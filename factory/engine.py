@@ -22,9 +22,9 @@ from .models import Lama, Yolox, TextDet, Sam, GOOD_CLASSES
 W_OUT = 1280
 LEVELS = {
     #        candidate area (fraction of photo)  min contrast  min visibility  diffs  op weights
-    0: dict(amin=0.0008, amax=0.0300, tgt=0.004, con=26, vis=34, n=(5, 5), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
-    1: dict(amin=0.0005, amax=0.0120, tgt=0.0015, con=20, vis=28, n=(5, 6), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
-    2: dict(amin=0.00030, amax=0.0040, tgt=0.0006, con=16, vis=22, n=(6, 7), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    0: dict(amin=0.0008, amax=0.0300, tgt=0.004, con=26, vis=40, n=(5, 5), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    1: dict(amin=0.0005, amax=0.0120, tgt=0.0015, con=20, vis=32, n=(5, 6), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    2: dict(amin=0.00030, amax=0.0040, tgt=0.0006, con=16, vis=26, n=(6, 7), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
 }
 LEVEL_NAMES = ["easy", "medium", "hard"]
 # measured difficulty (median per-difference visibility score, adjusted for clutter) -> level
@@ -354,8 +354,14 @@ class Engine:
             return True
         return False
 
+    def pasteable(self, B, c):
+        """Things we may copy, grow or swap: no writing on them, not part of a busy ornament or painted pattern."""
+        if self._busy[self._ringmask(c)].mean() > 0.30: return False
+        if self.has_text(B, c.box): return False
+        return True
+
     def op_dup(self, B, A, c, used):
-        if not self.solid(c) or not self.repeats(c): return None, None
+        if not self.solid(c) or not self.repeats(c) or not self.pasteable(B, c): return None, None
         spot = self._find_spot(B, c, used)
         if spot is None: return None, None
         return self._paste(B, A, c, *spot)
@@ -372,7 +378,7 @@ class Engine:
 
     def op_scale(self, B, A, c, used):
         """The thing grows a little, standing on the same base; it must fully cover its old outline."""
-        if not self.solid(c) or c.edge < 1.5: return None, None
+        if not self.solid(c) or c.edge < 1.5 or not self.pasteable(B, c): return None, None
         x0, y0, x1, y1 = c.box
         s = float(self.rng.uniform(1.22, 1.35))
         out, tm = self._paste(B, A, c, 0, 0, scale=s)
@@ -383,12 +389,21 @@ class Engine:
         # the grown outline must land on the same background
         r = ring_of(tm, 5)
         if np.linalg.norm(B[r].astype(np.float32).mean(0) - c.ring) > 22: return None, None
+        # the grown part must not cover structure (window frames, mullions, mouldings, other things):
+        # covering a frame is what leaves the dark flat rectangles
+        band = (tm > 0) & ~(c.mask > 0)
+        if band.sum() > 0:
+            if self._edges[band].mean() > max(0.05, 1.2 * self._edges[self._ringmask(c)].mean()): return None, None
+            if (self._occupied[band] > 0).mean() > 0.04: return None, None
+            # flat panels (glass, plain boards) grow into a featureless block: refuse
+            inner = c.mask > 0
+            if float(self._grad[inner].mean()) < 6: return None, None
         return out, np.maximum(tm, c.mask)
 
     def op_swap(self, B, A, c, used):
         """Replace this thing with another thing of the same size and shape from the photo (e.g. a different fruit,
         a different window pane). Nothing is rebuilt, so nothing can smear."""
-        if not self.solid(c): return None, None
+        if not self.solid(c) or not self.pasteable(B, c): return None, None
         x0, y0, x1, y1 = c.box; bw, bh = x1 - x0 + 1, y1 - y0 + 1
         best = None
         for o in self._cands:
@@ -403,6 +418,7 @@ class Engine:
             if (om & ~cm).sum() > 0.25 * cm.sum(): continue
             dif = float(np.abs(cv2.resize(A[oy0:oy1 + 1, ox0:ox1 + 1], (bw, bh)).astype(int) - A[y0:y1 + 1, x0:x1 + 1].astype(int))[cm].mean())
             if dif < 25: continue
+            if self._busy[self._ringmask(o)].mean() > 0.30 or self.has_text(A, o.box): continue
             if best is None or dif > best[0]: best = (dif, o, om)
         if best is None: return None, None
         _, o, om = best; ox0, oy0, ox1, oy1 = o.box
@@ -490,29 +506,16 @@ class Engine:
         return out
 
     # ---------------------------------------------------------------- pair
-    def make(self, A, lv, cands=None):
-        """A: prepared RGB photo. Returns dict or raises Reject. Pass cands to reuse a previous detection."""
-        P = LEVELS[lv]; H, W = A.shape[:2]; N = H * W
-        self.t = {}; t_all = time.time(); self.lama.calls = 0
-        clutter = self.clutter(A)
-        if clutter < 0.025: raise Reject("scene_too_plain", clutter)
-        if cands is None: cands = self.candidates(A)
-        self.last_cands = cands
-        pool = self.pools(cands, N)[lv]
-        self.rng.shuffle(pool)
-        # closest to this level's typical size first, real objects slightly preferred, with some randomness
-        pool.sort(key=lambda c: abs(np.log(c.area / N / P["tgt"])) + (0 if c.src == "object" else 0.3) + self.rng.random() * 0.8)
-        want = int(self.rng.integers(P["n"][0], P["n"][1] + 1))
-        if len(pool) < want: raise Reject("not_enough_candidates", len(pool))
-        B = A.copy(); used = []; diffs = []; tries = {}; nops = {}
+    def _edit(self, A, B, pool, want, lv, used, diffs, tries, nops, budget, banned=()):
+        """Add differences from `pool` until `want` exist. Mutates used/diffs/tries/nops; returns the new B."""
+        P = LEVELS[lv]; N = A.shape[0] * A.shape[1]
         ops, wts = zip(*P["ops"].items()); wts = np.array(wts, float) / sum(wts)
-        max_remove = int(np.ceil(0.6 * want))
-        t0 = time.time()
-        budget = want * 4 + 8
+        max_remove = int(np.ceil(0.6 * max(want, 5)))
+        start_calls = self.lama.calls
+        idx = {id(c): i for i, c in enumerate(self.last_cands)}
         for c in pool:
-            if len(diffs) >= want or self.lama.calls >= budget: break
-            x0, y0, x1, y1 = c.box
-            if overlaps(c.box, used, 26): continue
+            if len(diffs) >= want or self.lama.calls - start_calls >= budget: break
+            if overlaps(c.box, used, 26) or overlaps(c.box, banned, 10): continue
             order = list(self.rng.choice(ops, size=len(ops), replace=False, p=wts))
             for op in order:
                 if op == "remove" and nops.get("remove", 0) >= max_remove: continue
@@ -530,15 +533,56 @@ class Engine:
                 ch = np.abs(out.astype(int) - B.astype(int)).max(-1) > 14
                 ys, xs = np.where(ch)
                 bx0, by0, bx1, by1 = int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())
-                if overlaps((bx0, by0, bx1, by1), used, 18): continue
+                if overlaps((bx0, by0, bx1, by1), used, 18) or overlaps((bx0, by0, bx1, by1), banned, 10): continue
                 B = out; used.append((bx0, by0, bx1, by1)); nops[op] = nops.get(op, 0) + 1
                 diffs.append({"x": round((bx0 + bx1) / 2), "y": round((by0 + by1) / 2), "rx": max(14, round((bx1 - bx0) / 2 + 8)),
                               "ry": max(14, round((by1 - by0) / 2 + 8)), "op": op, "what": c.label, "vis": round(st["vis"], 1),
-                              "area": round(c.area / N, 5), "contrast": round(c.contrast, 1)})
+                              "area": round(c.area / N, 5), "contrast": round(c.contrast, 1), "ci": idx.get(id(c), -1)})
                 break
+        return B
+
+    @staticmethod
+    def region(d, H, W):
+        return (max(0, d["x"] - d["rx"] - 2), max(0, d["y"] - d["ry"] - 2), min(W - 1, d["x"] + d["rx"] + 2), min(H - 1, d["y"] + d["ry"] + 2))
+
+    def revert(self, A, B, d):
+        """Undo one difference (regions never overlap, so the rest of B is untouched)."""
+        H, W = A.shape[:2]; x0, y0, x1, y1 = self.region(d, H, W)
+        B = B.copy(); B[y0:y1 + 1, x0:x1 + 1] = A[y0:y1 + 1, x0:x1 + 1]; return B
+
+    def extend(self, A, B, diffs, need, lv, banned, budget=12):
+        """Add `need` new differences to an existing pair, away from existing ones and from banned (rejected) spots.
+        Uses this photo's candidates (call candidates(A) first). Returns (B, new_diffs)."""
+        H, W = A.shape[:2]; N = H * W
+        used = [self.region(d, H, W) for d in diffs]
+        taken = {d.get("ci") for d in diffs}
+        pool = [c for i, c in enumerate(self.last_cands) if i not in taken and LEVELS[lv]["amin"] * N <= c.area <= LEVELS[lv]["amax"] * N]
+        self.rng.shuffle(pool)
+        new = []; tries = {}; nops = {}
+        B = self._edit(A, B, pool, need, lv, used, new, tries, nops, budget, banned=banned)
+        return B, new
+
+    def make(self, A, lv, cands=None):
+        """A: prepared RGB photo. Returns dict or raises Reject. Pass cands to reuse a previous detection."""
+        P = LEVELS[lv]; H, W = A.shape[:2]; N = H * W
+        self.t = {}; t_all = time.time(); self.lama.calls = 0
+        clutter = self.clutter(A)
+        if clutter < 0.025: raise Reject("scene_too_plain", clutter)
+        if cands is None: cands = self.candidates(A)
+        self.last_cands = cands
+        pool = self.pools(cands, N)[lv]
+        self.rng.shuffle(pool)
+        # closest to this level's typical size first, real objects slightly preferred, with some randomness
+        pool.sort(key=lambda c: abs(np.log(c.area / N / P["tgt"])) + (0 if c.src == "object" else 0.3) + self.rng.random() * 0.8)
+        want = int(self.rng.integers(P["n"][0], P["n"][1] + 1))
+        if len(pool) < want: raise Reject("not_enough_candidates", len(pool))
+        B = A.copy(); used = []; diffs = []; tries = {}; nops = {}
+        t0 = time.time()
+        B = self._edit(A, B, pool, want, lv, used, diffs, tries, nops, budget=want * 4 + 8)
         self._tick("edit", t0)
         if len(diffs) < P["n"][0]: raise Reject("too_few_good_edits", len(diffs), tries)
         if len(nops) < 2: raise Reject("one_edit_type_only", nops)
+        self.last_tries = tries
         cells = {(min(2, d["x"] * 3 // W), min(1, d["y"] * 2 // H)) for d in diffs}
         if len(cells) < 3: raise Reject("diffs_clustered", len(cells))
         dm = np.abs(B.astype(int) - A.astype(int)).max(-1)
