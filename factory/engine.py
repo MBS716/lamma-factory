@@ -141,6 +141,25 @@ class Engine:
             masks, iou = self.sam.predict([(x, y), (x + bw, y + bh)], [2, 3])
             i = int(np.argmax(iou))
             if iou[i] > 0.65: take(masks[i], cls, "object")
+        # prompts on small distinct blobs (fine segmentation), so small things are not missed between grid points
+        small = cv2.resize(img, (W // 2, H // 2), interpolation=cv2.INTER_AREA)
+        seg = felzenszwalb(small, scale=80, sigma=0.7, min_size=20)
+        lab = small.astype(np.float32)
+        ids, cnt = np.unique(seg, return_counts=True)
+        pts = []
+        for i, n in zip(ids, cnt):
+            if not (0.0003 * N / 4 <= n <= 0.01 * N / 4): continue
+            ys, xs = np.where(seg == i)
+            cx, cy = int(np.median(xs)) * 2, int(np.median(ys)) * 2
+            if seg[cy // 2, cx // 2] != i: continue
+            pts.append((cx, cy))
+        self.rng.shuffle(pts)
+        for (px, py) in pts[:220]:
+            if self._focus[py, px] < 0.35 or self._lum[py, px] < 40 or self._textmask[py, px]: continue
+            if overlaps((px, py, px, py), self.people): continue
+            masks, iou = self.sam.predict([(px, py)], [1])
+            for k in np.argsort(-iou):
+                if iou[k] > 0.6: take(masks[k], "detail", "sam")
         # point grid: every sharp, lit spot away from people and writing; parts and whole things
         gx, gy = grid
         for j in range(gy):
@@ -188,7 +207,7 @@ class Engine:
         bw, bh = x1 - x0 + 1, y1 - y0 + 1
         area = xs.size
         if src != "object":
-            if area / (bw * bh) < 0.30 or max(bw, bh) / max(1, min(bw, bh)) > 5: return self._no("shape")
+            if area / (bw * bh) < 0.25 or max(bw, bh) / max(1, min(bw, bh)) > 6: return self._no("shape")
         # in focus and well lit
         sharp = float(self._focus[m > 0].mean())
         if sharp < 0.4: return self._no("out_of_focus")
@@ -209,16 +228,16 @@ class Engine:
             # a separate thing: clearly different from what surrounds it, with a real outline,
             # on surroundings that are not a repetitive natural texture (foliage, gravel, waves)
             if contrast < 12: return self._no("low_contrast")
-            if edge < 1.15: return self._no("weak_outline")
-            if contrast / (ringstd + 6) < 0.9: return self._no("not_distinct")
-            if self._busy[ring].mean() > 0.22: return self._no("busy_texture")
+            if edge < 1.1: return self._no("weak_outline")
+            if contrast / (ringstd + 6) < 0.75: return self._no("not_distinct")
+            if self._busy[ring].mean() > 0.28: return self._no("busy_texture")
         # the band just under the thing: what it stands on
         bb = np.zeros_like(m); bb[min(H - 1, y1 + 2):min(H, y1 + 2 + max(4, bh // 6)), x0:x1 + 1] = 255
         bottom = img[bb > 0].astype(np.float32).mean(0) if (bb > 0).any() else rmean
         return Cand(mask=m, box=box, area=int(area), label=label, src=src, contrast=contrast, ring=rmean,
                     ringstd=ringstd, edge=edge, sharp=sharp, bottom=bottom)
 
-    def solid(self, c): return c.src == "object" or (c.edge >= 1.8 and c.ringstd <= 20 and c.contrast >= 26)
+    def solid(self, c): return c.src == "object" or (c.edge >= 1.4 and c.contrast >= 18)
 
     # ---------------------------------------------------------------- operations
     def _with_shadow(self, B, c):
@@ -240,7 +259,7 @@ class Engine:
         return (m * 255).astype(np.uint8)
 
     def removable(self, c, N):
-        return c.ringstd <= 16 and c.area <= 0.008 * N and self._busy[self._ringmask(c)].mean() <= 0.14
+        return c.ringstd <= 24 and c.area <= 0.008 * N and self._busy[self._ringmask(c)].mean() <= 0.18
 
     def op_remove(self, B, c):
         if not self.removable(c, B.shape[0] * B.shape[1]): return None, None
@@ -324,7 +343,7 @@ class Engine:
 
     def op_scale(self, B, A, c, used):
         """The thing grows a little, standing on the same base; it must fully cover its old outline."""
-        if not self.solid(c) or c.edge < 1.8: return None, None
+        if not self.solid(c) or c.edge < 1.5: return None, None
         x0, y0, x1, y1 = c.box
         s = float(self.rng.uniform(1.22, 1.35))
         out, tm = self._paste(B, A, c, 0, 0, scale=s)
@@ -366,7 +385,7 @@ class Engine:
         return out, m
 
     def op_flip(self, B, c):
-        if c.src != "object": return None, None
+        if not self.solid(c): return None, None
         x0, y0, x1, y1 = c.box; pm = c.mask[y0:y1 + 1, x0:x1 + 1] > 0
         if (pm & pm[:, ::-1]).sum() / max(1, (pm | pm[:, ::-1]).sum()) < 0.86: return None, None
         patch = B[y0:y1 + 1, x0:x1 + 1]; fl = patch[:, ::-1]
