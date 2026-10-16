@@ -1,0 +1,32 @@
+# Manual test: produce N pairs from real Wikimedia Commons "Quality images" photos into a local folder, write the report and commit it.
+name: test-run
+on:
+  push:
+    paths: [".github/test-request"]   # editing this file starts a test (no extra API permission needed)
+  workflow_dispatch:
+    inputs:
+      target: {description: "pairs to produce", default: "30"}
+      max_attempts: {description: "stop after this many photos", default: "120"}
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: pip install -r requirements.txt
+      - name: models (cached)
+        uses: actions/cache@v4
+        with: {path: models, key: models-v1}
+      - run: bash scripts/get_models.sh
+      - run: nproc && lscpu | head -20
+      - name: produce
+        run: python run.py --source commons --target ${{ inputs.target || 30 }} --max-attempts ${{ inputs.max_attempts || 150 }} --store local --out reports/test-${{ github.run_number }} --registry state/test_registry.json --report
+      - name: keep report in the repo
+        run: |
+          rm -rf reports/test-${{ github.run_number }}/bucket/pairs
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports state && git commit -m "test run ${{ github.run_number }}" && git push || true
