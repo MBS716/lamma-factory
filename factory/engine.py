@@ -22,9 +22,9 @@ from .models import Lama, Yolox, TextDet, Sam, GOOD_CLASSES
 W_OUT = 1280
 LEVELS = {
     #        candidate area (fraction of photo)  min contrast  min visibility  diffs  op weights
-    0: dict(amin=0.0008, amax=0.0300, tgt=0.004, con=26, vis=40, n=(5, 5), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
-    1: dict(amin=0.0005, amax=0.0120, tgt=0.0015, con=20, vis=32, n=(5, 6), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
-    2: dict(amin=0.00030, amax=0.0040, tgt=0.0006, con=16, vis=26, n=(6, 7), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    0: dict(amin=0.0008, amax=0.0300, tgt=0.004, con=26, vis=37, n=(5, 5), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    1: dict(amin=0.0005, amax=0.0120, tgt=0.0015, con=20, vis=30, n=(5, 6), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
+    2: dict(amin=0.00030, amax=0.0040, tgt=0.0006, con=16, vis=24, n=(6, 7), ops={"remove": 3, "dup": 2, "swap": 2, "scale": 2, "move": 1, "flip": 1}),
 }
 LEVEL_NAMES = ["easy", "medium", "hard"]
 # measured difficulty (median per-difference visibility score, adjusted for clutter) -> level
