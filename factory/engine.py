@@ -28,7 +28,7 @@ LEVELS = {
 }
 LEVEL_NAMES = ["easy", "medium", "hard"]
 # measured difficulty (median per-difference visibility score, adjusted for clutter) -> level
-D_EASY, D_HARD = 3.9, 2.45   # calibrated so measured difficulty splits real output into thirds
+D_EASY, D_HARD = 3.3, 2.3    # calibrated on real output so measured difficulty splits it into thirds
 
 def prepare(img):
     """Crop to 3:2 and resize to W_OUT wide."""
@@ -93,6 +93,8 @@ class Engine:
                 for (x, y, bw, bh, sc, cls) in self.det(img[ty:ty + th, tx:tx + tw]):
                     if cls == "person" and sc > 0.2: ppl.append((x + tx, y + ty, bw, bh))
         self.people = [(x - 14, y - 14, x + bw + 14, y + bh + 14) for (x, y, bw, bh) in ppl]
+        self.animals = [(x - 6, y - 6, x + bw + 6, y + bh + 6) for (x, y, bw, bh, sc, cls) in self._dets
+                        if cls in ("bird", "cat", "dog", "horse", "sheep", "cow") and sc > 0.3]
         self._tick("detect", t0)
         t0 = time.time()
         self.textboxes = self.text(img)
@@ -214,6 +216,7 @@ class Engine:
         if x0 < 8 or y0 < 8 or x1 > W - 9 or y1 > H - 9: return self._no("edge_of_photo")
         box = (int(x0), int(y0), int(x1), int(y1))
         if self.forbidden(m, box): return self._no("people_or_text")
+        if src != "object" and overlaps(box, self.animals): return self._no("on_animal")
         bw, bh = x1 - x0 + 1, y1 - y0 + 1
         area = xs.size
         if src != "object":
@@ -339,14 +342,26 @@ class Engine:
             if s < bs: bs, best = s, (dx, dy)
         return best
 
+    def repeats(self, c):
+        """Another thing of the same kind nearby in the photo: similar size and colour, on a similar line."""
+        x0, y0, x1, y1 = c.box; bw, bh = x1 - x0 + 1, y1 - y0 + 1; cy = (y0 + y1) / 2
+        for o in self._cands:
+            if o is c: continue
+            ox0, oy0, ox1, oy1 = o.box; ow, oh = ox1 - ox0 + 1, oy1 - oy0 + 1
+            if not (0.75 < ow / bw < 1.33 and 0.75 < oh / bh < 1.33): continue
+            if abs((oy0 + oy1) / 2 - cy) > 0.6 * bh: continue
+            if o.label != c.label and np.linalg.norm(o.ring - c.ring) > 25: continue
+            return True
+        return False
+
     def op_dup(self, B, A, c, used):
-        if not self.solid(c): return None, None
+        if not self.solid(c) or not self.repeats(c): return None, None
         spot = self._find_spot(B, c, used)
         if spot is None: return None, None
         return self._paste(B, A, c, *spot)
 
     def op_move(self, B, A, c, used):
-        if not self.solid(c) or not self.removable(c, B.shape[0] * B.shape[1]): return None, None
+        if not self.solid(c) or not self.removable(c, B.shape[0] * B.shape[1]) or not self.repeats(c): return None, None
         spot = self._find_spot(B, c, used, near=(0.5, 1.0))
         if spot is None: return None, None
         B2, m1 = self.op_remove(B, c)
