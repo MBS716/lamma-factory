@@ -1,6 +1,8 @@
 """ONNX models used by the factory (CPU only, no GPU needed).
 - LaMa (Apache-2.0): removes an object and rebuilds the background.
-- YOLOX-s (Apache-2.0): finds everyday objects (cups, books, clocks, chairs, cars, people...)."""
+- YOLOX-s (Apache-2.0): finds everyday objects (cups, books, clocks, chairs, cars, people...).
+- PP-OCRv3 text detector (Apache-2.0): finds writing and logos so they are never edited.
+- EfficientSAM-Ti (Apache-2.0): cuts out whole things and their parts with clean outlines."""
 import os, numpy as np, cv2
 import onnxruntime as ort
 
@@ -23,7 +25,7 @@ GOOD_CLASSES = {'bicycle', 'car', 'motorcycle', 'bus', 'truck', 'boat', 'traffic
                 'parking meter', 'bench', 'bird', 'cat', 'dog', 'backpack', 'umbrella', 'handbag', 'suitcase', 'kite',
                 'sports ball', 'bottle', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
                 'orange', 'carrot', 'donut', 'cake', 'chair', 'potted plant', 'tv', 'laptop', 'mouse', 'remote',
-                'keyboard', 'cell phone', 'book', 'clock', 'vase', 'scissors', 'teddy bear', 'person', 'tie'}
+                'keyboard', 'cell phone', 'book', 'clock', 'vase', 'scissors', 'teddy bear'}   # never people (or what they wear)
 
 class Lama:
     def __init__(self):
@@ -75,3 +77,39 @@ class Yolox:
             x, y, bw, bh = boxes[k] / r
             out.append((float(x), float(y), float(bw), float(bh), float(best[k]), COCO[int(cls[k])]))
         return out
+
+class TextDet:
+    """Text regions (signs, labels, logos with letters). Returns a list of 4-point polygons in image pixels."""
+    def __init__(self, w=960, h=640):
+        self.m = cv2.dnn.TextDetectionModel_DB(os.path.join(MODEL_DIR, "textdet.onnx"))
+        self.m.setBinaryThreshold(0.3).setPolygonThreshold(0.5).setMaxCandidates(400).setUnclipRatio(2.0)
+        self.m.setInputParams(1.0 / 255.0, (w, h), (122.67891434, 116.66876762, 104.00698793), True)
+        self.w, self.h = w, h
+    def __call__(self, img):
+        H, W = img.shape[:2]
+        small = cv2.resize(img[..., ::-1], (self.w, self.h), interpolation=cv2.INTER_AREA)
+        polys, _ = self.m.detect(small)
+        sx, sy = W / self.w, H / self.h
+        return [np.array(p, np.float32) * [sx, sy] for p in polys]
+
+class Sam:
+    """EfficientSAM split in two: the image is encoded once, then each point/box prompt costs ~50 ms.
+    Returns up to 3 nested masks per prompt (part, bigger part, whole thing) with predicted quality."""
+    S = 1024
+    def __init__(self):
+        self.enc = ort.InferenceSession(os.path.join(MODEL_DIR, "esam_enc.onnx"), _so, providers=["CPUExecutionProvider"])
+        self.dec = ort.InferenceSession(os.path.join(MODEL_DIR, "esam_dec.onnx"), _so, providers=["CPUExecutionProvider"])
+        self.ein = self.dec.get_inputs()[0].name
+    def set_image(self, img):
+        self.H, self.W = img.shape[:2]
+        x = cv2.resize(img, (self.S, self.S), interpolation=cv2.INTER_AREA).astype(np.float32) / 255.0
+        self.emb = self.enc.run(None, {"batched_images": x.transpose(2, 0, 1)[None]})[0]
+    def predict(self, pts, labels):
+        """pts in image pixels, labels 1 = point on the thing, 2/3 = box corners. Masks at 1024x1024 (bool), ious."""
+        p = np.zeros((1, 1, 6, 2), np.float32); l = -np.ones((1, 1, 6), np.float32)
+        for i, ((x, y), lb) in enumerate(zip(pts, labels)):
+            p[0, 0, i] = [x * self.S / self.W, y * self.S / self.H]; l[0, 0, i] = lb
+        m, iou = self.dec.run(None, {self.ein: self.emb, "batched_point_coords": p, "batched_point_labels": l})
+        return m[0, 0] >= 0, iou[0, 0]
+    def full(self, m1024):
+        return cv2.resize(m1024.astype(np.uint8) * 255, (self.W, self.H), interpolation=cv2.INTER_NEAREST)

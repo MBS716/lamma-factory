@@ -6,17 +6,26 @@ import numpy as np
 from PIL import Image
 
 # scene searches that give rich, detailed photos (rotated so the library stays varied)
-THEMES = [
-    "old market", "souk", "bazaar stalls", "spice market", "street market", "fruit stall", "flower market",
-    "flea market", "antique shop", "bookshop interior", "library interior", "cafe interior", "restaurant interior",
-    "bakery shop", "kitchen interior", "living room interior", "cozy room", "workshop tools", "pottery shop",
-    "carpet shop", "lantern shop", "toy shop", "street food stall", "harbor boats", "fishing village",
-    "old town street", "narrow alley", "colorful street", "city street cars", "rooftops city", "balcony plants",
-    "window flowers", "village houses", "farm market", "garden with bench", "park playground", "beach umbrellas",
-    "camping site", "train station", "museum hall", "art gallery wall", "supermarket shelves", "hardware store",
-    "bicycle street", "desk with objects", "office interior", "classroom", "music instruments shop",
-    "vintage interior", "shelves with jars", "tea shop", "coffee roastery", "fish market", "textile shop",
-    "desert camp", "festival street", "night market", "old house facade", "castle courtyard", "marina",
+THEMES = [  # rotated one or two photos at a time so consecutive rounds never look alike
+    # streets and cities
+    "old town street", "narrow alley", "city street shops", "market square", "street cafe terrace", "shopping street",
+    "harbour town", "canal houses", "bridge city river", "tram street", "bicycles parked street", "night street lights",
+    # food and drink
+    "cafe interior", "restaurant interior", "bakery display", "market stall vegetables", "spice market", "fruit market",
+    "food stall", "kitchen interior", "tea house", "bar interior bottles", "cheese shop", "fish market",
+    # homes and interiors
+    "living room interior", "library interior", "bookshop", "antique shop", "workshop tools", "pottery",
+    "museum hall exhibits", "museum showcase", "palace interior", "church interior", "train station hall", "shop window",
+    # historic places
+    "castle courtyard", "old house facade", "historic building facade", "mosque courtyard", "souk", "medina",
+    "village houses", "windmill", "lighthouse", "old farm", "monastery", "fortress walls",
+    # gardens, nature, outdoors
+    "garden flowers bench", "botanical garden", "park benches", "playground", "beach umbrellas", "boats harbour",
+    "fishing boats", "marina", "mountain village", "lake boats", "orchard", "vineyard",
+    "farm animals", "autumn park", "snow village", "desert oasis", "campsite", "allotment garden",
+    # things and collections
+    "toys", "musical instruments", "vintage cars", "bicycles", "clocks", "hats shop",
+    "flower shop", "ceramics shop", "lanterns", "hardware store", "flea market", "christmas market",
 ]
 
 class Registry:
@@ -102,10 +111,23 @@ class Commons:
                 if t == tries - 1: raise
                 time.sleep((30 if code in (429, 503) else 3) * (t + 1))
     def skip(self, why): self.skipped[why] = self.skipped.get(why, 0) + 1
-    def photos(self, min_w=2000):
-        d = self.reg.d
+    def photos(self, min_w=2000, per_visit=2):
+        """Round-robin over THEMES, at most `per_visit` photos per theme before moving to the next one."""
+        d = self.reg.d; queue = {}
         while True:
             theme = THEMES[d["theme_i"] % len(THEMES)]; d["theme_i"] += 1
+            q = queue.setdefault(theme, [])
+            if not q:
+                q.extend(self._fetch(theme, min_w))
+            for _ in range(per_visit):
+                if not q: break
+                ph = q.pop(0)
+                if ph["id"] in self.reg.seen: continue
+                self.reg.seen.add(ph["id"]); yield ph
+
+    def _fetch(self, theme, min_w):
+        d = self.reg.d; found = []
+        for _ in range(3):
             off = d["theme_page"].get("c:" + theme, 0)
             q = {"action": "query", "format": "json", "formatversion": 2, "generator": "search",
                  "gsrsearch": f'incategory:"Quality images" filetype:bitmap {theme}', "gsrnamespace": 6,
@@ -126,15 +148,16 @@ class Commons:
                 if w < min_w or not (1.3 <= w / max(1, h) <= 2.0): self.skip("size_or_shape"); continue
                 if not FREE_LIC.match(lic): self.skip("licence"); continue
                 if "personality" in _plain(m.get("Restrictions", {}).get("value")).lower(): self.skip("personality_rights"); continue
-                self.reg.seen.add(pid)
                 artist = _plain(m.get("Artist", {}).get("value"))[:80]
                 if not artist: self.skip("no_author"); continue
                 lic_url = _plain(m.get("LicenseUrl", {}).get("value"))
                 if lic.lower().startswith("cc by") and not lic_url: self.skip("licence_unclear"); continue
-                yield {"provider": "commons", "id": pid, "theme": theme, "url": ii.get("descriptionurl", ""),
+                found.append({"provider": "commons", "id": pid, "theme": theme, "url": ii.get("descriptionurl", ""),
                        "photographer": artist, "photographer_url": ii.get("descriptionurl", ""), "licence": lic, "licence_url": lic_url,
                        "share_alike": "-sa" in lic.lower(), "attribution": _plain(m.get("AttributionRequired", {}).get("value")) != "false",
-                       "alt": p.get("title", ""), "src": ii.get("thumburl") or ii.get("url")}
+                       "alt": p.get("title", ""), "src": ii.get("thumburl") or ii.get("url")})
+            if found or not nxt: break
+        return found
     def download(self, ph):
         data = self._get(ph["src"], binary=True)
         return np.array(Image.open(io.BytesIO(data)).convert("RGB"))

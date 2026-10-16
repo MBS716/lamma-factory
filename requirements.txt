@@ -4,3 +4,4 @@ onnxruntime==1.20.1
 scikit-image==0.24.0
 pillow
 boto3
+onnx

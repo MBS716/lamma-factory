@@ -4,11 +4,12 @@ import os, html, json
 import numpy as np
 from PIL import Image
 
-OPS = {"remove": "حذف", "dup": "نسخ", "move": "إزاحة", "flip": "قلب"}
+OPS = {"remove": "حذف", "dup": "نسخ", "move": "إزاحة", "flip": "قلب", "scale": "تكبير", "swap": "استبدال"}
 LV = ["سهل", "متوسط", "صعب"]
 REASONS = {"not_enough_candidates": "عناصر مناسبة غير كافية", "too_few_good_edits": "تعديلات ناجحة غير كافية",
            "scene_too_plain": "المشهد بسيط جدًا", "diffs_clustered": "الفروق متجمعة في منطقة واحدة",
-           "stray_change": "تغيير خارج مناطق الفروق", "near_duplicate": "صورة مكررة تقريبًا"}
+           "stray_change": "تغيير خارج مناطق الفروق", "near_duplicate": "صورة مكررة تقريبًا",
+           "one_edit_type_only": "نوع تعديل واحد فقط", "level_quota_full": "حصة المستوى مكتملة", "author_quota": "حد صور المصوّر الواحد"}
 
 def write_report(out, stats, log, accepted):
     d = os.path.join(out, "report"); os.makedirs(os.path.join(d, "img"), exist_ok=True)
