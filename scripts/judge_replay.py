@@ -16,7 +16,7 @@ for jf in sorted(glob.glob(os.path.join(src, "*.json"))):
     A = np.array(Image.open(os.path.join(src, pid + "a.jpg")).convert("RGB"))
     B = np.array(Image.open(os.path.join(src, pid + "b.jpg")).convert("RGB"))
     eng.rng = np.random.default_rng(int(hashlib.md5(pid.encode()).hexdigest()[:8], 16))
-    eng.candidates(A)
+    eng.last_cands = eng.candidates(A)
     res = {"B": B, "diffs": meta["diffs"], "planned": meta["planned"], "clutter": meta["clutter"]}
     tiles = []
     jr = judge_and_repair(eng, A, res, judge, LEVELS[meta["planned"]]["n"][0], 2, tiles_out=tiles, tag=pid + "_")
