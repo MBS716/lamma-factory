@@ -28,7 +28,7 @@ LEVELS = {
 }
 LEVEL_NAMES = ["easy", "medium", "hard"]
 # measured difficulty (median per-difference visibility score, adjusted for clutter) -> level
-D_EASY, D_HARD = 5.0, 2.4
+D_EASY, D_HARD = 3.9, 2.45   # calibrated so measured difficulty splits real output into thirds
 
 def prepare(img):
     """Crop to 3:2 and resize to W_OUT wide."""
@@ -101,6 +101,12 @@ class Engine:
         self._textmask = cv2.dilate(tm, np.ones((15, 15), np.uint8)) > 0
         self._tick("text", t0)
 
+    def has_text(self, img, box, pad=6):
+        """Writing inside a small region, looked for at higher resolution than the whole-photo pass."""
+        H, W = img.shape[:2]; x0, y0, x1, y1 = box
+        crop = img[max(0, y0 - pad):min(H, y1 + pad + 1), max(0, x0 - pad):min(W, x1 + pad + 1)]
+        return len(self.text.small(crop)) > 0
+
     def forbidden(self, m, box):
         """True if a region touches a person or text/logo."""
         if overlaps(box, self.people): return True
@@ -172,6 +178,10 @@ class Engine:
                     if iou[k] > 0.6: take(masks[k], "detail", "sam")
         self._tick("candidates", t0)
         self._cands = out
+        occ = np.zeros((H, W), np.uint8)
+        for c in out: occ |= (c.mask > 0).astype(np.uint8)
+        self._occupied = occ.astype(np.float32)
+        self._edges = (cv2.Canny(cv2.cvtColor(img, cv2.COLOR_RGB2GRAY), 60, 140) > 0).astype(np.float32)
         return out
 
     def _grabcut(self, img, x0, y0, x1, y1):
@@ -307,6 +317,10 @@ class Engine:
             if nx0 < 10 or ny0 < 10 or nx1 > W - 11 or ny1 > H - 11: continue
             if overlaps((nx0, ny0, nx1, ny1), used, 22) or overlaps((nx0, ny0, nx1, ny1), self.people, 4): continue
             if self._textmask[ny0:ny1 + 1, nx0:nx1 + 1].any(): continue
+            # never on top of another thing (windows, other objects): the spot must be empty background
+            occ = self._occupied[ny0:ny1 + 1, nx0:nx1 + 1] - (c.mask[ny0:ny1 + 1, nx0:nx1 + 1] > 0)
+            if (occ[tm] > 0).mean() > 0.04: continue
+            if self._edges[ny0:ny1 + 1, nx0:nx1 + 1][tm].mean() > max(0.06, 1.3 * self._edges[rm].mean()): continue
             under = B[ny0:ny1 + 1, nx0:nx1 + 1].astype(np.float32)[tm]
             col = float(np.linalg.norm(under.mean(0) - c.ring)); tex = float(under.std(0).mean())
             if col > 22 or tex > c.ringstd * 1.5 + 6: continue
@@ -386,6 +400,7 @@ class Engine:
 
     def op_flip(self, B, c):
         if not self.solid(c): return None, None
+        if self.has_text(B, c.box): return None, None
         x0, y0, x1, y1 = c.box; pm = c.mask[y0:y1 + 1, x0:x1 + 1] > 0
         if (pm & pm[:, ::-1]).sum() / max(1, (pm | pm[:, ::-1]).sum()) < 0.86: return None, None
         patch = B[y0:y1 + 1, x0:x1 + 1]; fl = patch[:, ::-1]

@@ -91,6 +91,12 @@ class TextDet:
         polys, _ = self.m.detect(small)
         sx, sy = W / self.w, H / self.h
         return [np.array(p, np.float32) * [sx, sy] for p in polys]
+    def small(self, crop, side=320):
+        """Text in a small crop, upscaled so short words and logos are found."""
+        self.m.setInputParams(1.0 / 255.0, (side, side), (122.67891434, 116.66876762, 104.00698793), True)
+        try: polys, _ = self.m.detect(cv2.resize(crop[..., ::-1], (side, side), interpolation=cv2.INTER_CUBIC))
+        finally: self.m.setInputParams(1.0 / 255.0, (self.w, self.h), (122.67891434, 116.66876762, 104.00698793), True)
+        return polys
 
 class Sam:
     """EfficientSAM split in two: the image is encoded once, then each point/box prompt costs ~50 ms.
