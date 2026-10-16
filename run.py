@@ -17,6 +17,7 @@ ap.add_argument("--max-attempts", type=int, default=0); ap.add_argument("--time-
 ap.add_argument("--mix", default="0.3,0.4,0.3", help="share of easy,medium,hard")
 ap.add_argument("--store", default="local"); ap.add_argument("--out", default="out/run")
 ap.add_argument("--registry", default="state/registry.json"); ap.add_argument("--report", action="store_true")
+ap.add_argument("--judge", action="store_true", help="paid visual judge (Claude API); off unless the owner approves")
 ap.add_argument("--per-author", type=int, default=2, help="max pairs from one photographer per run")
 ap.add_argument("--seed", type=int, default=0); ap.add_argument("--quality", type=int, default=88)
 a = ap.parse_args()
@@ -28,6 +29,10 @@ store = LocalStore(os.path.join(a.out, "bucket")) if a.store == "local" else R2S
     os.environ["R2_ACCOUNT_ID"], os.environ["R2_BUCKET"], os.environ["R2_KEY_ID"], os.environ["R2_SECRET"])
 cat = Catalog(store)
 eng = Engine(seed=a.seed or int(time.time()))
+judge = None
+if a.judge:
+    from factory.judge import Judge, apply as judge_apply
+    judge = Judge()
 rng = random.Random(a.seed or None)
 mix = [float(x) for x in a.mix.split(",")]
 
@@ -67,6 +72,12 @@ for ph in src.photos():
                 why.append(f"{LEVEL_NAMES[L]}:{e.reason}")
                 if len(e.info) > 1 and isinstance(e.info[1], dict): rec.setdefault("tries", {}).update({f"{L}:{k}": v for k, v in e.info[1].items()})
         if res is None: raise Reject(" / ".join(why))
+        if judge:
+            v = judge(A, res["B"], res["diffs"])
+            res["B"], kept, failed = judge_apply(A, res["B"], res["diffs"], v)
+            rec["judge_failed"] = [[f[0]["op"], f[1]] for f in failed]
+            if len(kept) < LEVELS[res["planned"]]["n"][0]: raise Reject("judge_rejected")
+            res["diffs"] = kept
         pid = f"x{ph['id']}" if ph["provider"] == "pexels" else str(ph["id"])
         store.put(f"pairs/{pid}a.webp", webp(A), "image/webp"); store.put(f"pairs/{pid}b.webp", webp(res["B"]), "image/webp")
         entry = {"id": pid, "l": res["level"], "w": A.shape[1], "h": A.shape[0],
@@ -92,7 +103,7 @@ stats = {"attempts": len(log), "accepted": len(ok), "accept_rate": round(len(ok)
          "ops": {},  "elapsed_min": round(elapsed / 60, 1),
          "min_per_accepted": round(elapsed / 60 / max(1, len(ok)), 2),
          "sec_per_attempt": round(elapsed / max(1, len(log)), 1),
-         "source": a.source, "pexels_requests": getattr(src, "requests", 0), "pexels_remaining": getattr(src, "remaining", None), "skipped_before_download": getattr(src, "skipped", {}),
+         "source": a.source, "judge_calls": judge.calls if judge else 0, "judge_tokens": [judge.tin, judge.tout] if judge else None, "pexels_requests": getattr(src, "requests", 0), "pexels_remaining": getattr(src, "remaining", None), "skipped_before_download": getattr(src, "skipped", {}),
          "avg_pair_kb": None, "reasons": {}}
 for r in log:
     if not r.get("ok"):
