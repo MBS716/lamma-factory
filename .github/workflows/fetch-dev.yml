@@ -1,0 +1,21 @@
+# Development only: fetch a sample of Commons photos (with credits) for tuning the engine.
+name: fetch-dev
+on:
+  push:
+    branches: [dev-photos]
+    paths: [".github/fetch-dev-request"]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: pip install -r requirements.txt
+      - run: python scripts/fetch_dev.py 120
+      - run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add dev && git commit -m "dev photos sample" && git push || true
