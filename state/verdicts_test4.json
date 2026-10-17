@@ -1,0 +1,1394 @@
+{
+"0275ec58f2b83eac": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"8f906cf8c2168c6e": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"a7f63d33bc71500e": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted panel covers the beam"
+},
+"4f0d7b97e8df86bb": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "bricks enlarged, wrong scale"
+},
+"db2a70972825d114": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted panel covers the beam"
+},
+"28da4412cb157a31": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"ab83f9bfbae48b4d": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"9ca50d34dc061a80": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"48e6cc2b490e30bd": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"27393452a38a5091": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"27a3de9e8470b525": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"6fb862a34289b465": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "smudge where star was removed"
+},
+"b3e8bccdea0490e5": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over its frame"
+},
+"c7bcc8cdbb36a019": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "smudge where star was removed"
+},
+"1b0aa81088dccad3": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "warped star"
+},
+"6e8f0806ab0f6ea6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window pasted onto pillar"
+},
+"81681d2c63c6c6f6": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"89507c4f170292fc": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"6a4733a6aed0cdc6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "extra pillar inside shutter"
+},
+"43028865b014b4f1": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"7eea4a06b3f7fcd3": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"bcbf563ac77917a5": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"6177b56b8a9f3ece": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"ad448efad1e33205": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"816e2b5a9da12773": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"6c9dc69f2744269b": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"e70899c4456d5921": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"91405c4cd5da889f": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"f77c3b8d0eb257c7": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "blurry floating copy"
+},
+"55df9746162550cf": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "screen grown past its frame"
+},
+"66095986c71f0474": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"ba5383447fafa18e": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"470b3b5297985f61": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"dcff64f426cc82f3": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted pavilion overlaps building"
+},
+"e4c7f3fc113f7e6b": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"fa1d22263859612d": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "odd white blob"
+},
+"58c1d7a2795d110a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "small artefact"
+},
+"c3e5f95521adaf64": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"6b08a2110a598a14": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "caps floating over clothes"
+},
+"b3edaa20010b8bfc": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"ee0894aff95cbd72": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"413b8f3691f759ee": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"b683d30cd90c5fc8": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "broken ornament"
+},
+"20cfc182c67b1d16": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "warped ornament"
+},
+"efc85122b309002f": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "warped ornament"
+},
+"d88174476fb60b8a": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"798fff5737672aff": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"6a693ceb9f5e55bf": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"17861a813c531c71": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"c0fe798ed335e0af": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"03596935a5d2e17e": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"45c68dde1e59f584": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"78aeda797cbad86f": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"565146956067e1cf": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"0642eff9ee1363d5": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"a4d88ad0d0f315a6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat block over moulding"
+},
+"bc2a54195bbfd655": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"72351a0a976f4153": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"16a0e9f1ffb61cd0": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"c146802f5fcd9365": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"5ee3a76527a6ddba": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"1324a53e3f77e0c1": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"6354cdd98531aecf": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"7e1d6ec848ffd723": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"c16667940b42ff35": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "lit facade grown over tree branches"
+},
+"3d7a78dc30020caa": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"afc0a360ed0b0d5b": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "blurry enlarged bin"
+},
+"0aaad52819a13539": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"5ffa56c40e28e429": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted patch"
+},
+"296482aaa54fc3ee": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "floating panel"
+},
+"992d2322aa09206c": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted patch"
+},
+"0c56e2506016d26d": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "seam"
+},
+"94f96d1ccdb981b3": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted bright panel"
+},
+"dcb4e0a4ad8c359c": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"3179646306053710": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"a6cf77f319406aab": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"b91a97e25bab4ce9": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"09be6f52db31201f": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"39f263d7a4dc29be": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"162aad1fb0691f00": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "blurry enlarged chimney"
+},
+"b4eb82b7b4a7ed79": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"c53123233aaab944": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "tablecloth pasted over chair"
+},
+"243c289bf7419e1c": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "smudge where lamp arm was"
+},
+"38e7895981b12cef": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"dacd30c41010a260": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"d8e1efbf24292e76": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"28fc89f75d27e699": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"345aefcde7ec9594": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"cf7c75fb5b2a64ba": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"e760616882d25e9d": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over timber"
+},
+"99d81f2f9310794a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over moulding"
+},
+"bbac147f2d20727c": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"caa872da67fe84d4": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "blurry giant chair"
+},
+"30e378eee4df0b72": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"826b8d0b3ddbf509": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"e53f8bce0a74e104": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"493a55c3c6686b70": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"d1c3aee09b7c8889": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "shutter grown over frame"
+},
+"48a4d5c4dac3ae3e": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "shutter grown past frame"
+},
+"f1e87926c98730a0": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel replaces louvres"
+},
+"7101b4e8de447f79": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "doubled shutter"
+},
+"a5aa3d50c720f7c3": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over frame"
+},
+"38796e1162c2d674": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"869fd2fee22523c2": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window pasted over window"
+},
+"99b936d61136daa8": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"4e46d433a2821cc8": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "mirrored lettering"
+},
+"5644c021e26df56e": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "brick patch grown"
+},
+"a83514e8c7a4f811": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"41eb871de8cf420f": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over frame"
+},
+"1495cd56e061de1a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "brick patch grown"
+},
+"7d26489b42cc2a8d": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted brick patch"
+},
+"8d644c4e41657925": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel"
+},
+"e1e80eafb080ae3e": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel"
+},
+"b06b6ce2feee3ed6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel"
+},
+"150005883e938184": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"1a9618125776e7c3": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel"
+},
+"0d62eef1b71f92dd": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"2441a3e67c752604": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"283caa0f9b5efa11": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"4725e2ca0818ecca": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"92911433452c602a": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"88d4a2f5653e5ce9": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"a20ade6331ebba69": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"7aaf42c54af4f1ae": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"8dbfa534f7b3289b": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"154058c47a7d2a8a": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"767e63f2b2201c78": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"fb6a1a9d1698d822": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"bcc2c715333e1dfe": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "blurry enlarged box"
+},
+"69a0ab6ca6aca7a6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "messy copy"
+},
+"9b333b3b27e50061": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"eae44dbf0c831f73": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "poster pasted half over another"
+},
+"6ffa554f4b7d20d7": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"727402f31e750b41": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"debc1790beab794e": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"aa5cd2ee65aece90": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"ee1ffe0e00b6d61f": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"e5fd0113d58b793e": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"f639b1b23af00243": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "copy cut by another minaret"
+},
+"3d37dcef4b2a2577": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"b772cb766dddbb65": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"746078ab427533e1": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"b6d705702a896c69": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"d09edbe0ea23718a": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"b2bdbb4b2b08e848": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "fixture floating on wall"
+},
+"ffd0ee1eb7ff0cdc": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"c4a7b4f03b2d1c2e": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"4c8594572885404a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "lamp copy without cord"
+},
+"aa248831c3350179": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"ea282785612f83f3": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"80e10b666d757536": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"86e6adacb1a68ead": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"737a683129660afa": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"3a2c3f91f7f16fe6": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"b84f25493c820ef3": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"eef761b704f1709d": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "fruit cut at plate edge"
+},
+"fcdb628537f4f9d1": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"9dd8d19d06c3acfe": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"51e094b0fb347c76": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"9c8a06004defc205": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"584c569c058dbef7": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"fecb969e6df3eb68": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted beam across ceiling"
+},
+"7fc975c3e146abc9": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "smudge where window was removed"
+},
+"e94d4487b704cec8": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "door grown over pillar"
+},
+"dc61221bf173c290": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"f582d3ca4f19c5cf": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "smudge where window was removed"
+},
+"eb8c27f16d6feca9": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"53cb9b0423c759fc": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"4af4efc50527a91c": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"bf3bebc1f4403b43": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "grown over neighbour"
+},
+"195a3cefbae101e3": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"cd4deb27e9ed856b": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "panel floating on wall"
+},
+"1ef27bb1beb5b17d": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"3f2602ca80b47c98": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"5755028cec3c5fd5": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"62053e8729e6ef67": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "broken ornament"
+},
+"397b7db552cbc27b": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "broken ornament"
+},
+"5b69bdb57d0689f9": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"6120c5e4b3a364b0": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"074cffc087d568fe": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "dark block over window"
+},
+"a927dbe277d9730f": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"7828433a60c714d9": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "ornament pasted on cornice"
+},
+"4c692e507ef29627": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "lamp removed, flat patch"
+},
+"7a4d594c47095d26": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "floating chair copy"
+},
+"0bfe37c9d06d8f17": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted bright panel"
+},
+"d3362c91edc39906": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pasted panel"
+},
+"41d6565534c98b30": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"535b1a66b88471c1": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "pane grown over frame"
+},
+"c8fde1d58eda89f8": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "tablecloth pasted"
+},
+"433231cdd385e8f1": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"23b856fee053e233": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"c156ad88281d419b": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"2df865769d41d40e": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"0d50186a15815887": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"145eaf16ec2a9608": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "shutter grown"
+},
+"bdd2d59997148bf8": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"3298d38f8f22cad6": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "lone shutter on wall"
+},
+"847fd9a7121433b4": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown under banner"
+},
+"2fecd9f08c83f0be": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"7b17e946e97fe5a7": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "roof tiles pasted on wall"
+},
+"b11e713c32ba0c0a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "roof edge floating in sky"
+},
+"73b50018b181c7c4": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"bb3ffa334f65d212": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"449fbe428d8a6671": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat panel"
+},
+"52dfdbfb2a95cf3d": {
+"natural": true,
+"noticeable": true,
+"visibility": 4,
+"issue": ""
+},
+"f3bf74f92367ca93": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"3a7316cb7934219f": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"93dda631e09bf9eb": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"307ebf8b2fc85f00": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "mirrored poster text"
+},
+"d47668cb1984c176": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "window grown over ornament"
+},
+"48ec551e94ea2a19": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "balcony grown over arch"
+},
+"e832c310999ff09a": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "lamp copy without cord"
+},
+"a2edbdf2722ffdd3": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"45a2732e825a1817": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"8894dab53cc16520": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"598a7ec3a78376b3": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"fa531f7b38478bfb": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"6ef0b3600288cf1d": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"2004730a86b3ab6f": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"c7acdd7cc14b87aa": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"99fe2ddb25d87c45": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"61a14bf3ebb55dc6": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"7919ecb825d29c90": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"06c926d24d3c4238": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"100ee61edee2c6c5": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "flat patch in door frame"
+},
+"9c6911a59e0b57da": {
+"natural": false,
+"noticeable": true,
+"visibility": 3,
+"issue": "tablecloth pasted over chair"
+},
+"2423183660c0b899": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"e1aeac8ee9a660bd": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"f9b9315aa73c2b11": {
+"natural": true,
+"noticeable": true,
+"visibility": 3,
+"issue": ""
+},
+"b5d53997c913eeae": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+},
+"c43539497011161e": {
+"natural": true,
+"noticeable": false,
+"visibility": 1,
+"issue": "change too hard to notice"
+},
+"19a0fbe18feddbdb": {
+"natural": true,
+"noticeable": true,
+"visibility": 2,
+"issue": ""
+}
+}
