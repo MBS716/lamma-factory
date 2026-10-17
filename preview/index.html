@@ -231,6 +231,7 @@ button.hex:not(:disabled):hover{filter:brightness(1.25)}
 .dfcredit{font-size:.8rem;color:var(--muted);margin:0}
 .dfcredit a{color:var(--muted);text-decoration:underline;white-space:nowrap}
 @media (max-width:560px){.dfhint{display:none}}
+.art-ph img{width:96px;height:64px;border-radius:8px;object-fit:cover;border:2px solid var(--line)}
 </style>
 </head>
 <body>
@@ -446,7 +447,7 @@ const GAMES = {
   puzzle: {name:"الصورة الملخبطة", desc:"سباق لترتيب قطع صورة مبعثرة، والأسرع يتصدّر.", meta:"أفراد · من الجوال", teams:false,
            art:`<div class="art-pz">${[4,0,7,2,8,1,6,3,5].map(i=>`<span style="background-position:${-(i%3)*36}px ${-Math.floor(i/3)*36}px"></span>`).join("")}</div>`},
   diff:   {name:"اكتشف الفرق", desc:"صورتان حقيقيتان بفروق خفية، والفائز من يجد كل الفروق أولًا.", meta:"أفراد · من الجوال", teams:false,
-           art:`<div class="art-df"><span>🍎</span><span>🍎<i></i></span></div>`},
+           art:`<div class="art-df art-ph"><img src="spot/thumb_a.webp" alt=""><img src="spot/thumb_b.webp" alt=""></div>`},
 };
 $("#gamesGrid").innerHTML = Object.entries(GAMES).map(([k,g]) => `
   <button class="gcard" data-game="${k}">
