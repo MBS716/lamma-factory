@@ -1,0 +1,5 @@
+branch: update-spot
+commit: 298ea6b2029a1bf33687cd92c8ffd9bb19fa82de
+index.html: 9c6ca6bc57dd68c5db084013af10d355 (expected 9c6ca6bc57dd68c5db084013af10d355)
+spot images: 42 (expected 42)
+files identical to site/: yes

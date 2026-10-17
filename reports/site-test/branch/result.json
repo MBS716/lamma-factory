@@ -1,0 +1,51 @@
+{
+ "url": "http://localhost:8799/",
+ "rounds": [
+  {
+   "level_asked": 0,
+   "level_got": 0,
+   "title": "سوق الفواكه",
+   "diffs": 5,
+   "image": "s05a.webp",
+   "phone1": "5 / 5",
+   "phone2": "2 / 5",
+   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+  },
+  {
+   "level_asked": 1,
+   "level_got": 1,
+   "title": "داخل مطعم",
+   "diffs": 5,
+   "image": "s08a.webp",
+   "phone1": "5 / 5",
+   "phone2": "2 / 5",
+   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+  },
+  {
+   "level_asked": 2,
+   "level_got": 2,
+   "title": "داخل مقهى",
+   "diffs": 5,
+   "image": "s17a.webp",
+   "phone1": "5 / 5",
+   "phone2": "2 / 5",
+   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+  }
+ ],
+ "errors": [],
+ "step": "start",
+ "footer_tiger": true,
+ "footer_id": true,
+ "code": "9591",
+ "library": 20,
+ "levels_in_library": [
+  7,
+  6,
+  7
+ ],
+ "game_quiz": "ok",
+ "game_letters": "ok",
+ "game_wheel": "ok",
+ "game_puzzle": "ok",
+ "PASS": true
+}
