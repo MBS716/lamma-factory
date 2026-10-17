@@ -19,17 +19,19 @@ jobs:
       - name: push site to MBS716/lamma
         env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
         run: |
-          mkdir -p reports/site-test; exec > >(tee reports/site-test/deploy.txt) 2>&1; set -x
+          # never print the token: no shell tracing in this step
           target=$(tr -d ' \n' < .github/deploy-request)
-          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma 2>&1 | sed "s/${T}/***/g"
+          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma > /dev/null 2>&1
           cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
-          git push -q origin "main:refs/heads/backup-before-spot-update" 2>/dev/null || true   # keeps the old site (only first time)
+          git push -q origin "main:refs/heads/backup-before-spot-update" > /dev/null 2>&1 || true   # keeps the old site (only first time)
           if [ "$target" = "main" ]; then git checkout -q main; else git checkout -q -B update-spot; fi
+          test -f ../site/index.html && test -d ../site/spot || { echo "site files missing"; exit 1; }
           rm -rf spot; cp -r ../site/index.html ../site/spot .
+          echo "files: $(ls spot | wc -l) images"
           git add -A
           git commit -q -m "Spot the difference: real photo pairs (Wikimedia Commons) with easy/medium/hard levels" || echo "nothing to commit"
-          if [ "$target" = "main" ]; then git push -q origin main; else git push -q -f origin update-spot; fi
+          if [ "$target" = "main" ]; then git push -q origin main > /dev/null 2>&1; else git push -q -f origin update-spot > /dev/null 2>&1; fi || { echo "push failed"; exit 1; }
           echo "pushed to $target"
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
