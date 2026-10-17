@@ -1,0 +1,6 @@
+branch: main
+commit: 51106bed2df7c5f2578ea017ee1e6a58262b4527
+index.html: 9c6ca6bc57dd68c5db084013af10d355 (expected 9c6ca6bc57dd68c5db084013af10d355)
+spot images: 42 (expected 42)
+files identical to site/: yes
+live site serves the new index.html: yes
