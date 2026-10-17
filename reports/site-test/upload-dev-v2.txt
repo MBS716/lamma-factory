@@ -1,0 +1,5 @@
+branch: dev-v2
+commit: 13e6d36e8d2f0fbfe37c2a002387e472774c70ff
+index.html: 529ffc1c911e6dfb155a06f93e42c7e6 (expected 529ffc1c911e6dfb155a06f93e42c7e6)
+spot files: 116 (expected 116)
+files identical to site/: yes

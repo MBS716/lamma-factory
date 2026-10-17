@@ -1,0 +1,42 @@
+{
+ "url": "http://localhost:8799/",
+ "checks": [
+  "OK footer: TIGER and TopTop ID",
+  "OK how-to-play modal on all 5 games (5/5)",
+  "OK letters: only the team on turn gets the answer button",
+  "OK letters: equal questions per team (10/10)",
+  "OK letters: totals match the points given (900 / 800)",
+  "OK letters: answer times measured on the host clock (max 323 ms)",
+  "OK letters: winner screen on host and both phones (winner g, 900-800, tiebreak 0)",
+  "OK letters: phone how-to-play explains the points system",
+  "OK spot: library has 56 pairs (levels [29, 20, 7])",
+  "OK spot level 0: art003 (art) phone1 5/5, phone2 2/5",
+  "OK spot level 1: art036 (art) phone1 6/6, phone2 2/6",
+  "OK spot level 2: c-w94676400 (photo) phone1 5/5, phone2 2/5",
+  "OK spot: image-info modal shows author/licence",
+  "OK quiz: phone answers scored ([['جوال 1', 3473], ['جوال 2', 0]])",
+  "OK phone width fits (390px)",
+  "OK phone width fits (390px)"
+ ],
+ "errors": [],
+ "spot_library": {
+  "total": 56,
+  "levels": [
+   29,
+   20,
+   7
+  ],
+  "shards": [
+   {
+    "name": "shard-0000.json",
+    "count": 56,
+    "levels": [
+     29,
+     20,
+     7
+    ]
+   }
+  ]
+ },
+ "PASS": true
+}
