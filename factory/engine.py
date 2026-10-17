@@ -556,8 +556,10 @@ class Engine:
         H, W = A.shape[:2]; N = H * W
         used = [self.region(d, H, W) for d in diffs]
         taken = {d.get("ci") for d in diffs}
-        pool = [c for i, c in enumerate(self.last_cands) if i not in taken and LEVELS[lv]["amin"] * N <= c.area <= LEVELS[lv]["amax"] * N]
+        # any size is allowed for a replacement, closest to this level's typical size first
+        pool = [c for i, c in enumerate(self.last_cands) if i not in taken]
         self.rng.shuffle(pool)
+        pool.sort(key=lambda c: abs(np.log(c.area / N / LEVELS[lv]["tgt"])) + self.rng.random() * 0.8)
         new = []; tries = {}; nops = {}
         B = self._edit(A, B, pool, need, lv, used, new, tries, nops, budget, banned=banned)
         return B, new
