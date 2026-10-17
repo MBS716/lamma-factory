@@ -25,7 +25,7 @@ jobs:
       - run: bash scripts/get_models.sh
       - run: nproc && lscpu | head -20
       - name: produce
-        run: python run.py --source commons --target ${{ inputs.target || 30 }} --max-attempts ${{ inputs.max_attempts || 600 }} --time-limit 320 --save-pairs --store local --out reports/test-${{ github.run_number }} --registry state/test_registry.json --report
+        run: python run.py --source commons --target ${{ inputs.target || 45 }} --max-attempts ${{ inputs.max_attempts || 600 }} --time-limit 320 --save-pairs --store local --out reports/test-${{ github.run_number }} --registry state/test_registry.json --report
       - name: keep report in the repo
         run: |
           rm -rf reports/test-${{ github.run_number }}/bucket/pairs
