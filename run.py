@@ -84,8 +84,10 @@ for ph in src.photos():
             if jr["status"] == "pending": raise Reject("judge_pending")
             if jr["status"] == "rejected": jstats["pairs_rejected"] += 1; raise Reject("judge_rejected")
             res["B"], res["diffs"] = jr["B"], jr["diffs"]
-            res["D"], res["level"] = Engine.difficulty(res["diffs"], res["clutter"])
+            res["D"], _ = Engine.difficulty(res["diffs"], res["clutter"])
             res["D"] = round(res["D"], 2); res["vis_mean"] = jr["vis_mean"]
+            res["level"] = Engine.player_level(res["D"], jr["vis_mean"])
+            if made[res["level"]] >= quota[res["level"]]: raise Reject("level_quota_full")   # balance counted after judging
         pid = f"x{ph['id']}" if ph["provider"] == "pexels" else str(ph["id"])
         store.put(f"pairs/{pid}a.webp", webp(A), "image/webp"); store.put(f"pairs/{pid}b.webp", webp(res["B"]), "image/webp")
         entry = {"id": pid, "l": res["level"], "w": A.shape[1], "h": A.shape[0],

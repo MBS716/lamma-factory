@@ -505,6 +505,14 @@ class Engine:
         D = float(np.median(s)) / (1 + 4 * max(0.0, clutter - 0.06))
         return D, (0 if D >= D_EASY else 2 if D < D_HARD else 1)
 
+    @staticmethod
+    def player_level(D, vis_mean):
+        """Difficulty as the player meets it: how visible each change is when comparing (judge's 1-5 rating)
+        together with size and scene clutter (D). Thresholds split judged test pairs into thirds."""
+        if vis_mean is None: return 0 if D >= D_EASY else 2 if D < D_HARD else 1
+        score = 0.5 * min(D / 4.5, 1.0) + 0.5 * (vis_mean - 1) / 4
+        return 0 if score >= 0.51 else 2 if score < 0.40 else 1
+
     def pools(self, cands, N):
         out = {}
         for lv, P in LEVELS.items():
