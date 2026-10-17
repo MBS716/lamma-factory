@@ -162,6 +162,48 @@ class Commons:
         data = self._get(ph["src"], binary=True)
         return np.array(Image.open(io.BytesIO(data)).convert("RGB"))
 
+ART_CATS = [  # public-domain painters with busy, family-friendly scenes (every picture is still reviewed by eye)
+    "Paintings by Carl Larsson", "Paintings by Hendrick Avercamp", "Paintings by Pieter Bruegel the Elder",
+    "Paintings by Pieter Brueghel the Younger", "Paintings by Jan Brueghel the Elder", "Paintings by Canaletto",
+    "Paintings by Bernardo Bellotto", "Paintings by Francesco Guardi", "Paintings by Ludwig Deutsch",
+    "Paintings by Rudolf Ernst", "Paintings by Childe Hassam", "Paintings by Camille Pissarro",
+]
+class CommonsArt(Commons):
+    """Public-domain paintings from Wikimedia Commons (rich, hand-made scenes for the illustrated pairs)."""
+    def photos(self, min_w=1500, per_visit=2):
+        d = self.reg.d; queue = {}
+        while True:
+            cat = ART_CATS[d.get("art_i", 0) % len(ART_CATS)]; d["art_i"] = d.get("art_i", 0) + 1
+            q = queue.setdefault(cat, [])
+            if not q: q.extend(self._fetch_cat(cat, min_w))
+            for _ in range(per_visit):
+                if not q: break
+                ph = q.pop(0)
+                if ph["id"] in self.reg.seen: continue
+                self.reg.seen.add(ph["id"]); yield ph
+    def _fetch_cat(self, cat, min_w):
+        d = self.reg.d; found = []; d.setdefault("theme_page", {})
+        off = d["theme_page"].get("a:" + cat, 0)
+        q = {"action": "query", "format": "json", "formatversion": 2, "generator": "search",
+             "gsrsearch": f'incategory:"{cat}" filetype:bitmap', "gsrnamespace": 6, "gsrlimit": self.batch, "gsroffset": off,
+             "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": self.width,
+             "iiextmetadatafilter": "LicenseShortName|LicenseUrl|Artist|Restrictions"}
+        res = self._get(self.API + "?" + urllib.parse.urlencode(q))
+        pages = (res.get("query") or {}).get("pages", []); nxt = (res.get("continue") or {}).get("gsroffset")
+        d["theme_page"]["a:" + cat] = nxt if nxt and nxt < 9900 else 0
+        random.shuffle(pages)
+        for p in pages:
+            ii = (p.get("imageinfo") or [{}])[0]; m = ii.get("extmetadata", {})
+            lic = _plain(m.get("LicenseShortName", {}).get("value")); w, h = ii.get("width", 0), ii.get("height", 0)
+            if ii.get("mime") not in ("image/jpeg", "image/png", "image/webp"): self.skip("not_image"); continue
+            if w < min_w or not (1.25 <= w / max(1, h) <= 2.1): self.skip("size_or_shape"); continue
+            if not re.match(r"^(public domain|pd|cc0)", lic, re.I): self.skip("licence"); continue
+            artist = cat.replace("Paintings by ", "")
+            found.append({"provider": "commons", "id": "w" + str(p["pageid"]), "theme": "painting", "url": ii.get("descriptionurl", ""),
+                   "photographer": artist, "photographer_url": ii.get("descriptionurl", ""), "licence": "Public domain", "licence_url": "",
+                   "share_alike": False, "attribution": False, "alt": p.get("title", ""), "src": ii.get("thumburl") or ii.get("url")})
+        return found
+
 class Folder:
     """Local photos (for offline tests). Credit fields are filled from the file name."""
     def __init__(self, folder, registry):

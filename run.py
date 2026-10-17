@@ -7,7 +7,7 @@ import os, sys, io, json, time, argparse, base64, random, traceback
 import numpy as np
 from PIL import Image, ImageDraw
 from factory.engine import Engine, Reject, prepare, LEVEL_NAMES, LEVELS
-from factory.collect import Registry, Pexels, Commons, Folder, dhash
+from factory.collect import Registry, Pexels, Commons, CommonsArt, Folder, dhash
 from factory.store import LocalStore, R2Store, Catalog
 
 ap = argparse.ArgumentParser()
@@ -27,7 +27,7 @@ a = ap.parse_args()
 
 os.makedirs(a.out, exist_ok=True); os.makedirs(os.path.dirname(a.registry) or ".", exist_ok=True)
 reg = Registry(a.registry)
-src = {"pexels": lambda: Pexels(os.environ["PEXELS_API_KEY"], reg), "commons": lambda: Commons(reg), "folder": lambda: Folder(a.folder, reg)}[a.source]()
+src = {"pexels": lambda: Pexels(os.environ["PEXELS_API_KEY"], reg), "commons": lambda: Commons(reg), "commons-art": lambda: CommonsArt(reg), "folder": lambda: Folder(a.folder, reg)}[a.source]()
 store = LocalStore(os.path.join(a.out, "bucket")) if a.store == "local" else R2Store(
     os.environ["R2_ACCOUNT_ID"], os.environ["R2_BUCKET"], os.environ["R2_KEY_ID"], os.environ["R2_SECRET"])
 cat = Catalog(store)
