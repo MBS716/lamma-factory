@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1430">
+<title>لمّة للألعاب الجماعية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* layout: one stage column for players (phone first); host screens widen to a board + side panel for the big screen */
+:root{
+  --bg:#0f1430; --bg2:#151b3d; --card:#1c2450; --card2:#252f63; --line:#34407a;
+  --ink:#f6f1e4; --muted:#a9b0d4; --gold:#f6b93b; --on-gold:#241a03;
+  --green:#22c39a; --orange:#ff7b47; --blue:#5b8cff; --bad:#ff5b6e; --on-color:#0b0f24;
+  --display:"Lalezar","IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px;
+  background-image:radial-gradient(var(--line) 1px,transparent 1.6px);background-size:24px 24px}
+#app{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.25;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{font-family:var(--display);font-size:1.15rem;border:0;border-radius:14px;padding:.55em 1.3em;background:var(--gold);color:var(--on-gold);box-shadow:0 4px 0 color-mix(in srgb,var(--gold) 55%,var(--bg))}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 color-mix(in srgb,var(--gold) 55%,var(--bg))}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.g{background:var(--green);color:var(--on-color);box-shadow:0 4px 0 color-mix(in srgb,var(--green) 50%,var(--bg))}
+.btn.o{background:var(--orange);color:var(--on-color);box-shadow:0 4px 0 color-mix(in srgb,var(--orange) 50%,var(--bg))}
+.btn.sm{font-size:1rem;padding:.4em .9em}
+input.field{font:inherit;font-size:1.2rem;background:var(--bg);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:.5em .8em;min-width:0}
+.muted{color:var(--muted)}
+.err{color:var(--bad);min-height:1.6em}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.tg{color:var(--green)} .to{color:var(--orange)}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:22px 10px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:52px;height:58px;background:var(--gold);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:grid;place-items:center;font-family:var(--display);font-size:1.7rem;color:var(--on-gold);padding-top:6px}
+.brand h1{font-size:2.6rem;letter-spacing:.5px}
+.brand small{display:block;color:var(--muted);font-size:.9rem;margin-top:-6px}
+.conn{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:4px 12px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--green)} .dot.off{background:var(--orange)}
+
+/* home */
+.joinband{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:center;margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px}
+.joinband h2{font-size:2.3rem;color:var(--gold)}
+.joinform{display:flex;gap:10px;flex-wrap:wrap}
+.joinband>div{min-width:0}
+.joinform input{flex:1 1 140px;width:100%;font-family:var(--display);font-size:2rem;text-align:center;letter-spacing:10px;direction:ltr}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0}
+.step{display:flex;gap:12px;align-items:flex-start}
+.step b{font-family:var(--display);font-size:1.6rem;color:var(--gold);line-height:1}
+.sec-h{font-size:1.8rem;margin:26px 0 12px}
+.games{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media (max-width:1100px){.games{grid-template-columns:repeat(3,1fr)}}
+.gcard{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:start;padding:0}
+.gcard:hover{border-color:var(--gold)}
+.gart{height:150px;display:grid;place-items:center;background:var(--bg2);border-bottom:1px solid var(--line)}
+.gbody{padding:14px 16px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.gbody h3{font-size:1.5rem}
+.gbody .meta{font-size:.82rem;color:var(--gold);letter-spacing:.3px}
+.gbody .go{margin-top:auto;padding-top:10px;font-family:var(--display);color:var(--gold)}
+/* card art */
+.art-quiz{display:grid;grid-template-columns:repeat(2,46px);gap:8px}
+.art-quiz span{height:46px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;color:var(--on-color)}
+.art-hex{display:flex;gap:4px;direction:ltr}
+.art-hex span{width:52px;height:60px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:grid;place-items:center;font-family:var(--display);font-size:1.6rem;color:var(--on-color);padding-top:4px}
+.art-wheel{width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--gold) 0 45deg,var(--orange) 0 90deg,var(--green) 0 135deg,var(--blue) 0 180deg,var(--gold) 0 225deg,var(--orange) 0 270deg,var(--green) 0 315deg,var(--blue) 0);border:5px solid var(--ink);position:relative}
+.art-wheel::after{content:"";position:absolute;inset:40%;border-radius:50%;background:var(--ink)}
+.art-pz{display:grid;grid-template-columns:repeat(3,36px);gap:3px}
+.art-pz span{height:36px;border-radius:4px;background:linear-gradient(135deg,var(--orange),var(--gold) 50%,var(--green));background-size:108px 108px}
+
+/* host bar */
+.hbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 18px;margin-top:10px}
+.hbar h2{font-size:1.7rem}
+.codebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.code{font-family:var(--display);font-size:2.6rem;letter-spacing:8px;color:var(--gold);direction:ltr;line-height:1}
+.qr{background:#fff;padding:6px;border-radius:8px;line-height:0}
+.qr:empty{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:.95rem}
+.chip.g{border-color:var(--green)} .chip.o{border-color:var(--orange)}
+.note{background:var(--bg2);border:1px dashed var(--line);border-radius:14px;padding:10px 14px;font-size:.92rem;color:var(--muted);margin-top:12px}
+.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;margin-top:18px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.big-q{font-family:var(--display);font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.35;text-wrap:balance}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{display:flex;align-items:center;gap:12px;border:0;border-radius:16px;padding:16px 18px;font-size:1.2rem;font-weight:700;text-align:start;color:var(--on-color);min-height:72px}
+.opt .sh{font-size:1.3rem;width:1.4em;text-align:center;flex:none}
+.opt.dim{opacity:.3}
+.opt.right{outline:4px solid var(--ink);outline-offset:3px}
+.opt .cnt{margin-inline-start:auto;font-family:var(--display);font-size:1.4rem}
+.c0{background:var(--gold)} .c1{background:var(--green)} .c2{background:var(--orange)} .c3{background:var(--blue)}
+.timer{font-family:var(--display);font-size:3rem;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.lb{display:flex;flex-direction:column;gap:6px}
+.lb div{display:flex;justify-content:space-between;gap:10px;background:var(--bg2);border-radius:10px;padding:6px 12px;font-variant-numeric:tabular-nums}
+.lb div:first-child{background:color-mix(in srgb,var(--gold) 22%,var(--bg2))}
+.lb b{font-family:var(--display);font-weight:400;font-size:1.15rem}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:12px;margin:10px 0 4px}
+.podium div{background:var(--card2);border-radius:14px 14px 0 0;width:min(28%,150px);text-align:center;padding:10px 6px;display:flex;flex-direction:column;justify-content:flex-end}
+.podium .p1{height:170px;background:color-mix(in srgb,var(--gold) 35%,var(--card2))}
+.podium .p2{height:130px} .podium .p3{height:100px}
+.podium strong{font-family:var(--display);font-size:1.2rem;font-weight:400;word-break:break-word}
+.scores{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.score{border-radius:16px;padding:12px 14px;background:var(--bg2);border:2px solid var(--line)}
+.score.g{border-color:var(--green)} .score.o{border-color:var(--orange)}
+.score b{display:block;font-family:var(--display);font-weight:400;font-size:2.2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.score.turn{box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 55%,transparent)}
+
+/* hex board */
+.hexwrap{overflow-x:auto;display:flex;justify-content:safe center}
+.hexboard{direction:ltr;--hw:min(13.5vw,92px);--gap:5px;padding:calc(var(--hw)*.32) 12px calc(var(--hw)*.32);border-left:10px solid var(--green);border-right:10px solid var(--green);border-top:10px solid var(--orange);border-bottom:10px solid var(--orange);border-radius:12px;background:var(--bg2)}
+.hexboard.small{--hw:min(13vw,60px);--gap:4px}
+.hrow{display:flex;gap:var(--gap)}
+.hrow+.hrow{margin-top:calc(var(--hw)*-0.2887 + var(--gap))}
+.hrow.odd{margin-inline-start:calc((var(--hw) + var(--gap))/2)}
+.hrow:not(.odd){margin-inline-end:calc((var(--hw) + var(--gap))/2)}
+.hex{width:var(--hw);height:calc(var(--hw)*1.1547);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);border:0;background:var(--card2);font-family:var(--display);font-size:calc(var(--hw)*.42);color:var(--ink);display:grid;place-items:center;padding-top:calc(var(--hw)*.08);flex:none}
+.hex.g{background:var(--green);color:var(--on-color)} .hex.o{background:var(--orange);color:var(--on-color)}
+.hex.cur{background:var(--gold);color:var(--on-gold);animation:pulse 1s ease-in-out infinite alternate}
+button.hex:not(:disabled):hover{filter:brightness(1.25)}
+.hex:disabled{cursor:default}
+@keyframes pulse{to{filter:brightness(1.2)}}
+.lettercard{display:flex;gap:16px;align-items:flex-start}
+.lettercard .L{font-family:var(--display);font-size:4rem;line-height:1;color:var(--gold);flex:none;width:1.4em;text-align:center}
+.answer{font-family:var(--display);font-size:1.6rem;color:var(--gold)}
+.buzzbar{border-radius:14px;padding:10px 14px;background:var(--bg2);font-size:1.1rem}
+.buzzbar.g{background:color-mix(in srgb,var(--green) 30%,var(--bg2))} .buzzbar.o{background:color-mix(in srgb,var(--orange) 30%,var(--bg2))}
+.winner{font-family:var(--display);font-size:2rem;text-align:center;padding:14px;border-radius:16px}
+.winner.g{background:var(--green);color:var(--on-color)} .winner.o{background:var(--orange);color:var(--on-color)}
+
+/* wheel */
+.wheelbox{position:relative;width:min(100%,460px);aspect-ratio:1;margin:0 auto;max-width:100%}
+.wheelbox canvas{width:100%;height:100%;display:block;border-radius:50%}
+.wheelbox.spin canvas{transition:transform 4.6s cubic-bezier(.12,.75,.1,1)}
+.pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:34px solid var(--ink);z-index:2;filter:drop-shadow(0 3px 0 var(--bg))}
+.hub{position:absolute;inset:42%;border-radius:50%;background:var(--ink);border:6px solid var(--gold);z-index:2}
+.result{border-radius:16px;padding:14px 16px;background:color-mix(in srgb,var(--gold) 18%,var(--bg2));border:2px solid var(--gold)}
+.result h3{font-size:1.8rem;color:var(--gold)}
+
+/* puzzle */
+.pz{display:grid;gap:3px;width:min(100%,480px);aspect-ratio:1;margin:0 auto;background:var(--line);padding:3px;border-radius:12px;direction:ltr;max-width:100%}
+.tile{border:0;padding:0;border-radius:4px;background-repeat:no-repeat;min-width:0}
+.tile.sel{outline:4px solid var(--gold);outline-offset:-4px;filter:brightness(1.15)}
+.pz.done .tile{border-radius:0}
+.pz.done{gap:0;padding:0;background:transparent}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.thumb{border:3px solid transparent;border-radius:12px;padding:0;overflow:hidden;background:var(--bg2);line-height:0}
+.thumb.on{border-color:var(--gold)}
+.thumb img{width:100%;aspect-ratio:1;object-fit:cover}
+.seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:4px 14px}
+.seg button.on{background:var(--gold);color:var(--on-gold)}
+.race{display:flex;flex-direction:column;gap:8px}
+.race .r{display:grid;grid-template-columns:minmax(70px,140px) 1fr auto;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+.bar{height:14px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .3s}
+.ref{width:120px;border-radius:10px;border:2px solid var(--line)}
+
+/* spot the difference */
+.dfpair{display:grid;grid-template-columns:1fr 1fr;gap:12px;direction:ltr}
+.dfimg{position:relative;border-radius:12px;overflow:hidden;border:3px solid var(--line);cursor:crosshair;line-height:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.dfimg img{width:100%;aspect-ratio:1;display:block;user-select:none;-webkit-user-select:none;pointer-events:none}
+.dfmarks{position:absolute;inset:0;pointer-events:none}
+.dfm{position:absolute;aspect-ratio:1;transform:translate(-50%,-50%);border:4px solid var(--green);border-radius:50%;box-shadow:0 0 0 3px color-mix(in srgb,var(--bg) 60%,transparent)}
+.dfm.rev{border-color:var(--orange);border-style:dashed}
+.dfx{position:absolute;transform:translate(-50%,-50%);color:var(--bad);font-size:2rem;font-weight:700;line-height:1;text-shadow:0 0 4px var(--bg)}
+.art-df{display:flex;gap:8px;direction:ltr}
+.art-df span{width:60px;height:60px;border-radius:8px;background:linear-gradient(160deg,var(--blue),var(--green));position:relative;display:grid;place-items:center;font-size:1.6rem}
+.art-df i{position:absolute;width:30px;height:30px;border:3px solid var(--gold);border-radius:50%;top:10px;left:18px}
+@media (max-width:560px){.dfpair{grid-template-columns:1fr}}
+
+/* player */
+.pwrap{max-width:560px;margin:14px auto 0;display:flex;flex-direction:column;gap:14px}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.phead .who{font-family:var(--display);font-size:1.3rem}
+.center{text-align:center}
+.bigmsg{font-family:var(--display);font-size:2rem;text-align:center;line-height:1.3}
+.buzz{width:min(70vw,240px);aspect-ratio:1;border-radius:50%;border:0;font-family:var(--display);font-size:2.4rem;color:var(--on-color);margin:6px auto;display:block;box-shadow:0 10px 0 color-mix(in srgb,var(--ink) 25%,var(--bg))}
+.buzz:active{transform:translateY(6px);box-shadow:0 4px 0 color-mix(in srgb,var(--ink) 25%,var(--bg))}
+.buzz:disabled{opacity:.4;transform:none}
+.teampick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.teampick button{border-radius:16px;border:3px solid transparent;padding:16px;font-family:var(--display);font-size:1.4rem;color:var(--on-color)}
+.teampick button.on{border-color:var(--ink)}
+.teampick .g{background:var(--green)} .teampick .o{background:var(--orange)}
+
+@media (max-width:900px){
+  .games{grid-template-columns:1fr 1fr}
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .joinband{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .games{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .brand h1{font-size:2.1rem}
+  .code{font-size:2rem}
+  .thumbs{grid-template-columns:repeat(2,1fr)}
+  .joinform input{flex-basis:100%;letter-spacing:6px}
+  .joinform .btn{flex:1}
+  .hexboard,.hexboard.small{--hw:11.5vw;--gap:3px;padding-inline:8px;border-left-width:8px;border-right-width:8px}
+  .panel{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .wheelbox.spin canvas{transition-duration:.01s}
+  .hex.cur{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="app" dir="rtl" lang="ar">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">ل</div>
+      <div><h1>لمّة</h1><small>ألعاب ومسابقات جماعية بكود واحد</small></div>
+    </div>
+    <div class="conn" id="conn"><span class="dot" id="connDot"></span><span id="connTxt">جارٍ فحص الاتصال المباشر…</span></div>
+  </header>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="joinband">
+      <div>
+        <h2>عندك كود لعبة؟</h2>
+        <p class="muted">اكتب الكود الذي يظهر على شاشة المقدّم وادخل من جوالك.</p>
+      </div>
+      <div>
+        <form class="joinform" id="joinForm" autocomplete="off">
+          <input class="field" id="joinCode" inputmode="numeric" maxlength="4" placeholder="0000" aria-label="كود اللعبة">
+          <button class="btn" type="submit">دخول اللعبة</button>
+        </form>
+        <p class="err" id="joinErr"></p>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step"><b>1</b><p><strong>المقدّم يختار لعبة</strong><br><span class="muted">فيظهر كود من 4 أرقام ورابط دخول.</span></p></div>
+      <div class="step"><b>2</b><p><strong>المشاركون يدخلون</strong><br><span class="muted">بالكود أو الرابط أو مسح الرمز من الشاشة.</span></p></div>
+      <div class="step"><b>3</b><p><strong>اللعب لحظي</strong><br><span class="muted">الإجابات والجرس والنتائج تظهر للجميع فورًا.</span></p></div>
+    </div>
+
+    <h2 class="sec-h">ابدأ لعبة كمقدّم</h2>
+    <div class="games" id="gamesGrid"></div>
+  </section>
+
+  <!-- HOST -->
+  <section id="host" hidden>
+    <div class="hbar" id="hostBar"></div>
+    <div id="hostMain"></div>
+  </section>
+
+  <!-- PLAYER -->
+  <section id="player" hidden>
+    <div class="pwrap" id="playerMain"></div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+"use strict";
+const BASE_URL = location.protocol.startsWith("http") ? location.origin + location.pathname : "";
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clean = s => String(s || "").replace(/[\u0000-\u001f\u007f­​-‏‪-‮⁠-⁩﻿]/g, "").trim().slice(0, 20);
+function rng(seed){ let s = (seed >>> 0) || 7; return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+function shuffle(arr, seed){ const r = rng(seed), a = arr.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const range = n => Array.from({length:n}, (_, i) => i);
+const TEAM = {g:"الأخضر", o:"البرتقالي"};
+const lsGet = k => { try { return localStorage.getItem(k) || ""; } catch(e){ return ""; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch(e){} };
+
+/* ================= CONTENT ================= */
+const QUIZ = [
+  ["ما عاصمة اليابان؟", ["طوكيو","أوساكا","كيوتو","سيول"], 0],
+  ["كم عدد أيام السنة الكبيسة؟", ["365","366","364","360"], 1],
+  ["ما أكبر محيط في العالم؟", ["الأطلسي","الهندي","الهادئ","المتجمد الشمالي"], 2],
+  ["أي كوكب يُعرف بالكوكب الأحمر؟", ["الزهرة","المريخ","المشتري","عطارد"], 1],
+  ["كم لاعبًا لكل فريق كرة قدم داخل الملعب؟", ["9","10","11","12"], 2],
+  ["ما العنصر الذي رمزه الكيميائي O؟", ["الذهب","الأكسجين","الحديد","الفضة"], 1],
+  ["في أي مدينة يقع برج خليفة؟", ["الدوحة","الرياض","دبي","الكويت"], 2],
+  ["ما أطول نهر في أفريقيا؟", ["الكونغو","النيل","النيجر","الزمبيزي"], 1],
+  ["كم ضلعًا للشكل السداسي؟", ["5","6","7","8"], 1],
+  ["ما أسرع حيوان بري؟", ["الأسد","الفهد","الحصان","الغزال"], 1],
+  ["ما عملة المملكة المتحدة؟", ["اليورو","الدولار","الجنيه الإسترليني","الفرنك"], 2],
+  ["كم عدد قارات العالم؟", ["5","6","7","8"], 2],
+  ["ما الغاز الذي تمتصه النباتات من الهواء؟", ["الأكسجين","ثاني أكسيد الكربون","النيتروجين","الهيليوم"], 1],
+  ["ما أصغر دولة عربية مساحةً؟", ["قطر","البحرين","لبنان","الكويت"], 1],
+  ["في أي قارة تقع البرازيل؟", ["أفريقيا","أمريكا الجنوبية","أوروبا","آسيا"], 1],
+  ["كم ثانية في الساعة الواحدة؟", ["360","3600","6000","600"], 1],
+  ["ما أكبر صحراء حارة في العالم؟", ["الربع الخالي","الصحراء الكبرى","غوبي","كالاهاري"], 1],
+  ["ما أكبر عضو في جسم الإنسان؟", ["الكبد","الجلد","الرئة","القلب"], 1],
+  ["ما عاصمة المغرب؟", ["الدار البيضاء","مراكش","الرباط","فاس"], 2],
+  ["كم عدد ألوان قوس قزح؟", ["5","6","7","8"], 2],
+];
+const LETTERS = [
+  ["أ","أكبر قارة في العالم من حيث المساحة","آسيا"],
+  ["ب","عاصمة لبنان","بيروت"],
+  ["ت","ثمرة النخيل","تمر"],
+  ["ث","حيوان يُضرب به المثل في المكر","ثعلب"],
+  ["ج","مدينة سعودية ساحلية على البحر الأحمر","جدة"],
+  ["ح","طائر يرمز إلى السلام","حمامة"],
+  ["خ","الحيوان الذي يُضحّى به غالبًا في عيد الأضحى","خروف"],
+  ["د","أكبر مدن الإمارات من حيث عدد السكان","دبي"],
+  ["ذ","معدن ثمين لونه أصفر","ذهب"],
+  ["ر","عاصمة المملكة العربية السعودية","الرياض"],
+  ["ز","أطول حيوان على وجه الأرض","زرافة"],
+  ["س","أداة تُلبس في المعصم لمعرفة الوقت","ساعة"],
+  ["ش","النجم الذي تدور حوله الأرض","الشمس"],
+  ["ص","عاصمة اليمن","صنعاء"],
+  ["ض","حيوان برمائي يقفز وينقّ","ضفدع"],
+  ["ط","وسيلة نقل تحلّق في السماء","طائرة"],
+  ["ظ","عكس النور","ظلام"],
+  ["ع","عاصمة الأردن","عمّان"],
+  ["غ","أكبر القردة حجمًا ويعيش في غابات أفريقيا","غوريلا"],
+  ["ف","حيوان ضخم له خرطوم","فيل"],
+  ["ق","التابع الطبيعي الوحيد للأرض","القمر"],
+  ["ك","الرياضة الأكثر شعبية في العالم","كرة القدم"],
+  ["ل","عاصمة المملكة المتحدة","لندن"],
+  ["م","المدينة التي يقع فيها المسجد الحرام","مكة المكرمة"],
+  ["ن","أطول نهر في أفريقيا","النيل"],
+  ["هـ","دولة عاصمتها نيودلهي","الهند"],
+  ["و","مادة تُصنع منها الكتب والدفاتر","الورق"],
+  ["ي","دولة عاصمتها طوكيو","اليابان"],
+];
+const SEGS = [
+  {t:"+100", p:100}, {t:"تحدٍّ", ch:1}, {t:"+200", p:200}, {t:"خسارة الدور", lose:1},
+  {t:"+300", p:300}, {t:"تحدٍّ", ch:1}, {t:"ضعف النقاط", x2:1}, {t:"+500", p:500},
+];
+const CHALLENGES = [
+  "قلّد صوت حيوان، ويخمّنه فريقك خلال 10 ثوانٍ",
+  "اذكر 5 دول تبدأ بحرف الميم خلال 15 ثانية",
+  "عُدّ من 20 إلى 1 بسرعة دون أي خطأ",
+  "اذكر 3 أشياء لونها أزرق في 5 ثوانٍ",
+  "صِف شيئًا دون ذكر اسمه، ويخمّنه فريقك في 30 ثانية",
+  "اذكر 4 لاعبي كرة قدم عرب في 10 ثوانٍ",
+  "تحدَّ لاعبًا من الفريق الآخر في حجر ورقة مقص",
+  "قل اسم مدينة تبدأ بآخر حرف من اسمك",
+];
+const SCENES = ["الصحراء","البحر","المدينة ليلًا","الملعب"];
+const SHAPES = ["◆","●","▲","■"];
+
+/* ================= ROOM (Firebase Realtime Database) ================= */
+/* ضع إعدادات مشروعك في Firebase هنا (من: Project settings ← Your apps ← Web app) */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA",
+  authDomain: "lamma-b3804.firebaseapp.com",
+  databaseURL: "https://lamma-b3804-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lamma-b3804",
+  storageBucket: "lamma-b3804.firebasestorage.app",
+  messagingSenderId: "75949188252",
+  appId: "1:75949188252:web:f2e58971af02071b8a7959",
+};
+
+let ROOM = null, NR = null, H = null, P = null, connState = "checking";
+function makeRoom(db){
+  const me = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  return {
+    async join(name){
+      const ref = db.ref("rooms/" + name), mine = ref.child(me), ci = db.ref(".info/connected");
+      let local = {}, peersArr = Object.freeze([]), handlers = [], connH = [], conn = false, left = false;
+      const write = () => mine.set({j:JSON.stringify(local), t:firebase.database.ServerValue.TIMESTAMP});
+      const build = val => {
+        const prev = new Map(peersArr.map(p => [p.peer, p])), now = Date.now();
+        peersArr = Object.freeze(Object.entries(val || {}).map(([id, v]) => {
+          let pres = {}; try { pres = JSON.parse((v && v.j) || "{}") || {}; } catch(e){}
+          const old = prev.get(id);
+          return old && old.raw === (v && v.j) ? old : {peer:id, presence:pres, raw:v && v.j, sameTab:id === me, isMe:id === me, updatedAt:now};
+        }));
+        handlers.slice().forEach(h => { try { h({peers:peersArr}); } catch(e){ console.error(e); } });
+      };
+      const cb = snap => build(snap.val());
+      const ccb = s => { conn = !!s.val(); if (conn && !left){ mine.onDisconnect().remove(); write(); } connH.forEach(h => h(conn)); };
+      mine.onDisconnect().remove();
+      await Promise.race([write(), sleep(10000).then(() => { throw new Error("timeout"); })]);
+      ref.on("value", cb);
+      ci.on("value", ccb);
+      return {
+        name,
+        presence(patch){ for (const [k, v] of Object.entries(patch)){ if (v === null) delete local[k]; else local[k] = v; } return left ? Promise.resolve() : write(); },
+        peers: () => peersArr,
+        onPeers(h){ handlers.push(h); setTimeout(() => h({peers:peersArr}), 0); return () => { handlers = handlers.filter(x => x !== h); }; },
+        connected: () => conn,
+        onConnection(h){ connH.push(h); return () => { connH = connH.filter(x => x !== h); }; },
+        async leave(){ if (left) return; left = true; ref.off("value", cb); ci.off("value", ccb); handlers = []; try { await mine.onDisconnect().cancel(); } catch(e){} await mine.remove(); },
+      };
+    },
+  };
+}
+const roomReady = (async () => {
+  try {
+    if (FIREBASE_CONFIG && window.firebase){
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      ROOM = makeRoom(firebase.database());
+    }
+  } catch(e){ console.error(e); ROOM = null; }
+  connState = ROOM ? "on" : "off"; updateConn(); return ROOM;
+})();
+function updateConn(){
+  $("#connDot").className = "dot " + (connState === "on" ? "on" : connState === "off" ? "off" : "");
+  $("#connTxt").textContent = connState === "on" ? "الاتصال المباشر جاهز" : connState === "off" ? "وضع الشاشة الواحدة" : "جارٍ فحص الاتصال المباشر…";
+}
+const peerKey = peer => "p_" + String(peer).replace(/[^A-Za-z0-9_-]/g, "").slice(0, 40);
+const pname = p => clean(p.presence && p.presence.n) || "لاعب";
+function hostPlayers(){ return NR ? NR.peers().filter(p => !p.sameTab && p.presence && p.presence.r === "p") : []; }
+function myPeer(){ const me = NR && NR.peers().find(p => p.sameTab); return me ? me.peer : ""; }
+function joinLink(code){ return (BASE_URL || "") + "#" + code; }
+
+/* ================= GAMES REGISTRY ================= */
+const GAMES = {
+  quiz:   {name:"تحدي الأسئلة", desc:"أسئلة متعددة الخيارات بمؤقت، ونقاط أعلى لمن يجيب أسرع.", meta:"أفراد · من الجوال", teams:false,
+           art:`<div class="art-quiz">${SHAPES.map((s,i)=>`<span class="c${i}">${s}</span>`).join("")}</div>`},
+  letters:{name:"سباق الحروف", desc:"فريقان يتنافسان على خلايا الحروف، والفائز من يصل ضفّتيه أولًا.", meta:"فريقان · جرس من الجوال", teams:true,
+           art:`<div class="art-hex"><span style="background:var(--green)">م</span><span style="background:var(--gold)">ل</span><span style="background:var(--orange)">ع</span></div>`},
+  wheel:  {name:"عجلة التحديات", desc:"لفّ العجلة: نقاط، تحديات، مضاعفة أو خسارة الدور.", meta:"فريقان · يتابعون من الجوال", teams:true,
+           art:`<div class="art-wheel"></div>`},
+  puzzle: {name:"الصورة الملخبطة", desc:"سباق لترتيب قطع صورة مبعثرة، والأسرع يتصدّر.", meta:"أفراد · من الجوال", teams:false,
+           art:`<div class="art-pz">${[4,0,7,2,8,1,6,3,5].map(i=>`<span style="background-position:${-(i%3)*36}px ${-Math.floor(i/3)*36}px"></span>`).join("")}</div>`},
+  diff:   {name:"اكتشف الفرق", desc:"صورتان متشابهتان، والفائز من يجد كل الفروق أولًا.", meta:"أفراد · من الجوال", teams:false,
+           art:`<div class="art-df"><span>🍎</span><span>🍎<i></i></span></div>`},
+};
+$("#gamesGrid").innerHTML = Object.entries(GAMES).map(([k,g]) => `
+  <button class="gcard" data-game="${k}">
+    <div class="gart">${g.art}</div>
+    <div class="gbody"><span class="meta">${g.meta}</span><h3>${g.name}</h3><p class="muted">${g.desc}</p><span class="go">ابدأ كمقدّم ←</span></div>
+  </button>`).join("");
+$("#gamesGrid").addEventListener("click", e => { const b = e.target.closest("[data-game]"); if (b) hostStart(b.dataset.game); });
+
+function show(v){ for (const id of ["home","host","player"]) $("#" + id).hidden = id !== v; window.scrollTo(0, 0); }
+
+/* ================= HOST ================= */
+async function hostStart(g){
+  H = {g, code:null, s:MOD[g].init(), priv:{}};
+  for (const id of ["#hostMain","#hostBar"]){ $(id).innerHTML = ""; $(id).dataset.k = ""; }
+  show("host"); renderHost();
+  await roomReady;
+  if (ROOM) await claimCode();
+  renderHost();
+}
+async function claimCode(){
+  for (let k = 0; k < 4; k++){
+    const code = String(1000 + Math.floor(Math.random() * 9000));
+    let nr;
+    try { nr = await ROOM.join("lm-" + code); } catch(e){ console.error(e); H.failed = true; return; }
+    try { await nr.presence({r:"h", g:H.g, s:H.s}); } catch(e){}
+    await sleep(1300);
+    if (nr.peers().some(p => !p.sameTab && p.presence && p.presence.r === "h")){ try { await nr.leave(); } catch(e){} continue; }
+    if (!H){ try { await nr.leave(); } catch(e){} return; }
+    NR = nr; H.code = code;
+    NR.onPeers(() => { if (H && MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
+    return;
+  }
+}
+function pushHost(){
+  if (!H) return;
+  if (NR){
+    let s = H.s, txt = JSON.stringify(s);
+    if (txt.length > 3800 && s.res){ s = {...s, res:{}}; }
+    NR.presence({r:"h", g:H.g, s}).catch(() => {});
+  }
+  renderHost();
+}
+async function hostEnd(){
+  if (H && H.priv.tick) clearInterval(H.priv.tick);
+  if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
+  H = null; show("home");
+}
+function renderHost(){
+  if (!H) return;
+  const g = GAMES[H.g], players = hostPlayers();
+  let codeHtml;
+  if (H.code){
+    codeHtml = `<div><span class="muted">كود الدخول</span><div class="code">${H.code}</div></div>
+      <div class="qr" id="qr"></div>
+      ${BASE_URL ? `<button class="btn ghost sm" id="copyLink">نسخ رابط الدخول</button>` : ""}`;
+  } else if (connState === "checking" || (ROOM && !H.code && !H.failed)){
+    codeHtml = `<span class="muted">جارٍ تجهيز الكود…</span>`;
+  } else {
+    codeHtml = `<span class="muted">وضع الشاشة الواحدة</span>`;
+  }
+  const bar = `<div><span class="muted">${g.meta}</span><h2>${g.name}</h2></div>
+    <div class="codebox">${codeHtml}</div>
+    <div class="row"><span class="chip">${players.length} لاعب</span><button class="btn ghost sm" id="endBtn">إنهاء</button></div>`;
+  const barEl = $("#hostBar");
+  if (barEl.dataset.k !== bar){
+    barEl.innerHTML = bar; barEl.dataset.k = bar;
+    $("#endBtn").onclick = hostEnd;
+    const cp = $("#copyLink");
+    if (cp) cp.onclick = () => copyText(joinLink(H.code), cp);
+    const qr = $("#qr");
+    if (qr && BASE_URL && window.QRCode){ try { new QRCode(qr, {text:joinLink(H.code), width:96, height:96, colorDark:"#0f1430", colorLight:"#ffffff"}); } catch(e){} }
+  }
+  MOD[H.g].host(players);
+}
+function copyText(t, btn){
+  const done = () => { const o = btn.textContent; btn.textContent = "تم النسخ"; setTimeout(() => btn.textContent = o, 1500); };
+  try { navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t, btn)); } catch(e){ fallbackCopy(t, btn); }
+}
+function fallbackCopy(t, btn){ btn.insertAdjacentHTML("afterend", `<input class="field" value="${esc(t)}" readonly style="font-size:.9rem;direction:ltr" onfocus="this.select()">`); btn.remove(); }
+function soloNote(){
+  if (H.code) return "";
+  if (ROOM && H.failed) return `<p class="note">تعذّر الاتصال بقاعدة البيانات. تأكد من اتصال الإنترنت، ومن نشر القواعد في Firebase، ثم أعد فتح اللعبة.</p>`;
+  return `<p class="note">الاتصال المباشر غير مفعّل في هذه النسخة، فتُدار اللعبة من هذه الشاشة فقط. لتفعيل اللعب من الجوالات أضف إعدادات Firebase إلى الملف.</p>`;
+}
+function playerChips(players, teams){
+  if (!players.length) return `<p class="muted">لم ينضم أحد بعد. اعرض الكود على الشاشة.</p>`;
+  if (!teams) return `<div class="chips">${players.map(p => `<span class="chip">${esc(pname(p))}</span>`).join("")}</div>`;
+  const col = t => players.filter(p => p.presence.tm === t).map(p => `<span class="chip ${t}">${esc(pname(p))}</span>`).join("") || `<span class="muted">لا أحد</span>`;
+  return `<div class="stack"><div><b class="tg">الفريق الأخضر</b><div class="chips">${col("g")}</div></div><div><b class="to">الفريق البرتقالي</b><div class="chips">${col("o")}</div></div></div>`;
+}
+function setMain(html){ const m = $("#hostMain"); if (m.dataset.k !== html){ m.innerHTML = html; m.dataset.k = html; return true; } return false; }
+
+/* ================= PLAYER ================= */
+async function playerJoin(code){
+  $("#joinErr").textContent = "";
+  if (!/^\d{4}$/.test(code)){ $("#joinErr").textContent = "الكود مكوّن من 4 أرقام."; return; }
+  await roomReady;
+  if (!ROOM){ $("#joinErr").textContent = "الاتصال المباشر غير مفعّل في هذه النسخة من الموقع."; return; }
+  if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
+  try { NR = await ROOM.join("lm-" + code); }
+  catch(e){ console.error(e); NR = null; $("#joinErr").textContent = "تعذّر الاتصال باللعبة. تأكد من الإنترنت وأعد المحاولة."; return; }
+  $("#playerMain").innerHTML = ""; $("#playerMain").dataset.k = "";
+  P = {code, name:lsGet("lm-name"), team:null, joined:false, g:null, host:null, view:{}, searching:true};
+  show("player"); playerRender();
+  NR.onPeers(() => playerRender());
+  setTimeout(() => { if (P && P.code === code){ P.searching = false; playerRender(); } }, 6000);
+}
+async function playerLeave(){ if (NR){ try { await NR.leave(); } catch(e){} NR = null; } P = null; show("home"); }
+function findHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && GAMES[p.presence.g]) : null; }
+function pSet(html){ const m = $("#playerMain"); if (m.dataset.k !== html){ m.innerHTML = html; m.dataset.k = html; return true; } return false; }
+function playerRender(){
+  if (!P) return;
+  const host = findHost();
+  if (!host){
+    pSet(`<div class="panel center stack">${P.searching || P.joined
+      ? `<p class="bigmsg">${P.joined ? "بانتظار المقدّم…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`
+      : `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم.</p>`}
+      <div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
+    bindPlayer(); return;
+  }
+  P.g = host.presence.g;
+  const game = GAMES[P.g];
+  if (!P.joined){
+    const needTeam = game.teams;
+    pSet(`<div class="panel stack">
+      <p class="muted">انضممت إلى</p><h2 style="font-size:2rem">${game.name}</h2>
+      <label for="pName">اسمك</label>
+      <input class="field" id="pName" maxlength="20" value="${esc(P.name)}" placeholder="اكتب اسمك">
+      ${needTeam ? `<span>اختر فريقك</span><div class="teampick"><button class="g ${P.team==="g"?"on":""}" data-team="g">الأخضر</button><button class="o ${P.team==="o"?"on":""}" data-team="o">البرتقالي</button></div>` : ""}
+      <p class="err" id="pErr"></p>
+      <button class="btn" data-act="enter">دخول</button></div>`);
+    bindPlayer(); return;
+  }
+  MOD[P.g].player(host.presence.s || {}, host);
+}
+function bindPlayer(){
+  const m = $("#playerMain");
+  m.onclick = e => {
+    const t = e.target.closest("button"); if (!t) return;
+    if (t.dataset.act === "leave") return playerLeave();
+    if (t.dataset.team){ P.team = t.dataset.team; P.name = clean($("#pName") ? $("#pName").value : P.name); m.querySelectorAll("[data-team]").forEach(b => b.classList.toggle("on", b.dataset.team === P.team)); return; }
+    if (t.dataset.act === "enter"){
+      const name = clean($("#pName").value);
+      if (!name){ $("#pErr").textContent = "اكتب اسمك أولًا."; return; }
+      if (GAMES[P.g].teams && !P.team){ $("#pErr").textContent = "اختر فريقك."; return; }
+      P.name = name; lsSet("lm-name", name); P.joined = true;
+      NR.presence({r:"p", n:name, tm:P.team || null}).catch(() => {});
+      playerRender(); return;
+    }
+    if (P && P.g && MOD[P.g].pclick) MOD[P.g].pclick(t);
+  };
+}
+function phead(extra){ return `<div class="phead"><span class="who">${esc(P.name)}${P.team ? ` · <span class="t${P.team}">${TEAM[P.team]}</span>` : ""}</span><span class="row">${extra || ""}<button class="btn ghost sm" data-act="leave">خروج</button></span></div>`; }
+
+/* ================= QUIZ ================= */
+const optOrder = qid => shuffle([0,1,2,3], qid * 97 + 13);
+const QZ_MS = 20000;
+const Quiz = {
+  init: () => ({ph:"lobby", i:0, n:10, q:-1, t:20, cnt:0, top:[], res:{}, dist:null}),
+  start(){
+    H.priv.order = shuffle(range(QUIZ.length), Date.now() % 1e9).slice(0, 10);
+    H.priv.scores = {}; H.priv.local = {g:0, o:0};
+    H.s = {...Quiz.init(), n:H.priv.order.length};
+    Quiz.next();
+  },
+  next(){
+    const s = H.s;
+    if (s.i >= s.n){ s.ph = "end"; pushHost(); return; }
+    s.q = H.priv.order[s.i]; s.i++; s.ph = "q"; s.t = 20; s.cnt = 0; s.res = {}; s.dist = null;
+    H.priv.seen = {}; H.priv.qStart = Date.now(); H.priv.showAns = false;
+    clearInterval(H.priv.tick); H.priv.tick = setInterval(Quiz.tick, 250);
+    pushHost();
+  },
+  tick(){
+    if (!H || H.s.ph !== "q") return;
+    const left = Math.max(0, Math.ceil((QZ_MS - (Date.now() - H.priv.qStart)) / 1000));
+    if (left !== H.s.t){ H.s.t = left; pushHost(); }
+    if (left <= 0) Quiz.reveal();
+  },
+  hostPeers(players){
+    if (H.s.ph !== "q") return;
+    let ch = false;
+    for (const p of players){
+      const a = p.presence.a;
+      if (a && a.q === H.s.q && Number.isInteger(a.c) && a.c >= 0 && a.c < 4 && !H.priv.seen[p.peer]){
+        H.priv.seen[p.peer] = {c:a.c, ms:Date.now() - H.priv.qStart, n:pname(p)}; ch = true;
+      }
+    }
+    if (ch){
+      H.s.cnt = Object.keys(H.priv.seen).length;
+      if (players.length && H.s.cnt >= players.length) Quiz.reveal(); else pushHost();
+    }
+  },
+  reveal(){
+    clearInterval(H.priv.tick);
+    const s = H.s, correct = optOrder(s.q).indexOf(QUIZ[s.q][2]), dist = [0,0,0,0];
+    for (const p of hostPlayers()){ const sc = H.priv.scores[p.peer] || (H.priv.scores[p.peer] = {n:pname(p), s:0}); sc.n = pname(p); }
+    for (const sc of Object.values(H.priv.scores)) sc.g = 0;
+    for (const [peer, a] of Object.entries(H.priv.seen)){
+      dist[a.c]++;
+      const sc = H.priv.scores[peer] || (H.priv.scores[peer] = {n:a.n, s:0});
+      if (a.c === correct){ sc.g = 500 + Math.round(500 * Math.max(0, 1 - a.ms / QZ_MS)); sc.s += sc.g; }
+    }
+    const all = Object.entries(H.priv.scores).sort((a, b) => b[1].s - a[1].s);
+    s.res = {}; all.forEach(([peer, sc], i) => { s.res[peerKey(peer)] = [sc.g, sc.s, i + 1]; });
+    s.top = all.slice(0, 8).map(([, sc]) => [sc.n, sc.s]);
+    s.dist = dist; s.ph = "r"; s.t = 0;
+    pushHost();
+  },
+  optsHtml(s, mode){
+    const ord = optOrder(s.q), q = QUIZ[s.q], correct = ord.indexOf(q[2]);
+    return `<div class="opts">${ord.map((oi, i) => {
+      const cls = mode === "r" ? (i === correct ? "right" : "dim") : "";
+      return `<div class="opt c${i} ${cls}"><span class="sh">${SHAPES[i]}</span><span>${esc(q[1][oi])}</span>${mode === "r" && s.dist ? `<span class="cnt">${s.dist[i]}</span>` : ""}</div>`;
+    }).join("")}</div>`;
+  },
+  host(players){
+    const s = H.s; let html;
+    if (s.ph === "lobby"){
+      html = `<div class="layout"><div class="panel stack"><h2 style="font-size:2rem">بانتظار اللاعبين</h2>
+        <p class="muted">10 أسئلة، 20 ثانية لكل سؤال. الإجابة الصحيحة تمنح من 500 إلى 1000 نقطة حسب السرعة.</p>
+        ${playerChips(players, false)}<div><button class="btn" data-h="start">ابدأ المسابقة</button></div>${soloNote()}</div>
+        <div class="panel stack"><h3>كيف يشارك اللاعبون</h3><p class="muted">يفتحون الرابط أو يكتبون الكود في الصفحة الرئيسية، ثم يكتبون أسماءهم. تظهر الأسئلة على هذه الشاشة، ويجيبون من جوالاتهم بالشكل واللون.</p></div></div>`;
+    } else if (s.ph === "q"){
+      html = `<div class="layout"><div class="panel stack"><span class="muted">السؤال ${s.i} من ${s.n}</span><p class="big-q">${esc(QUIZ[s.q][0])}</p>${Quiz.optsHtml(s, "q")}</div>
+        <div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer">${s.t}</span><span class="chip">أجاب ${s.cnt} من ${players.length}</span></div>
+        <button class="btn" data-h="reveal">إظهار الإجابة الآن</button>${soloNote()}</div></div>`;
+    } else if (s.ph === "r"){
+      const loc = H.priv.local;
+      html = `<div class="layout"><div class="panel stack"><span class="muted">السؤال ${s.i} من ${s.n}</span><p class="big-q">${esc(QUIZ[s.q][0])}</p>${Quiz.optsHtml(s, "r")}</div>
+        <div class="panel stack"><h3>الترتيب</h3>${s.top.length ? `<div class="lb">${s.top.map(([n, sc], i) => `<div><span>${i + 1}. ${esc(n)}</span><b>${sc}</b></div>`).join("")}</div>` : `<p class="muted">لا لاعبين على الجوالات.</p>`}
+        ${!H.code ? `<div class="scores"><div class="score g"><span>الأخضر</span><b>${loc.g}</b><button class="btn g sm" data-h="lg">+1</button></div><div class="score o"><span>البرتقالي</span><b>${loc.o}</b><button class="btn o sm" data-h="lo">+1</button></div></div>` : ""}
+        <button class="btn" data-h="next">${s.i >= s.n ? "النتيجة النهائية" : "السؤال التالي"}</button></div></div>`;
+    } else {
+      const t = s.top;
+      html = `<div class="panel stack" style="margin-top:18px"><h2 class="center" style="font-size:2.4rem;color:var(--gold)">النتيجة النهائية</h2>
+        ${t.length ? `<div class="podium">${t[1] ? `<div class="p2"><strong>${esc(t[1][0])}</strong><span>${t[1][1]}</span></div>` : ""}<div class="p1"><strong>${esc(t[0][0])}</strong><span>${t[0][1]}</span></div>${t[2] ? `<div class="p3"><strong>${esc(t[2][0])}</strong><span>${t[2][1]}</span></div>` : ""}</div>
+        <div class="lb">${t.slice(3).map(([n, sc], i) => `<div><span>${i + 4}. ${esc(n)}</span><b>${sc}</b></div>`).join("")}</div>` : `<p class="center muted">الأخضر ${H.priv.local.g} · البرتقالي ${H.priv.local.o}</p>`}
+        <div class="row" style="justify-content:center"><button class="btn" data-h="start">مسابقة جديدة</button></div></div>`;
+    }
+    setMain(html);
+    $("#hostMain").onclick = e => {
+      const b = e.target.closest("[data-h]"); if (!b) return;
+      const a = b.dataset.h;
+      if (a === "start") Quiz.start();
+      else if (a === "reveal") Quiz.reveal();
+      else if (a === "next") Quiz.next();
+      else if (a === "lg"){ H.priv.local.g++; renderHost(); }
+      else if (a === "lo"){ H.priv.local.o++; renderHost(); }
+    };
+  },
+  player(s){
+    const me = peerKey(myPeer()), mine = P.ans && P.ans.q === s.q ? P.ans.c : null;
+    let body;
+    if (s.ph === "lobby") body = `<div class="panel center stack"><p class="bigmsg">أنت داخل!</p><p class="muted">بانتظار أن يبدأ المقدّم المسابقة.</p></div>`;
+    else if (s.ph === "q"){
+      if (mine !== null) body = `<div class="panel center stack"><p class="bigmsg">تم تسجيل إجابتك</p><div class="opt c${mine}" style="justify-content:center"><span class="sh">${SHAPES[mine]}</span><span>${esc(QUIZ[s.q][1][optOrder(s.q)[mine]])}</span></div><p class="muted">بانتظار البقية… ${s.t} ث</p></div>`;
+      else body = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="muted">السؤال ${s.i} من ${s.n}</span><span class="timer" style="font-size:2rem">${s.t}</span></div>
+        <p style="font-size:1.3rem;font-weight:700">${esc(QUIZ[s.q][0])}</p>
+        <div class="opts">${optOrder(s.q).map((oi, i) => `<button class="opt c${i}" data-ans="${i}"><span class="sh">${SHAPES[i]}</span><span>${esc(QUIZ[s.q][1][oi])}</span></button>`).join("")}</div></div>`;
+    } else if (s.ph === "r"){
+      const r = s.res[me], correct = optOrder(s.q).indexOf(QUIZ[s.q][2]);
+      const ok = mine === correct;
+      body = `<div class="panel center stack"><p class="bigmsg" style="color:var(--${ok ? "green" : "bad"})">${mine === null ? "لم تُجب" : ok ? "إجابة صحيحة!" : "إجابة خاطئة"}</p>
+        ${r ? `<p style="font-size:1.2rem">+${r[0]} نقطة · المجموع <b>${r[1]}</b></p><p class="muted">ترتيبك ${r[2]}</p>` : ""}
+        <p class="muted">الإجابة: ${esc(QUIZ[s.q][1][QUIZ[s.q][2]])}</p></div>`;
+    } else {
+      const r = s.res[me];
+      body = `<div class="panel center stack"><p class="bigmsg" style="color:var(--gold)">انتهت المسابقة</p>${r ? `<p style="font-size:1.3rem">ترتيبك <b>${r[2]}</b> بمجموع ${r[1]} نقطة</p>` : ""}
+        <div class="lb">${s.top.slice(0, 3).map(([n, sc], i) => `<div><span>${i + 1}. ${esc(n)}</span><b>${sc}</b></div>`).join("")}</div></div>`;
+    }
+    pSet(phead() + body); bindPlayer();
+  },
+  pclick(t){
+    if (t.dataset.ans === undefined) return;
+    const host = findHost(); if (!host) return;
+    const s = host.presence.s; if (s.ph !== "q") return;
+    P.ans = {q:s.q, c:+t.dataset.ans};
+    NR.presence({a:P.ans}).catch(() => {});
+    playerRender();
+  },
+};
+
+/* ================= LETTERS ================= */
+const HEX_N = 5;
+function hexNeighbors(r, c){
+  return (r % 2 ? [[r-1,c],[r-1,c+1],[r,c-1],[r,c+1],[r+1,c],[r+1,c+1]] : [[r-1,c-1],[r-1,c],[r,c-1],[r,c+1],[r+1,c-1],[r+1,c]])
+    .filter(([a, b]) => a >= 0 && b >= 0 && a < HEX_N && b < HEX_N);
+}
+function hexWinner(b){
+  for (const t of ["g","o"]){
+    const seen = new Set(), q = [];
+    for (let i = 0; i < HEX_N; i++){ const idx = t === "g" ? i * HEX_N : i; if (b[idx] === t){ q.push(idx); seen.add(idx); } }
+    while (q.length){
+      const idx = q.shift(), r = Math.floor(idx / HEX_N), c = idx % HEX_N;
+      if (t === "g" ? c === HEX_N - 1 : r === HEX_N - 1) return t;
+      for (const [a, d] of hexNeighbors(r, c)){ const n = a * HEX_N + d; if (!seen.has(n) && b[n] === t){ seen.add(n); q.push(n); } }
+    }
+  }
+  return null;
+}
+function hexBoard(s, clickable, small){
+  let html = `<div class="hexwrap"><div class="hexboard ${small ? "small" : ""}" role="grid" aria-label="لوحة الحروف">`;
+  for (let r = 0; r < HEX_N; r++){
+    html += `<div class="hrow ${r % 2 ? "odd" : ""}">`;
+    for (let c = 0; c < HEX_N; c++){
+      const i = r * HEX_N + c, own = s.b[i], L = LETTERS[s.L[i]][0];
+      const cls = own !== "." ? own : (s.cur === i ? "cur" : "");
+      const dis = !clickable || own !== "." || s.w ? "disabled" : "";
+      html += `<button class="hex ${cls}" data-cell="${i}" ${dis} aria-label="حرف ${L}">${L}</button>`;
+    }
+    html += `</div>`;
+  }
+  return html + `</div></div>`;
+}
+const Letters = {
+  init: () => ({L:shuffle(range(LETTERS.length), Date.now() % 1e9).slice(0, 25), b:".".repeat(25), cur:-1, rd:0, bz:null, w:null, sc:[0,0]}),
+  newRound(){ const sc = H.s.sc; H.s = {...Letters.init(), sc, rd:H.s.rd + 1}; H.priv.showAns = false; pushHost(); },
+  hostPeers(players){
+    const s = H.s; if (s.cur < 0 || s.bz || s.w) return;
+    const c = players.filter(p => p.presence.bz && p.presence.bz.rd === s.rd && (p.presence.tm === "g" || p.presence.tm === "o"));
+    if (!c.length) return;
+    c.sort((a, b) => (+a.presence.bz.t || 0) - (+b.presence.bz.t || 0));
+    s.bz = {n:pname(c[0]), tm:c[0].presence.tm}; pushHost();
+  },
+  host(players){
+    const s = H.s, cur = s.cur >= 0 ? LETTERS[s.L[s.cur]] : null;
+    let side;
+    if (s.w){
+      side = `<div class="winner ${s.w}">فاز الفريق ${TEAM[s.w]}!</div><button class="btn" data-h="round">جولة جديدة</button>`;
+    } else if (cur){
+      side = `<div class="lettercard"><span class="L">${cur[0]}</span><div class="stack" style="gap:6px"><span class="muted">سؤال حرف ${cur[0]}</span><p style="font-size:1.3rem;font-weight:700">${esc(cur[1])}</p>
+          ${H.priv.showAns ? `<span class="answer">${esc(cur[2])}</span>` : `<button class="btn ghost sm" data-h="ans">إظهار الإجابة</button>`}</div></div>
+        <div class="buzzbar ${s.bz ? s.bz.tm : ""}">${s.bz ? `أول من ضغط الجرس: <b>${esc(s.bz.n)}</b> (الفريق ${TEAM[s.bz.tm]})` : `الجرس مفتوح… بانتظار أول ضغطة`}</div>
+        <div class="row"><button class="btn g sm" data-h="win-g">صحيحة للأخضر</button><button class="btn o sm" data-h="win-o">صحيحة للبرتقالي</button></div>
+        <div class="row"><button class="btn ghost sm" data-h="rebuzz">فتح الجرس من جديد</button><button class="btn ghost sm" data-h="close">إلغاء الخلية</button></div>`;
+    } else {
+      side = `<h3>اختر خلية</h3><p class="muted">اضغط أي حرف على اللوحة لعرض سؤاله. يمكنك طرح سؤالك الخاص لنفس الحرف.</p>
+        <p class="muted"><b class="tg">الأخضر</b> يصل بين اليمين واليسار، و<b class="to">البرتقالي</b> بين الأعلى والأسفل.</p>`;
+    }
+    const html = `<div class="layout"><div class="panel">${hexBoard(s, !cur && !s.w, false)}</div>
+      <div class="stack"><div class="scores"><div class="score g"><span>جولات الأخضر</span><b>${s.sc[0]}</b></div><div class="score o"><span>جولات البرتقالي</span><b>${s.sc[1]}</b></div></div>
+      <div class="panel stack">${side}</div><div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, true)}${soloNote()}</div>
+      <div><button class="btn ghost sm" data-h="round">لوحة جديدة</button></div></div></div>`;
+    setMain(html);
+    $("#hostMain").onclick = e => {
+      const cell = e.target.closest("[data-cell]");
+      if (cell && !cell.disabled){ s.cur = +cell.dataset.cell; s.rd++; s.bz = null; H.priv.showAns = false; pushHost(); return; }
+      const b = e.target.closest("[data-h]"); if (!b) return;
+      const a = b.dataset.h;
+      if (a === "ans"){ H.priv.showAns = true; renderHost(); }
+      else if (a === "win-g" || a === "win-o"){
+        const t = a.slice(4), arr = s.b.split(""); arr[s.cur] = t; s.b = arr.join(""); s.cur = -1; s.bz = null;
+        s.w = hexWinner(s.b); if (s.w) s.sc[s.w === "g" ? 0 : 1]++;
+        pushHost();
+      }
+      else if (a === "rebuzz"){ s.rd++; s.bz = null; pushHost(); }
+      else if (a === "close"){ s.cur = -1; s.bz = null; pushHost(); }
+      else if (a === "round") Letters.newRound();
+    };
+  },
+  player(s){
+    const cur = s.cur >= 0 ? LETTERS[s.L[s.cur]] : null, buzzed = P.buzzRd === s.rd;
+    let status;
+    if (s.w) status = `<div class="winner ${s.w}">فاز الفريق ${TEAM[s.w]}!</div>`;
+    else if (!cur) status = `<p class="center muted">بانتظار أن يختار المقدّم حرفًا…</p>`;
+    else if (s.bz) status = `<div class="buzzbar ${s.bz.tm} center">${s.bz.n === P.name && s.bz.tm === P.team ? "<b>أنت الأسرع! أجب الآن</b>" : `الأسرع: <b>${esc(s.bz.n)}</b> (${TEAM[s.bz.tm]})`}</div>`;
+    else status = `<p class="center" style="font-size:1.2rem">حرف <b style="color:var(--gold);font-family:var(--display);font-size:1.6rem">${cur[0]}</b> · اضغط الجرس إذا عرفت الإجابة</p>`;
+    const canBuzz = cur && !s.bz && !s.w && !buzzed;
+    pSet(phead() + `<div class="panel stack">${hexBoard(s, false, true)}</div>${status}
+      <button class="buzz" style="background:var(--${P.team === "g" ? "green" : "orange"})" data-buzz="1" ${canBuzz ? "" : "disabled"}>${buzzed && !s.bz ? "تم!" : "الجرس"}</button>`);
+    bindPlayer();
+  },
+  pclick(t){
+    if (!t.dataset.buzz) return;
+    const host = findHost(); if (!host) return;
+    const s = host.presence.s; if (s.cur < 0 || s.bz) return;
+    P.buzzRd = s.rd;
+    NR.presence({bz:{rd:s.rd, t:Date.now()}}).catch(() => {});
+    playerRender();
+  },
+};
+
+/* ================= WHEEL ================= */
+let wheelImg = null;
+async function wheelCanvas(){
+  try { await document.fonts.load('40px "Lalezar"'); } catch(e){}
+  const cs = getComputedStyle(document.documentElement), col = n => cs.getPropertyValue(n).trim();
+  const fills = [col("--gold"), col("--green"), col("--orange"), col("--blue")];
+  const c = document.createElement("canvas"); c.width = c.height = 640;
+  const x = c.getContext("2d"), R = 310, cx = 320, step = Math.PI * 2 / SEGS.length;
+  SEGS.forEach((sg, i) => {
+    const a0 = -Math.PI / 2 + i * step;
+    x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a0 + step); x.closePath();
+    x.fillStyle = fills[i % 4]; x.fill();
+    x.lineWidth = 4; x.strokeStyle = col("--bg"); x.stroke();
+    x.save(); x.translate(cx, cx); x.rotate(a0 + step / 2);
+    x.fillStyle = col("--on-color"); x.textAlign = "right"; x.textBaseline = "middle";
+    x.font = `${sg.t.length > 6 ? 30 : 42}px Lalezar, Tahoma, sans-serif`; x.direction = "rtl";
+    x.fillText(sg.t, R - 22, 4); x.restore();
+  });
+  x.beginPath(); x.arc(cx, cx, R, 0, Math.PI * 2); x.lineWidth = 10; x.strokeStyle = col("--ink"); x.stroke();
+  return c;
+}
+function mountWheel(holder, s, state){
+  let box = holder.querySelector(".wheelbox");
+  if (!box){
+    holder.innerHTML = `<div class="wheelbox"><div class="pointer"></div><div class="hub"></div></div>`;
+    box = holder.querySelector(".wheelbox");
+    (wheelImg ? Promise.resolve(wheelImg) : wheelCanvas().then(c => wheelImg = c)).then(src => {
+      const c = document.createElement("canvas"); c.width = c.height = 640; c.getContext("2d").drawImage(src, 0, 0);
+      c.style.transform = `rotate(${s.rot}deg)`; box.appendChild(c); state.sp = s.sp;
+    });
+    state.sp = s.sp; return;
+  }
+  const c = box.querySelector("canvas"); if (!c) return;
+  if (state.sp !== s.sp){ box.classList.add("spin"); state.sp = s.sp; }
+  c.style.transform = `rotate(${s.rot}deg)`;
+}
+const Wheel = {
+  init: () => ({rot:0, sp:0, seg:-1, ch:"", turn:"g", sc:[0,0], show:false}),
+  spin(){
+    const s = H.s, i = Math.floor(Math.random() * SEGS.length), seg = 360 / SEGS.length;
+    const target = (360 - (i * seg + seg / 2) + (Math.random() - .5) * seg * .6) % 360;
+    const cur = ((s.rot % 360) + 360) % 360;
+    s.rot = s.rot + 360 * 6 + ((target - cur + 360) % 360);
+    s.seg = i; s.sp++; s.show = false;
+    s.ch = SEGS[i].ch ? CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)] : "";
+    pushHost();
+    const sp = s.sp;
+    setTimeout(() => { if (H && H.g === "wheel" && H.s.sp === sp){ H.s.show = true; pushHost(); } }, 4800);
+  },
+  act(kind, team){
+    const s = H.s, sg = SEGS[s.seg], ti = s.turn === "g" ? 0 : 1;
+    if (kind === "pts") s.sc[ti] += sg.p;
+    if (kind === "ch") s.sc[team === "g" ? 0 : 1] += 300;
+    if (kind === "x2") s.sc[ti] *= 2;
+    s.turn = s.turn === "g" ? "o" : "g"; s.show = false; s.seg = -1; s.ch = "";
+    pushHost();
+  },
+  resultHtml(s, host){
+    if (!s.show || s.seg < 0) return "";
+    const sg = SEGS[s.seg], who = `الفريق ${TEAM[s.turn]}`;
+    let txt = sg.p ? `${sg.p} نقطة لـ${who}` : sg.ch ? esc(s.ch) : sg.lose ? `${who} خسر دوره` : `مضاعفة نقاط ${who}`;
+    let btns = "";
+    if (host){
+      if (sg.p) btns = `<button class="btn" data-h="pts">احتساب النقاط</button>`;
+      else if (sg.ch) btns = `<div class="row"><button class="btn g sm" data-h="ch-g">نجح الأخضر +300</button><button class="btn o sm" data-h="ch-o">نجح البرتقالي +300</button><button class="btn ghost sm" data-h="skip">لم ينجح أحد</button></div>`;
+      else if (sg.x2) btns = `<button class="btn" data-h="x2">ضاعف النقاط</button>`;
+      else btns = `<button class="btn" data-h="skip">الدور التالي</button>`;
+    }
+    return `<div class="result stack"><h3>${esc(sg.t)}</h3><p style="font-size:1.2rem">${txt}</p>${btns}</div>`;
+  },
+  scoresHtml(s){
+    return `<div class="scores"><div class="score g ${s.turn === "g" ? "turn" : ""}"><span>الأخضر</span><b>${s.sc[0]}</b></div><div class="score o ${s.turn === "o" ? "turn" : ""}"><span>البرتقالي</span><b>${s.sc[1]}</b></div></div>`;
+  },
+  host(players){
+    const s = H.s;
+    if (!$("#hostMain .wh-holder")){
+      $("#hostMain").innerHTML = `<div class="layout"><div class="panel"><div class="wh-holder"></div></div><div class="stack" id="whSide"></div></div>`;
+      $("#hostMain").dataset.k = "";
+      H.priv.wstate = {};
+      $("#hostMain").onclick = e => {
+        const b = e.target.closest("[data-h]"); if (!b) return;
+        const a = b.dataset.h;
+        if (a === "spin") Wheel.spin();
+        else if (a === "pts") Wheel.act("pts");
+        else if (a === "ch-g") Wheel.act("ch", "g");
+        else if (a === "ch-o") Wheel.act("ch", "o");
+        else if (a === "x2") Wheel.act("x2");
+        else if (a === "skip") Wheel.act("skip");
+        else if (a === "reset"){ H.s = Wheel.init(); H.s.rot = s.rot; H.s.sp = s.sp; pushHost(); }
+      };
+    }
+    mountWheel($("#hostMain .wh-holder"), s, H.priv.wstate);
+    const spinning = s.seg >= 0 && !s.show;
+    const side = `${Wheel.scoresHtml(s)}<div class="panel stack"><p style="font-size:1.2rem">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>
+      ${Wheel.resultHtml(s, true) || `<button class="btn" data-h="spin" ${spinning ? "disabled" : ""}>${spinning ? "العجلة تدور…" : "لُفّ العجلة"}</button>`}</div>
+      <div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, true)}${soloNote()}</div><div><button class="btn ghost sm" data-h="reset">تصفير النقاط</button></div>`;
+    const sideEl = $("#whSide"); if (sideEl.dataset.k !== side){ sideEl.innerHTML = side; sideEl.dataset.k = side; }
+  },
+  player(s){
+    if (!$("#playerMain .wh-holder")){
+      $("#playerMain").innerHTML = `${phead()}<div class="panel"><div class="wh-holder"></div></div><div id="whP"></div>`;
+      $("#playerMain").dataset.k = ""; P.view.w = {}; bindPlayer();
+    }
+    mountWheel($("#playerMain .wh-holder"), s, P.view.w);
+    const html = `${Wheel.scoresHtml(s)}<p class="center" style="margin-top:10px">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>${Wheel.resultHtml(s, false)}`;
+    const el = $("#whP"); if (el.dataset.k !== html){ el.innerHTML = html; el.dataset.k = html; }
+  },
+};
+
+/* ================= PUZZLE ================= */
+const sceneCache = {};
+function sceneURL(i){
+  if (sceneCache[i]) return sceneCache[i];
+  const c = document.createElement("canvas"); c.width = c.height = 600;
+  const x = c.getContext("2d"), R = rng(4242 + i * 101);
+  const emoji = (e, size, cx, cy) => { x.font = `${size}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(e, cx, cy); };
+  const grad = (stops) => { const g = x.createLinearGradient(0, 0, 0, 600); stops.forEach(([o, col]) => g.addColorStop(o, col)); return g; };
+  const hill = (col, y0, ys) => { x.fillStyle = col; x.beginPath(); x.moveTo(0, y0); x.bezierCurveTo(150, ys[0], 350, ys[1], 600, ys[2]); x.lineTo(600, 600); x.lineTo(0, 600); x.closePath(); x.fill(); };
+  if (i === 0){
+    x.fillStyle = grad([[0,"#ff8a4c"],[.55,"#ffd08a"],[1,"#ffe6b8"]]); x.fillRect(0, 0, 600, 600);
+    x.fillStyle = "#fff4cf"; x.beginPath(); x.arc(450, 140, 70, 0, 7); x.fill();
+    hill("#eaa95b", 380, [300, 430, 340]); hill("#d68a3e", 470, [420, 520, 430]); hill("#b8702d", 560, [520, 560, 500]);
+    emoji("🌴", 150, 120, 330); emoji("🐪", 150, 380, 430);
+  } else if (i === 1){
+    x.fillStyle = grad([[0,"#7cc8ff"],[.5,"#d9f2ff"],[.52,"#1f8ccc"],[1,"#0c4f8a"]]); x.fillRect(0, 0, 600, 600);
+    x.strokeStyle = "rgba(255,255,255,.55)"; x.lineWidth = 4;
+    for (let y = 340; y < 600; y += 40){ x.beginPath(); for (let k = 0; k <= 600; k += 20) x.lineTo(k, y + Math.sin(k / 30 + y) * 6); x.stroke(); }
+    emoji("☀️", 110, 480, 100); emoji("⛵", 160, 320, 300); emoji("🐬", 120, 150, 470);
+  } else if (i === 2){
+    x.fillStyle = grad([[0,"#0b1035"],[1,"#3b2a6e"]]); x.fillRect(0, 0, 600, 600);
+    x.fillStyle = "#fff"; for (let k = 0; k < 70; k++){ x.globalAlpha = .4 + R() * .6; x.fillRect(R() * 600, R() * 300, 2, 2); } x.globalAlpha = 1;
+    emoji("🌙", 120, 470, 110);
+    let bx = 0; while (bx < 600){ const w = 50 + R() * 50, h = 150 + R() * 260; x.fillStyle = ["#1d2150","#262b63","#171a40"][Math.floor(R() * 3)]; x.fillRect(bx, 600 - h, w - 4, h);
+      x.fillStyle = "#ffd36b"; for (let wy = 600 - h + 14; wy < 590; wy += 22) for (let wx = bx + 8; wx < bx + w - 14; wx += 14) if (R() > .45) x.fillRect(wx, wy, 7, 10);
+      bx += w; }
+  } else {
+    for (let k = 0; k < 10; k++){ x.fillStyle = k % 2 ? "#3a9a4a" : "#46ad56"; x.fillRect(k * 60, 0, 60, 600); }
+    x.strokeStyle = "#fff"; x.lineWidth = 6; x.strokeRect(30, 30, 540, 540);
+    x.beginPath(); x.moveTo(300, 30); x.lineTo(300, 570); x.stroke();
+    x.beginPath(); x.arc(300, 300, 80, 0, 7); x.stroke();
+    x.strokeRect(30, 190, 80, 220); x.strokeRect(490, 190, 80, 220);
+    emoji("⚽", 130, 300, 300); emoji("🏆", 90, 470, 110); emoji("🥅", 90, 110, 480);
+  }
+  return sceneCache[i] = c.toDataURL("image/jpeg", .86);
+}
+function mountPuzzle(el, cfg, onChange){
+  const n = cfg.n, N = n * n, url = sceneURL(cfg.img);
+  let perm = shuffle(range(N), cfg.seed);
+  if (perm.every((v, k) => v === k)) [perm[0], perm[1]] = [perm[1], perm[0]];
+  let sel = -1, mv = 0, done = false;
+  const pos = id => { const r = Math.floor(id / n), c = id % n; return `${n > 1 ? c / (n - 1) * 100 : 0}% ${n > 1 ? r / (n - 1) * 100 : 0}%`; };
+  function draw(){
+    el.innerHTML = `<div class="pz ${done ? "done" : ""}" style="grid-template-columns:repeat(${n},1fr)">${perm.map((id, k) =>
+      `<button class="tile ${sel === k ? "sel" : ""}" data-k="${k}" style="background-image:url(${url});background-size:${n * 100}% ${n * 100}%;background-position:${pos(id)}" aria-label="قطعة ${k + 1}" ${done ? "disabled" : ""}></button>`).join("")}</div>`;
+  }
+  el.onclick = e => {
+    const t = e.target.closest("[data-k]"); if (!t || done) return;
+    const k = +t.dataset.k;
+    if (sel < 0) sel = k;
+    else if (sel === k) sel = -1;
+    else { [perm[sel], perm[k]] = [perm[k], perm[sel]]; sel = -1; mv++;
+      done = perm.every((v, i) => v === i);
+      onChange && onChange({p:Math.round(perm.filter((v, i) => v === i).length / N * 100), d:done, mv}); }
+    draw();
+  };
+  draw();
+}
+const Puzzle = {
+  init: () => ({ph:"lobby", rd:0, img:0, n:3, seed:1, fin:[]}),
+  start(){ const s = H.s; s.rd++; s.seed = 1 + Math.floor(Math.random() * 1e9); s.ph = "play"; s.fin = []; H.priv.t0 = Date.now(); H.priv.prog = {}; H.priv.mounted = null; pushHost(); },
+  hostPeers(players){
+    const s = H.s; if (s.ph !== "play") return;
+    let ch = false;
+    for (const p of players){
+      const z = p.presence.pz; if (!z || z.rd !== s.rd) continue;
+      H.priv.prog[p.peer] = {n:pname(p), p:Math.max(0, Math.min(100, +z.p || 0))};
+      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){
+        s.fin.push([pname(p), Math.max(0, +z.mv || 0), Math.round((Date.now() - H.priv.t0) / 1000), peerKey(p.peer)]); ch = true;
+      }
+    }
+    if (ch) pushHost();
+  },
+  host(players){
+    const s = H.s;
+    if (s.ph === "lobby"){
+      setMain(`<div class="layout"><div class="panel stack"><h3>اختر الصورة</h3>
+        <div class="thumbs">${SCENES.map((nm, i) => `<button class="thumb ${s.img === i ? "on" : ""}" data-img="${i}" aria-label="${nm}"><img src="${sceneURL(i)}" alt="${nm}"></button>`).join("")}</div>
+        <div class="row"><span>عدد القطع</span><div class="seg">${[3,4,5].map(k => `<button class="${s.n === k ? "on" : ""}" data-n="${k}">${k}×${k}</button>`).join("")}</div></div>
+        <div><button class="btn" data-h="go">ابدأ السباق</button></div></div>
+        <div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, false)}<p class="muted">كل لاعب يحصل على نفس الصورة بنفس الخلط، ويرتّبها بالضغط على قطعتين لتبديلهما.</p>${soloNote()}</div></div>`);
+    } else {
+      const prog = Object.values(H.priv.prog || {}).sort((a, b) => b.p - a.p);
+      const local = !H.code || !players.length;
+      const html = `<div class="layout"><div class="panel stack">${local ? `<div id="hostPz"></div>` : `<h3>سباق الترتيب</h3><div class="race">${prog.length ? prog.map(r => `<div class="r"><span>${esc(r.n)}</span><div class="bar"><i style="width:${r.p}%"></i></div><b>${r.p}%</b></div>`).join("") : `<p class="muted">بانتظار أول حركة…</p>`}</div>`}</div>
+        <div class="stack"><div class="panel stack"><div class="row"><img class="ref" src="${sceneURL(s.img)}" alt="الصورة الأصلية"><div><span class="muted">الصورة الأصلية</span><h3>${SCENES[s.img]} · ${s.n}×${s.n}</h3></div></div></div>
+        <div class="panel stack"><h3>المنتهون</h3>${s.fin.length ? `<div class="lb">${s.fin.map((f, i) => `<div><span>${i + 1}. ${esc(f[0])}</span><span class="muted">${f[2]} ث · ${f[1]} حركة</span></div>`).join("")}</div>` : `<p class="muted">لم ينهِ أحد بعد.</p>`}</div>
+        <div class="row"><button class="btn" data-h="go">جولة جديدة بنفس الإعدادات</button><button class="btn ghost sm" data-h="lobby">تغيير الصورة</button></div></div></div>`;
+      if (setMain(html) || H.priv.mounted !== s.rd){
+        const el = $("#hostPz"); if (el){ mountPuzzle(el, s, null); H.priv.mounted = s.rd; }
+      }
+    }
+    $("#hostMain").onclick = e => {
+      if (e.target.closest("#hostPz")) return;
+      const b = e.target.closest("[data-img],[data-n],[data-h]"); if (!b) return;
+      if (b.dataset.img !== undefined){ s.img = +b.dataset.img; pushHost(); }
+      else if (b.dataset.n){ s.n = +b.dataset.n; pushHost(); }
+      else if (b.dataset.h === "go") Puzzle.start();
+      else if (b.dataset.h === "lobby"){ s.ph = "lobby"; pushHost(); }
+    };
+  },
+  player(s){
+    if (s.ph !== "play"){
+      P.view.pzRd = null;
+      pSet(phead() + `<div class="panel center stack"><p class="bigmsg">أنت داخل!</p><p class="muted">بانتظار أن يبدأ المقدّم السباق.</p></div>`);
+      bindPlayer(); return;
+    }
+    const me = peerKey(myPeer()), rank = s.fin.findIndex(f => f[3] === me);
+    if (P.view.pzRd !== s.rd){
+      P.view.pzRd = s.rd;
+      pSet(phead() + `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>رتّب الصورة</h3><img class="ref" style="width:80px" src="${sceneURL(s.img)}" alt="الصورة الأصلية"></div><p class="muted">اضغط قطعتين لتبديل مكانيهما.</p><div id="pPz"></div></div><div id="pPzStatus"></div>`);
+      bindPlayer();
+      NR.presence({pz:{rd:s.rd, p:0, d:false, mv:0}}).catch(() => {});
+      mountPuzzle($("#pPz"), s, z => NR.presence({pz:{rd:s.rd, ...z}}).catch(() => {}));
+    }
+    const st = rank >= 0 ? `<div class="panel center"><p class="bigmsg" style="color:var(--gold)">أنهيت! ترتيبك ${rank + 1}</p><p class="muted">${s.fin[rank][2]} ثانية · ${s.fin[rank][1]} حركة</p></div>`
+      : s.fin.length ? `<p class="center muted">أنهى ${s.fin.length} لاعب حتى الآن</p>` : "";
+    const el = $("#pPzStatus"); if (el && el.dataset.k !== st){ el.innerHTML = st; el.dataset.k = st; }
+  },
+};
+
+/* ================= SPOT THE DIFFERENCE ================= */
+const DIFF_EMO = ["🍎","🌸","⭐","🎈","🐱","🚗","🎁","🌵","🍉","🦋","🐟","🍄","☂️","🎸","⚽","🐢","🌻","🍩","🚀","🧁"];
+const DIFF_BG = [["#bde7ff","#eef9ff","#8fd0f5"],["#ffdcae","#fff5e3","#f6b977"],["#cfeec4","#f3fff0","#9ad48a"],["#ecd6ff","#fff2ff","#c9a2ef"]];
+function genDiff(seed, nd){
+  const R = rng(seed), bg = Math.floor(R() * 4);
+  const cells = shuffle(range(16), Math.floor(R() * 1e9) + 1);
+  const emo = shuffle(range(DIFF_EMO.length), Math.floor(R() * 1e9) + 1);
+  const cx = c => (c % 4) * 150 + 75, cy = c => Math.floor(c / 4) * 150 + 75;
+  const A = cells.slice(0, 11).map((c, i) => ({e:DIFF_EMO[emo[i]], x:cx(c) + (R() - .5) * 46, y:cy(c) + (R() - .5) * 46, s:62 + R() * 22}));
+  const B = A.map(o => ({...o})), free = cells.slice(11), spare = emo.slice(11);
+  const types = shuffle(["remove","swap","big","move","add","remove","swap","big","move","add"], Math.floor(R() * 1e9) + 1).slice(0, nd);
+  const pick = shuffle(range(11), Math.floor(R() * 1e9) + 1);
+  let pi = 0, fi = 0, si = 0; const diffs = [];
+  for (const t of types){
+    if (t === "add"){ const c = free[fi++], o = {e:DIFF_EMO[spare[si++]], x:cx(c), y:cy(c), s:72}; B.push(o); diffs.push({x:o.x, y:o.y, r:62}); continue; }
+    const i = pick[pi++], o = A[i], b = B[i];
+    if (t === "remove") b.hide = true;
+    else if (t === "swap") b.e = DIFF_EMO[spare[si++]];
+    else if (t === "big") b.s = o.s * 1.5;
+    else if (t === "move") b.x = o.x + (o.x > 300 ? -46 : 46);
+    diffs.push({x:(o.x + b.x) / 2, y:o.y, r:t === "move" ? 78 : 64});
+  }
+  return {bg, A, B, diffs};
+}
+const diffCache = {};
+function diffURL(seed, nd, side){
+  const key = seed + ":" + nd + side; if (diffCache[key]) return diffCache[key];
+  const g = genDiff(seed, nd), pal = DIFF_BG[g.bg];
+  const c = document.createElement("canvas"); c.width = c.height = 600;
+  const x = c.getContext("2d"), R = rng(777 + g.bg * 31);
+  const gr = x.createLinearGradient(0, 0, 0, 600); gr.addColorStop(0, pal[0]); gr.addColorStop(1, pal[1]);
+  x.fillStyle = gr; x.fillRect(0, 0, 600, 600);
+  x.fillStyle = pal[2]; x.globalAlpha = .35;
+  for (let k = 0; k < 9; k++){ x.beginPath(); x.arc(R() * 600, R() * 600, 30 + R() * 70, 0, 7); x.fill(); }
+  x.globalAlpha = 1; x.textAlign = "center"; x.textBaseline = "middle";
+  for (const o of (side === "A" ? g.A : g.B)){
+    if (o.hide) continue;
+    x.font = `${Math.round(o.s)}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+    x.fillText(o.e, o.x, o.y);
+  }
+  return diffCache[key] = c.toDataURL("image/jpeg", .88);
+}
+function mountDiff(el, cfg, onChange){
+  const g = genDiff(cfg.seed, cfg.nd), found = new Set();
+  let wrong = 0, revealed = false;
+  el.innerHTML = `<div class="dfpair">${["A","B"].map(sd => `<div class="dfimg" data-side="${sd}"><img src="${diffURL(cfg.seed, cfg.nd, sd)}" alt="${sd === "A" ? "الصورة الأولى" : "الصورة الثانية"}" draggable="false"><div class="dfmarks"></div></div>`).join("")}</div>`;
+  const marks = [...el.querySelectorAll(".dfmarks")];
+  const draw = () => {
+    const html = g.diffs.map((d, i) => found.has(i) || revealed ? `<span class="dfm ${found.has(i) ? "" : "rev"}" style="left:${d.x / 6}%;top:${d.y / 6}%;width:${d.r / 3}%"></span>` : "").join("");
+    marks.forEach(m => m.innerHTML = html);
+  };
+  el.onclick = e => {
+    const box = e.target.closest(".dfimg");
+    if (!box || revealed || found.size === g.diffs.length) return;
+    const r = box.getBoundingClientRect(), px = (e.clientX - r.left) / r.width * 600, py = (e.clientY - r.top) / r.height * 600;
+    let hit = -1, best = 1e9;
+    g.diffs.forEach((d, i) => { const dist = Math.hypot(d.x - px, d.y - py); if (!found.has(i) && dist < d.r && dist < best){ hit = i; best = dist; } });
+    if (hit >= 0){ found.add(hit); draw(); }
+    else {
+      wrong++;
+      const m = box.querySelector(".dfmarks"), xm = document.createElement("span");
+      xm.className = "dfx"; xm.style.left = px / 6 + "%"; xm.style.top = py / 6 + "%"; xm.textContent = "✕";
+      m.appendChild(xm); setTimeout(() => xm.remove(), 700);
+    }
+    onChange && onChange({f:found.size, d:found.size === g.diffs.length, w:wrong});
+  };
+  draw();
+  return {reveal(){ if (!revealed){ revealed = true; draw(); } }};
+}
+const Diff = {
+  init: () => ({ph:"lobby", rd:0, nd:5, seed:1, rev:false, fin:[]}),
+  start(){ const s = H.s; s.rd++; s.seed = 1 + Math.floor(Math.random() * 1e9); s.ph = "play"; s.rev = false; s.fin = []; H.priv.t0 = Date.now(); H.priv.prog = {}; pushHost(); },
+  hostPeers(players){
+    const s = H.s; if (s.ph !== "play") return;
+    let ch = false;
+    for (const p of players){
+      const z = p.presence.df; if (!z || z.rd !== s.rd) continue;
+      H.priv.prog[p.peer] = {n:pname(p), f:Math.max(0, Math.min(s.nd, +z.f || 0)), w:Math.max(0, +z.w || 0)};
+      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){
+        s.fin.push([pname(p), Math.max(0, +z.w || 0), Math.round((Date.now() - H.priv.t0) / 1000), peerKey(p.peer)]); ch = true;
+      }
+    }
+    if (ch) pushHost();
+  },
+  host(players){
+    const s = H.s, m = $("#hostMain");
+    m.onclick = e => {
+      const b = e.target.closest("[data-nd],[data-h]"); if (!b) return;
+      if (b.dataset.nd){ s.nd = +b.dataset.nd; pushHost(); }
+      else if (b.dataset.h === "go") Diff.start();
+      else if (b.dataset.h === "rev"){ s.rev = true; pushHost(); }
+      else if (b.dataset.h === "lobby"){ s.ph = "lobby"; pushHost(); }
+    };
+    if (s.ph === "lobby"){
+      H.priv.dfRd = null;
+      setMain(`<div class="layout"><div class="panel stack"><h2 style="font-size:2rem">اكتشف الفرق</h2>
+        <p class="muted">يرى كل لاعب صورتين متشابهتين على جواله، ويضغط على مكان كل اختلاف. الأسرع في إيجاد كل الفروق يتصدّر.</p>
+        <div class="row"><span>عدد الفروق</span><div class="seg">${[5,7].map(k => `<button class="${s.nd === k ? "on" : ""}" data-nd="${k}">${k}</button>`).join("")}</div></div>
+        <div><button class="btn" data-h="go">ابدأ الجولة</button></div></div>
+        <div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, false)}${soloNote()}</div></div>`);
+      return;
+    }
+    if (!m.querySelector(".df-holder") || H.priv.dfRd !== s.rd){
+      m.innerHTML = `<div class="layout"><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>ابحث عن ${s.nd} فروق</h3><b id="dfHostCount"></b></div><div class="df-holder"></div></div><div class="stack" id="dfSide"></div></div>`;
+      m.dataset.k = ""; H.priv.dfRd = s.rd;
+      H.priv.dfm = mountDiff(m.querySelector(".df-holder"), s, st => { const c = $("#dfHostCount"); if (c) c.textContent = `${st.f} / ${s.nd}`; });
+    }
+    if (s.rev) H.priv.dfm.reveal();
+    const prog = Object.values(H.priv.prog || {}).sort((a, b) => b.f - a.f);
+    const side = `<div class="panel stack"><h3>السباق</h3>${prog.length ? `<div class="race">${prog.map(r => `<div class="r"><span>${esc(r.n)}</span><div class="bar"><i style="width:${Math.round(r.f / s.nd * 100)}%"></i></div><b>${r.f}/${s.nd}</b></div>`).join("")}</div>` : `<p class="muted">${H.code && players.length ? "بانتظار أول اكتشاف…" : "العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم."}</p>`}</div>
+      <div class="panel stack"><h3>المنتهون</h3>${s.fin.length ? `<div class="lb">${s.fin.map((f, i) => `<div><span>${i + 1}. ${esc(f[0])}</span><span class="muted">${f[2]} ث · ${f[1]} خطأ</span></div>`).join("")}</div>` : `<p class="muted">لم ينهِ أحد بعد.</p>`}</div>
+      <div class="row">${s.rev ? "" : `<button class="btn ghost sm" data-h="rev">اكشف الفروق</button>`}<button class="btn" data-h="go">جولة جديدة</button><button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>${soloNote()}`;
+    const sideEl = $("#dfSide"); if (sideEl.dataset.k !== side){ sideEl.innerHTML = side; sideEl.dataset.k = side; }
+  },
+  player(s){
+    if (s.ph !== "play"){
+      P.view.dfRd = null;
+      pSet(phead() + `<div class="panel center stack"><p class="bigmsg">أنت داخل!</p><p class="muted">بانتظار أن يبدأ المقدّم الجولة.</p></div>`);
+      bindPlayer(); return;
+    }
+    if (P.view.dfRd !== s.rd){
+      P.view.dfRd = s.rd;
+      pSet(phead() + `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>اكتشف ${s.nd} فروق</h3><b id="dfCount" style="font-family:var(--display);font-size:1.5rem;color:var(--gold)">0 / ${s.nd}</b></div><p class="muted">اضغط على مكان الاختلاف في أي من الصورتين.</p><div id="pDf"></div></div><div id="pDfStatus"></div>`);
+      bindPlayer();
+      NR.presence({df:{rd:s.rd, f:0, d:false, w:0}}).catch(() => {});
+      P.view.dfm = mountDiff($("#pDf"), s, st => { const c = $("#dfCount"); if (c) c.textContent = `${st.f} / ${s.nd}`; NR.presence({df:{rd:s.rd, ...st}}).catch(() => {}); });
+    }
+    if (s.rev && P.view.dfm) P.view.dfm.reveal();
+    const me = peerKey(myPeer()), rank = s.fin.findIndex(f => f[3] === me);
+    const st = rank >= 0 ? `<div class="panel center"><p class="bigmsg" style="color:var(--gold)">وجدتها كلها! ترتيبك ${rank + 1}</p><p class="muted">${s.fin[rank][2]} ثانية · ${s.fin[rank][1]} خطأ</p></div>`
+      : s.rev ? `<p class="center muted">كشف المقدّم الفروق المتبقية</p>` : s.fin.length ? `<p class="center muted">أنهى ${s.fin.length} لاعب حتى الآن</p>` : "";
+    const el = $("#pDfStatus"); if (el && el.dataset.k !== st){ el.innerHTML = st; el.dataset.k = st; }
+  },
+};
+
+const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
+
+/* ================= JOIN ================= */
+$("#joinForm").addEventListener("submit", e => { e.preventDefault(); playerJoin($("#joinCode").value.trim()); });
+$("#joinCode").addEventListener("input", e => { e.target.value = e.target.value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\D/g, "").slice(0, 4); });
+const hashCode = (location.hash || "").replace("#", "") || new URLSearchParams(location.search).get("code") || "";
+if (/^\d{4}$/.test(hashCode)){ $("#joinCode").value = hashCode; playerJoin(hashCode); }
+</script>
+
+</body>
+</html>
