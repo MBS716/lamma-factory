@@ -1,10 +1,21 @@
-# Publishes site/ to MBS716/lamma. Needs the secret LAMMA_DEPLOY_TOKEN (fine-grained token: repository MBS716/lamma, Contents read+write).
-# Edit .github/deploy-request to "branch" (push to branch update-spot, live site unchanged) or "main" (publish + test the live site).
+# Publishes site/ (index.html + spot/) to MBS716/lamma.
+#
+# .github/deploy-request decides what happens:
+#   dry-run      check the files and simulate the upload into a throw-away local copy (no token used)
+#   branch       upload to branch update-spot of MBS716/lamma (the live site does not change)
+#   main-approved  publish to main (the live site) - only after the owner's explicit approval
+#   anything else  nothing is done
+#
+# Security rules for this file:
+#   * the token is only ever passed as an HTTP header via git -c; it is never part of a URL, a file or a command echo
+#   * no shell tracing (set -x), no printing of git output that could contain credentials
+#   * the cloned lamma/ folder is deleted before anything is committed back to this repository
+#   * every commit back to this repository is scanned for credential-looking text first
 name: deploy-site
 on:
   push:
     branches: [main]
-    paths: [".github/deploy-request"]
+    paths: [".github/deploy-request", "site/**", ".github/workflows/deploy-site.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -13,41 +24,77 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: check token
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
-        run: '[ -n "$T" ] || { echo "Secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }'
-      - name: push site to MBS716/lamma
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
+      - name: what to do
+        id: mode
         run: |
-          # never print the token: no shell tracing in this step
-          target=$(tr -d ' \n' < .github/deploy-request)
-          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma > /dev/null 2>&1
+          m=$(tr -d ' \r\n' < .github/deploy-request)
+          case "$m" in dry-run|branch|main-approved) ;; *) m=none ;; esac
+          echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "mode: $m"
+      - name: check the site files
+        run: |
+          test -f site/index.html || { echo "site/index.html missing"; exit 1; }
+          n=$(python3 - <<'PY'
+          import json, re, os, sys
+          html = open("site/index.html", encoding="utf-8").read()
+          m = re.search(r"const SPOT_LIB = (\[.*?\]);\n", html, re.S)
+          lib = json.loads(m.group(1))
+          need = [p[k] for p in lib for k in ("a", "b")] + ["thumb_a.webp", "thumb_b.webp"]
+          miss = [f for f in need if not os.path.isfile("site/spot/" + f)]
+          if miss: print("missing:", miss, file=sys.stderr); sys.exit(1)
+          print(len(lib), "pairs,", len(need), "images, levels", [sum(p["level"] == l for p in lib) for l in range(3)], file=sys.stderr)
+          print(len(need))
+          PY
+          )
+          echo "images referenced and present: $n"
+      - name: simulate the upload (no token)
+        if: steps.mode.outputs.mode == 'dry-run'
+        run: |
+          git init -q --bare /tmp/fake-lamma.git
+          git clone -q /tmp/fake-lamma.git work && cd work
+          git config user.name "Claude"; git config user.email "noreply@anthropic.com"
+          echo "old" > index.html; git add -A; git commit -qm old; git branch -M main; git push -q origin main
+          git checkout -q -B update-spot
+          rm -rf spot; cp -r ../site/index.html ../site/spot .
+          git add -A; git commit -qm "update"; git push -q -f origin update-spot
+          cd .. && git clone -q -b update-spot /tmp/fake-lamma.git check
+          diff -r --exclude=.git site check && echo "dry run OK: update-spot would contain exactly site/ ($(ls check/spot | wc -l) images + index.html)"
+          rm -rf work check
+      - name: upload to MBS716/lamma
+        if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
+        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", MODE: "${{ steps.mode.outputs.mode }}"}
+        run: |
+          [ -n "$T" ] || { echo "secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
+          echo "::add-mask::$AUTH"
+          g() { git -c "http.https://github.com/.extraheader=$AUTH" "$@" > /dev/null 2>&1; }
+          g clone -q https://github.com/MBS716/lamma.git lamma || { echo "clone failed (token invalid or no access)"; exit 1; }
           cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
-          git push -q origin "main:refs/heads/backup-before-spot-update" > /dev/null 2>&1 || true   # keeps the old site (only first time)
-          if [ "$target" = "main" ]; then git checkout -q main; else git checkout -q -B update-spot; fi
-          test -f ../site/index.html && test -d ../site/spot || { echo "site files missing"; exit 1; }
+          git ls-remote --exit-code origin backup-before-spot-update > /dev/null 2>&1 || true
+          if [ "$MODE" = "main-approved" ]; then git checkout -q main; else git checkout -q -B update-spot; fi
           rm -rf spot; cp -r ../site/index.html ../site/spot .
-          echo "files: $(ls spot | wc -l) images"
-          git add -A
-          git commit -q -m "Spot the difference: real photo pairs (Wikimedia Commons) with easy/medium/hard levels" || echo "nothing to commit"
-          if [ "$target" = "main" ]; then git push -q origin main > /dev/null 2>&1; else git push -q -f origin update-spot > /dev/null 2>&1; fi || { echo "push failed"; exit 1; }
-          echo "pushed to $target"
+          git add -A; git commit -q -m "Spot the difference: real photo pairs (Wikimedia Commons) with easy/medium/hard levels" || echo "nothing to commit"
+          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin update-spot; fi || { echo "push failed"; exit 1; }
+          echo "uploaded to $( [ "$MODE" = main-approved ] && echo main || echo update-spot ): $(ls spot | wc -l) images + index.html"
+          cd .. && rm -rf lamma
       - uses: actions/setup-python@v5
+        if: steps.mode.outputs.mode == 'main-approved'
         with: {python-version: "3.11"}
       - name: test the live site
+        if: steps.mode.outputs.mode == 'main-approved'
         run: |
-          target=$(tr -d ' \n' < .github/deploy-request)
-          [ "$target" = "main" ] || { echo "branch only: live site not changed"; exit 0; }
-          pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium > /dev/null
           want=$(md5sum site/index.html | cut -c1-32)
           for i in $(seq 1 60); do
             got=$(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           python tests/live_e2e.py https://mbs716.github.io/lamma/ reports/site-test/live
-      - if: always()
+      - name: save test results (scanned for credentials first)
+        if: always() && steps.mode.outputs.mode == 'main-approved'
         run: |
+          rm -rf lamma
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
-          git pull -q --rebase || true
-          git add reports/site-test 2>/dev/null && git commit -m "live site test results" && git push || true
+          git add reports/site-test 2>/dev/null || exit 0
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit: credential-like text found"; exit 1; fi
+          git commit -q -m "live site test results" && git pull -q --rebase && git push -q || true

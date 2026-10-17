@@ -30,4 +30,6 @@ jobs:
         run: |
           rm -rf reports/test-${{ github.run_number }}/bucket/pairs
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
-          git add reports state && git commit -m "test run ${{ github.run_number }}" && git push || true
+          git add reports state
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit: credential-like text found"; exit 1; fi
+          git commit -m "test run ${{ github.run_number }}" && git push || true
