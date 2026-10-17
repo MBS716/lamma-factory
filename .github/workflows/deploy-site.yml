@@ -53,6 +53,10 @@ jobs:
           PY
           )
           echo "files referenced and present: $n"
+      - name: every spot pair loads and every difference is real (no unlisted changes)
+        run: |
+          pip install -q pillow numpy scipy
+          python site-src/tools/verify_spot.py site
       - name: simulate the upload (no token)
         if: steps.mode.outputs.mode == 'dry-run'
         env: {B: "${{ steps.mode.outputs.branch }}"}
