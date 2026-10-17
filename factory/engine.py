@@ -380,6 +380,9 @@ class Engine:
         """The thing grows a little, standing on the same base; it must fully cover its old outline."""
         if not self.solid(c) or c.edge < 1.5 or not self.pasteable(B, c): return None, None
         x0, y0, x1, y1 = c.box
+        # only free-standing things grow (lamps, pots, trees, hats); rectangular framed things (windows, shutters,
+        # panels, posters) grown over their frame were the most common failure seen by the judge
+        if c.area / ((x1 - x0 + 1) * (y1 - y0 + 1)) > 0.82: return None, None
         s = float(self.rng.uniform(1.22, 1.35))
         out, tm = self._paste(B, A, c, 0, 0, scale=s)
         if out is None: return None, None
@@ -417,7 +420,10 @@ class Engine:
             if (cm & ~cv2.dilate(om.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)).sum() > 0.03 * cm.sum(): continue
             if (om & ~cm).sum() > 0.25 * cm.sum(): continue
             dif = float(np.abs(cv2.resize(A[oy0:oy1 + 1, ox0:ox1 + 1], (bw, bh)).astype(int) - A[y0:y1 + 1, x0:x1 + 1].astype(int))[cm].mean())
-            if dif < 25: continue
+            if dif < 32: continue
+            # same kind of surface: a flat panel must not replace something with detail (louvres, doorways)
+            g_c = float(self._grad[c.mask > 0].mean()); g_o = float(self._grad[o.mask > 0].mean())
+            if not (0.6 < (g_o + 4) / (g_c + 4) < 1.67): continue
             if self._busy[self._ringmask(o)].mean() > 0.30 or self.has_text(A, o.box): continue
             if best is None or dif > best[0]: best = (dif, o, om)
         if best is None: return None, None
@@ -435,7 +441,7 @@ class Engine:
         x0, y0, x1, y1 = c.box; pm = c.mask[y0:y1 + 1, x0:x1 + 1] > 0
         if (pm & pm[:, ::-1]).sum() / max(1, (pm | pm[:, ::-1]).sum()) < 0.86: return None, None
         patch = B[y0:y1 + 1, x0:x1 + 1]; fl = patch[:, ::-1]
-        if np.abs(patch.astype(int) - fl.astype(int))[pm].mean() < 28: return None, None
+        if np.abs(patch.astype(int) - fl.astype(int))[pm].mean() < 40: return None, None   # mirror must be noticeable
         a = cv2.GaussianBlur((pm & pm[:, ::-1]).astype(np.float32), (0, 0), 0.9)[..., None]
         out = B.copy(); out[y0:y1 + 1, x0:x1 + 1] = (patch * (1 - a) + fl * a).round().astype(np.uint8)
         return out, c.mask
