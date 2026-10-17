@@ -1,0 +1,50 @@
+# Publishes site/ to MBS716/lamma. Needs the secret LAMMA_DEPLOY_TOKEN (fine-grained token: repository MBS716/lamma, Contents read+write).
+# Edit .github/deploy-request to "branch" (push to branch update-spot, live site unchanged) or "main" (publish + test the live site).
+name: deploy-site
+on:
+  push:
+    branches: [main]
+    paths: [".github/deploy-request"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: check token
+        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
+        run: '[ -n "$T" ] || { echo "Secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }'
+      - name: push site to MBS716/lamma
+        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
+        run: |
+          target=$(tr -d ' \n' < .github/deploy-request)
+          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma
+          cd lamma
+          git config user.name "Claude"; git config user.email "noreply@anthropic.com"
+          git push -q origin "main:refs/heads/backup-before-spot-update" 2>/dev/null || true   # keeps the old site (only first time)
+          if [ "$target" = "main" ]; then git checkout -q main; else git checkout -q -B update-spot; fi
+          rm -rf spot; cp -r ../site/index.html ../site/spot .
+          git add -A
+          git commit -q -m "Spot the difference: real photo pairs (Wikimedia Commons) with easy/medium/hard levels" || echo "nothing to commit"
+          if [ "$target" = "main" ]; then git push -q origin main; else git push -q -f origin update-spot; fi
+          echo "pushed to $target"
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: test the live site
+        run: |
+          target=$(tr -d ' \n' < .github/deploy-request)
+          [ "$target" = "main" ] || { echo "branch only: live site not changed"; exit 0; }
+          pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+          want=$(md5sum site/index.html | cut -c1-32)
+          for i in $(seq 1 60); do
+            got=$(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
+          done
+          python tests/live_e2e.py https://mbs716.github.io/lamma/ reports/site-test/live
+      - if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git pull -q --rebase || true
+          git add reports/site-test 2>/dev/null && git commit -m "live site test results" && git push || true

@@ -1,17 +1,30 @@
-# Checks that the preview of the next Lamma site (served from preview/ by GitHub Pages) is online.
-name: preview-check
+# Real test of the preview copy of the next Lamma site (served from preview/ by GitHub Pages of this repo).
+name: preview-test
 on:
-  workflow_dispatch:
   push:
     branches: [main]
-    paths: ["preview/**", ".github/workflows/preview.yml"]
+    paths: ["preview/**", "tests/**", ".github/workflows/preview.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
 jobs:
-  check:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          sleep 90
-          for u in index.html spot/s01a.webp spot/s20b.webp; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" "https://mbs716.github.io/lamma-factory/preview/$u"); echo "$u $code"; [ "$code" = 200 ] || exit 1
-          done
-          curl -s https://mbs716.github.io/lamma-factory/preview/ | grep -c "SPOT_LIB"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+      - name: wait until GitHub Pages serves this commit
+        run: |
+          want=$(md5sum preview/index.html | cut -c1-32)
+          for i in $(seq 1 40); do
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
+          done; echo "pages did not update"; exit 1
+      - run: python tests/live_e2e.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview
+      - if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git pull -q --rebase || true
+          git add reports/site-test && git commit -m "preview test results" && git push || true
