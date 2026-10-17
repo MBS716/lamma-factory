@@ -4,25 +4,48 @@
   {
    "level_asked": 0,
    "level_got": 0,
-   "title": "مكتبة كتب",
+   "title": "سوق الفواكه",
    "diffs": 5,
-   "image": "s02a.webp",
+   "image": "s05a.webp",
    "phone1": "5 / 5",
    "phone2": "2 / 5",
-   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:02 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+  },
+  {
+   "level_asked": 1,
+   "level_got": 1,
+   "title": "بلدة المرفأ",
+   "diffs": 6,
+   "image": "s13a.webp",
+   "phone1": "6 / 6",
+   "phone2": "2 / 6",
+   "host_race": "السباق | 2:56 | جوال 1 | 6/6 | جوال 2 | 2/6 | المنتهون | 1. جوال 1 | 0:02 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
+  },
+  {
+   "level_asked": 2,
+   "level_got": 2,
+   "title": "داخل مقهى",
+   "diffs": 5,
+   "image": "s17a.webp",
+   "phone1": "5 / 5",
+   "phone2": "2 / 5",
+   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
   }
  ],
  "errors": [],
  "step": "start",
  "footer_tiger": true,
  "footer_id": true,
- "code": "8370",
+ "code": "1108",
  "library": 20,
  "levels_in_library": [
   7,
   6,
   7
  ],
- "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e.py\", line 12, in main\n    await run(rep)\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e.py\", line 30, in run\n    await body(rep, b, host, phones)\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e.py\", line 61, in body\n    pair = await host.evaluate('H.s.pair'); W, H = pair['w'], pair['h']\n                                                   ~~~~^^^^^\nTypeError: 'NoneType' object is not subscriptable\n",
- "PASS": false
+ "game_quiz": "ok",
+ "game_letters": "ok",
+ "game_wheel": "ok",
+ "game_puzzle": "ok",
+ "PASS": true
 }
