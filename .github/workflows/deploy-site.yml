@@ -98,20 +98,20 @@ jobs:
       - name: test the uploaded branch in a real browser (real Firebase, files served from the branch copy)
         if: steps.mode.outputs.mode == 'branch'
         run: |
-          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium > /dev/null
+          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
-          python tests/live_e2e_v2.py http://localhost:8799/ reports/site-test/branch-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
+          python tests/live_e2e_v3.py http://localhost:8799/ reports/site-test/branch3-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
         run: |
-          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium > /dev/null
+          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
           want=$(md5sum site/index.html | cut -c1-32)
           for i in $(seq 1 60); do
             got=$(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
-          python tests/live_e2e_v2.py https://mbs716.github.io/lamma/ reports/site-test/live
+          python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live
           python - <<'PY'
           import asyncio
           from playwright.async_api import async_playwright

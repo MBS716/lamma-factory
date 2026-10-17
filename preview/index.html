@@ -398,6 +398,9 @@ html.noscroll,html.noscroll body{overflow:hidden}
 
 .resume{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 16px;border-radius:16px;background:color-mix(in srgb,var(--gold) 16%,var(--card));border:1px solid var(--gold)}
 .pwrap.wide{max-width:1100px}
+.rqnote{border-radius:14px;padding:10px 14px;background:color-mix(in srgb,var(--gold) 22%,var(--bg2));border:1px solid var(--gold);font-weight:700}
+.pwrap .wheelbox{width:min(100%,300px)}
+.note.lost{border-color:var(--bad);color:var(--ink);margin:0}
 </style>
 </head>
 <body>
@@ -1119,6 +1122,9 @@ const SCENES = ["الصحراء","البحر","المدينة ليلًا","ال�
 
 /* ================= LIVE CONNECTION ================= */
 const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "authDomain": "lamma-b3804.firebaseapp.com", "databaseURL": "https://lamma-b3804-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "lamma-b3804", "storageBucket": "lamma-b3804.firebasestorage.app", "messagingSenderId": "75949188252", "appId": "1:75949188252:web:f2e58971af02071b8a7959"};
+/* Rooms of this version live apart from the rooms of the current public site, so a phone that opens the other
+   version with the same code finds no game instead of a game it cannot read. */
+const APP_V = 2, ROOM_PREFIX = "lm2-";
 const BASE_URL = "";
 let ROOM = null, NR = null, H = null, P = null, connState = "checking";
 function makeFirebaseRoom(db){
@@ -1138,9 +1144,9 @@ function makeFirebaseRoom(db){
         handlers.slice().forEach(h => { try { h({peers:peersArr}); } catch(e){ console.error(e); } });
       };
       const cb = snap => build(snap.val());
-      const ccb = s => { conn = !!s.val(); if (conn && !left){ mine.onDisconnect().remove(); write(); } };
+      const ccb = s => { const was = conn; conn = !!s.val(); if (conn && !left){ mine.onDisconnect().remove(); write(); } if (was !== conn) setTimeout(() => window.dispatchEvent(new Event("lm-conn")), 0); };
       mine.onDisconnect().remove();
-      await Promise.race([write(), sleep(10000).then(() => { throw new Error("timeout"); })]);
+      await Promise.race([write(), sleep(25000).then(() => { throw new Error("timeout"); })]);   // slow mobile networks need longer than 10 s
       ref.on("value", cb); ci.on("value", ccb);
       return {
         name,
@@ -1233,10 +1239,10 @@ const sec = (t, body) => `<section class="hsec"><h4>${t}</h4>${body}</section>`;
 const HELP = {
   letters:() => sec("الفكرة", `<p>فريقان (الأخضر والبرتقالي) يتنافسان على أسئلة الحروف. لكل سؤال حرف، والإجابة تبدأ بهذا الحرف. <b>الفائز صاحب أعلى مجموع نقاط</b>، ولا يوجد فوز بالوصول بين أطراف اللوحة.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يفتح اللعبة على الشاشة الكبيرة فيظهر كود من 4 أرقام. يدخل اللاعبون الكود من جوالاتهم، ويكتب كل لاعب اسمه ويختار فريقه. يختار المقدّم نوع المباراة ومستوى الأسئلة ووقت السؤال ثم يضغط «ابدأ المباراة».</p>`)
-    + sec("طريقة اللعب", `<ol><li>الفريقان يتناوبان: سؤال للأخضر ثم سؤال للبرتقالي، فيحصل الفريقان دائمًا على نفس عدد الأسئلة.</li><li>الفريق صاحب الدور يختار حرفًا من اللوحة (أو حرفًا عشوائيًا)، فيظهر السؤال ويبدأ الوقت فورًا.</li><li>عندما يعلن الفريق إجابته يضغط أحد لاعبيه «✋ جاوبنا» من جواله، أو يضغط المقدّم «أعلن الفريق إجابته»، فيتوقف الوقت.</li><li>يحكم المقدّم: صحيحة أو خاطئة. وقت الحكم لا يُحسب على الفريق.</li><li>الخلية تتلون بلون الفريق إذا أجاب صح، وتصبح رمادية إذا أخطأ أو انتهى الوقت. اللوحة للعرض فقط ولا تؤثر على الفوز.</li></ol>`)
+    + sec("طريقة اللعب", `<ol><li>الفريقان يتناوبان: سؤال للأخضر ثم سؤال للبرتقالي، فيحصل الفريقان دائمًا على نفس عدد الأسئلة.</li><li>الفريق صاحب الدور يختار حرفًا من اللوحة (أو حرفًا عشوائيًا)، فيظهر السؤال ويبدأ الوقت فورًا.</li><li>يعلن الفريق إجابته بصوت مسموع، فيضغط المقدّم «⏱ تثبيت وقت الإجابة» لحظة سماعها، فيتوقف الوقت. المقدّم وحده يثبّت الوقت ويحكم.</li><li>زر «✋ نريد الإجابة» في جوال الفريق ينبّه المقدّم فقط، ولا يوقف الوقت ولا يؤثر على النقاط.</li><li>يحكم المقدّم: صحيحة أو خاطئة. وقت الحكم لا يُحسب على الفريق.</li><li>الخلية تتلون بلون الفريق إذا أجاب صح، وتصبح رمادية إذا أخطأ أو انتهى الوقت. اللوحة للعرض فقط ولا تؤثر على الفوز.</li></ol>`)
     + sec("النقاط (سؤال مدته 30 ثانية)", `<table class="htable"><tr><th>زمن الإجابة الصحيحة</th><th>النقاط</th></tr><tr><td>5 ثوانٍ أو أقل</td><td>100</td></tr><tr><td>6 إلى 10 ثوانٍ</td><td>90</td></tr><tr><td>11 إلى 15</td><td>75</td></tr><tr><td>16 إلى 20</td><td>60</td></tr><tr><td>21 إلى 25</td><td>45</td></tr><tr><td>26 إلى 30</td><td>30</td></tr><tr><td>إجابة خاطئة أو انتهاء الوقت</td><td>0</td></tr></table><p class="muted">إذا اختار المقدّم 20 أو 45 ثانية تتناسب الفترات مع الوقت المختار. اختيار الحرف وحده لا يعطي نقاطًا.</p>`)
     + sec("نهاية المباراة", `<p><b>بعدد الأسئلة:</b> 20 أو 30 أو 40 سؤالًا تُقسم بالتساوي بين الفريقين.<br><b>بالوقت:</b> 10 أو 15 أو 20 دقيقة، وعند انتهاء الوقت يُكمل الفريق الآخر سؤاله إن لزم حتى تتساوى الفرص.</p><p><b>التعادل:</b> تُلعب جولة فاصلة: سؤال لكل فريق، وتتكرر حتى يتقدم أحدهما.</p><p>تظهر شاشة الفوز بالإحصاءات (النقاط، الصحيحة، الدقة، متوسط الزمن، أسرع إجابة، الفارق) وتبقى حتى يبدأ المقدّم مباراة جديدة.</p>`)
-    + sec("مثال", `<p>دور الأخضر، اختاروا «ب»: «عاصمة العراق؟». أعلنوا «بغداد» بعد 7 ثوانٍ، فحكم المقدّم بأنها صحيحة: +90 للأخضر. ثم يأتي دور البرتقالي.</p>`),
+    + sec("مثال", `<p>دور الأخضر، اختاروا «ب»: «عاصمة العراق؟». أعلنوا «بغداد» بعد 7 ثوانٍ فثبّت المقدّم الوقت، ثم حكم بأنها صحيحة: +90 للأخضر. ثم يأتي دور البرتقالي.</p>`),
   quiz:() => sec("الفكرة", `<p>مسابقة اختيار من متعدد: يظهر السؤال على شاشة المقدّم وعلى الجوالات، وكل لاعب يجيب من جواله.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يختار التصنيف والمستوى وعدد الأسئلة ووقت كل سؤال، ثم يعرض الكود. يدخل اللاعبون الكود ويكتبون أسماءهم، ثم يضغط المقدّم «ابدأ المسابقة».</p>`)
     + sec("طريقة اللعب", `<p>اختر الإجابة من جوالك بالشكل واللون المطابقين. تُكشف الإجابة عند انتهاء الوقت أو عند إجابة الجميع، ثم ينتقل المقدّم للسؤال التالي.</p>`)
@@ -1251,7 +1257,7 @@ const HELP = {
     + sec("الدخول والبدء", `<p>المقدّم يختار المستوى ووقت الجولة ثم يبدأ، فيحصل كل اللاعبين على نفس الصورتين في الوقت نفسه.</p>`)
     + sec("طريقة اللعب", `<ul><li>اضغط على مكان الفرق في أي من الصورتين، فتظهر دائرة خضراء.</li><li>كبّر بإصبعين أو بأزرار ＋ و－، واسحب بإصبع واحد للتحرك داخل الصورة. التكبير والسحب لا يُحسبان أخطاء.</li><li>الضغطة الخاطئة تظهر ✕ وتُحسب في عدد الأخطاء.</li></ul>`)
     + sec("الترتيب والوقت", `<p>الأسرع في إيجاد كل الفروق يتصدر، وعند التساوي الأقل أخطاءً. عند انتهاء الوقت تُكشف الفروق المتبقية بدوائر برتقالية.</p>`)
-    + sec("ميزات", `<p>لا يتكرر زوج صور شاهده أحد في الغرفة ما دام هناك جديد. زر «معلومات الصورة» يعرض المصوّر والمصدر والترخيص.</p>`),
+    + sec("ميزات", `<p>لا يتكرر زوج صور داخل الغرفة حتى تُلعب كل صور المستوى، وتُقدَّم أولًا الصور التي لم يرها أحد من الحاضرين. زر «معلومات الصورة» يعرض المصوّر والترخيص، ويظهر رابط الصورة الأصلية بعد انتهاء الجولة.</p>`),
   puzzle:() => sec("الفكرة", `<p>سباق لترتيب صورة مقسّمة إلى قطع مبعثرة. كل اللاعبين يحصلون على نفس الصورة بنفس الخلط.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يختار نوع الصور والصعوبة (من 3×3 إلى 6×6) ووقت الجولة والصورة، ثم يبدأ السباق.</p>`)
     + sec("طريقة اللعب", `<ul><li>اسحب القطعة إلى مكانها الصحيح فتتبادل مع القطعة الموجودة هناك.</li><li>أو اضغط قطعتين متتاليتين لتبديلهما.</li><li>زر «تكبير» يوسّع مساحة اللعب على الجوال.</li></ul>`)
@@ -1276,8 +1282,8 @@ async function claimCode(prefer){
   for (let k = 0; k < 4; k++){
     const code = k === 0 && prefer ? prefer : String(1000 + Math.floor(Math.random() * 9000));
     let nr;
-    try { nr = await ROOM.join("lm-" + code); } catch(e){ console.error(e); if (H) H.failed = true; return; }
-    try { await nr.presence({r:"h", g:H.g, s:H.s}); } catch(e){}
+    try { nr = await ROOM.join(ROOM_PREFIX + code); } catch(e){ console.error(e); if (H) H.failed = true; return; }
+    try { await nr.presence({r:"h", v:APP_V, g:H.g, s:H.s}); } catch(e){}
     await sleep(1300);
     const other = () => nr.peers().some(p => !p.sameTab && p.presence && p.presence.r === "h");
     if (other() && k === 0 && prefer) for (let w = 0; w < 8 && other(); w++) await sleep(500);   // our old tab may take a moment to leave
@@ -1291,7 +1297,7 @@ async function claimCode(prefer){
 function pushHost(){
   if (!H) return;
   saveHost();
-  if (NR){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; NR.presence({r:"h", g:H.g, s}).catch(() => {}); }
+  if (NR){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; NR.presence({r:"h", v:APP_V, g:H.g, s}).catch(() => {}); }
   renderHost();
 }
 /* ---- the host's game survives a page reload or a dropped connection: the state is kept in this tab
@@ -1335,7 +1341,7 @@ function renderHost(){
   else if (connState === "checking" || (ROOM && !H.failed)) codeHtml = `<span class="muted">جارٍ تجهيز الكود…</span>`;
   else codeHtml = `<span class="muted">وضع الشاشة الواحدة</span>`;
   const lvBadge = H.s.o.lv != null && H.s.ph !== "lobby" ? `<span class="chip lv">${H.s.o.lv === 3 ? "متدرّج" : LV_NAMES[H.s.o.lv]}</span>` : "";
-  const bar = `<div><span class="muted">${g.group === "team" ? "لعبة فرق" : "سباق من الجوال"}</span><h2>${g.name}</h2></div>
+  const bar = `${lostNote()}<div><span class="muted">${g.group === "team" ? "لعبة فرق" : "سباق من الجوال"}</span><h2>${g.name}</h2></div>
     <div class="codebox">${codeHtml}</div>
     <div class="row">${lvBadge}<span class="chip">${players.length} لاعب</span><button class="btn ghost sm" data-help="${H.g}">❔ طريقة اللعب</button>${H.s.ph !== "lobby" ? `<button class="btn ghost sm" id="setBtn">الإعدادات</button>` : ""}<button class="btn ghost sm" id="endBtn">إنهاء</button></div>`;
   const barEl = $("#hostBar");
@@ -1390,25 +1396,37 @@ function setMain(html){ const m = $("#hostMain"); if (m.dataset.k !== html){ m.i
 function setEl(el, html){ if (el && el.dataset.k !== html){ el.innerHTML = html; el.dataset.k = html; return true; } return false; }
 
 /* ================= PLAYER ================= */
+let joining = null, joinTok = null;
+function joinStatus(html){ $("#playerMain").innerHTML = `<div class="panel center stack">${html}<div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`; $("#playerMain").dataset.k = ""; bindPlayer(); }
 async function playerJoin(code){
   $("#joinErr").textContent = "";
   if (!/^\d{4}$/.test(code)){ $("#joinErr").textContent = "الكود مكوّن من 4 أرقام."; return; }
-  await roomReady;
-  if (!ROOM){ $("#joinErr").textContent = "الاتصال المباشر غير متاح هنا."; return; }
-  if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
-  try { NR = await ROOM.join("lm-" + code); }
-  catch(e){ console.error(e); NR = null; $("#joinErr").textContent = "تعذّر الاتصال باللعبة. تأكد من الإنترنت وأعد المحاولة."; return; }
-  $("#playerMain").innerHTML = ""; $("#playerMain").dataset.k = "";
-  P = {code, name:lsGet("lm-name"), team:null, joined:false, g:null, view:{}, searching:true};
-  // a phone that reloads (or loses the page) comes straight back into the same game with the same name and team
-  let prev = null; try { prev = JSON.parse(sessionStorage.getItem("lm-in") || "null"); } catch(e){}
-  if (prev && prev.code === code && P.name){ P.team = prev.team || null; P.joined = true; NR.presence({r:"p", n:P.name, tm:P.team, dv:devId}).catch(() => {}); }
-  show("player"); playerRender();
-  NR.onPeers(() => playerRender());
-  setTimeout(() => { if (P && P.code === code){ P.searching = false; playerRender(); } }, 6000);
+  if (joining === code) return;                     // a second tap while connecting does nothing
+  joining = code; const tok = joinTok = {};
+  const btn = $("#joinForm button"); if (btn) btn.disabled = true;
+  show("player"); joinStatus(`<div class="spinner"></div><p class="bigmsg">جارٍ الاتصال باللعبة…</p><p class="muted">الكود ${esc(code)}</p>`);
+  try {
+    await roomReady;
+    if (!ROOM){ joinStatus(`<p class="bigmsg">تعذّر تشغيل الاتصال المباشر</p><p class="muted">تأكد من الإنترنت، ثم أعد فتح الصفحة. إن كنت تستخدم متصفحًا داخل تطبيق (مثل واتساب أو إنستغرام) فافتح الرابط في Safari أو Chrome.</p>`); return; }
+    if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
+    let nr;
+    try { nr = await ROOM.join(ROOM_PREFIX + code); }
+    catch(e){ console.error(e); if (joinTok !== tok) return; joinStatus(`<p class="bigmsg">تعذّر الاتصال باللعبة</p><p class="muted">الاتصال بطيء أو مقطوع. تأكد من الإنترنت ثم أعد المحاولة.</p><button class="btn" data-act="retry" data-code="${esc(code)}">إعادة المحاولة</button>`); return; }
+    if (joinTok !== tok){ try { await nr.leave(); } catch(e){} return; }      // the player pressed «رجوع» while connecting
+    NR = nr;
+    $("#playerMain").innerHTML = ""; $("#playerMain").dataset.k = "";
+    P = {code, name:lsGet("lm-name"), team:null, joined:false, g:null, view:{}, searching:true, t0:Date.now()};
+    // a phone that reloads (or loses the page) comes straight back into the same game with the same name and team
+    let prev = null; try { prev = JSON.parse(sessionStorage.getItem("lm-in") || "null"); } catch(e){}
+    if (prev && prev.code === code && P.name && Date.now() - (prev.at || 0) < 6 * 3600e3){ P.team = prev.team || null; P.joined = true; NR.presence({r:"p", n:P.name, tm:P.team, dv:devId}).catch(() => {}); }
+    else { try { sessionStorage.removeItem("lm-in"); } catch(e){} }
+    playerRender();
+    NR.onPeers(() => playerRender());
+    setTimeout(() => { if (P && P.code === code){ P.searching = false; playerRender(); } }, 8000);
+  } finally { joining = null; if (btn) btn.disabled = false; }
 }
-async function playerLeave(){ try { sessionStorage.removeItem("lm-in"); } catch(e){} if (NR){ try { await NR.leave(); } catch(e){} NR = null; } P = null; show("home"); }
-function findHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && GAMES[p.presence.g]) : null; }
+async function playerLeave(){ joinTok = null; try { sessionStorage.removeItem("lm-in"); } catch(e){} if (NR){ try { await NR.leave(); } catch(e){} NR = null; } P = null; show("home"); }
+function findHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && p.presence.v === APP_V && GAMES[p.presence.g]) : null; }
 function pSet(html){ const m = $("#playerMain"); if (m.dataset.k !== html){ m.innerHTML = html; m.dataset.k = html; return true; } return false; }
 function playerRender(){
   if (!P) return;
@@ -1416,7 +1434,7 @@ function playerRender(){
   if (!host){
     pSet(`<div class="panel center stack">${P.searching || P.joined
       ? `<p class="bigmsg">${P.joined ? "بانتظار المقدّم…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`
-      : `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم.</p>`}
+      : `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم، وأن الجوال يفتح نفس رابط الموقع الذي يستخدمه المقدّم.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`}
       <div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
     bindPlayer(); return;
   }
@@ -1448,20 +1466,22 @@ function bindPlayer(){
   m.onclick = e => {
     const t = e.target.closest("button"); if (!t) return;
     if (t.dataset.act === "leave") return playerLeave();
+    if (t.dataset.act === "retry") return playerJoin(t.dataset.code);
     if (t.dataset.team){ P.team = t.dataset.team; P.name = clean($("#pName") ? $("#pName").value : P.name); m.querySelectorAll("[data-team]").forEach(b => b.classList.toggle("on", b.dataset.team === P.team)); return; }
     if (t.dataset.act === "enter"){
       const name = clean($("#pName").value);
       if (!name){ $("#pErr").textContent = "اكتب اسمك أولًا."; return; }
       if (GAMES[P.g].teams && !P.team){ $("#pErr").textContent = "اختر فريقك."; return; }
       P.name = name; lsSet("lm-name", name); P.joined = true;
-      try { sessionStorage.setItem("lm-in", JSON.stringify({code:P.code, team:P.team || null})); } catch(e){}
+      try { sessionStorage.setItem("lm-in", JSON.stringify({code:P.code, team:P.team || null, at:Date.now()})); } catch(e){}
       NR.presence({r:"p", n:name, tm:P.team || null, dv:devId}).catch(() => {});
       $("#playerMain").dataset.k = ""; playerRender(); return;
     }
     if (P && P.g && MOD[P.g].pclick) MOD[P.g].pclick(t);
   };
 }
-function phead(extra){ return `<div class="phead"><span class="who">${esc(P.name)}${P.team ? ` · <span class="t${P.team}">${TEAM[P.team]}</span>` : ""}</span><span class="row">${extra || ""}<button class="btn ghost sm icon" data-help="${P.g}" aria-label="طريقة اللعب">❔</button><button class="btn ghost sm" data-act="leave">خروج</button></span></div>`; }
+const lostNote = () => NR && NR.connected && !NR.connected() ? `<p class="note lost">انقطع الاتصال بالإنترنت… نعيد الاتصال تلقائيًا، ولن تضيع نقاطك.</p>` : "";
+function phead(extra){ return lostNote() + `<div class="phead"><span class="who">${esc(P.name)}${P.team ? ` · <span class="t${P.team}">${TEAM[P.team]}</span>` : ""}</span><span class="row">${extra || ""}<button class="btn ghost sm icon" data-help="${P.g}" aria-label="طريقة اللعب">❔</button><button class="btn ghost sm" data-act="leave">خروج</button></span></div>`; }
 function raceHTML(prog, total, unit){
   return prog.length ? `<div class="race">${prog.map(r => `<div class="r"><span>${esc(r.n)}</span><div class="bar"><i style="width:${Math.round(r.v / total * 100)}%"></i></div><b>${unit ? `${r.v}/${total}` : `${Math.round(r.v / total * 100)}%`}</b></div>`).join("")}</div>` : `<p class="muted">بانتظار أول حركة…</p>`;
 }
@@ -1739,7 +1759,7 @@ const Letters = {
     if (qi < 0){ if (!swap){ const arr = s.b.split(""); arr[cell] = "x"; s.b = arr.join(""); s.cur = -1; s.st = "pick"; H.priv.flash = `لا توجد أسئلة متبقية لحرف ${L}، اختر حرفًا آخر.`; pushHost(); } return; }
     const q = H.priv.B[qi];
     H.priv.used.add(qi); seenAdd("lm-lseen", [hashStr(q[3])], 3000); H.priv.ans = q[4]; H.priv.flash = "";
-    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.a = ""; s.am = -1; s.by = ""; s.k++; s.st = "ask"; s.t = s.T;
+    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.a = ""; s.am = -1; s.by = ""; s.rq = ""; s.k++; s.st = "ask"; s.t = s.T;
     H.priv.q0 = Date.now(); H.priv.showAns = false;
     clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.tick, 200);
     pushHost();
@@ -1756,7 +1776,7 @@ const Letters = {
     const ms = Date.now() - H.priv.q0;
     if (ms >= s.T * 1000){ Letters.finishQ(false, true); return; }
     clearInterval(H.priv.tick);
-    s.am = ms; s.by = by || ""; s.st = "judge"; s.t = Math.max(0, Math.ceil((s.T * 1000 - ms) / 1000));
+    s.am = ms; s.by = ""; s.st = "judge"; s.t = Math.max(0, Math.ceil((s.T * 1000 - ms) / 1000));
     pushHost();
   },
   /* result of a question: runs once per question (st changes immediately), so repeated taps can't score twice */
@@ -1780,7 +1800,7 @@ const Letters = {
     }
     if (end){ Letters.end(); return; }
     s.tn = g > o ? "o" : "g";       // the team with fewer questions plays next; green opens every pair
-    s.st = "pick"; s.cur = -1; s.q = ""; s.a = ""; s.lt = ""; s.am = -1; s.by = ""; s.last = null; s.t = s.T;
+    s.st = "pick"; s.cur = -1; s.q = ""; s.a = ""; s.lt = ""; s.am = -1; s.by = ""; s.rq = ""; s.last = null; s.t = s.T;
     if (!s.b.includes(".")) Letters.board();
     pushHost();
   },
@@ -1797,17 +1817,18 @@ const Letters = {
     if (a === "start" || a === "match") Letters.start();
     else if (a === "cell"){ if (s.ph === "play" && s.st === "pick" && s.b[+el.dataset.cell] === ".") Letters.ask(+el.dataset.cell); }
     else if (a === "rand"){ if (s.st !== "pick") return; const free = range(25).filter(i => s.b[i] === "."); if (free.length) Letters.ask(free[Math.floor(Math.random() * free.length)]); }
-    else if (a === "stop") Letters.stop("المقدّم");
+    else if (a === "stop") Letters.stop();
     else if (a === "ok") Letters.finishQ(true);
     else if (a === "no") Letters.finishQ(false);
     else if (a === "next") Letters.next();
     else if (a === "swap"){ if (s.st === "ask") Letters.ask(s.cur, true); }
     else if (a === "ans"){ H.priv.showAns = !H.priv.showAns; renderHost(); }
   },
+  /* a phone may only SIGNAL that its team wants to answer: it never stops the clock and never affects points */
   hostPeers(players){
-    const s = H.s; if (s.ph !== "play" || s.st !== "ask") return;
+    const s = H.s; if (s.ph !== "play" || s.st !== "ask" || s.rq) return;
     const p = players.find(p => p.presence.am && p.presence.am.k === s.k && p.presence.tm === s.tn);
-    if (p) Letters.stop(pname(p));
+    if (p){ s.rq = pname(p); pushHost(); }
   },
   scoreboard(s){
     const card = t => { const x = s.sc[t]; return `<div class="tscore ${t} ${s.ph === "play" && s.tn === t ? "turn" : ""}"><div class="row" style="justify-content:space-between"><span class="tname2">${TEAM[t]}</span>${s.ph === "play" && s.tn === t ? `<span class="turnchip">الدور</span>` : ""}</div>
@@ -1828,10 +1849,11 @@ const Letters = {
     if (s.st === "ask"){
       const el = H && host ? Date.now() - H.priv.q0 : (T - s.t) * 1000, now = speedPoints(Math.max(0, el), T);
       return `<div class="stage">${head}<div class="qclock"><span class="timer ${s.t <= 5 ? "warn" : ""}">${s.t}</span><div class="tbar"><i style="width:${s.t / T * 100}%"></i></div>${host ? `<span class="chip">الإجابة الآن = ${now} نقطة</span>` : ""}</div>
-        ${host ? `<button class="btn big stopbtn" data-h="stop">✋ أعلن الفريق إجابته</button>
+        ${s.rq ? `<div class="rqnote">✋ الفريق ${TEAM[s.tn]} يطلب الإجابة${host ? ` (${esc(s.rq)})` : ""}. الوقت لا يتوقف حتى ${host ? "تثبّته عند سماع الإجابة" : "يثبّته المقدّم عند سماع الإجابة"}.</div>` : ""}
+        ${host ? `<button class="btn big stopbtn" data-h="stop">⏱ تثبيت وقت الإجابة</button><p class="muted" style="margin-top:-6px">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p>
         <div class="row"><button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(H.priv.ans)}` : "إظهار الإجابة لي"}</button><button class="btn ghost sm" data-h="swap">تبديل السؤال</button></div>` : ""}</div>`;
     }
-    if (s.st === "judge") return `<div class="stage">${head}<div class="judge"><p>زمن الإجابة <b>${fmtS(s.am)} ث</b>${s.by ? ` · ${esc(s.by)}` : ""}</p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة</p></div>
+    if (s.st === "judge") return `<div class="stage">${head}<div class="judge"><p>وقت الإجابة المثبّت <b>${fmtS(s.am)} ث</b></p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة</p></div>
       ${host ? `<p class="answer">الإجابة: ${esc(H.priv.ans)}</p><div class="row"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}</div>`;
     if (s.st === "done"){
       const l = s.last || {}, msg = l.ok ? `إجابة صحيحة! <b>+${l.pts}</b> للفريق ${TEAM[l.tm]}` : l.to ? `انتهى الوقت · 0 نقطة` : `إجابة خاطئة · 0 نقطة`;
@@ -1870,7 +1892,7 @@ const Letters = {
     if (s.ph === "end" && s.fin){ pSet(phead() + Letters.endHTML(s, false)); bindPlayer(); return; }
     const mine = P.team === s.tn, can = s.st === "ask" && mine && P.amK !== s.k;
     let action = "";
-    if (s.st === "ask") action = mine ? `<button class="buzz ${P.team}" data-am="1" ${can ? "" : "disabled"}>${P.amK === s.k ? "تم!" : "✋ جاوبنا"}</button><p class="muted center">اضغط لحظة إعلان فريقك للإجابة ليتوقف الوقت.</p>`
+    if (s.st === "ask") action = mine ? `<button class="buzz ${P.team}" data-am="1" ${can && !s.rq ? "" : "disabled"}>${P.amK === s.k || s.rq ? "وصل الطلب" : "✋ نريد الإجابة"}</button><p class="muted center">هذا الزر ينبّه المقدّم فقط. أعلنوا إجابتكم بصوت مسموع، والمقدّم يثبّت الوقت عند سماعها.</p>`
       : `<p class="center muted">دور الفريق ${TEAM[s.tn]} الآن.</p>`;
     pSet(phead(`<span class="chip"><b class="tg">${s.sc.g.p}</b> - <b class="to">${s.sc.o.p}</b></span>`) + `${Letters.scoreboard(s)}<div class="row" style="justify-content:center">${Letters.progress(s)}</div>
       <div class="panel stack">${Letters.stage(s, false)}${action}</div><div class="panel">${hexBoard(s, false, true)}</div>`);
@@ -1970,7 +1992,7 @@ const Wheel = {
     else if (sg.ch){ txt = `${esc(s.ch)} <span class="muted">(${pts} نقطة)</span>`; btns = `<div class="row"><button class="btn g sm" data-h="ch-g">نجح الأخضر</button><button class="btn o sm" data-h="ch-o">نجح البرتقالي</button><button class="btn ghost sm" data-h="skip">لم ينجح أحد</button></div>`; }
     else if (sg.q){
       const q = s.wq, corr = s.wci;
-      txt = `<b>${esc(q.q)}</b><div class="opts mini">${range(4).map(i => `<div class="opt c${i} ${s.qrev ? (i === corr ? "right" : "dim") : ""}"><span class="sh">${SHAPES[i]}</span><span>${esc(q.o[i])}</span></div>`).join("")}</div><span class="muted">سؤال لـ${who} · ${pts} نقطة</span>`;
+      txt = `<b>${esc(q.q)}</b><div class="opts mini">${range(4).map(i => `<div class="opt c${i} ${s.qrev ? (i === corr ? "right" : "dim") : ""}"><span class="sh">${SHAPES[i]}</span><span>${esc(q.o[i])}</span></div>`).join("")}</div><span class="muted">سؤال ${who} · ${pts} نقطة</span>`;
       btns = s.qrev ? `<div class="row"><button class="btn" data-h="q-ok">أجاب ${who} صح</button><button class="btn ghost sm" data-h="skip">إجابة خاطئة</button></div>` : `<button class="btn ghost sm" data-h="qrev">إظهار الإجابة</button>`;
     }
     else if (sg.steal){ txt = `${who} يسرق ${sg.steal} نقطة من الفريق ${TEAM[s.turn === "g" ? "o" : "g"]}`; btns = `<button class="btn" data-h="steal">تنفيذ السرقة</button>`; }
@@ -1996,11 +2018,12 @@ const Wheel = {
   },
   player(s){
     if (!$("#playerMain .wh-holder")){
-      $("#playerMain").innerHTML = `${phead()}<div class="panel"><div class="wh-holder"></div></div><div id="whP" class="stack"></div>`;
+      $("#playerMain").innerHTML = `${phead()}<div id="whP" class="stack"></div><div class="panel"><div class="wh-holder"></div></div>`;     // result first: on a phone it must be visible without scrolling
       $("#playerMain").dataset.k = ""; P.view.w = {}; bindPlayer();
     }
     mountWheel($("#playerMain .wh-holder"), s, P.view.w);
-    setEl($("#whP"), `${Wheel.scoresHtml(s)}${s.win ? "" : `<p class="center">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>`}${Wheel.resultHtml(s, false)}`);
+    const ch = setEl($("#whP"), `${Wheel.scoresHtml(s)}${s.win ? "" : `<p class="center">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>`}${Wheel.resultHtml(s, false)}`);
+    if (ch && s.show){ const r = $("#whP .result, #whP .winner"); if (r && r.scrollIntoView) r.scrollIntoView({block:"nearest", behavior:"smooth"}); }
   },
 };
 
@@ -2180,30 +2203,37 @@ const Spot = {
     return this.index;
   },
   async shard(name){ if (!this.shards[name]) this.shards[name] = await this.j(SPOT_CDN + "catalog/" + name); return this.shards[name]; },
-  async seenBy(devs){ // union of everything these devices have played (Firebase), plus this device's local history
-    const all = new Set(localSeen()), db = fbdb();
-    const one = async d => { try { const sn = await Promise.race([db.ref("spotseen/" + d).once("value"), sleep(4000).then(() => null)]); if (sn) Object.keys(sn.val() || {}).forEach(k => all.add(k)); } catch(e){} };
+  async seenBy(devs){ // id -> when these devices last played it (Firebase + this device's local list). Used only to PREFER new pairs.
+    const all = new Map(), db = fbdb(); localSeen().forEach((id, i) => all.set(id, i + 1));
+    const one = async d => { try { const sn = await Promise.race([db.ref("spotseen/" + d).once("value"), sleep(4000).then(() => null)]); if (sn) Object.entries(sn.val() || {}).forEach(([k, t]) => all.set(k, Math.max(all.get(k) || 0, +t || 1))); } catch(e){} };
     if (db) await Promise.all(devs.map(one));
     return all;
   },
   markSeen(id, devs){ rememberLocal(id); const db = fbdb(); if (db) devs.forEach(d => { try { db.ref("spotseen/" + d + "/" + id).set(Date.now()).catch(() => {}); } catch(e){} }); },
   report(id){ const db = fbdb(); try { if (db) return Promise.resolve(db.ref("spotreports/" + id + "/" + devId).set(Date.now())); } catch(e){} return Promise.resolve(); },
   levelOk: (lv, l) => lv === 3 || l === lv,
-  /* returns {pair, fresh, total}: a pair nobody in the room has played, or (fresh:false) a replay when the level is used up */
-  async pick(lv, devs){
-    const seen = await this.seenBy(devs), idx = await this.loadIndex();
+  /* Pick a pair for this room.
+     - A pair already played in THIS room is never repeated until the room has played every pair of the level
+       (then {done:true}, and the host decides: other level or replay).
+     - Among the pairs this room has not played, ones no device in the room has seen before come first; if all of them
+       were seen in earlier games, the one seen longest ago is used. Old history never blocks a round. */
+  async pick(lv, devs, roomPlayed){
+    const idx = await this.loadIndex();
     if (!idx || !idx.shards || !idx.shards.length) return null;
-    const shards = idx.shards.filter(s => lv === 3 ? s.count : s.levels[lv]);
-    let fallback = null;
-    for (const s of shuffle(shards, rnd())){
-      let list; try { list = await this.shard(s.name); } catch(e){ continue; }
-      const ok = list.filter(e => this.levelOk(lv, e.l) && !this.hidden.has(e.id));
-      const fresh = ok.filter(e => !seen.has(e.id));
-      if (fresh.length) return {pair:this.norm(fresh[Math.floor(Math.random() * fresh.length)]), fresh:true, total:idx.total};
-      // replay: the pair this room saw longest ago is the least likely to be remembered
-      if (!fallback && ok.length) fallback = ok[Math.floor(Math.random() * ok.length)];
+    const seen = await this.seenBy(devs);
+    let best = null, bestT = Infinity, total = 0;
+    for (const sh of shuffle(idx.shards.filter(x => lv === 3 ? x.count : x.levels[lv]), rnd())){
+      let list; try { list = await this.shard(sh.name); } catch(e){ continue; }
+      const ok = list.filter(e => this.levelOk(lv, e.l) && !this.hidden.has(e.id) && !roomPlayed.has(e.id));
+      total += ok.length;
+      for (const e of shuffle(ok, rnd())){
+        const t = seen.get(e.id) || 0;
+        if (t < bestT){ best = e; bestT = t; if (!t) break; }
+      }
+      if (best && !bestT) break;          // a pair nobody here has seen: no need to read more shards
     }
-    return fallback ? {pair:this.norm(fallback), fresh:false, total:idx.total} : null;
+    if (!best) return {done:true};
+    return {pair:this.norm(best), fresh:!bestT, total:idx.total};
   },
 };
 
@@ -2304,14 +2334,14 @@ function spotFail(holder, attr){
 }
 /* attribution: a small button that opens the photo's author, source, licence and the changes made (CC BY / CC BY-SA) */
 const infoBtn = attr => `<button class="btn ghost sm" ${attr}>ⓘ معلومات الصورة</button>`;
-function imageInfo(p){
+function imageInfo(p, running){
   const safe = u => /^https:\/\//.test(u || "") ? esc(u) : "";
   const link = (u, t) => safe(u) ? `<a href="${safe(u)}" target="_blank" rel="noopener">${t}</a>` : t;
   let rows;
   if (p.kind === "art" || !p.credit) rows = `<tr><th>العمل</th><td>رسم أصلي من إعداد لمّة</td></tr><tr><th>التعديلات</th><td>نسخة ثانية من الرسم نفسه بفروق مقصودة.</td></tr>`;
   else if (p.credit.length >= 4){
     const [who, page, lic, licUrl] = p.credit, sa = /SA/i.test(lic || "");
-    rows = `<tr><th>المصوّر</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
+    rows = `<tr><th>المصوّر</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${running ? `Wikimedia Commons<br><span class="muted">رابط صفحة الصورة الأصلية يظهر هنا بعد انتهاء الجولة، حتى لا تُكشف الفروق أثناء اللعب.</span>` : link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
       <tr><th>الترخيص</th><td>${link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
       <tr><th>التعديلات</th><td>قُصّت الصورة وغُيّر حجمها، وعُدّلت النسخة الثانية بإخفاء أو تحريك أو تغيير عناصر صغيرة لصنع الفروق.${sa ? " النسختان المعدّلتان متاحتان بالترخيص نفسه." : ""}</td></tr>`;
   } else {
@@ -2322,6 +2352,8 @@ function imageInfo(p){
 }
 const reportBtn = attr => `<button class="btn ghost sm dfreport" ${attr}>إبلاغ عن مشكلة في الصورة</button>`;
 const Diff = {
+  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}}; },
+  async restore(pv){ H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; if (H.s.ph !== "lobby" && H.s.ph !== "done"){ H.s.ph = "lobby"; } },
   init: () => ({rd:0, pair:null, nd:0, lv:1, rev:false, fin:[], fresh:true}),
   async start(replay){
     if (H.priv.picking) return;
@@ -2330,14 +2362,16 @@ const Diff = {
     pushHost();
     const devs = [devId, ...hostPlayers().map(p => p.presence.dv).filter(d => typeof d === "string" && /^[a-z0-9]{10,24}$/.test(d))].slice(0, 40);
     let r; H.priv.picking = true;
-    try { r = await Spot.pick(s.o.lv, devs); } catch(e){ console.warn(e); r = null; }
+    const played = H.priv.played || (H.priv.played = new Set());
+    if (replay){ for (const id of [...played]) if (Spot.levelOk(s.o.lv, (H.priv.playedLv || {})[id])) played.delete(id); }
+    try { r = await Spot.pick(s.o.lv, devs, played); } catch(e){ console.warn(e); r = null; }
     if (H) H.priv.picking = false;
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;
     if (!r){ s.ph = "fail"; pushHost(); return; }
-    if (!r.fresh && !replay){ s.ph = "done"; pushHost(); return; }   // every pair of this level was played in this room
+    if (r.done){ s.ph = "done"; pushHost(); return; }   // this room has played every pair of this level
     const p = r.pair;
     s.pair = p; s.nd = p.diffs.length; s.lv = p.level; s.fresh = r.fresh; H.priv.total = r.total;
-    Spot.markSeen(p.id, devs);
+    Spot.markSeen(p.id, devs); played.add(p.id); (H.priv.playedLv = H.priv.playedLv || {})[p.id] = p.level;
     pushHost();
     try { await preloadSpot(p); } catch(e){ console.warn(e); }
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;
@@ -2349,7 +2383,7 @@ const Diff = {
     else if (a === "rev" || a === "end") endRace();
     else if (a === "lobby"){ clearInterval(H.priv.tick); s.ph = "lobby"; pushHost(); }
     else if (a === "dfhretry"){ H.priv.dfRd = null; renderHost(); }
-    else if (a === "dfinfo" && s.pair) imageInfo(s.pair);
+    else if (a === "dfinfo" && s.pair) imageInfo(s.pair, s.ph !== "over");
     else if (a === "replay") Diff.start(true);
     else if (a === "dfreport" && s.pair){ Spot.report(s.pair.id).then(() => { const b = $("#hostMain .dfreport"); if (b){ b.textContent = "شكرًا، وصل البلاغ"; b.disabled = true; } }).catch(() => {}); }
   },
@@ -2369,7 +2403,7 @@ const Diff = {
       H.priv.dfRd = null;
       if (!H.priv.idxAsked){ H.priv.idxAsked = true; Spot.loadIndex().then(() => { if (H && H.g === "diff" && H.s.ph === "lobby"){ $("#hostMain").dataset.k = ""; renderHost(); } }); }
       const ix = Spot.index, cnt = ix ? ix.levels : null;
-      setMain(lobbyHTML(players, `${cnt ? `<p class="muted">عدد الصور: سهل ${cnt[0]} · متوسط ${cnt[1]} · صعب ${cnt[2]}. لا يتكرر زوج شاهده أحد في الغرفة ما دام هناك جديد.</p>` : ""}
+      setMain(lobbyHTML(players, `${cnt ? `<p class="muted">عدد الصور: سهل ${cnt[0]} · متوسط ${cnt[1]} · صعب ${cnt[2]}. لا يتكرر زوج داخل الغرفة حتى تُلعب كل صور المستوى، وتُقدَّم الصور التي لم يرها أحد من الحاضرين.</p>` : ""}
         <p class="muted">${["سهل: فروق واضحة في مشاهد بسيطة ورسوم ملوّنة.","متوسط: فروق صغيرة وطبيعية لا تلفت النظر.","صعب: تفاصيل دقيقة مخفية داخل مشاهد مزدحمة.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]}</p>`, "ابدأ الجولة"));
       return;
     }
@@ -2380,7 +2414,7 @@ const Diff = {
     if (s.ph === "prep" || !pair){ H.priv.dfRd = null; setMain(`<div class="panel center stack" style="margin-top:18px"><div class="spinner"></div><p class="bigmsg">جارٍ تجهيز الصورتين…</p></div>`); return; }
     if (H.priv.dfRd !== s.rd){
       H.priv.dfRd = s.rd; H.priv.dfm = null;
-      m.innerHTML = `<div class="dfhost"><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${s.nd} فروق · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div class="df-holder"></div><div class="row dfmeta">${infoBtn('data-h="dfinfo"')}${reportBtn('data-h="dfreport"')}</div></div><div class="stack" id="dfSide"></div></div>`;
+      m.innerHTML = `<div class="dfhost"><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${s.nd} فروق · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div class="df-holder"></div><div class="row dfmeta">${infoBtn('data-h="dfinfo"')}<span id="dfRep"></span></div></div><div class="stack" id="dfSide"></div></div>`;
       m.dataset.k = "";
       const rd = s.rd, holder = m.querySelector(".df-holder");
       preloadSpot(pair).then(() => {
@@ -2390,6 +2424,7 @@ const Diff = {
       }).catch(() => spotFail(holder, 'data-h="dfhretry"'));
     }
     if (s.rev && H.priv.dfm) H.priv.dfm.reveal();
+    setEl($("#dfRep"), s.ph === "over" ? reportBtn('data-h="dfreport"') : "");     // reporting a bad picture: host only, after the round
     const prog = Object.values(H.priv.prog || {}).sort((a, b) => b.v - a.v), over = s.ph === "over";
     setEl($("#dfSide"), `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${over ? "الترتيب النهائي" : "السباق"}</h3>${clockChip(s)}</div>${over ? standingsHTML(s, "خطأ", s.nd) : H.code && players.length ? raceHTML(prog, s.nd, true) : `<p class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</p>`}</div>
       ${over ? "" : `<div class="panel stack"><h3>المنتهون</h3>${finHTML(s.fin.map(f => [f[0], f[1], fmtT(f[2])]), "خطأ")}</div>`}
@@ -2401,7 +2436,7 @@ const Diff = {
     if (s.ph === "prep" || !pair){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><div class="spinner"></div><p class="bigmsg">جولة جديدة…</p></div>`); bindPlayer(); return; }
     if (P.view.dfRd !== s.rd){
       P.view.dfRd = s.rd; P.view.dfm = null;
-      pSet(phead(`<span id="pClock"></span>`) + `<div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${s.nd} فروق</h3><b id="dfCount" class="count">0 / ${s.nd}</b></div><p class="muted">اضغط على مكان الفرق في أي من الصورتين.</p><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><div class="row dfmeta">${infoBtn('data-act="dfinfo"')}${reportBtn('data-act="dfreport"')}</div></div><div id="pDfStatus"></div>`);
+      pSet(phead(`<span id="pClock"></span>`) + `<div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${s.nd} فروق</h3><b id="dfCount" class="count">0 / ${s.nd}</b></div><p class="muted">اضغط على مكان الفرق في أي من الصورتين.</p><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><div class="row dfmeta">${infoBtn('data-act="dfinfo"')}</div></div><div id="pDfStatus"></div>`);
       rememberLocal(pair.id);
       bindPlayer();
       if (s.ph === "play") NR.presence({df:{rd:s.rd, f:0, d:false, w:0}}).catch(() => {});
@@ -2420,7 +2455,7 @@ const Diff = {
   },
   pclick(t){
     if (t.dataset.act === "dfretry"){ P.view.dfRd = null; playerRender(); }
-    else if (t.dataset.act === "dfinfo"){ const h = findHost(); if (h && h.presence.s.pair) imageInfo(h.presence.s.pair); }
+    else if (t.dataset.act === "dfinfo"){ const h = findHost(); if (h && h.presence.s.pair) imageInfo(h.presence.s.pair, h.presence.s.ph !== "over"); }
     else if (t.dataset.act === "dfreport"){ const h = findHost(), id = h && h.presence.s.pair && h.presence.s.pair.id; if (id) Spot.report(id).then(() => { t.textContent = "شكرًا، وصل البلاغ"; t.disabled = true; }).catch(() => {}); }
   },
 };
@@ -2431,9 +2466,10 @@ const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
 { const b = $("#copyId"); if (b) b.onclick = () => copyText("10000003", b); }
 
 /* ================= JOIN ================= */
+window.addEventListener("lm-conn", () => { if (P){ $("#playerMain").dataset.k = ""; playerRender(); } if (H) renderHost(); });
 resumeBanner();
 $("#joinForm").addEventListener("submit", e => { e.preventDefault(); playerJoin($("#joinCode").value.trim()); });
-$("#joinCode").addEventListener("input", e => { e.target.value = e.target.value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\D/g, "").slice(0, 4); });
+$("#joinCode").addEventListener("input", e => { e.target.value = e.target.value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/\D/g, "").slice(0, 4); });
 photosReady.then(() => { if (H && H.s.ph === "lobby" && H.g === "puzzle"){ if (PHOTOS_OK === false) H.s.o.src = "draw"; renderHost(); } });
 { const hc = (location.hash || "").replace("#", "") || new URLSearchParams(location.search).get("code") || "";
   if (/^\d{4}$/.test(hc)){ $("#joinCode").value = hc; playerJoin(hc); } }

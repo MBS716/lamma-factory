@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+      - run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium webkit
       - name: wait until GitHub Pages serves this commit
         run: |
           want=$(md5sum preview/index.html | cut -c1-32)
@@ -22,7 +22,7 @@ jobs:
             got=$(curl -s "https://mbs716.github.io/lamma-factory/preview/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
-      - run: python tests/live_e2e_v2.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview-v2
+      - run: python tests/live_e2e_v3.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview-v3 https://mbs716.github.io/lamma/
       - if: always()
         run: |
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
