@@ -19,7 +19,7 @@ jobs:
       - name: push site to MBS716/lamma
         env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
         run: |
-          mkdir -p reports/site-test; exec > >(tee reports/site-test/deploy.log) 2>&1; set -x
+          mkdir -p reports/site-test; exec > >(tee reports/site-test/deploy.txt) 2>&1; set -x
           target=$(tr -d ' \n' < .github/deploy-request)
           git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma 2>&1 | sed "s/${T}/***/g"
           cd lamma
