@@ -319,6 +319,7 @@ function playerRender(){
   }
   if (P.g && P.g !== host.presence.g){ P.view = {}; $("#playerMain").dataset.k = ""; }
   P.g = host.presence.g;
+  $("#playerMain").classList.toggle("wide", P.g === "diff");     // two pictures side by side need room on tablets and computers
   const game = GAMES[P.g];
   if (!P.joined || (game.teams && !P.team)){
     P.joined = false;
@@ -720,7 +721,7 @@ const Letters = {
     const team = `<b class="t${s.tn}">الفريق ${TEAM[s.tn]}</b>`, T = s.T;
     if (s.st === "pick") return `<div class="stage"><p class="stage-h">دور ${team}</p><p class="muted">${host ? "يختار الفريق حرفًا من اللوحة، أو اضغط «حرف عشوائي»." : "يختار الفريق حرفًا، والمقدّم يفتحه."}</p>
       ${host && H.priv.flash ? `<p class="note">${esc(H.priv.flash)}</p>` : ""}${host ? `<div class="row"><button class="btn" data-h="rand">حرف عشوائي</button></div>` : ""}</div>`;
-    const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">سؤال حرف ${esc(s.lt)} لـ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span></div><p class="qtext">${esc(s.q)}</p></div></div>`;
+    const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">حرف ${esc(s.lt)} · دور ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span></div><p class="qtext">${esc(s.q)}</p></div></div>`;
     if (s.st === "ask"){
       const el = H && host ? Date.now() - H.priv.q0 : (T - s.t) * 1000, now = speedPoints(Math.max(0, el), T);
       return `<div class="stage">${head}<div class="qclock"><span class="timer ${s.t <= 5 ? "warn" : ""}">${s.t}</span><div class="tbar"><i style="width:${s.t / T * 100}%"></i></div>${host ? `<span class="chip">الإجابة الآن = ${now} نقطة</span>` : ""}</div>
@@ -731,7 +732,7 @@ const Letters = {
       ${host ? `<p class="answer">الإجابة: ${esc(H.priv.ans)}</p><div class="row"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}</div>`;
     if (s.st === "done"){
       const l = s.last || {}, msg = l.ok ? `إجابة صحيحة! <b>+${l.pts}</b> للفريق ${TEAM[l.tm]}` : l.to ? `انتهى الوقت · 0 نقطة` : `إجابة خاطئة · 0 نقطة`;
-      return `<div class="stage">${head}<div class="verdict ${l.ok ? "ok " + l.tm : "no"}">${msg}${l.ok ? `<small>في ${fmtS(l.ms)} ث</small>` : ""}</div><p class="answer">الإجابة: ${esc(s.a)}</p>
+      return `<div class="stage">${head}<div class="verdict ${l.ok ? "ok " + l.tm : "no"}"><span>${msg}</span>${l.ok ? `<small>في ${fmtS(l.ms)} ث</small>` : ""}</div><p class="answer">الإجابة: ${esc(s.a)}</p>
         ${host ? `<button class="btn big" data-h="next">التالي ←</button>` : ""}</div>`;
     }
     return "";

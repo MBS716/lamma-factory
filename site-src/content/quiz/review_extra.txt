@@ -1,0 +1,9 @@
+Review of extra.json
+Checked: 298 items. Fixed: 6. Deleted: 0.
+
+[10] FIX (grammar: 'من' for persons): field 2: 'ما النبي الذي يُضرب المثل بصبره على المرض والبلاء؟' -> 'من النبي الذي يُضرب المثل بصبره على المرض والبلاء؟'
+[54] FIX (grammar: 'من' for persons): field 2: 'ما النبي الذي سخّر الله له الريح وعلّمه منطق الطير؟' -> 'من النبي الذي سخّر الله له الريح وعلّمه منطق الطير؟'
+[91] FIX (grammar: 'من' for persons): field 2: 'ما النبي الذي ورد في الحديث الصحيح أنه كان نجارًا؟' -> 'من النبي الذي ورد في الحديث الصحيح أنه كان نجارًا؟'
+[74] FIX (grammar): field 2: 'كم سنة يرمز لها "اليوبيل الفضي"؟' -> 'إلى كم سنةً يرمز "اليوبيل الفضي"؟'
+[213] FIX (name changed federally in US 2025 (Mount McKinley); list both): field 3: 'دينالي' -> 'دينالي (ماكينلي)'
+[142] FIX (level: too hard for level 0): field 1: 0 -> 1

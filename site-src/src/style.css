@@ -382,3 +382,4 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .dfpair{overflow:hidden}
 
 .resume{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 16px;border-radius:16px;background:color-mix(in srgb,var(--gold) 16%,var(--card));border:1px solid var(--gold)}
+.pwrap.wide{max-width:1100px}

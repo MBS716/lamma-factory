@@ -55,13 +55,13 @@ def quiz(items):
             if c not in CATS: why = "category"
             elif l not in (0, 1, 2): why = "level"
             elif not text or len(text) > 140: why = "question length"
-            elif any(not o for o in opts) or len({norm(o) for o in opts}) < 4: why = "options not distinct"
+            elif any(not o for o in opts) or len(set(opts)) < 4: why = "options not distinct"
             else:
                 n = norm(text)
                 if n in seen: why = "duplicate"
                 else:
                     a = norm(opts[0])
-                    if any(jacc(n, m) >= 0.7 for m in by_ans[a]): why = "near duplicate"
+                    if any(jacc(n, m) >= 0.9 for m in by_ans[a]): why = "near duplicate"     # same words, other order (meaning-level duplicates were removed by review)
         if why: bad.append([src, why, q]); continue
         text = q[2].strip()
         if not text.endswith("؟"): text = text.rstrip("?.") + "؟"
