@@ -1,0 +1,39 @@
+Fact-check review of sau.json and lit.json
+Item format: [cat, level, question, correct, wrong1, wrong2, wrong3]; indices are 0-based and unchanged (no deletions).
+
+sau.json: checked 280, fixed 6, deleted 0
+lit.json: checked 280, fixed 2, deleted 0
+
+sau.json [25] FIXED: ["sau", 0, "قرب أي مدينة يقع جبل عرفات؟", "مكة المكرمة", "المدينة المنورة", "الطائف", "أبها"]
+    -> ["sau", 0, "قرب أي مدينة يقع مشعر عرفات؟", "مكة المكرمة", "المدينة المنورة", "الطائف", "أبها"]
+    reason: Arafat is a plain/mash`ar, not a mountain ("جبل عرفات" is inaccurate; the hill there is جبل الرحمة, asked in [72]).
+sau.json [66] FIXED: ["sau", 0, "ما اسم المشروع العملاق في منطقة تبوك الذي يضم مدينة \"ذا لاين\"؟", "نيوم", "القدية", "العلا", "الدرعية"]
+    -> ["sau", 0, "ما اسم المشروع العملاق الذي يضم مدينة \"ذا لاين\"؟", "نيوم", "القدية", "العلا", "الدرعية"]
+    reason: Question text gave away the answer of [115] (NEOM is in Tabuk region); removed "في منطقة تبوك".
+sau.json [72] FIXED: ["sau", 0, "ما اسم الجبل الذي يقف عنده الحجاج يوم عرفة؟", "جبل الرحمة", "جبل النور", "جبل ثور", "جبل أحد"]
+    -> ["sau", 0, "ما اسم الجبل الواقع في مشعر عرفات؟", "جبل الرحمة", "جبل النور", "جبل ثور", "جبل أحد"]
+    reason: Religious accuracy: the wuquf is valid anywhere in Arafat, not "at" the mountain; old wording implied standing at Jabal al-Rahma is the rite.
+sau.json [143] FIXED: ["sau", 1, "إلى أي منطقة سعودية ينتمي حاتم الطائي المشهور بالكرم؟", "حائل", "نجران", "الباحة", "القصيم"]
+    -> ["sau", 1, "في أي منطقة سعودية تقع ديار قبيلة طيء التي ينتمي إليها حاتم الطائي؟", "حائل", "نجران", "الباحة", "القصيم"]
+    reason: Anachronism: a pre-Islamic figure cannot "belong to" a modern administrative region; reworded to the tribal homeland (Aja and Salma, Hail).
+sau.json [175] FIXED: ["sau", 1, "ما المدينة الصناعية الكبرى على ساحل البحر الأحمر التي تتوأم مع الجبيل؟", "ينبع", "الجبيل", "رأس تنورة", "الخفجي"]
+    -> ["sau", 1, "ما المدينة الصناعية الكبرى على ساحل البحر الأحمر التي تتوأم مع الجبيل؟", "ينبع", "الدمام", "رأس تنورة", "الخفجي"]
+    reason: Wrong option "الجبيل" was the city named in the question itself; replaced with "الدمام".
+sau.json [277] FIXED: ["sau", 0, "ما اسم النسك الذي يمكن أداؤه في مكة طوال العام؟", "العمرة", "الحج", "الاعتكاف", "الأضحية"]
+    -> ["sau", 0, "ما اسم النسك الذي يمكن أداؤه في مكة طوال العام؟", "العمرة", "الحج", "رمي الجمرات", "الأضحية"]
+    reason: Wrong option "الاعتكاف" can also be done all year (in any mosque incl. the Haram), so it could be argued correct; replaced with "رمي الجمرات" (Hajj days only).
+lit.json [8] FIXED: ["lit", 0, "ما مفرد كلمة \"أعداء\"؟", "عدو", "عداء", "معادي", "عداوة"]
+    -> ["lit", 0, "ما مفرد كلمة \"أعداء\"؟", "عدو", "عداء", "معادٍ", "عداوة"]
+    reason: Spelling: indefinite manqus "معادي" should be "معادٍ".
+lit.json [262] FIXED: ["lit", 2, "من مؤلف ملحمة \"الشاهنامه\"؟", "الفردوسي", "عمر الخيام", "جلال الدين الرومي", "سعدي الشيرازي"]
+    -> ["lit", 2, "من مؤلف ملحمة \"الشاهنامة\"؟", "الفردوسي", "عمر الخيام", "جلال الدين الرومي", "سعدي الشيرازي"]
+    reason: Spelling: standard Arabic form is "الشاهنامة" (ta marbuta), not Persian-style "الشاهنامه".
+
+NOTE FOR COORDINATOR (not changed here; the other files are outside this review):
+Cross-bank duplicates of the same fact exist between sau/lit and gen/geo/his. If the game draws from all banks, remove one copy (preferably from gen/geo/his so the specialist bank keeps it):
+  sau[22]=gen[0]=sci[23] (سفينة الصحراء); sau[20]=gen[24] (الهيل); sau[21]=gen[25] (الدلة); sau[16]=gen[26] (الشماغ); sau[51]=gen[27] (البشت); sau[14]=gen[28] (الكبسة); sau[54]=gen[31] (اللقيمات); sau[23]=gen[46] (الصقر); sau[70]=gen[52] (ذو الحجة); sau[29]=gen[62] (زمزم)
+  sau[90]=gen[161]=his[62] (مؤسس الدولة الأولى); sau[46]=gen[181]=his[7] (مسجد قباء); sau[72]~gen[184] (جبل الرحمة); sau[92]=gen[252]=his[123] (1902); sau[91]=gen[253]=his[191] (1727); sau[204]=gen[255] (الغوار); sau[207]=gen[257] (الحجر أول موقع يونسكو); sau[131]=gen[279]=his[95] (سوق عكاظ)
+  sau[26]=geo[70]; sau[12]=geo[38]; sau[32]=geo[40]; sau[9]=geo[53]; sau[27]~geo[71]; sau[39]=geo[72]; sau[105]=geo[183]; sau[102]=geo[182]; sau[38]=geo[186]; sau[104]=geo[187]; sau[109]=geo[188]; sau[110]~geo[189]; sau[103]=geo[279]; sau[206]=geo[261]; sau[13]~geo[32]~sci[180]; sau[84]~geo[35]; sau[174]~geo[185]; sau[6]/sau[7]~geo[45]
+  sau[44]=his[6]; sau[34]=his[64]; sau[67]=his[125]; sau[196]=his[192]; sau[194]=his[193]; sau[195]=his[194]; sau[215]~his[185]; sau[191]~spo[154]; sau[85]=spo[78]
+  lit[123]=gen[233]; lit[124]=gen[234]; lit[217]=gen[235]; lit[128]=gen[236]; lit[129]=gen[237]; lit[182]=gen[238]; lit[133]=gen[268]; lit[89]=gen[274]; lit[223]=gen[277]~his[48]
+Within sau+lit no same-fact duplicates remain (sau[66]/[115] overlap fixed above).

@@ -1,0 +1,39 @@
+=== part1.json (294 items checked) ===
+[28] FIXED: 1|أعلى قمة جبلية في العالم؟|إفرست  ->  1|أعلى قمة جبلية في العالم؟|إيفرست -- spelling of answer (إيفرست is the standard form)
+[36] FIXED: 2|الجسيم سالب الشحنة في الذرة؟|إلكترون  ->  1|الجسيم سالب الشحنة في الذرة؟|إلكترون -- level: electron is school-level knowledge
+[40] FIXED: 2|البلد الذي نشأت فيه كرة القدم الحديثة؟|إنجلترا  ->  1|البلد الذي نشأت فيه كرة القدم الحديثة؟|إنجلترا -- level: widely known
+[59] DELETED: ب | عاصمة ألمانيا؟ -> برلين -- duplicate of #15 (Germany/Berlin)
+[71] FIXED: 1|ثمر النخيل قبل أن يصير رطبًا؟|بلح  ->  1|الاسم الشائع لثمر النخيل في مصر والشام؟|بلح -- ambiguous: the stage just before رطب is بسر (also ب), so بلح was not the single answer
+[74] FIXED: 2|عاصمة تايلاند؟|بانكوك  ->  1|عاصمة تايلاند؟|بانكوك -- level: Bangkok is not hard
+[81] FIXED: 2|الفلكي المسلم محمد بن جابر الحراني الصابئ؟|البتاني  ->  2|الفلكي محمد بن جابر بن سنان الحراني صاحب "الزيج الصابئ"؟|البتاني -- question called him both "المسلم" and "الصابئ"; reworded to a neutral, identifying clue
+[100] FIXED: 1|المدينة التي وقعت فيها آخر غزوات النبي ﷺ؟|تبوك  ->  1|الموضع الذي سُميت باسمه آخر غزوات النبي ﷺ؟|تبوك -- no battle actually took place at Tabuk; "وقعت فيها" reworded
+[101] DELETED: ت | دولة آسيوية عاصمتها بانكوك؟ -> تايلاند -- duplicate of #74 (Thailand/Bangkok)
+[123] FIXED: 2|السفينة الشهيرة التي غرقت في رحلتها الأولى عام 1912؟|تيتانيك  ->  1|السفينة الشهيرة التي غرقت في رحلتها الأولى عام 1912؟|تيتانيك -- level: Titanic is widely known
+[155] FIXED: 1|الموضع الذي استقبل فيه أهل المدينة النبي بنشيد "طلع البدر علينا"؟|ثنية الوداع  ->  1|الموضع الذي ورد ذكره في نشيد "طلع البدر علينا"؟|ثنية الوداع -- the reception story at this spot is historically weak/disputed; reworded to refer only to the song
+[166] FIXED: 2|عالم رياضيات وفلك من حرّان في العصر العباسي، اسمه ... بن قرة؟|ثابت بن قرة  ->  2|عالم رياضيات وفلك من حرّان في العصر العباسي، من أشهر مترجمي الكتب اليونانية؟|ثابت بن قرة -- question revealed half the answer ("... بن قرة")
+[208] FIXED: 2|رياضة تُضرب فيها كرة صغيرة نحو 18 حفرة؟|جولف  ->  1|رياضة تُضرب فيها كرة صغيرة نحو 18 حفرة؟|جولف -- level: golf is well known
+[239] FIXED: 1|مادة لاذعة الطعم تحوّل ورق تباع الشمس إلى الأحمر؟|حمض  ->  1|مادة تحوّل ورق عباد الشمس الأزرق إلى اللون الأحمر؟|حمض -- typo "تباع الشمس" -> "عباد الشمس"; acids are sour not "لاذعة"
+[291] FIXED: 2|احتجاب ضوء القمر بسبب وقوعه في ظل الأرض؟|خسوف  ->  1|احتجاب ضوء القمر بسبب وقوعه في ظل الأرض؟|خسوف -- level: lunar eclipse term is common
+Summary part1.json: checked 294, fixed 13, deleted 2, remaining 292
+
+=== part2.json (293 items checked) ===
+[56] FIXED: 1|ملك ذُكر في سورة الكهف وبنى سداً من حديد؟|ذو القرنين  ->  1|الملك الصالح المذكور في سورة الكهف الذي بنى السد على يأجوج ومأجوج؟|ذو القرنين -- Quran says the barrier was of iron pieces with molten copper, not simply "سد من حديد"; reworded
+[71] FIXED: 2|نبي ذُكر مع إسماعيل وإدريس في سورة الأنبياء؟|ذو الكفل  ->  2|من ذُكر مع إسماعيل وإدريس في قوله تعالى "كلٌّ من الصابرين"؟|ذو الكفل -- whether ذو الكفل was a prophet is disputed among scholars; removed the word "نبي"
+[72] FIXED: 2|معركة انتصر فيها العرب على الفرس قبل الإسلام؟|ذي قار  ->  2|يوم من أيام العرب انتصروا فيه على الفرس لأول مرة؟|ذي قار -- its date relative to the start of Islam is disputed; removed "قبل الإسلام"
+[98] DELETED: ر | حبوب بيضاء تُطبخ بها الكبسة؟ -> رز -- duplicate of part1 #4 (rice in kabsa, أرز)
+[129] FIXED: 0|ثاني الكواكب بُعداً عن الشمس؟|الزهرة  ->  1|ثاني الكواكب بُعداً عن الشمس؟|الزهرة -- level: order of planets is not trivial for most adults
+[149] DELETED: ز | زاوية مقدارها تسعون درجة؟ -> زاوية قائمة -- answer only matches ز because it repeats the word زاوية from the question
+[167] DELETED: س | دولة عربية عاصمتها دمشق؟ -> سوريا -- duplicate of #0 (Syria/Damascus)
+[168] DELETED: س | دولة عربية عاصمتها الخرطوم؟ -> السودان -- duplicate of part1 #276 (Sudan/Khartoum)
+[205] DELETED: س | الكاتب الإسباني مؤلف دون كيشوت؟ -> سرفانتس -- duplicate of #31 (Cervantes/Don Quixote)
+[238] DELETED: ش | الشاعر المصري الملقب بأمير الشعراء؟ -> شوقي -- duplicate of part1 #30 (أمير الشعراء أحمد شوقي)
+[246] FIXED: 2|المحقق الشهير الذي ابتكره آرثر كونان دويل؟|شرلوك هولمز  ->  1|المحقق الشهير الذي ابتكره آرثر كونان دويل؟|شرلوك هولمز -- level: Sherlock Holmes is widely known
+[260] DELETED: ص | نبي قوم ثمود صاحب الناقة؟ -> صالح -- duplicate of part1 #144 (Salih/Thamud)
+[277] FIXED: 1|القائد الذي حرر القدس بعد معركة حطين؟|صلاح الدين  ->  1|مؤسس الدولة الأيوبية الذي حرر القدس؟|صلاح الدين -- near-duplicate of part1 #230 (Hattin/Saladin); reworded to a different fact
+[278] DELETED: ص | صلح بين المسلمين وقريش في السنة السادسة للهجرة؟ -> صلح الحديبية -- duplicate of part1 #231 (Hudaybiyyah); answer only fit ص via the word صلح
+[280] FIXED: 1|النجم المصري الملقب بالفرعون في ليفربول؟|صلاح  ->  1|لاعب كرة القدم المصري محمد ...، الملقب بالفرعون المصري؟|صلاح -- tied to his current club (time-sensitive); reworded
+[282] FIXED: 1|العدد الذي إذا ضُرب فيه أي عدد كان الناتج هو نفسه؟|صفر  ->  1|العدد الذي إذا أُضيف إلى أي عدد بقي العدد كما هو؟|صفر -- FACTUALLY WRONG: multiplying by zero gives zero, not the same number
+[289] DELETED: ص | أخو الخنساء الذي رثته في شعرها؟ -> صخر -- duplicate of part1 #275 (Khansa/Sakhr)
+[291] DELETED: ص | أشهر كتب الحديث جمعه الإمام البخاري؟ -> صحيح البخاري -- duplicate of part1 #65 (Bukhari); question also gave away the answer
+Summary part2.json: checked 293, fixed 8, deleted 10, remaining 283
+

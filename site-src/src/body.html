@@ -1,0 +1,67 @@
+<div id="app" dir="rtl" lang="ar">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">ل</div>
+      <div><h1>لمّة</h1><small>ألعاب ومسابقات جماعية بكود واحد</small></div>
+    </div>
+    <div class="conn" id="conn"><span class="dot" id="connDot"></span><span id="connTxt">جارٍ فحص الاتصال المباشر…</span></div>
+  </header>
+
+  <section id="home">
+    <div class="resume" id="resume" hidden></div>
+    <div class="joinband">
+      <div>
+        <h2>عندك كود لعبة؟</h2>
+        <p class="muted">اكتب الكود الذي يظهر على شاشة المقدّم وادخل من جوالك.</p>
+      </div>
+      <div>
+        <form class="joinform" id="joinForm" autocomplete="off">
+          <input class="field" id="joinCode" inputmode="numeric" maxlength="4" placeholder="0000" aria-label="كود اللعبة">
+          <button class="btn" type="submit">دخول اللعبة</button>
+        </form>
+        <p class="err" id="joinErr"></p>
+      </div>
+    </div>
+
+    <div class="sec-head"><h2 class="sec-h">ألعاب الفرق</h2><p class="muted">فريقان يتنافسان أمام شاشة واحدة، والجرس والنتائج على الجوالات.</p></div>
+    <div class="games two" id="teamGrid"></div>
+
+    <div class="sec-head"><h2 class="sec-h">سباقات من الجوال</h2><p class="muted">كل لاعب يلعب على جواله، والترتيب يظهر لحظيًا على شاشة المقدّم.</p></div>
+    <div class="games three" id="raceGrid"></div>
+
+    <div class="steps">
+      <div class="step"><b>1</b><p><strong>المقدّم يختار لعبة ومستواها</strong><br><span class="muted">فيظهر كود من 4 أرقام ورابط ورمز QR.</span></p></div>
+      <div class="step"><b>2</b><p><strong>المشاركون يدخلون</strong><br><span class="muted">بالكود أو الرابط أو مسح الرمز من الشاشة.</span></p></div>
+      <div class="step"><b>3</b><p><strong>اللعب لحظي</strong><br><span class="muted">الإجابات والجرس والنتائج تظهر للجميع فورًا.</span></p></div>
+    </div>
+  </section>
+
+  <section id="host" hidden>
+    <div class="hbar" id="hostBar"></div>
+    <div id="hostMain"></div>
+  </section>
+
+  <section id="player" hidden>
+    <div class="pwrap" id="playerMain"></div>
+  </section>
+
+  <dialog id="modal" class="modal" aria-labelledby="modalTitle">
+    <div class="mbox">
+      <div class="mhead"><h3 id="modalTitle"></h3><button class="btn ghost sm icon" data-close="1" aria-label="إغلاق">✕</button></div>
+      <div class="mbody" id="modalBody"></div>
+      <div class="mfoot"><button class="btn sm" data-close="1">حسنًا</button></div>
+    </div>
+  </dialog>
+
+  <footer class="foot">
+    <div class="tiger">
+      <img src="@@TIGER@@" alt="شعار TIGER" width="76" height="76" loading="lazy" decoding="async">
+      <div class="tinfo">
+        <b class="tname">TIGER</b>
+        <span class="muted">للتواصل والدعم عبر تطبيق توب توب (TopTop)</span>
+        <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
+      </div>
+    </div>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER</p>
+  </footer>
+</div>

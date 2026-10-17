@@ -1,0 +1,42 @@
+Fact-check review of gen.json and geo.json
+Item format: [cat, level, question, correct, wrong1, wrong2, wrong3]; indices are 0-based and unchanged (no deletions).
+
+gen.json: checked 280, fixed 6, deleted 0
+geo.json: checked 280, fixed 6, deleted 0
+
+gen.json [31] FIXED: ["gen", 0, "ما الحلى الخليجي المكوّن من كرات عجين مقلية تُغطى بالدبس؟", "اللقيمات", "البسبوسة", "الكنافة", "المهلبية"]
+    -> ["gen", 0, "ما الحلوى الخليجية المكوّنة من كرات عجين مقلية تُغطّى بالدبس أو القطر؟", "اللقيمات", "البسبوسة", "الكنافة", "المهلبية"]
+    reason: Spelling: "الحلى" is colloquial; standard form is "الحلوى" (feminine agreement). Also luqaimat are topped with date syrup or sugar syrup, so "أو القطر" added.
+gen.json [42] FIXED: ["gen", 0, "ما الحيوان الذي يغيّر لون جلده للتخفي؟", "الحرباء", "السحلية", "الضفدع", "الأفعى"]
+    -> ["gen", 0, "ما الحيوان الذي يغيّر لون جلده للتخفي؟", "الحرباء", "السحلية", "السلحفاة", "الأفعى"]
+    reason: Wrong option "السحلية" could be argued correct: the chameleon is itself a lizard, and some lizards change colour.
+gen.json [196] FIXED: ["gen", 1, "ما اللغة الأكثر متحدثين بها كلغة أم في العالم؟", "الصينية", "الإنجليزية", "الإسبانية", "الهندية"]
+    -> ["gen", 1, "ما اللغة التي يتحدث بها أكبر عدد من الناس لغةً أمًّا في العالم؟", "الصينية", "الإنجليزية", "الإسبانية", "الهندية"]
+    reason: Awkward grammar ("الأكثر متحدثين بها كلغة أم").
+gen.json [203] FIXED: ["gen", 2, "ما الحيوان البري صاحب أكبر عينين بين الحيوانات البرية؟", "النعامة", "البومة", "الحصان", "الفيل"]
+    -> ["gen", 2, "ما الحيوان البري صاحب أكبر عينين؟", "النعامة", "البومة", "الحصان", "الفيل"]
+    reason: Redundant wording ("البري ... بين الحيوانات البرية").
+gen.json [209] FIXED: ["gen", 2, "ما الحيوان الذي استخدمه القائد هانيبال لعبور جبال الألب؟", "الفيلة", "الجمال", "البغال", "الثيران"]
+    -> ["gen", 2, "ما الحيوان الذي اشتهر القائد هانيبال باستخدامه في عبور جبال الألب؟", "الفيلة", "الجمال", "البغال", "الكلاب"]
+    reason: Wrong option "البغال" was also correct: Hannibal's army really did cross with mules (and horses). Made the question about the famous animal and replaced the option.
+gen.json [274] FIXED: ["gen", 2, "من الصحابي الملقب بشاعر الرسول ﷺ؟", "حسان بن ثابت", "كعب بن زهير", "عبدالله بن رواحة", "لبيد بن ربيعة"]
+    -> ["gen", 2, "من الصحابي الملقب بشاعر الرسول ﷺ؟", "حسان بن ثابت", "كعب بن زهير", "عبدالله بن رواحة", "النابغة الذبياني"]
+    reason: Wrong option "عبدالله بن رواحة" was also one of the Prophet's poets, so it could be argued correct. Replaced with a pre-Islamic poet.
+geo.json [98] FIXED: ["geo", 0, "في أي دولة تقع مدينة تبريز؟", "إيران", "تركيا", "أذربيجان", "العراق"]
+    -> ["geo", 1, "في أي دولة تقع مدينة تبريز؟", "إيران", "تركيا", "أذربيجان", "العراق"]
+    reason: Level: Tabriz is not known to most adults; moved from 0 to 1.
+geo.json [150] FIXED: ["geo", 1, "في أي مسطح مائي يصب نهر الأردن؟", "البحر الميت", "البحر المتوسط", "بحيرة طبريا", "خليج العقبة"]
+    -> ["geo", 1, "في أي مسطح مائي يصب نهر الأردن؟", "البحر الميت", "البحر المتوسط", "بحيرة طبريا", "البحر الأحمر"]
+    reason: Wrong option "بحيرة طبريا" was partly correct: the Jordan River flows into Lake Tiberias before it ends in the Dead Sea.
+geo.json [188] FIXED: ["geo", 1, "ما سلسلة الجبال الممتدة بمحاذاة البحر الأحمر غرب السعودية؟", "جبال السروات", "جبال طويق", "جبلا أجا وسلمى", "جبال الحجاز الشرقية"]
+    -> ["geo", 1, "ما سلسلة الجبال الممتدة بمحاذاة البحر الأحمر غرب السعودية؟", "جبال السروات", "جبال طويق", "جبلا أجا وسلمى", "جبال الحجر"]
+    reason: Wrong option "جبال الحجاز الشرقية" is an invented name, and the Sarawat range is also known as the Hijaz mountains. Replaced with the Hajar mountains (Oman/UAE).
+geo.json [197] FIXED: ["geo", 1, "ما الدولة الأوروبية المعروفة بالأراضي المنخفضة؟", "هولندا", "الدنمارك", "بلجيكا", "لوكسمبورغ"]
+    -> ["geo", 1, "ما الدولة الأوروبية المعروفة بالأراضي المنخفضة؟", "هولندا", "الدنمارك", "سويسرا", "لوكسمبورغ"]
+    reason: Wrong option "بلجيكا" is part of the Low Countries, so it could be argued correct.
+geo.json [198] FIXED: ["geo", 1, "ما الدولة العربية التي لُقّبت قديمًا بالعربية السعيدة؟", "اليمن", "عُمان", "الحجاز", "الشام"]
+    -> ["geo", 1, "ما الدولة العربية التي لُقّبت قديمًا بالعربية السعيدة؟", "اليمن", "عُمان", "الأردن", "سوريا"]
+    reason: Wrong options "الحجاز" and "الشام" are regions, not countries, though the question asks for a country.
+geo.json [275] FIXED: ["geo", 2, "ما البحر الذي يفصل إيطاليا عن منطقة البلقان؟", "البحر الأدرياتيكي", "بحر إيجة", "البحر التيراني", "البحر الأيوني"]
+    -> ["geo", 2, "ما البحر الذي يفصل إيطاليا عن منطقة البلقان؟", "البحر الأدرياتيكي", "بحر إيجة", "البحر التيراني", "بحر البلطيق"]
+    reason: Wrong option "البحر الأيوني" also separates southern Italy from part of the Balkans (Albania/Greece), so it could be argued correct.

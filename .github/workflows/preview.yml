@@ -22,7 +22,7 @@ jobs:
             got=$(curl -s "https://mbs716.github.io/lamma-factory/preview/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
-      - run: python tests/live_e2e.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview
+      - run: python tests/live_e2e_v2.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview-v2
       - if: always()
         run: |
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"

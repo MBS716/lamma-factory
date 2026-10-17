@@ -3,6 +3,7 @@
 # .github/deploy-request decides what happens:
 #   dry-run      check the files and simulate the upload into a throw-away local copy (no token used)
 #   branch       upload to branch update-spot of MBS716/lamma (the live site does not change)
+#   branch:NAME  upload to branch NAME (lower-case letters, digits, dashes; never main)
 #   main-approved  publish to main (the live site) - only after the owner's explicit approval
 #   anything else  nothing is done
 #
@@ -27,41 +28,48 @@ jobs:
       - name: what to do
         id: mode
         run: |
-          m=$(tr -d ' \r\n' < .github/deploy-request)
+          r=$(tr -d ' \r\n' < .github/deploy-request); m=${r%%:*}; b=update-spot
+          case "$r" in branch:*) b=${r#branch:} ;; esac
           case "$m" in dry-run|branch|main-approved) ;; *) m=none ;; esac
-          echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "mode: $m"
+          if [ "$m" = branch ] && ! echo "$b" | grep -Eq '^[a-z0-9][a-z0-9-]{0,39}$'; then m=none; fi
+          if [ "$m" = branch ] && [ "$b" = main ]; then m=none; fi
+          [ "$m" = main-approved ] && b=main
+          echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "branch=$b" >> "$GITHUB_OUTPUT"; echo "mode: $m, branch: $b"
       - name: check the site files
         run: |
           test -f site/index.html || { echo "site/index.html missing"; exit 1; }
           n=$(python3 - <<'PY'
-          import json, re, os, sys
-          html = open("site/index.html", encoding="utf-8").read()
-          m = re.search(r"const SPOT_LIB = (\[.*?\]);\n", html, re.S)
-          lib = json.loads(m.group(1))
-          need = [p[k] for p in lib for k in ("a", "b")] + ["thumb_a.webp", "thumb_b.webp"]
-          miss = [f for f in need if not os.path.isfile("site/spot/" + f)]
-          if miss: print("missing:", miss, file=sys.stderr); sys.exit(1)
-          print(len(lib), "pairs,", len(need), "images, levels", [sum(p["level"] == l for p in lib) for l in range(3)], file=sys.stderr)
+          import json, os, sys
+          need = ["site/index.html", "site/tiger.webp", "site/spot/catalog/index.json"]
+          idx = json.load(open("site/spot/catalog/index.json"))
+          for sh in idx["shards"]:
+              need.append("site/spot/catalog/" + sh["name"])
+              for e in json.load(open("site/spot/catalog/" + sh["name"])): need += [f"site/spot/pairs/{e['id']}a.webp", f"site/spot/pairs/{e['id']}b.webp"]
+          for f in os.listdir("site/data"): need.append("site/data/" + f)
+          miss = [f for f in need if not os.path.isfile(f)]
+          if miss: print("missing:", miss[:20], file=sys.stderr); sys.exit(1)
+          print(idx["total"], "pairs, levels", idx["levels"], "; banks:", {f: len(json.load(open("site/data/" + f))) for f in os.listdir("site/data")}, file=sys.stderr)
           print(len(need))
           PY
           )
-          echo "images referenced and present: $n"
+          echo "files referenced and present: $n"
       - name: simulate the upload (no token)
         if: steps.mode.outputs.mode == 'dry-run'
+        env: {B: "${{ steps.mode.outputs.branch }}"}
         run: |
           git init -q --bare /tmp/fake-lamma.git
           git clone -q /tmp/fake-lamma.git work && cd work
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           echo "old" > index.html; git add -A; git commit -qm old; git branch -M main; git push -q origin main
-          git checkout -q -B update-spot
-          rm -rf spot; cp -r ../site/index.html ../site/spot .
-          git add -A; git commit -qm "update"; git push -q -f origin update-spot
-          cd .. && git clone -q -b update-spot /tmp/fake-lamma.git check
-          diff -r --exclude=.git site check && echo "dry run OK: update-spot would contain exactly site/ ($(ls check/spot | wc -l) images + index.html)"
+          git checkout -q -B "$B"
+          rm -rf index.html spot data tiger.webp; cp -r ../site/. .
+          git add -A; git commit -qm "update"; git push -q -f origin "$B"
+          cd .. && git clone -q -b "$B" /tmp/fake-lamma.git check
+          diff -r --exclude=.git site check && echo "dry run OK: $B would contain exactly site/"
           rm -rf work check
       - name: upload to MBS716/lamma
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", MODE: "${{ steps.mode.outputs.mode }}"}
+        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
         run: |
           [ -n "$T" ] || { echo "secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
@@ -71,18 +79,18 @@ jobs:
           cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           git ls-remote --exit-code origin backup-before-spot-update > /dev/null 2>&1 || true
-          if [ "$MODE" = "main-approved" ]; then git checkout -q main; else git checkout -q -B update-spot; fi
-          rm -rf spot; cp -r ../site/index.html ../site/spot .
-          git add -A; git commit -q -m "Spot the difference: real photo pairs (Wikimedia Commons) with easy/medium/hard levels" || echo "nothing to commit"
-          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin update-spot; fi || { echo "push failed"; exit 1; }
-          echo "uploaded to $( [ "$MODE" = main-approved ] && echo main || echo update-spot ): $(ls spot | wc -l) images + index.html"
+          if [ "$MODE" = "main-approved" ]; then git checkout -q main; else git checkout -q -B "$B"; fi
+          rm -rf index.html spot data tiger.webp; cp -r ../site/. .
+          git add -A; git commit -q -m "$(cat ../.github/deploy-message 2>/dev/null || echo 'Update the Lamma site')" || echo "nothing to commit"
+          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin "$B"; fi || { echo "push failed"; exit 1; }
+          echo "uploaded to $B: $(find spot -type f | wc -l) spot files + index.html + data"
           cd .. && rm -rf lamma
           # read the branch back (public repo, no token) and compare it with site/
-          b=$([ "$MODE" = main-approved ] && echo main || echo update-spot)
+          b="$B"
           git clone -q --depth 1 -b "$b" https://github.com/MBS716/lamma.git readback
           mkdir -p reports/site-test
           { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
-            echo "spot images: $(ls readback/spot | wc -l) (expected $(ls site/spot | wc -l))"; diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
+            echo "spot files: $(find readback/spot -type f | wc -l) (expected $(find site/spot -type f | wc -l))"; diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
           diff -rq --exclude=.git site readback > /dev/null
       - uses: actions/setup-python@v5
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
@@ -92,7 +100,7 @@ jobs:
         run: |
           pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
-          python tests/live_e2e.py http://localhost:8799/ reports/site-test/branch
+          python tests/live_e2e_v2.py http://localhost:8799/ reports/site-test/branch-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
         run: |
@@ -103,7 +111,7 @@ jobs:
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
-          python tests/live_e2e.py https://mbs716.github.io/lamma/ reports/site-test/live
+          python tests/live_e2e_v2.py https://mbs716.github.io/lamma/ reports/site-test/live
           python - <<'PY'
           import asyncio
           from playwright.async_api import async_playwright
