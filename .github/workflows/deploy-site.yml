@@ -102,7 +102,21 @@ jobs:
             got=$(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
+          [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
           python tests/live_e2e.py https://mbs716.github.io/lamma/ reports/site-test/live
+          python - <<'PY'
+          import asyncio
+          from playwright.async_api import async_playwright
+          async def m():
+              async with async_playwright() as p:
+                  b = await p.chromium.launch(); pg = await b.new_page(viewport={'width': 1280, 'height': 900})
+                  await pg.goto("https://github.com/MBS716/lamma/tree/main", wait_until="load"); await pg.wait_for_timeout(3000)
+                  await pg.screenshot(path="reports/site-test/live/github_main.png")
+                  await pg.goto("https://github.com/MBS716/lamma/tree/main/spot", wait_until="load"); await pg.wait_for_timeout(3000)
+                  await pg.screenshot(path="reports/site-test/live/github_main_spot.png", full_page=True)
+                  await b.close()
+          asyncio.run(m())
+          PY
       - name: save test results (scanned for credentials first)
         if: always() && (steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved')
         run: |
