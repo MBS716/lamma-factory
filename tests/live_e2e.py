@@ -54,11 +54,13 @@ async def body(rep, b, host, phones):
         for lv in (0, 1, 2):
             if await host.locator('[data-h=lobby]').count(): await host.click('[data-h=lobby]')
             await host.wait_for_selector('[data-opt=lv]', timeout=10000)
+            rd0 = await host.evaluate('H.s.rd')
             await host.click(f'[data-opt=lv][data-val="{lv}"]'); await host.click('[data-h=start]')
-            for pg in phones:
-                await pg.wait_for_selector('#pDf .dfimg img', timeout=30000)
-                await pg.wait_for_function('[...document.querySelectorAll("#pDf img")].every(i=>i.complete&&i.naturalWidth>1000)', timeout=30000)
+            await host.wait_for_function(f'H.s.pair && H.s.rd > {rd0} && H.s.ph !== "prep"', timeout=30000)
             pair = await host.evaluate('H.s.pair'); W, H = pair['w'], pair['h']
+            for pg in phones:
+                await pg.wait_for_function('(f) => { const i=[...document.querySelectorAll("#pDf img")]; return i.length===2 && i[1].getAttribute("src").endsWith(f) && i.every(x=>x.complete&&x.naturalWidth>1000); }', arg=pair['b'].split('/')[-1], timeout=30000)
+            await phones[0].wait_for_timeout(400)
             srcs = await phones[0].eval_on_selector_all('#pDf img', 'e=>e.map(i=>i.currentSrc)')
             box = await phones[0].locator('#pDf .dfimg >> nth=1').bounding_box()
             for d in pair['diffs']:
