@@ -2,6 +2,7 @@
 name: test-run
 on:
   push:
+    branches: [main]
     paths: [".github/test-request"]   # editing this file starts a test (no extra API permission needed)
   workflow_dispatch:
     inputs:
