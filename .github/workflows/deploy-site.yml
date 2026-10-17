@@ -19,8 +19,9 @@ jobs:
       - name: push site to MBS716/lamma
         env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}"}
         run: |
+          mkdir -p reports/site-test; exec > >(tee reports/site-test/deploy.log) 2>&1; set -x
           target=$(tr -d ' \n' < .github/deploy-request)
-          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma
+          git clone -q "https://x-access-token:${T}@github.com/MBS716/lamma.git" lamma 2>&1 | sed "s/${T}/***/g"
           cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           git push -q origin "main:refs/heads/backup-before-spot-update" 2>/dev/null || true   # keeps the old site (only first time)
