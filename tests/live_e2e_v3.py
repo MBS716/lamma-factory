@@ -152,7 +152,7 @@ async def run(pw):
                 check(await ios.locator('.dfreport').count() == 0 and await host.locator('.dfreport').count() == 0, 'spot: no report button during the round')
                 await ios.click('[data-act=dfinfo]'); await ios.wait_for_selector('#modal[open]'); info = await ios.inner_html('#modalBody')
                 check('commons.wikimedia.org/wiki' not in info, 'spot: no link to the original picture during the round')
-                await ios.screenshot(path=f'{OUT}/spot_iphone_info_during.png'); await ios.click('#modal [data-close] >> nth=1')
+                await ios.wait_for_timeout(800); await ios.screenshot(path=f'{OUT}/spot_iphone_info_during.png'); await ios.click('#modal [data-close] >> nth=1')
                 await host.click('[data-h=end]'); await host.wait_for_timeout(1500)
                 if pair.get('kind') == 'photo':
                     await ios.click('[data-act=dfinfo]'); await ios.wait_for_selector('#modal[open]'); info = await ios.inner_html('#modalBody')
