@@ -1,11 +1,11 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#5852)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#5852)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#1390)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#1390)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
-  "FAIL a phone on the current public site cannot half-join a game of this version (no stuck lobby)",
+  "OK public site runs the same version: a phone there joins this game normally",
   "OK letters: the team pressing on its phone does NOT stop the clock",
   "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
@@ -17,7 +17,7 @@
   "OK wheel: phones see the correct answer after the host reveals it",
   "OK wheel: question visible on iPhone and Android screens (True, True)",
   "OK wheel: challenge visible on iPhone and Android screens (True, True)",
-  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: iPhone found every difference by touch (5/5)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
   "OK spot: after the round the source link is shown (licence attribution)",
@@ -25,7 +25,7 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3464], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3468], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
@@ -56,5 +56,5 @@
    }
   ]
  },
- "PASS": false
+ "PASS": true
 }
