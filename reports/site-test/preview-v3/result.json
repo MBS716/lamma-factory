@@ -1,8 +1,8 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#4088)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#4088)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#5898)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#5898)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK a phone on the current public site cannot half-join a game of this version (no stuck lobby)",
