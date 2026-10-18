@@ -74,7 +74,9 @@ async def run(pw):
         if PUBLIC:
             await bad.goto(PUBLIC + f'?t={int(time.time())}', wait_until='load'); await bad.fill('#joinCode', code); await bad.click('#joinForm button')
             await bad.wait_for_timeout(10000); t = await bad.inner_text('#app')
-            check('اسمك' not in t, 'a phone on the current public site cannot half-join a game of this version (no stuck lobby)')
+            same = await bad.evaluate('typeof ROOM_PREFIX !== "undefined" ? ROOM_PREFIX : ""') == await host.evaluate('ROOM_PREFIX')
+            if same: check('اسمك' in t, 'public site runs the same version: a phone there joins this game normally')
+            else: check('اسمك' not in t, 'public site runs another version: its phones get "not found" instead of a stuck lobby')
         else: R['not_tested'].append('public-site phone with a new-version code')
 
         # ---------------- letters: fairness, scoring, equal turns, end screen
