@@ -1,0 +1,33 @@
+# Read-only check of the published site (no token): SEO tags, Search Console tag, and the full game test.
+name: live-check
+on:
+  push:
+    branches: [main]
+    paths: [".github/live-check-request"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: what the live site serves
+        run: |
+          mkdir -p reports/site-test/live-check
+          { echo "checked (UTC): $(date -u '+%Y-%m-%d %H:%M')"; echo "main commit: $(git ls-remote https://github.com/MBS716/lamma.git refs/heads/main | cut -c1-40)";
+            echo "live index.html md5: $(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
+            echo "verification tag on the live page: $(curl -s "https://mbs716.github.io/lamma/?nc=$RANDOM" | grep -o '<meta name="google-site-verification"[^>]*>')"; } | tee reports/site-test/live-check/live.txt
+      - run: GSV=o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-check
+      - run: python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live-check
+        if: always()
+      - if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/site-test
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "live check results" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done

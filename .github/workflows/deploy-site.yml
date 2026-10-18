@@ -145,4 +145,5 @@ jobs:
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
           git add reports/site-test 2>/dev/null || exit 0
           if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit: credential-like text found"; exit 1; fi
-          git commit -q -m "live site test results" && git pull -q --rebase && git push -q || true
+          git commit -q -m "live site test results" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done
