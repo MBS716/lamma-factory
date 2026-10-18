@@ -100,7 +100,7 @@ jobs:
           b="$B"
           git clone -q --depth 1 -b "$b" https://github.com/MBS716/lamma.git readback
           mkdir -p reports/site-test
-          { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "date (UTC): $(date -u '+%Y-%m-%d %H:%M')"; cat backup.txt 2>/dev/null; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
+          { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "date (UTC): $(date -u '+%Y-%m-%d %H:%M')"; cat backup.txt 2>/dev/null || true; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
             echo "spot files: $(find readback/spot -type f | wc -l) (expected $(find site/spot -type f | wc -l))"; diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
           diff -rq --exclude=.git site readback > /dev/null
       - uses: actions/setup-python@v5

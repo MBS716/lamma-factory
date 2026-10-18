@@ -1,6 +1,6 @@
-Lamma v2.0 (2026-10-18): fixes and 46 reviewed photo pairs; published for owner testing
+Lamma v2.0 (2026-10-18): published to the main site for owner testing (owner approval 18 Oct 2026); previous version kept in a backup branch
 
-Not for main until the owner approves.
+Published for testing and evaluation with the owner's explicit approval; not a final release.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_012ZrQZX85pmYU2FZS5ywHwn
