@@ -1,0 +1,114 @@
+== time (UTC): 2026-10-18 17:24:35
+
+== GET https://mbs716.github.io/lamma/sitemap.xml  (as Googlebot, redirects shown, not followed)
+HTTP/2 200 
+content-type: application/xml
+last-modified: Sun, 18 Oct 2026 16:23:26 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 250
+
+== GET http://mbs716.github.io/lamma/sitemap.xml  (as Googlebot, redirects shown, not followed)
+HTTP/1.1 301 Moved Permanently
+Content-Length: 162
+Content-Type: text/html
+Location: https://mbs716.github.io/lamma/sitemap.xml
+Age: 0
+X-Cache: MISS
+X-Cache-Hits: 0
+Vary: Accept-Encoding
+
+== GET https://mbs716.github.io/lamma/robots.txt  (as Googlebot, redirects shown, not followed)
+HTTP/2 200 
+content-type: text/plain; charset=utf-8
+last-modified: Sun, 18 Oct 2026 16:23:26 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 76
+
+== GET https://mbs716.github.io/robots.txt  (as Googlebot, redirects shown, not followed)
+HTTP/2 404 
+content-type: text/html; charset=utf-8
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 9115
+
+== GET https://mbs716.github.io/lamma/  (as Googlebot, redirects shown, not followed)
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+last-modified: Sun, 18 Oct 2026 16:23:26 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 216291
+
+== GET https://mbs716.github.io/lamma  (as Googlebot, redirects shown, not followed)
+HTTP/2 301 
+content-type: text/html
+location: https://mbs716.github.io/lamma/
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 162
+
+== GET https://mbs716.github.io/lamma/index.html  (as Googlebot, redirects shown, not followed)
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+last-modified: Sun, 18 Oct 2026 16:23:26 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+vary: Accept-Encoding
+content-length: 216291
+
+== sitemap body (bytes, as Googlebot)
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://mbs716.github.io/lamma/</loc><lastmod>2026-10-18</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+</urlset>
+
+== first bytes in hex (BOM / whitespace before <?xml?)
+ 3c 3f 78 6d 6c 20 76 65 72 73 69 6f 6e 3d 22 31
+== XML parse
+root: {http://www.sitemaps.org/schemas/sitemap/0.9}urlset
+loc: ['https://mbs716.github.io/lamma/']
+lastmod: ['2026-10-18']
+== same as repo main?
+main commit: 6b26f54908f7e36b33827fa18351f74e7cff1ea3
+sitemap.xml identical to main
+robots.txt identical to main
+index.html identical to main
+== canonical / robots / verification in the live page
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://mbs716.github.io/lamma/">
+<meta name="google-site-verification" content="o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw">
+== .nojekyll / Pages files in main
+total 536
+drwxr-xr-x  5 runner runner   4096 Oct 18 17:24 .
+drwxrwxrwt 14 root   root     4096 Oct 18 17:24 ..
+drwxr-xr-x  7 runner runner   4096 Oct 18 17:24 .git
+-rw-r--r--  1 runner runner   3399 Oct 18 17:24 apple-touch-icon.png
+drwxr-xr-x  2 runner runner   4096 Oct 18 17:24 data
+-rw-r--r--  1 runner runner   1369 Oct 18 17:24 favicon-32.png
+-rw-r--r--  1 runner runner   4038 Oct 18 17:24 favicon.ico
+-rw-r--r--  1 runner runner   7250 Oct 18 17:24 icon-192.png
+-rw-r--r--  1 runner runner   9455 Oct 18 17:24 icon-512.png
+-rw-r--r--  1 runner runner 216291 Oct 18 17:24 index.html
+-rw-r--r--  1 runner runner  74521 Oct 18 17:24 og-image.png
+-rw-r--r--  1 runner runner     76 Oct 18 17:24 robots.txt
+-rw-r--r--  1 runner runner    872 Oct 18 17:24 site.webmanifest
+-rw-r--r--  1 runner runner    250 Oct 18 17:24 sitemap.xml
+drwxr-xr-x  4 runner runner   4096 Oct 18 17:24 spot
+-rw-r--r--  1 runner runner 185536 Oct 18 17:24 tiger.webp
