@@ -27,6 +27,8 @@ def run():
     for p in ("og:title", "og:description", "og:url", "og:image", "og:type", "og:locale", "og:site_name"):
         check(bool(meta("property", p)), f"{p}: {(meta('property', p) or '')[:70]}")
     check(meta("name", "twitter:card") == "summary_large_image", "twitter card: large image")
+    gv = os.environ.get("GSV", "")
+    if gv: check(meta("name", "google-site-verification") == gv, f"Search Console verification tag present: {meta('name', 'google-site-verification')}")
     lds = re.findall(r'<script type="application/ld\+json">(.*?)</script>', page, re.S)
     try:
         data = json.loads(lds[0]); types = [x["@type"] for x in data]
