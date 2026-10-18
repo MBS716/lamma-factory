@@ -171,16 +171,18 @@ ART_CATS = [  # public-domain painters with busy, family-friendly scenes (every 
 class CommonsArt(Commons):
     """Public-domain paintings from Wikimedia Commons (rich, hand-made scenes for the illustrated pairs)."""
     def photos(self, min_w=1500, per_visit=2):
-        d = self.reg.d; queue = {}
-        while True:
-            cat = ART_CATS[d.get("art_i", 0) % len(ART_CATS)]; d["art_i"] = d.get("art_i", 0) + 1
-            q = queue.setdefault(cat, [])
-            if not q: q.extend(self._fetch_cat(cat, min_w))
-            for _ in range(per_visit):
-                if not q: break
-                ph = q.pop(0)
-                if ph["id"] in self.reg.seen: continue
-                self.reg.seen.add(ph["id"]); yield ph
+        d = self.reg.d; queue = {}; empty_rounds = 0
+        while empty_rounds < 3:                       # stop when the categories have nothing new left (no endless loop)
+            got = 0
+            for _ in range(len(ART_CATS)):
+                cat = ART_CATS[d.get("art_i", 0) % len(ART_CATS)]; d["art_i"] = d.get("art_i", 0) + 1
+                q = queue.setdefault(cat, [])
+                if not q: q.extend(self._fetch_cat(cat, min_w))
+                for _ in range(per_visit):
+                    while q and q[0]["id"] in self.reg.seen: q.pop(0)
+                    if not q: break
+                    ph = q.pop(0); self.reg.seen.add(ph["id"]); got += 1; yield ph
+            empty_rounds = 0 if got else empty_rounds + 1
     def _fetch_cat(self, cat, min_w):
         d = self.reg.d; found = []; d.setdefault("theme_page", {})
         off = d["theme_page"].get("a:" + cat, 0)

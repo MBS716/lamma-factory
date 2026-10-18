@@ -20,9 +20,23 @@ jobs:
         uses: actions/cache@v4
         with: {path: models, key: models-v2}
       - run: bash scripts/get_models.sh
+      - name: probe the painting source (what Commons returns per category)
+        run: |
+          mkdir -p reports/art-probe
+          timeout 10m python - <<'PY' > reports/art-probe/probe-${{ github.run_number }}.txt 2>&1 || true
+          from factory.collect import CommonsArt, Registry, ART_CATS
+          reg = Registry("/tmp/probe_reg.json"); c = CommonsArt(reg)
+          for cat in ART_CATS:
+              try:
+                  f = c._fetch_cat(cat, 1500); print(cat, "->", len(f), [x["alt"][:50] for x in f[:3]])
+              except Exception as e: print(cat, "ERROR", e)
+          print("skipped:", c.skipped)
+          PY
+          cat reports/art-probe/probe-${{ github.run_number }}.txt
       - name: produce
-        run: python run.py --source commons-art --target 40 --max-attempts 500 --time-limit 300 --mix 0.45,0.4,0.15 --per-author 5 --save-pairs --store local --out reports/art-${{ github.run_number }} --registry state/art_registry.json --report
+        run: timeout 285m python run.py --source commons-art --target 40 --max-attempts 500 --time-limit 270 --mix 0.45,0.4,0.15 --per-author 5 --save-pairs --store local --out reports/art-${{ github.run_number }} --registry state/art_registry.json --report
       - name: keep results in the repo
+        if: always()
         run: |
           rm -rf reports/art-${{ github.run_number }}/bucket/pairs
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
