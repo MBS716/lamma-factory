@@ -28,7 +28,7 @@ jobs:
           reg = Registry("/tmp/probe_reg.json"); c = CommonsArt(reg)
           for cat in ART_CATS:
               try:
-                  f = c._fetch_cat(cat, 1500); print(cat, "->", len(f), [x["alt"][:50] for x in f[:3]])
+                  f = c._fetch_cat(cat, 1200); print(cat, "->", len(f), [x["alt"][:50] for x in f[:3]])
               except Exception as e: print(cat, "ERROR", e)
           print("skipped:", c.skipped)
           PY

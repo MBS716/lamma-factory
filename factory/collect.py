@@ -167,10 +167,12 @@ ART_CATS = [  # public-domain painters with busy, family-friendly scenes (every 
     "Paintings by Pieter Brueghel the Younger", "Paintings by Jan Brueghel the Elder", "Paintings by Canaletto",
     "Paintings by Bernardo Bellotto", "Paintings by Francesco Guardi", "Paintings by Ludwig Deutsch",
     "Paintings by Rudolf Ernst", "Paintings by Childe Hassam", "Paintings by Camille Pissarro",
+    "Paintings by David Teniers the Younger", "Paintings by Jan van Goyen", "Paintings by Adriaen van Ostade",
+    "Paintings by Claude Monet", "Paintings by Gustave Caillebotte", "Paintings by Ivan Aivazovsky",
 ]
 class CommonsArt(Commons):
     """Public-domain paintings from Wikimedia Commons (rich, hand-made scenes for the illustrated pairs)."""
-    def photos(self, min_w=1500, per_visit=2):
+    def photos(self, min_w=1200, per_visit=2):
         d = self.reg.d; queue = {}; empty_rounds = 0
         while empty_rounds < 3:                       # stop when the categories have nothing new left (no endless loop)
             got = 0
@@ -187,7 +189,7 @@ class CommonsArt(Commons):
         d = self.reg.d; found = []; d.setdefault("theme_page", {})
         off = d["theme_page"].get("a:" + cat, 0)
         q = {"action": "query", "format": "json", "formatversion": 2, "generator": "search",
-             "gsrsearch": f'incategory:"{cat}" filetype:bitmap', "gsrnamespace": 6, "gsrlimit": self.batch, "gsroffset": off,
+             "gsrsearch": f'deepcat:"{cat}" filetype:bitmap', "gsrnamespace": 6, "gsrlimit": self.batch, "gsroffset": off,
              "prop": "imageinfo", "iiprop": "url|size|mime|extmetadata", "iiurlwidth": self.width,
              "iiextmetadatafilter": "LicenseShortName|LicenseUrl|Artist|Restrictions"}
         res = self._get(self.API + "?" + urllib.parse.urlencode(q))
@@ -198,7 +200,7 @@ class CommonsArt(Commons):
             ii = (p.get("imageinfo") or [{}])[0]; m = ii.get("extmetadata", {})
             lic = _plain(m.get("LicenseShortName", {}).get("value")); w, h = ii.get("width", 0), ii.get("height", 0)
             if ii.get("mime") not in ("image/jpeg", "image/png", "image/webp"): self.skip("not_image"); continue
-            if w < min_w or not (1.25 <= w / max(1, h) <= 2.1): self.skip("size_or_shape"); continue
+            if w < min_w or not (1.2 <= w / max(1, h) <= 2.2): self.skip("size_or_shape"); continue
             if not re.match(r"^(public domain|pd|cc0)", lic, re.I): self.skip("licence"); continue
             artist = cat.replace("Paintings by ", "")
             found.append({"provider": "commons", "id": "w" + str(p["pageid"]), "theme": "painting", "url": ii.get("descriptionurl", ""),
