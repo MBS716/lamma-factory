@@ -1,0 +1,44 @@
+# Read-only inspection of the published sitemap, robots and canonical (changes nothing on the site).
+name: sitemap-inspect
+on:
+  push:
+    branches: [main]
+    paths: [".github/sitemap-inspect-request"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: inspect
+        run: |
+          O=reports/site-test/sitemap-inspect; mkdir -p $O
+          GB="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+          {
+          echo "== time (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+          for u in https://mbs716.github.io/lamma/sitemap.xml http://mbs716.github.io/lamma/sitemap.xml https://mbs716.github.io/lamma/robots.txt https://mbs716.github.io/robots.txt https://mbs716.github.io/lamma/ https://mbs716.github.io/lamma https://mbs716.github.io/lamma/index.html; do
+            echo; echo "== GET $u  (as Googlebot, redirects shown, not followed)"
+            curl -s -o /dev/null -D - -A "$GB" "$u" | tr -d '\r' | grep -iE '^(HTTP/|location|content-type|content-length|x-robots-tag|cache-control|last-modified|age|x-cache|vary|content-encoding)'
+          done
+          echo; echo "== sitemap body (bytes, as Googlebot)"; curl -s -A "$GB" https://mbs716.github.io/lamma/sitemap.xml | tee /tmp/sm.xml; echo
+          echo "== first bytes in hex (BOM / whitespace before <?xml?)"; head -c 16 /tmp/sm.xml | od -An -tx1
+          echo "== XML parse"; python3 -c "
+          import xml.etree.ElementTree as ET; t=ET.parse('/tmp/sm.xml'); r=t.getroot(); print('root:', r.tag)
+          print('loc:', [e.text for e in r.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc')])
+          print('lastmod:', [e.text for e in r.iter('{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod')])"
+          echo "== same as repo main?"; git clone -q --depth 1 https://github.com/MBS716/lamma.git /tmp/lm
+          echo "main commit: $(git -C /tmp/lm rev-parse HEAD)"; cmp /tmp/sm.xml /tmp/lm/sitemap.xml && echo "sitemap.xml identical to main"
+          curl -s -A "$GB" https://mbs716.github.io/lamma/robots.txt > /tmp/rb.txt; cmp /tmp/rb.txt /tmp/lm/robots.txt && echo "robots.txt identical to main"
+          curl -s -A "$GB" https://mbs716.github.io/lamma/ > /tmp/ix.html; cmp /tmp/ix.html /tmp/lm/index.html && echo "index.html identical to main"
+          echo "== canonical / robots / verification in the live page"; grep -oE '<link rel="canonical"[^>]*>|<meta name="robots"[^>]*>|<meta name="google-site-verification"[^>]*>' /tmp/ix.html
+          echo "== .nojekyll / Pages files in main"; ls -la /tmp/lm | head -30
+          } 2>&1 | tee $O/report.txt
+      - name: save
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/site-test/sitemap-inspect
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi
+          git commit -q -m "sitemap inspection" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done
