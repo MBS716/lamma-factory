@@ -1,51 +1,60 @@
 {
  "url": "https://mbs716.github.io/lamma/",
- "rounds": [
-  {
-   "level_asked": 0,
-   "level_got": 0,
-   "title": "بيوت على القناة",
-   "diffs": 5,
-   "image": "s07a.webp",
-   "phone1": "5 / 5",
-   "phone2": "2 / 5",
-   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
-  },
-  {
-   "level_asked": 1,
-   "level_got": 1,
-   "title": "بلدة المرفأ",
-   "diffs": 6,
-   "image": "s13a.webp",
-   "phone1": "6 / 6",
-   "phone2": "2 / 6",
-   "host_race": "السباق | 2:56 | جوال 1 | 6/6 | جوال 2 | 2/6 | المنتهون | 1. جوال 1 | 0:02 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
-  },
-  {
-   "level_asked": 2,
-   "level_got": 2,
-   "title": "زقاق ضيق",
-   "diffs": 5,
-   "image": "s19a.webp",
-   "phone1": "5 / 5",
-   "phone2": "2 / 5",
-   "host_race": "السباق | 2:56 | جوال 1 | 5/5 | جوال 2 | 2/5 | المنتهون | 1. جوال 1 | 0:01 · 0 خطأ | إنهاء وكشف الفروق | صورة جديدة | الإعدادات"
-  }
+ "checks": [
+  "OK invite link points to this site (https://mbs716.github.io/lamma/#2971)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/#2971)",
+  "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
+  "OK wrong code: the phone gets a clear \"game not found\" message",
+  "OK letters: the team pressing on its phone does NOT stop the clock",
+  "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
+  "OK letters: the question is on the phone screen of the team on turn",
+  "OK letters: both teams had the same number of questions (10/10)",
+  "OK letters: totals equal the points awarded (860/900)",
+  "OK letters: no question repeated",
+  "OK letters: winner screen on host, iPhone and Android",
+  "OK wheel: 4 options on the phone, correct answer not marked before the host reveals it",
+  "OK wheel: phones see the correct answer after the host reveals it",
+  "OK wheel: question visible on iPhone and Android screens (True, True)",
+  "OK wheel: challenge visible on iPhone and Android screens (True, True)",
+  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: no report button during the round",
+  "OK spot: no link to the original picture during the round",
+  "OK spot: after the round the source link is shown (licence attribution)",
+  "OK spot: the room played all 12 hard pairs, none twice, before the end message (12)",
+  "OK spot: end-of-level message only after the level is used up",
+  "OK spot: changing the level gives a pair of the new level",
+  "OK quiz: the question is on both phone screens",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3456], ['أندرويد', 0]])",
+  "OK puzzle: iPhone swaps two pieces by tapping",
+  "OK puzzle: Android drag swaps pieces without scrolling the page",
+  "OK iPhone: no sideways scrolling (390 <= 390)",
+  "OK Android: no sideways scrolling (412 <= 412)"
  ],
  "errors": [],
- "step": "start",
- "footer_tiger": true,
- "footer_id": true,
- "code": "6514",
- "library": 20,
- "levels_in_library": [
-  7,
-  6,
-  7
+ "not_tested": [
+  "public-site phone with a new-version code",
+  "real phones on mobile networks (only browser engines on GitHub servers)",
+  "in-app browsers (WhatsApp/Instagram/camera QR)",
+  "scanning the QR with a camera (the QR content is checked instead)"
  ],
- "game_quiz": "ok",
- "game_letters": "ok",
- "game_wheel": "ok",
- "game_puzzle": "ok",
+ "spot_index": {
+  "total": 46,
+  "levels": [
+   22,
+   12,
+   12
+  ],
+  "shards": [
+   {
+    "name": "shard-0000.json",
+    "count": 46,
+    "levels": [
+     22,
+     12,
+     12
+    ]
+   }
+  ]
+ },
  "PASS": true
 }
