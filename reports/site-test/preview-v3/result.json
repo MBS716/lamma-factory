@@ -1,8 +1,8 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#1390)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#1390)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#8974)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#8974)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs the same version: a phone there joins this game normally",
@@ -25,7 +25,7 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3468], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3474], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
