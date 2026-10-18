@@ -76,6 +76,8 @@ def js(firebase, base, spot_cdn='spot/', embed=False):
 title = '<title>لمّة للألعاب الجماعية</title>\n'
 import base64
 css, body = S('style.css'), S('body.html')
+VERSION = os.environ.get('LAMMA_VERSION', 'v2.0')
+body = body.replace('@@VER@@', 'لمّة ' + VERSION)
 TIGER_B64 = 'data:image/webp;base64,' + base64.b64encode(open(os.path.join(ROOT, 'assets', 'tiger.webp'), 'rb').read()).decode()
 shutil.copy(os.path.join(ROOT, 'assets', 'tiger.webp'), os.path.join(DIST, 'tiger.webp'))   # separate file: the page itself stays small
 body_site = body.replace('@@TIGER@@', 'tiger.webp')

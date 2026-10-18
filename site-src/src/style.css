@@ -386,3 +386,4 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .rqnote{border-radius:14px;padding:10px 14px;background:color-mix(in srgb,var(--gold) 22%,var(--bg2));border:1px solid var(--gold);font-weight:700}
 .pwrap .wheelbox{width:min(100%,300px)}
 .note.lost{border-color:var(--bad);color:var(--ink);margin:0}
+.ver{font-size:.8rem;opacity:.7}

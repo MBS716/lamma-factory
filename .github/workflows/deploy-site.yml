@@ -83,7 +83,14 @@ jobs:
           cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           git ls-remote --exit-code origin backup-before-spot-update > /dev/null 2>&1 || true
-          if [ "$MODE" = "main-approved" ]; then git checkout -q main; else git checkout -q -B "$B"; fi
+          if [ "$MODE" = "main-approved" ]; then
+            # keep the current live version: backup branch named after today's date (never overwritten)
+            BK="backup-main-$(date -u +%Y%m%d-%H%M)"
+            g push -q origin "refs/remotes/origin/main:refs/heads/$BK" || { echo "backup failed, not publishing"; exit 1; }
+            git ls-remote --exit-code https://github.com/MBS716/lamma.git "refs/heads/$BK" > /dev/null || { echo "backup not found, not publishing"; exit 1; }
+            echo "backup of the previous main: $BK ($(git rev-parse origin/main))" | tee ../backup.txt
+            git checkout -q main
+          else git checkout -q -B "$B"; fi
           rm -rf index.html spot data tiger.webp; cp -r ../site/. .
           git add -A; git commit -q -m "$(cat ../.github/deploy-message 2>/dev/null || echo 'Update the Lamma site')" || echo "nothing to commit"
           if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin "$B"; fi || { echo "push failed"; exit 1; }
@@ -93,7 +100,7 @@ jobs:
           b="$B"
           git clone -q --depth 1 -b "$b" https://github.com/MBS716/lamma.git readback
           mkdir -p reports/site-test
-          { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
+          { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "date (UTC): $(date -u '+%Y-%m-%d %H:%M')"; cat backup.txt 2>/dev/null; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
             echo "spot files: $(find readback/spot -type f | wc -l) (expected $(find site/spot -type f | wc -l))"; diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
           diff -rq --exclude=.git site readback > /dev/null
       - uses: actions/setup-python@v5
