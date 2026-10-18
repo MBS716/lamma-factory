@@ -33,6 +33,8 @@ jobs:
           print("skipped:", c.skipped)
           PY
           cat reports/art-probe/probe-${{ github.run_number }}.txt
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/art-probe && git commit -q -m "art probe ${{ github.run_number }}" && for i in 1 2 3; do git pull -q --rebase && git push -q && break; sleep 5; done || true
       - name: produce
         run: timeout 285m python run.py --source commons-art --target 40 --max-attempts 500 --time-limit 270 --mix 0.45,0.4,0.15 --per-author 5 --save-pairs --store local --out reports/art-${{ github.run_number }} --registry state/art_registry.json --report
       - name: keep results in the repo
