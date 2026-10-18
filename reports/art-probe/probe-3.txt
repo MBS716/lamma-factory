@@ -1,0 +1,13 @@
+Paintings by Carl Larsson -> 0 []
+Paintings by Hendrick Avercamp -> 3 ['File:Hendrick Avercamp - Dutch Canal - NG.M.00167 ', 'File:Hendrick Avercamp - Summer - NG.M.01373 - Nat', 'File:Hendrick van Avercamp (1585-1634) - Holländis']
+Paintings by Pieter Bruegel the Elder -> 0 []
+Paintings by Pieter Brueghel the Younger -> 0 []
+Paintings by Jan Brueghel the Elder -> 0 []
+Paintings by Canaletto -> 0 []
+Paintings by Bernardo Bellotto -> 8 ['File:Nymphenburg Palace from the garden by Bernard', 'File:1738-39 Blick auf den Canal Grande mit dem Pa', 'File:Tatton Park 2016 116.jpg']
+Paintings by Francesco Guardi -> 4 ['File:Francesco Guardi (attrib.) - A basket of flow', 'File:Francesco Guardi (circle) - Still life with a', 'File:Francesco Guardi (1712 - 1793) - View of the ']
+Paintings by Ludwig Deutsch -> 0 []
+Paintings by Rudolf Ernst -> 3 ['File:Rodolphe Ernst - The Perfume Maker 1.jpg', 'File:Le Monde illustré, 1895-10-12, bpt6k6224303r,', 'File:Ernst Rudolph Salome and the Tigers.jpg']
+Paintings by Childe Hassam -> 6 ['File:Old House, Easthampton, Long Island, by Frede', 'File:1910 Hassam At the Piano Tel Aviv Museum oft ', 'File:Childe Hassam - Drydock, Gloucester - Google ']
+Paintings by Camille Pissarro -> 0 []
+skipped: {'size_or_shape': 172, 'licence': 13, 'not_image': 1}
