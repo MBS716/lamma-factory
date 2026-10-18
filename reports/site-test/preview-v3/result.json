@@ -1,8 +1,8 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#6118)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#6118)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview/#4088)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview/#4088)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK a phone on the current public site cannot half-join a game of this version (no stuck lobby)",
@@ -21,11 +21,11 @@
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
   "OK spot: after the round the source link is shown (licence attribution)",
-  "OK spot: the room played all 7 hard pairs, none twice, before the end message (7)",
+  "OK spot: the room played all 12 hard pairs, none twice, before the end message (12)",
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3466], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3473], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
@@ -38,20 +38,20 @@
   "scanning the QR with a camera (the QR content is checked instead)"
  ],
  "spot_index": {
-  "total": 55,
+  "total": 71,
   "levels": [
-   29,
-   19,
-   7
+   38,
+   21,
+   12
   ],
   "shards": [
    {
     "name": "shard-0000.json",
-    "count": 55,
+    "count": 71,
     "levels": [
-     29,
-     19,
-     7
+     38,
+     21,
+     12
     ]
    }
   ]
