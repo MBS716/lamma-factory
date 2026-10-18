@@ -2341,8 +2341,8 @@ function imageInfo(p, running){
   if (p.kind === "art" || !p.credit) rows = `<tr><th>العمل</th><td>رسم أصلي من إعداد لمّة</td></tr><tr><th>التعديلات</th><td>نسخة ثانية من الرسم نفسه بفروق مقصودة.</td></tr>`;
   else if (p.credit.length >= 4){
     const [who, page, lic, licUrl] = p.credit, sa = /SA/i.test(lic || "");
-    rows = `<tr><th>المصوّر</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${running ? `Wikimedia Commons<br><span class="muted">رابط صفحة الصورة الأصلية يظهر هنا بعد انتهاء الجولة، حتى لا تُكشف الفروق أثناء اللعب.</span>` : link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
-      <tr><th>الترخيص</th><td>${link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
+    rows = `<tr><th>${p.kind === "painting" ? "الفنان" : "المصوّر"}</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${running ? `Wikimedia Commons<br><span class="muted">رابط صفحة الصورة الأصلية يظهر هنا بعد انتهاء الجولة، حتى لا تُكشف الفروق أثناء اللعب.</span>` : link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
+      <tr><th>الترخيص</th><td>${/^public domain$/i.test(lic || "") ? "ملكية عامة (Public domain)" : link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
       <tr><th>التعديلات</th><td>قُصّت الصورة وغُيّر حجمها، وعُدّلت النسخة الثانية بإخفاء أو تحريك أو تغيير عناصر صغيرة لصنع الفروق.${sa ? " النسختان المعدّلتان متاحتان بالترخيص نفسه." : ""}</td></tr>`;
   } else {
     const [who, whoUrl, photoUrl] = p.credit;

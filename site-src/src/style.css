@@ -383,3 +383,6 @@ html.noscroll,html.noscroll body{overflow:hidden}
 
 .resume{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding:12px 16px;border-radius:16px;background:color-mix(in srgb,var(--gold) 16%,var(--card));border:1px solid var(--gold)}
 .pwrap.wide{max-width:1100px}
+.rqnote{border-radius:14px;padding:10px 14px;background:color-mix(in srgb,var(--gold) 22%,var(--bg2));border:1px solid var(--gold);font-weight:700}
+.pwrap .wheelbox{width:min(100%,300px)}
+.note.lost{border-color:var(--bad);color:var(--ink);margin:0}

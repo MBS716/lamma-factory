@@ -594,60 +594,6 @@
   "kind": "photo"
  },
  {
-  "id": "c-w7489486",
-  "a": "s13a.webp",
-  "b": "s13b.webp",
-  "w": 1280,
-  "h": 853,
-  "level": 1,
-  "title": "بلدة المرفأ",
-  "diffs": [
-   {
-    "x": 258,
-    "y": 517,
-    "rx": 34,
-    "ry": 16
-   },
-   {
-    "x": 690,
-    "y": 445,
-    "rx": 16,
-    "ry": 21
-   },
-   {
-    "x": 582,
-    "y": 484,
-    "rx": 23,
-    "ry": 22
-   },
-   {
-    "x": 761,
-    "y": 489,
-    "rx": 19,
-    "ry": 18
-   },
-   {
-    "x": 336,
-    "y": 351,
-    "rx": 14,
-    "ry": 25
-   },
-   {
-    "x": 508,
-    "y": 486,
-    "rx": 14,
-    "ry": 22
-   }
-  ],
-  "credit": [
-   "Marc Ryckaert (MJJR)",
-   "https://commons.wikimedia.org/wiki/File:Chania_R03.jpg",
-   "CC BY 3.0",
-   "https://creativecommons.org/licenses/by/3.0"
-  ],
-  "kind": "photo"
- },
- {
   "id": "c-w118196019",
   "a": "s14a.webp",
   "b": "s14b.webp",
@@ -2709,6 +2655,834 @@
     "rx": 124,
     "ry": 88
    }
+  ]
+ },
+ {
+  "id": "c-w106356198",
+  "a": "c-w106356198a.webp",
+  "b": "c-w106356198b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "مخيم من الأعلى",
+  "diffs": [
+   {
+    "x": 1108,
+    "y": 82,
+    "rx": 28,
+    "ry": 34
+   },
+   {
+    "x": 896,
+    "y": 80,
+    "rx": 30,
+    "ry": 32
+   },
+   {
+    "x": 982,
+    "y": 177,
+    "rx": 22,
+    "ry": 34
+   },
+   {
+    "x": 438,
+    "y": 365,
+    "rx": 30,
+    "ry": 32
+   },
+   {
+    "x": 204,
+    "y": 230,
+    "rx": 34,
+    "ry": 20
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Arne Müseler",
+   "https://commons.wikimedia.org/wiki/File:Niedersonthofen_camping.jpg",
+   "CC BY-SA 3.0 de",
+   "https://creativecommons.org/licenses/by-sa/3.0/de/deed.en"
+  ]
+ },
+ {
+  "id": "c-w145181068",
+  "a": "c-w145181068a.webp",
+  "b": "c-w145181068b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "دمى من الصوف",
+  "diffs": [
+   {
+    "x": 579,
+    "y": 240,
+    "rx": 35,
+    "ry": 58
+   },
+   {
+    "x": 426,
+    "y": 266,
+    "rx": 40,
+    "ry": 56
+   },
+   {
+    "x": 100,
+    "y": 422,
+    "rx": 36,
+    "ry": 35
+   },
+   {
+    "x": 118,
+    "y": 738,
+    "rx": 62,
+    "ry": 44
+   },
+   {
+    "x": 550,
+    "y": 762,
+    "rx": 64,
+    "ry": 81
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Bijay Chaurasia",
+   "https://commons.wikimedia.org/wiki/File:Felt_Dolls_in_Thamel,_Kathmandu_Nepal-8312.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w160962700",
+  "a": "c-w160962700a.webp",
+  "b": "c-w160962700b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 2,
+  "title": "صناعة الفخار",
+  "diffs": [
+   {
+    "x": 79,
+    "y": 512,
+    "rx": 27,
+    "ry": 28
+   },
+   {
+    "x": 352,
+    "y": 612,
+    "rx": 22,
+    "ry": 24
+   },
+   {
+    "x": 470,
+    "y": 618,
+    "rx": 24,
+    "ry": 22
+   },
+   {
+    "x": 339,
+    "y": 502,
+    "rx": 22,
+    "ry": 23
+   },
+   {
+    "x": 238,
+    "y": 635,
+    "rx": 24,
+    "ry": 24
+   },
+   {
+    "x": 34,
+    "y": 696,
+    "rx": 24,
+    "ry": 24
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Mahinur11",
+   "https://commons.wikimedia.org/wiki/File:Old_pottery.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w180244992",
+  "a": "c-w180244992a.webp",
+  "b": "c-w180244992b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 1,
+  "title": "شارع وساحة",
+  "diffs": [
+   {
+    "x": 608,
+    "y": 384,
+    "rx": 19,
+    "ry": 33
+   },
+   {
+    "x": 1128,
+    "y": 376,
+    "rx": 16,
+    "ry": 31
+   },
+   {
+    "x": 124,
+    "y": 526,
+    "rx": 33,
+    "ry": 27
+   },
+   {
+    "x": 822,
+    "y": 410,
+    "rx": 16,
+    "ry": 30
+   },
+   {
+    "x": 504,
+    "y": 212,
+    "rx": 22,
+    "ry": 30
+   },
+   {
+    "x": 1022,
+    "y": 424,
+    "rx": 20,
+    "ry": 22
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Aciarium",
+   "https://commons.wikimedia.org/wiki/File:Waasenplatz_6-7_Leoben_06-2025.jpg",
+   "CC BY 4.0",
+   "https://creativecommons.org/licenses/by/4.0"
+  ]
+ },
+ {
+  "id": "c-w29341375",
+  "a": "c-w29341375a.webp",
+  "b": "c-w29341375b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "سوق شعبي",
+  "diffs": [
+   {
+    "x": 951,
+    "y": 281,
+    "rx": 51,
+    "ry": 26
+   },
+   {
+    "x": 922,
+    "y": 388,
+    "rx": 40,
+    "ry": 26
+   },
+   {
+    "x": 508,
+    "y": 348,
+    "rx": 41,
+    "ry": 22
+   },
+   {
+    "x": 766,
+    "y": 322,
+    "rx": 44,
+    "ry": 23
+   },
+   {
+    "x": 649,
+    "y": 317,
+    "rx": 45,
+    "ry": 24
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Diego Delso",
+   "https://commons.wikimedia.org/wiki/File:Souq_Waqif,_Doha,_Catar,_2013-08-05,_DD_62.JPG",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ]
+ },
+ {
+  "id": "c-w35026614",
+  "a": "c-w35026614a.webp",
+  "b": "c-w35026614b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "قوارب في مرفأ",
+  "diffs": [
+   {
+    "x": 398,
+    "y": 566,
+    "rx": 31,
+    "ry": 40
+   },
+   {
+    "x": 888,
+    "y": 402,
+    "rx": 32,
+    "ry": 40
+   },
+   {
+    "x": 394,
+    "y": 206,
+    "rx": 34,
+    "ry": 40
+   },
+   {
+    "x": 1156,
+    "y": 228,
+    "rx": 36,
+    "ry": 42
+   },
+   {
+    "x": 488,
+    "y": 206,
+    "rx": 52,
+    "ry": 95
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Jebulon",
+   "https://commons.wikimedia.org/wiki/File:Rack_bateaux,_Conleau,_golfe_du_Morbihan,_France.jpg",
+   "CC0",
+   "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  ]
+ },
+ {
+  "id": "c-w51063442",
+  "a": "c-w51063442a.webp",
+  "b": "c-w51063442b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 1,
+  "title": "واجهة ملوّنة",
+  "diffs": [
+   {
+    "x": 474,
+    "y": 660,
+    "rx": 30,
+    "ry": 28
+   },
+   {
+    "x": 1040,
+    "y": 608,
+    "rx": 30,
+    "ry": 28
+   },
+   {
+    "x": 338,
+    "y": 660,
+    "rx": 28,
+    "ry": 28
+   },
+   {
+    "x": 286,
+    "y": 561,
+    "rx": 30,
+    "ry": 28
+   },
+   {
+    "x": 903,
+    "y": 608,
+    "rx": 29,
+    "ry": 28
+   },
+   {
+    "x": 476,
+    "y": 561,
+    "rx": 28,
+    "ry": 28
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Wilfredor",
+   "https://commons.wikimedia.org/wiki/File:Copysul_house.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w115755843",
+  "a": "c-w115755843a.webp",
+  "b": "c-w115755843b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "شارع تاريخي",
+  "diffs": [
+   {
+    "x": 500,
+    "y": 376,
+    "rx": 22,
+    "ry": 44
+   },
+   {
+    "x": 578,
+    "y": 398,
+    "rx": 21,
+    "ry": 42
+   },
+   {
+    "x": 588,
+    "y": 507,
+    "rx": 26,
+    "ry": 56
+   },
+   {
+    "x": 678,
+    "y": 428,
+    "rx": 22,
+    "ry": 38
+   },
+   {
+    "x": 1080,
+    "y": 569,
+    "rx": 26,
+    "ry": 55
+   },
+   {
+    "x": 460,
+    "y": 498,
+    "rx": 24,
+    "ry": 49
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Dietmar Rabich",
+   "https://commons.wikimedia.org/wiki/File:M%C3%BCnster,_Prinzipalmarkt_--_2022_--_0248.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w123910259",
+  "a": "c-w123910259a.webp",
+  "b": "c-w123910259b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "بسطة فواكه",
+  "diffs": [
+   {
+    "x": 713,
+    "y": 482,
+    "rx": 63,
+    "ry": 62
+   },
+   {
+    "x": 396,
+    "y": 398,
+    "rx": 78,
+    "ry": 72
+   },
+   {
+    "x": 1043,
+    "y": 564,
+    "rx": 56,
+    "ry": 57
+   },
+   {
+    "x": 900,
+    "y": 578,
+    "rx": 56,
+    "ry": 60
+   },
+   {
+    "x": 983,
+    "y": 72,
+    "rx": 69,
+    "ry": 69
+   },
+   {
+    "x": 899,
+    "y": 410,
+    "rx": 62,
+    "ry": 64
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Marco Almbauer",
+   "https://commons.wikimedia.org/wiki/File:Different_fruits_on_a_market.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w148696966",
+  "a": "c-w148696966a.webp",
+  "b": "c-w148696966b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "بيوت على القناة",
+  "diffs": [
+   {
+    "x": 378,
+    "y": 666,
+    "rx": 22,
+    "ry": 44
+   },
+   {
+    "x": 366,
+    "y": 478,
+    "rx": 20,
+    "ry": 36
+   },
+   {
+    "x": 474,
+    "y": 634,
+    "rx": 22,
+    "ry": 36
+   },
+   {
+    "x": 566,
+    "y": 548,
+    "rx": 20,
+    "ry": 40
+   },
+   {
+    "x": 476,
+    "y": 445,
+    "rx": 22,
+    "ry": 46
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Basile Morin",
+   "https://commons.wikimedia.org/wiki/File:Colorful_canal_houses_at_golden_hour_in_Damrak_avenue_Amsterdam_the_Netherlands.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w182213820",
+  "a": "c-w182213820a.webp",
+  "b": "c-w182213820b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 2,
+  "title": "واجهة النهر",
+  "diffs": [
+   {
+    "x": 1030,
+    "y": 496,
+    "rx": 28,
+    "ry": 33
+   },
+   {
+    "x": 626,
+    "y": 416,
+    "rx": 20,
+    "ry": 20
+   },
+   {
+    "x": 810,
+    "y": 450,
+    "rx": 24,
+    "ry": 20
+   },
+   {
+    "x": 346,
+    "y": 452,
+    "rx": 20,
+    "ry": 20
+   },
+   {
+    "x": 46,
+    "y": 454,
+    "rx": 20,
+    "ry": 20
+   },
+   {
+    "x": 230,
+    "y": 417,
+    "rx": 20,
+    "ry": 20
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Юрий Д.К.",
+   "https://commons.wikimedia.org/wiki/File:Moscow_-_2025_-_Prechistenskaya_Embankment,_view_from_Krymskaya_Embankment._Khilkov_Lane,_Ministry_of_Foreign_Affairs_building2.jpg",
+   "CC BY 4.0",
+   "https://creativecommons.org/licenses/by/4.0"
+  ]
+ },
+ {
+  "id": "c-w190391746",
+  "a": "c-w190391746a.webp",
+  "b": "c-w190391746b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 2,
+  "title": "نافورة ومبنى",
+  "diffs": [
+   {
+    "x": 952,
+    "y": 558,
+    "rx": 15,
+    "ry": 22
+   },
+   {
+    "x": 1090,
+    "y": 445,
+    "rx": 16,
+    "ry": 22
+   },
+   {
+    "x": 673,
+    "y": 341,
+    "rx": 16,
+    "ry": 21
+   },
+   {
+    "x": 882,
+    "y": 398,
+    "rx": 17,
+    "ry": 22
+   },
+   {
+    "x": 288,
+    "y": 410,
+    "rx": 16,
+    "ry": 22
+   },
+   {
+    "x": 352,
+    "y": 296,
+    "rx": 16,
+    "ry": 21
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Юрий Д.К.",
+   "https://commons.wikimedia.org/wiki/File:Moscow_-_2025_-_Fountains_of_the_Vodootvodny_Canal_and_Kadashevskaya_Embankment,_6.jpg",
+   "CC BY 4.0",
+   "https://creativecommons.org/licenses/by/4.0"
+  ]
+ },
+ {
+  "id": "c-w34780065",
+  "a": "c-w34780065a.webp",
+  "b": "c-w34780065b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 2,
+  "title": "مبنى على النهر",
+  "diffs": [
+   {
+    "x": 690,
+    "y": 248,
+    "rx": 18,
+    "ry": 28
+   },
+   {
+    "x": 980,
+    "y": 248,
+    "rx": 18,
+    "ry": 29
+   },
+   {
+    "x": 202,
+    "y": 238,
+    "rx": 18,
+    "ry": 28
+   },
+   {
+    "x": 364,
+    "y": 551,
+    "rx": 22,
+    "ry": 25
+   },
+   {
+    "x": 164,
+    "y": 471,
+    "rx": 20,
+    "ry": 29
+   },
+   {
+    "x": 555,
+    "y": 472,
+    "rx": 20,
+    "ry": 29
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Florstein (Telegram:WikiPhoto.Space)",
+   "https://commons.wikimedia.org/wiki/File:Apartment_Houses_at_Obvodny_Canal_SPB_03.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ]
+ },
+ {
+  "id": "c-w45640114",
+  "a": "c-w45640114a.webp",
+  "b": "c-w45640114b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 2,
+  "title": "مبنى على الضفة",
+  "diffs": [
+   {
+    "x": 1000,
+    "y": 216,
+    "rx": 21,
+    "ry": 27
+   },
+   {
+    "x": 678,
+    "y": 191,
+    "rx": 19,
+    "ry": 27
+   },
+   {
+    "x": 790,
+    "y": 244,
+    "rx": 16,
+    "ry": 26
+   },
+   {
+    "x": 902,
+    "y": 140,
+    "rx": 22,
+    "ry": 28
+   },
+   {
+    "x": 900,
+    "y": 308,
+    "rx": 24,
+    "ry": 28
+   },
+   {
+    "x": 778,
+    "y": 168,
+    "rx": 21,
+    "ry": 26
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "This Photo was taken by Wolfgang Moroder.  \n\nFeel free to use my photos, but ple",
+   "https://commons.wikimedia.org/wiki/File:House_of_Atlas_Saint_Petersburg.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ]
+ },
+ {
+  "id": "c-w49094844",
+  "a": "c-w49094844a.webp",
+  "b": "c-w49094844b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "قصر ورايات",
+  "diffs": [
+   {
+    "x": 312,
+    "y": 548,
+    "rx": 22,
+    "ry": 52
+   },
+   {
+    "x": 794,
+    "y": 661,
+    "rx": 66,
+    "ry": 58
+   },
+   {
+    "x": 179,
+    "y": 541,
+    "rx": 23,
+    "ry": 48
+   },
+   {
+    "x": 625,
+    "y": 408,
+    "rx": 54,
+    "ry": 60
+   },
+   {
+    "x": 462,
+    "y": 403,
+    "rx": 54,
+    "ry": 62
+   },
+   {
+    "x": 112,
+    "y": 410,
+    "rx": 42,
+    "ry": 50
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Jebulon",
+   "https://commons.wikimedia.org/wiki/File:Old_town_hall_Pons_Charente-Maritime.jpg",
+   "CC0",
+   "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  ]
+ },
+ {
+  "id": "c-w52227923",
+  "a": "c-w52227923a.webp",
+  "b": "c-w52227923b.webp",
+  "w": 1280,
+  "h": 853,
+  "level": 0,
+  "title": "مبنى ليلي",
+  "diffs": [
+   {
+    "x": 1144,
+    "y": 696,
+    "rx": 22,
+    "ry": 34
+   },
+   {
+    "x": 356,
+    "y": 695,
+    "rx": 22,
+    "ry": 36
+   },
+   {
+    "x": 356,
+    "y": 482,
+    "rx": 22,
+    "ry": 40
+   },
+   {
+    "x": 1040,
+    "y": 378,
+    "rx": 22,
+    "ry": 34
+   },
+   {
+    "x": 1096,
+    "y": 492,
+    "rx": 22,
+    "ry": 40
+   }
+  ],
+  "kind": "photo",
+  "credit": [
+   "Wilfredor",
+   "https://commons.wikimedia.org/wiki/File:Correios_Building,_S%C3%A3o_Paulo,_Brazil.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
   ]
  }
 ]
