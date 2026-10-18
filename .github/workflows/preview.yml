@@ -23,6 +23,8 @@ jobs:
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
       - run: python tests/live_e2e_v3.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview-v3 https://mbs716.github.io/lamma/
+      - run: python tests/seo_check.py https://mbs716.github.io/lamma-factory/preview/ reports/site-test/preview-seo https://mbs716.github.io/lamma/
+        if: always()
       - if: always()
         run: |
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"

@@ -1,0 +1,30 @@
+{
+ "name": "لمّة | ألعاب جماعية ومسابقات مباشرة",
+ "short_name": "لمّة",
+ "description": "العب مع أصدقائك من جوالاتكم بكود واحد: سباق الحروف، وعجلة التحديات، وتحدي الأسئلة، واكتشف الفرق، والصورة الملخبطة. المقدّم على الشاشة والنتائج لحظية، مجانًا وبدون تسجيل.",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0f1430",
+ "theme_color": "#0f1430",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

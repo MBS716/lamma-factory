@@ -112,6 +112,7 @@ jobs:
           pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
           python tests/live_e2e_v3.py http://localhost:8799/ reports/site-test/branch3-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
+          python tests/seo_check.py http://localhost:8799/ reports/site-test/branch-seo https://mbs716.github.io/lamma/
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
         run: |
@@ -123,6 +124,7 @@ jobs:
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
           python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live
+          python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-seo
           python - <<'PY'
           import asyncio
           from playwright.async_api import async_playwright
