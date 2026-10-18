@@ -109,7 +109,7 @@ async def run(pw):
         await ios.screenshot(path=f'{OUT}/letters_iphone_victory.png', full_page=True)
 
         # ---------------- wheel: question and challenge visible on the phones
-        code = await start(host, 'wheel')
+        code = await start(host, 'wheel', {'goal': 0})     # open game: reaching the goal would end it before both kinds of result are seen
         await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
         await host.click('[data-h=start]'); await host.wait_for_timeout(800)
         got = {}
