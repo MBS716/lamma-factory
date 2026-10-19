@@ -353,7 +353,7 @@ button.hex:not(:disabled):hover{filter:brightness(1.25)}
 @media (max-width:560px){.modal{max-width:100vw;margin:auto 0 0;width:100vw}.mbox{border-radius:22px 22px 0 0}}
 
 /* letters: scoreboard + stage */
-.ltlay{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+@media (min-width:901px){.ltlay{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
 .tscore{border-radius:18px;padding:12px 14px;background:var(--bg2);border:2px solid var(--line);transition:box-shadow .3s,transform .3s}
 .tscore.g{border-color:var(--green)} .tscore.o{border-color:var(--orange)}
 .tscore.turn{box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 50%,transparent);transform:translateY(-2px)}
@@ -428,6 +428,52 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .pwrap .wheelbox{width:min(100%,300px)}
 .note.lost{border-color:var(--bad);color:var(--ink);margin:0}
 .ver{font-size:.8rem;opacity:.7}
+
+/* ===== mobile layout (v2.2) ===== */
+body{overflow-wrap:break-word;word-break:normal;hyphens:none}
+/* the hex board sizes itself to the space it actually has, not to the window */
+.hexwrap{container-type:inline-size}
+.hexboard{--bw:10px;--bp:12px;border-left-width:var(--bw);border-right-width:var(--bw);padding-inline:var(--bp)}
+@supports (width:1cqw){
+  .hexboard{--hw:clamp(24px,calc((100cqw - 2*var(--bw) - 2*var(--bp) - 4.5*var(--gap)) / 5.5),92px)}
+  .hexboard.small{--hw:clamp(24px,calc((100cqw - 2*var(--bw) - 2*var(--bp) - 4.5*var(--gap)) / 5.5),60px)}
+}
+/* the wheel turns inside a round clip, so its rotated corners never widen the page */
+.wclip{position:absolute;inset:0;border-radius:50%;overflow:hidden}
+@media (max-width:900px){
+  /* letters host: one column; scores, then what the host needs now (board when picking, question otherwise) */
+  .ltlay{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+  .ltlay>.stack{display:contents}
+  .ltlay .lt-score{order:1} .ltlay .lt-prog{order:2} .ltlay .lt-board{order:3} .ltlay .lt-stage{order:4} .ltlay .lt-players{order:6}
+  .ltlay:not(.st-pick) .lt-board{order:5}
+}
+@media (max-width:560px){
+  .hexboard,.hexboard.small{--bw:8px;--bp:6px;--gap:3px}
+  .panel.lt-board{padding:8px}
+  .scores{gap:8px}
+  .tscore{padding:8px 10px;border-radius:14px}
+  .tscore .pts{font-size:2rem}
+  .tname2{font-size:1.05rem}
+  .tstats{gap:8px;font-size:.8rem}
+  .tscore.turn{transform:none}
+  .lettercard{gap:10px}
+  .lettercard .L{font-size:2.8rem}
+  .qtext{font-size:1.15rem}
+  .stage-h,.answer,.verdict{font-size:1.3rem}
+  .qclock{grid-template-columns:auto minmax(0,1fr)}
+  .qclock .chip{grid-column:1/-1;justify-self:start}
+  .btn.big{font-size:1.2rem;padding:.5em 1.1em}
+  .stage .row>.btn{flex:1 1 0;min-width:0}
+  .hbar{padding:12px 14px;gap:10px}
+  .hbar h2{font-size:1.4rem}
+  .hbar .codebox{gap:10px}
+  .hbar .qr img,.hbar .qr canvas{width:72px!important;height:72px!important}
+  .hbar .row{gap:8px}
+}
+/* puzzle: the dragged piece lives inside the puzzle and never leaves the board's area */
+.pzwrap{position:relative}
+.tile.ghost{position:absolute;left:0;top:0;z-index:5;pointer-events:none;will-change:transform}
+.tile.ghost.back{transition:transform .16s ease-out}
 </style>
 </head>
 <body>
@@ -495,7 +541,7 @@ html.noscroll,html.noscroll body{overflow:hidden}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v2.1 · 2026-10-18</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v2.2-mobile · 2026-10-19</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1910,9 +1956,9 @@ const Letters = {
       return;
     }
     if (s.ph === "end"){ setMain(Letters.endHTML(s, true)); return; }
-    setMain(`<div class="layout ltlay"><div class="stack"><div class="panel" data-board="1">${hexBoard(s, s.st === "pick", false)}</div></div>
-      <div class="stack">${Letters.scoreboard(s)}<div class="row" style="justify-content:space-between">${Letters.progress(s)}${s.tb ? `<span class="muted">تُلعب أزواج أسئلة حتى يتقدم فريق</span>` : ""}</div>
-      <div class="panel stack">${Letters.stage(s, true)}</div><details class="panel"><summary>اللاعبون (${players.length})</summary>${playerChips(players, true)}${soloNote()}</details></div></div>`);
+    setMain(`<div class="layout ltlay st-${s.st}"><div class="stack"><div class="panel lt-board" data-board="1">${hexBoard(s, s.st === "pick", false)}</div></div>
+      <div class="stack"><div class="lt-score">${Letters.scoreboard(s)}</div><div class="row lt-prog" style="justify-content:space-between">${Letters.progress(s)}${s.tb ? `<span class="muted">تُلعب أزواج أسئلة حتى يتقدم فريق</span>` : ""}</div>
+      <div class="panel stack lt-stage">${Letters.stage(s, true)}</div><details class="panel lt-players"><summary>اللاعبون (${players.length})</summary>${playerChips(players, true)}${soloNote()}</details></div></div>`);
     const bd = $("#hostMain [data-board]"); if (bd) bd.onclick = e => { const c = e.target.closest("[data-cell]"); if (c && !c.disabled){ e.stopPropagation(); Letters.act("cell", c); } };
   },
   player(s){
@@ -1962,11 +2008,11 @@ async function wheelCanvas(){
 function mountWheel(holder, s, state){
   let box = holder.querySelector(".wheelbox");
   if (!box){
-    holder.innerHTML = `<div class="wheelbox"><div class="pointer"></div><div class="hub"></div></div>`;
+    holder.innerHTML = `<div class="wheelbox"><div class="wclip"></div><div class="pointer"></div><div class="hub"></div></div>`;
     box = holder.querySelector(".wheelbox");
     (wheelImg ? Promise.resolve(wheelImg) : wheelCanvas().then(c => wheelImg = c)).then(src => {
       const c = document.createElement("canvas"); c.width = c.height = 640; c.getContext("2d").drawImage(src, 0, 0);
-      c.style.transform = `rotate(${s.rot}deg)`; box.appendChild(c); state.sp = s.sp;
+      c.style.transform = `rotate(${s.rot}deg)`; box.querySelector(".wclip").appendChild(c); state.sp = s.sp;
     });
     state.sp = s.sp; return;
   }
@@ -2104,38 +2150,68 @@ function mountPuzzle(el, cfg, onChange){
     if (done && wrap.classList.contains("big")) setTimeout(() => toggleBig(false), 900);
   }
   const tileAt = (x, y) => { const t = document.elementFromPoint(x, y); const b = t && t.closest && t.closest(".pz .tile"); return b && board.contains(b) ? +b.dataset.k : -1; };
-  board.addEventListener("pointerdown", e => {
-    const t = e.target.closest("[data-k]"); if (!t || done || locked) return;
-    e.preventDefault(); drag = {k:+t.dataset.k, x:e.clientX, y:e.clientY, id:e.pointerId, moved:false, ghost:null, over:-1};
-    try { board.setPointerCapture(e.pointerId); } catch(_){}
-  });
-  board.addEventListener("pointermove", e => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-    if (!drag.moved && Math.hypot(dx, dy) > 10){
-      drag.moved = true; const src = board.querySelector(`[data-k="${drag.k}"]`), r = src.getBoundingClientRect();
-      const g = src.cloneNode(); g.className = "tile ghost"; g.style.width = r.width + "px"; g.style.height = r.height + "px"; document.body.appendChild(g); drag.ghost = g; drag.w = r.width; drag.h = r.height; src.classList.add("lift");
-    }
-    if (drag.moved){
-      drag.ghost.style.transform = `translate(${e.clientX - drag.w / 2}px,${e.clientY - drag.h / 2}px) scale(1.06)`;
-      const k = tileAt(e.clientX, e.clientY); if (k !== drag.over){ board.querySelectorAll(".tile.over").forEach(b => b.classList.remove("over")); if (k >= 0 && k !== drag.k) board.querySelector(`[data-k="${k}"]`).classList.add("over"); drag.over = k; }
-    }
-  });
-  const finish = e => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const d = drag; drag = null; if (d.ghost) d.ghost.remove();
-    if (d.moved){ const k = tileAt(e.clientX, e.clientY); if (k >= 0 && k !== d.k && e.type === "pointerup") swap(d.k, k); else draw(); return; }
-    if (e.type !== "pointerup") return;
-    if (sel < 0){ sel = d.k; draw(); } else if (sel === d.k){ sel = -1; draw(); } else swap(sel, d.k);
+  // Drag with one finger at a time. The moving piece is drawn inside the puzzle and is kept within the board,
+  // so it can never sit over other parts of the page; every way a touch can end (lift, cancel, lost capture,
+  // app switch, page redraw) puts it back or drops it, and a piece that misses a square slides back to where it was.
+  const clearOver = () => board.querySelectorAll(".tile.over,.tile.lift").forEach(b => b.classList.remove("over", "lift"));
+  const place = (g, x, y) => {
+    const br = board.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+    const cx = Math.min(Math.max(x - g.w / 2, br.left), br.right - g.w), cy = Math.min(Math.max(y - g.h / 2, br.top), br.bottom - g.h);
+    g.el.style.transform = `translate(${cx - wr.left}px,${cy - wr.top}px) scale(1.06)`;
   };
-  board.addEventListener("pointerup", finish); board.addEventListener("pointercancel", finish);
+  function stopListening(){ window.removeEventListener("pointermove", onMove, true); window.removeEventListener("pointerup", onEnd, true); window.removeEventListener("pointercancel", onEnd, true); window.removeEventListener("blur", onAbort); document.removeEventListener("visibilitychange", onAbort); }
+  function endDrag(e, drop){
+    const d = drag; if (!d) return; drag = null; stopListening();
+    try { board.releasePointerCapture(d.id); } catch(_){}
+    if (!d.moved){ if (drop){ if (sel < 0){ sel = d.k; draw(); } else if (sel === d.k){ sel = -1; draw(); } else swap(sel, d.k); } return; }
+    const k = drop && e ? tileAt(e.clientX, e.clientY) : -1;
+    if (k >= 0 && k !== d.k && board.isConnected){ d.g.el.remove(); swap(d.k, k); return; }
+    // missed: slide the piece back to its square, then show it there again
+    const src = board.querySelector(`[data-k="${d.k}"]`), g = d.g.el;
+    if (!src || !board.isConnected || matchMedia("(prefers-reduced-motion: reduce)").matches){ g.remove(); clearOver(); return; }
+    const sr = src.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+    g.classList.add("back"); g.style.transform = `translate(${sr.left - wr.left}px,${sr.top - wr.top}px)`;
+    let gone = false; const fin = () => { if (gone) return; gone = true; g.remove(); clearOver(); };
+    g.addEventListener("transitionend", fin, {once:true}); setTimeout(fin, 260);
+  }
+  function onMove(e){
+    const d = drag; if (!d || e.pointerId !== d.id) return;
+    if (!board.isConnected){ endDrag(null, false); return; }
+    e.preventDefault();
+    if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8){
+      const src = board.querySelector(`[data-k="${d.k}"]`); if (!src){ endDrag(null, false); return; }
+      const r = src.getBoundingClientRect(), g = src.cloneNode(); g.className = "tile ghost"; g.removeAttribute("data-k"); g.setAttribute("aria-hidden", "true");
+      g.style.width = r.width + "px"; g.style.height = r.height + "px"; wrap.appendChild(g);
+      d.moved = true; d.g = {el:g, w:r.width, h:r.height}; src.classList.add("lift"); if (sel >= 0){ sel = -1; board.querySelectorAll(".tile.sel").forEach(b => b.classList.remove("sel")); }
+    }
+    if (d.moved){
+      place(d.g, e.clientX, e.clientY);
+      const k = tileAt(e.clientX, e.clientY);
+      if (k !== d.over){ board.querySelectorAll(".tile.over").forEach(b => b.classList.remove("over")); if (k >= 0 && k !== d.k) board.querySelector(`[data-k="${k}"]`).classList.add("over"); d.over = k; }
+    }
+  }
+  function onEnd(e){ if (drag && e.pointerId === drag.id) endDrag(e, e.type === "pointerup"); }
+  function onAbort(){ endDrag(null, false); }
+  board.addEventListener("pointerdown", e => {
+    if (drag){ if (e.pointerId !== drag.id) e.preventDefault(); return; }      // a second finger never starts a second piece
+    if (e.button > 0) return;
+    const t = e.target.closest("[data-k]"); if (!t || done || locked) return;
+    e.preventDefault();
+    wrap.querySelectorAll(".tile.ghost").forEach(g => g.remove());
+    drag = {k:+t.dataset.k, x:e.clientX, y:e.clientY, id:e.pointerId, moved:false, g:null, over:-1};
+    try { board.setPointerCapture(e.pointerId); } catch(_){}
+    window.addEventListener("pointermove", onMove, true); window.addEventListener("pointerup", onEnd, true); window.addEventListener("pointercancel", onEnd, true);
+    window.addEventListener("blur", onAbort); document.addEventListener("visibilitychange", onAbort);
+  });
+  board.addEventListener("lostpointercapture", e => { if (drag && e.pointerId === drag.id) setTimeout(() => { if (drag && drag.id === e.pointerId && !board.isConnected) endDrag(null, false); }, 0); });
+  board.addEventListener("contextmenu", e => e.preventDefault());
   function toggleBig(on){
     wrap.classList.toggle("big", on); document.documentElement.classList.toggle("noscroll", on);
     el.querySelector("[data-pzbig]").textContent = on ? "✕ إغلاق التكبير" : "⤢ تكبير";
   }
   el.querySelector("[data-pzbig]").onclick = () => toggleBig(!wrap.classList.contains("big"));
   draw();
-  return {lock(){ if (!locked){ locked = true; sel = -1; el.classList.add("locked"); toggleBig(false); draw(); } }};
+  return {lock(){ if (!locked){ endDrag(null, false); locked = true; sel = -1; el.classList.add("locked"); toggleBig(false); draw(); } }};
 }
 const imgURL = (src, img, size) => src === "photo" ? photoURL(img, size) : sceneURL(img);
 const Puzzle = {

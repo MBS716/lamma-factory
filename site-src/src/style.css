@@ -312,7 +312,7 @@ button.hex:not(:disabled):hover{filter:brightness(1.25)}
 @media (max-width:560px){.modal{max-width:100vw;margin:auto 0 0;width:100vw}.mbox{border-radius:22px 22px 0 0}}
 
 /* letters: scoreboard + stage */
-.ltlay{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+@media (min-width:901px){.ltlay{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}}
 .tscore{border-radius:18px;padding:12px 14px;background:var(--bg2);border:2px solid var(--line);transition:box-shadow .3s,transform .3s}
 .tscore.g{border-color:var(--green)} .tscore.o{border-color:var(--orange)}
 .tscore.turn{box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 50%,transparent);transform:translateY(-2px)}
@@ -387,3 +387,49 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .pwrap .wheelbox{width:min(100%,300px)}
 .note.lost{border-color:var(--bad);color:var(--ink);margin:0}
 .ver{font-size:.8rem;opacity:.7}
+
+/* ===== mobile layout (v2.2) ===== */
+body{overflow-wrap:break-word;word-break:normal;hyphens:none}
+/* the hex board sizes itself to the space it actually has, not to the window */
+.hexwrap{container-type:inline-size}
+.hexboard{--bw:10px;--bp:12px;border-left-width:var(--bw);border-right-width:var(--bw);padding-inline:var(--bp)}
+@supports (width:1cqw){
+  .hexboard{--hw:clamp(24px,calc((100cqw - 2*var(--bw) - 2*var(--bp) - 4.5*var(--gap)) / 5.5),92px)}
+  .hexboard.small{--hw:clamp(24px,calc((100cqw - 2*var(--bw) - 2*var(--bp) - 4.5*var(--gap)) / 5.5),60px)}
+}
+/* the wheel turns inside a round clip, so its rotated corners never widen the page */
+.wclip{position:absolute;inset:0;border-radius:50%;overflow:hidden}
+@media (max-width:900px){
+  /* letters host: one column; scores, then what the host needs now (board when picking, question otherwise) */
+  .ltlay{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+  .ltlay>.stack{display:contents}
+  .ltlay .lt-score{order:1} .ltlay .lt-prog{order:2} .ltlay .lt-board{order:3} .ltlay .lt-stage{order:4} .ltlay .lt-players{order:6}
+  .ltlay:not(.st-pick) .lt-board{order:5}
+}
+@media (max-width:560px){
+  .hexboard,.hexboard.small{--bw:8px;--bp:6px;--gap:3px}
+  .panel.lt-board{padding:8px}
+  .scores{gap:8px}
+  .tscore{padding:8px 10px;border-radius:14px}
+  .tscore .pts{font-size:2rem}
+  .tname2{font-size:1.05rem}
+  .tstats{gap:8px;font-size:.8rem}
+  .tscore.turn{transform:none}
+  .lettercard{gap:10px}
+  .lettercard .L{font-size:2.8rem}
+  .qtext{font-size:1.15rem}
+  .stage-h,.answer,.verdict{font-size:1.3rem}
+  .qclock{grid-template-columns:auto minmax(0,1fr)}
+  .qclock .chip{grid-column:1/-1;justify-self:start}
+  .btn.big{font-size:1.2rem;padding:.5em 1.1em}
+  .stage .row>.btn{flex:1 1 0;min-width:0}
+  .hbar{padding:12px 14px;gap:10px}
+  .hbar h2{font-size:1.4rem}
+  .hbar .codebox{gap:10px}
+  .hbar .qr img,.hbar .qr canvas{width:72px!important;height:72px!important}
+  .hbar .row{gap:8px}
+}
+/* puzzle: the dragged piece lives inside the puzzle and never leaves the board's area */
+.pzwrap{position:relative}
+.tile.ghost{position:absolute;left:0;top:0;z-index:5;pointer-events:none;will-change:transform}
+.tile.ghost.back{transition:transform .16s ease-out}
