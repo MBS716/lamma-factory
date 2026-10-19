@@ -1,0 +1,60 @@
+{
+ "url": "http://localhost:8799/",
+ "checks": [
+  "OK invite link points to this site (http://localhost:8799/#5518)",
+  "OK QR code encodes the invite link (http://localhost:8799/#5518)",
+  "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
+  "OK wrong code: the phone gets a clear \"game not found\" message",
+  "OK letters: the team pressing on its phone does NOT stop the clock",
+  "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
+  "OK letters: the question is on the phone screen of the team on turn",
+  "OK letters: both teams had the same number of questions (10/10)",
+  "OK letters: totals equal the points awarded (860/900)",
+  "OK letters: no question repeated",
+  "OK letters: winner screen on host, iPhone and Android",
+  "OK wheel: 4 options on the phone, correct answer not marked before the host reveals it",
+  "OK wheel: phones see the correct answer after the host reveals it",
+  "OK wheel: question visible on iPhone and Android screens (True, True)",
+  "OK wheel: challenge visible on iPhone and Android screens (True, True)",
+  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: no report button during the round",
+  "OK spot: no link to the original picture during the round",
+  "OK spot: after the round the source link is shown (licence attribution)",
+  "OK spot: the room played all 12 hard pairs, none twice, before the end message (12)",
+  "OK spot: end-of-level message only after the level is used up",
+  "OK spot: changing the level gives a pair of the new level",
+  "OK quiz: the question is on both phone screens",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3478], ['أندرويد', 0]])",
+  "OK puzzle: iPhone swaps two pieces by tapping",
+  "OK puzzle: Android drag swaps pieces without scrolling the page",
+  "OK iPhone: no sideways scrolling (390 <= 390)",
+  "OK Android: no sideways scrolling (412 <= 412)"
+ ],
+ "errors": [],
+ "not_tested": [
+  "public-site phone with a new-version code",
+  "real phones on mobile networks (only browser engines on GitHub servers)",
+  "in-app browsers (WhatsApp/Instagram/camera QR)",
+  "scanning the QR with a camera (the QR content is checked instead)"
+ ],
+ "spot_index": {
+  "total": 46,
+  "levels": [
+   22,
+   12,
+   12
+  ],
+  "shards": [
+   {
+    "name": "shard-0000.json",
+    "count": 46,
+    "levels": [
+     22,
+     12,
+     12
+    ]
+   }
+  ]
+ },
+ "PASS": true
+}
