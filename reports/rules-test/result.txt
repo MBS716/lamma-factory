@@ -1,32 +1,72 @@
-OK   signed-in device writes its own presence
-OK   another visitor cannot overwrite it (no host impersonation)
-OK   another visitor cannot delete it
-OK   a visitor cannot write a presence claiming someone else's id
-OK   not signed in: cannot claim an id
-OK   presence must have the expected shape
-OK   presence size is limited
+-- the host opens a room
+OK   host takes the room's host lock
+OK   host writes its seat marked as the host
+OK   host updates the match state (scores live in the host's own seat)
+OK   host saves the match copy for resuming
+OK   host saves the hidden answers
+-- players join
+OK   a phone joins with its own seat
+OK   a second phone joins
+OK   a phone sends its answer (changes only its own seat)
+OK   players read the room (they need the host's state)
+-- scores and the match: host only
+OK   a phone cannot change the host's seat (scores, questions, phase)
+OK   a phone cannot replace the host's seat
+OK   a phone cannot delete the host's seat (end the game)
+OK   a phone cannot change the saved match
+OK   a phone cannot delete the saved match
+OK   a phone cannot read the hidden answers
+OK   a phone cannot read the saved match
+-- impersonating the host
+OK   a phone cannot mark its own seat as the host's
+OK   a phone cannot add the host mark to its existing seat
+OK   a phone cannot take the host lock of an active room
+OK   a phone cannot delete the host lock
+OK   the lock cannot claim a future time (to stay fresh forever)
+OK   a lock cannot be written for someone else
+-- impersonating a player
+OK   a phone cannot change another player's seat
+OK   a phone cannot delete another player's seat
+OK   a phone cannot write a seat in someone else's name (u)
+OK   a seat's first-join time cannot be backdated (to steal a name)
+OK   a seat's first-join time cannot be changed later
+OK   not signed in: cannot join
+OK   not signed in: cannot read a room
+-- shape and size
+OK   unknown fields are refused
+OK   a seat without its fields is refused
+OK   oversized seat is refused
+OK   rooms only under the game's names (lm3-/lmp3- + 4 digits)
 OK   nobody can delete a whole room
 OK   nobody can list all rooms
-OK   a room can be read with its code (players need it)
-OK   the owner removes its own presence when leaving
-OK   current site: presence without sign-in still works
-OK   current site: it can update and remove its presence
-OK   host locks its room
-OK   another device cannot take a locked room
-OK   the lock cannot be faked into the future
-OK   host saves the match
-OK   host saves the hidden answers
-OK   another device cannot change the saved match (no score tampering)
-OK   another device cannot read the hidden answers
-OK   not signed in: cannot read the saved match
-OK   the host device reads its saved match back (resume)
-OK   another device cannot delete the saved match
-OK   after 3 hours without the host, the room can be taken by another device
-OK   the host ends the match: removes its copies
-OK   spot: a device records a seen picture
+OK   other paths stay closed
+OK   the whole database cannot be read
+-- leaving and coming back (session restore)
+OK   phone registers its 'away' mark for when it disconnects
+OK   connection lost (WhatsApp, closed browser): the seat stays, marked away, join time kept
+OK   same device returns: writes the same seat again (same join time)
+OK   …or simply updates it
+OK   host closes the tab and returns (same device): updates its host seat
+OK   host refreshes its lock
+OK   host reads its saved match back
+OK   host tidies a stale seat of its room
+OK   a device with a new identity cannot take over its old seat
+OK   …it joins with a new seat instead
+-- abandoned rooms (host away more than 3 hours)
+OK   another host can take the room after 3 hours
+OK   the old host can no longer mark a host seat there
+OK   the old host cannot read the new host's saved match
+-- the host ends the game
+OK   host deletes its saved match
+OK   host deletes its hidden answers
+OK   host releases the lock
+OK   host removes its seat
+-- spot the difference
+OK   spot: a signed-in device records a seen picture
 OK   spot: the room reads a device's history
 OK   spot: nobody lists all devices
 OK   spot: a report is recorded
-OK   other paths stay closed (write)
-OK   the whole database cannot be read
-31/31 passed
+OK   spot: not signed in: refused
+-- the site version live today (v3.1) after the switch
+OK   a page that is not signed in (old version) can no longer write: the site must be updated first
+60/60 passed
