@@ -1,0 +1,12 @@
+time (UTC): 2026-10-20 11:30:29
+read whole database (shallow): 401 keys=1
+read rooms list (shallow): 200 rooms=3
+read spotseen (shallow): 401 keys=1
+write a new top-level path: 401
+delete it: 401
+write own presence in a room: 200
+another visitor overwrites that presence (e.g. pretends to be the host): 200
+write a value with an unexpected shape: 200
+wipe a whole room in one request: 200
+room gone afterwards: 200 value=null
+probe path gone afterwards: 401 value=1
