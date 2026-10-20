@@ -122,6 +122,8 @@ async def sessions_real(host, ios, android, newctx):
     await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
     names = lambda: host.evaluate('hostPlayers().map(p => pname(p) + (p.away ? " (away)" : "")).sort()')
     link = await host.evaluate('joinLink(H.code)'); b = await host.evaluate('BUILD')
+    pre = await host.evaluate('ROOM_PREFIX'); prev = 'preview' in URL
+    check(pre == ('lmp3-' if prev else 'lm3-') and link.startswith(URL), f'sessions: {"preview" if prev else "official"} rooms are separate ({pre}) and the invite link stays on this site')
     check(('?v=' + b) in link and link.endswith('#' + code), f'sessions: invite link carries the version ({link[-30:]})')
     vj = await host.evaluate('fetch("version.json?t=" + Date.now(), {cache:"no-store"}).then(r => r.json()).catch(() => ({}))')
     check(vj.get('b') == b, f'sessions: version.json matches the page ({vj.get("b")} = {b})')
@@ -141,7 +143,14 @@ async def sessions_real(host, ios, android, newctx):
     check('مستخدم' in err and n == sorted(['آيفون', 'أندرويد']), f'sessions: another device cannot take a name already in the game ({err[:40]})')
     await other.close()
     await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "ask"', timeout=20000)
-    before = await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])'); hctx = getattr(host, '_lctx', None) or host.context
+    # a new version appears during the round: nothing reloads, the round and its data stay, a notice is shown
+    before = await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])')
+    for pg in (host, ios): await pg.route('**/version.json*', lambda r: r.fulfill(body='{"b":"zz-newer","v":"next"}', content_type='application/json'))
+    u0 = [host.url, ios.url]; await host.evaluate('checkUpdate()'); await ios.evaluate('checkUpdate()'); await host.wait_for_timeout(4000)
+    same = await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])') == before and await ios.evaluate('!!(P && P.joined)')
+    check([host.url, ios.url] == u0 and same and await host.is_visible('#updBar'), 'sessions: a new version during a round: no reload on host or phone, round and scores kept, a notice instead')
+    for pg in (host, ios): await pg.unroute('**/version.json*')
+    hctx = getattr(host, '_lctx', None) or host.context
     await host.close()
     ok = True
     try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("غير متصل مؤقتًا")', timeout=30000)
