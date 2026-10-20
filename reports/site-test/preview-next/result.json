@@ -1,0 +1,90 @@
+{
+ "url": "https://mbs716.github.io/lamma-factory/preview-next/",
+ "checks": [
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=1959f5d494#2596)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=1959f5d494#2596)",
+  "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
+  "OK wrong code: the phone gets a clear \"game not found\" message",
+  "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
+  "OK letters: the team pressing on its phone does NOT stop the clock",
+  "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
+  "OK letters: the question is on the phone screen of the team on turn",
+  "OK letters: both teams had the same number of questions (10/10)",
+  "OK letters: totals equal the points awarded (860/900)",
+  "OK letters: no question repeated",
+  "OK letters: winner screen on host, iPhone and Android",
+  "OK sessions: invite link carries the version (review-next/?v=1959f5d494#9375)",
+  "OK sessions: version.json matches the page (1959f5d494 = 1959f5d494)",
+  "OK sessions: iPhone reloads, back in the same seat with no form",
+  "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
+  "OK sessions: Android opens the site again (no code), back automatically with its name and team",
+  "OK sessions: still two players, none twice ['آيفون', 'أندرويد']",
+  "OK sessions: another device cannot take a name already in the game (هذا الاسم مستخدم في هذه اللعبة. اختر اسم)",
+  "OK sessions: host closed the tab, the phones stay and show \"host temporarily away\"",
+  "OK sessions: host opens the site again, back in the same room and question, no new code",
+  "OK sessions: phones carry on without re-joining",
+  "OK sessions: host ends the game, phones are told",
+  "OK wheel v3: both phones show the scoreboard and the 1,500 goal",
+  "OK wheel v3: the question reaches iPhone and Android",
+  "OK wheel v3: 4 options on the phone, the right answer is not sent before judging",
+  "OK wheel v3: host judges right: +200, phones see the verdict",
+  "OK wheel v3: speed challenge face-off on both phones",
+  "OK wheel v3: cancelled challenge, scores unchanged on every screen",
+  "OK wheel v3: the closed box on both phones",
+  "OK wheel v3: phones receive the same box result as the host (imm 0)",
+  "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
+  "OK wheel v3: luck twice, both results on the phones before the choice",
+  "OK wheel v3: immunity blocks the deduction, shown on both phones",
+  "OK wheel v3: luck loan lost, the 100 debt is shown on iPhone and Android",
+  "OK wheel v3: the next gain repays the debt first (40 + 150 − 100 = 90), shown on the phones",
+  "OK wheel v3: host tab closed, both phones stay in the room and see «host temporarily away»",
+  "OK wheel v3: host back from a new tab: same room and match (device copy: rules not updated yet)",
+  "OK wheel v3: both phones back in the match without re-joining",
+  "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
+  "OK wheel v3: winner screen on iPhone and Android",
+  "OK wheel v3: state sent to phones stays small (486 characters)",
+  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: no report button during the round",
+  "OK spot: no link to the original picture during the round",
+  "OK spot: after the round the source link is shown (licence attribution)",
+  "OK spot: the room played all 12 hard pairs, none twice, before the end message (12)",
+  "OK spot: end-of-level message only after the level is used up",
+  "OK spot: changing the level gives a pair of the new level",
+  "OK quiz: the question is on both phone screens",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3479], ['أندرويد', 0]])",
+  "OK puzzle: iPhone swaps two pieces by tapping",
+  "OK puzzle: Android drag swaps pieces without scrolling the page",
+  "OK iPhone: no sideways scrolling (390 <= 390)",
+  "OK Android: no sideways scrolling (412 <= 412)"
+ ],
+ "errors": [
+  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=746341&pw=lif89ZfpGO."
+ ],
+ "not_tested": [
+  "real phones on mobile networks (only browser engines on GitHub servers)",
+  "in-app browsers (WhatsApp/Instagram/camera QR)",
+  "scanning the QR with a camera (the QR content is checked instead)"
+ ],
+ "wheel_cloud": false,
+ "wheel_auth": false,
+ "spot_index": {
+  "total": 46,
+  "levels": [
+   22,
+   12,
+   12
+  ],
+  "shards": [
+   {
+    "name": "shard-0000.json",
+    "count": 46,
+    "levels": [
+     22,
+     12,
+     12
+    ]
+   }
+  ]
+ },
+ "PASS": false
+}
