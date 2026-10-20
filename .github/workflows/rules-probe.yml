@@ -1,0 +1,43 @@
+# Read what the Lamma Realtime Database rules allow, the way any visitor's browser could (no login, no keys).
+# Only status codes and counts are recorded, never the stored data. The probe writes only to its own
+# throw-away paths (probe-lamma/<random> and rooms/lm2-probe<random>) and deletes them at the end.
+name: rules-probe
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/rules-probe.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: probe
+        run: |
+          DB=https://lamma-b3804-default-rtdb.europe-west1.firebasedatabase.app
+          R=$(python3 -c "import secrets;print(secrets.token_hex(5))"); O=reports/rules-probe; mkdir -p $O
+          st(){ curl -s -o /tmp/body -w "%{http_code}" -X "$1" "$DB/$2" ${3:+-d "$3"}; }
+          cnt(){ python3 -c "import json;d=json.load(open('/tmp/body'));print(len(d) if isinstance(d,dict) else ('null' if d is None else 'value'))" 2>/dev/null || echo "-"; }
+          {
+          echo "time (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+          echo "read whole database (shallow): $(st GET '.json?shallow=true') keys=$(cnt)"
+          echo "read rooms list (shallow): $(st GET 'rooms.json?shallow=true') rooms=$(cnt)"
+          echo "read spotseen (shallow): $(st GET 'spotseen.json?shallow=true') keys=$(cnt)"
+          echo "write a new top-level path: $(st PUT "probe-lamma/$R.json" '{"t":1}')"
+          echo "delete it: $(st DELETE "probe-lamma/$R.json")"
+          echo "write own presence in a room: $(st PUT "rooms/lm2-probe$R/peerA.json" '{"j":"{\"r\":\"p\"}","t":1}')"
+          echo "another visitor overwrites that presence (e.g. pretends to be the host): $(st PUT "rooms/lm2-probe$R/peerA.json" '{"j":"{\"r\":\"h\"}","t":2}')"
+          echo "write a value with an unexpected shape: $(st PUT "rooms/lm2-probe$R/peerB.json" '"just a string"')"
+          echo "wipe a whole room in one request: $(st DELETE "rooms/lm2-probe$R.json")"
+          echo "room gone afterwards: $(st GET "rooms/lm2-probe$R.json") value=$(cnt)"
+          echo "probe path gone afterwards: $(st GET "probe-lamma.json?shallow=true") value=$(cnt)"
+          } 2>&1 | tee $O/report.txt
+      - name: save
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/rules-probe
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi
+          git commit -q -m "rules probe" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done
