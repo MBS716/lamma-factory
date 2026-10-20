@@ -8,6 +8,9 @@
      a tie goes to up to 5 speed challenges, then an official draw. A round cap guarantees the game ends.
    - points never go below 0; at most one immunity and one second-chance per team (a second one becomes +100);
      immunity absorbs the first deduction imposed on the team (cards, box, steal), not its own lost bet.
+   - luck loan (Oct 20): a team with fewer than 100 points that lands on the bet may borrow 100 from the game's bank.
+     Right answer: +100 net and the loan is closed. Wrong: a debt of 100, repaid automatically from the team's next
+     gains. One loan at a time, never more than 100. The goal and the final result use the net score (points − debt).
    - at most 2 extra spins per turn; rare cards are locked for 4 spins after they appear; no extra spins in the final.
    - every host action carries a token (spin number + step): a repeated tap, a stale button or a replayed update does
      nothing, so no reward or penalty is ever applied twice. Random results are drawn at the moment of reveal. */
@@ -20,6 +23,9 @@ const W3 = (() => {
     box:{n:"صندوق الحظ", opt:1}, respin:{n:"إعادة تدوير", opt:1}, l2:{n:"حظك مرتين", opt:1, rare:1},
     tre:{n:"الكنز", opt:1, rare:1}, swap:{n:"تبديل المزايا", opt:1, rare:1},
   };
+  // colour family of each card on the wheel (spread around it so the same family never sits side by side)
+  const CAT = {p50:"bonus", p150:"bonus", p250:"bonus", m50:"pen", m150:"pen", m250:"pen", q:"ask", streak:"ask", quick:"ask", bet:"ask",
+    speed:"duel", steal:"steal", gold:"spec", box:"spec", tre:"spec", l2:"spec", respin:"spec", swap:"spec", sec:"spec", imm:"spec"};
   const ORDER = ["p150","q","box","m50","speed","imm","p50","gold","m150","streak","respin","p250","bet","sec","m250","quick","tre","steal","l2","swap"];
   const MODES = {
     classic:{n:"كلاسيكي", w:{q:22,speed:10,p50:6,p150:6,p250:4,m50:5,m150:4,m250:2,imm:4,box:6,gold:3,bet:4,respin:3,l2:2,sec:3,streak:4,steal:4,quick:4,tre:2,swap:2}},
@@ -33,13 +39,38 @@ const W3 = (() => {
   const T = ["g", "o"];
 
   const init = o => ({ph:"lobby", o:{goal:null, t:30, lv:1, mode:"hype", off:[], ...(o || {})},
-    sc:[0,0], im:[0,0], s2:[0,0], ca:[0,0], first:0, turn:0, tn:[0,0], rd:0, fnow:0, fin:null, tb:null, win:null,
+    sc:[0,0], im:[0,0], s2:[0,0], ca:[0,0], debt:[0,0], first:0, turn:0, tn:[0,0], rd:0, fnow:0, fin:null, tb:null, win:null,
     sp:0, step:0, stage:"spin", rot:0, seg:null, xb:EXTRA, cd:{}, cur:null, lg:[], dl:0, left:0, tt:0, t0:0});
   const enabled = s => ORDER.filter(k => (MODES[s.o.mode] || MODES.hype).w[k] > 0 && !(C[k].opt && (s.o.off || []).includes(k)));
-  // the wheel as drawn: every enabled card gets a slice whose size is its probability (degrees, clockwise from the pointer)
+  /* The wheel as drawn. A card's total area on the wheel equals its probability. Frequent cards are split into several
+     equal slices (about 4.5 % each) spread around the wheel, so no slice dominates; slices are ordered so neighbours
+     differ in colour family and big and small ones alternate. The order is fixed for given settings. */
+  const UNIT = 4.5;
+  function odds(s){ const w = (MODES[s.o.mode] || MODES.hype).w, ks = enabled(s), tot = ks.reduce((a, k) => a + w[k], 0), o = {}; ks.forEach(k => o[k] = w[k] / tot); return o; }
+  const layoutCache = new Map();
   function layout(s){
+    const key = (s.o.mode || "hype") + "|" + enabled(s).join(); if (layoutCache.has(key)) return layoutCache.get(key);
     const w = (MODES[s.o.mode] || MODES.hype).w, ks = enabled(s), tot = ks.reduce((a, k) => a + w[k], 0);
-    let a = 0; return ks.map(k => { const d = w[k] / tot * 360, sl = {k, a0:a, a1:a + d, p:w[k] / tot}; a += d; return sl; });
+    const ps = []; ks.forEach(k => { const n = Math.max(1, Math.round(w[k] / UNIT)); for (let i = 0; i < n; i++) ps.push({k, w:w[k] / n, i, n}); });
+    const sizes = ps.map(x => x.w).sort((a, b) => a - b), med = sizes[Math.floor(sizes.length / 2)];
+    const big = x => x.w >= med, rem = ps.slice(), out = [];
+    const area = c => rem.filter(x => CAT[x.k] === c).reduce((a, x) => a + x.w, 0);
+    while (rem.length){
+      const prev = out[out.length - 1], prev2 = out[out.length - 2], first = out[0], lastSlot = rem.length === 1;
+      let best = null, bs = Infinity;
+      for (const c of rem){
+        let sc = 0;
+        if (prev && CAT[c.k] === CAT[prev.k]) sc += 100;
+        if (lastSlot && first && CAT[c.k] === CAT[first.k]) sc += 100;
+        if (prev2 && c.k === prev2.k) sc += 40;
+        if (prev && big(c) === big(prev)) sc += 10;
+        sc -= area(CAT[c.k]) * 0.8;                       // place the family with most area left first, so it never piles up at the end
+        if (sc < bs - 1e-9){ bs = sc; best = c; }
+      }
+      out.push(best); rem.splice(rem.indexOf(best), 1);
+    }
+    let a = 0; const L = out.map(x => { const d = x.w / tot * 360, sl = {k:x.k, a0:a, a1:a + d, p:x.w / tot, i:x.i, n:x.n}; a += d; return sl; });
+    layoutCache.set(key, L); return L;
   }
   // cards that cannot come up on the next spin, and why
   function locks(s, sub){
@@ -52,7 +83,7 @@ const W3 = (() => {
     return L;
   }
   function pick(s, R, sub){
-    const w = (MODES[s.o.mode] || MODES.hype).w, L = locks(s, sub), ks = enabled(s).filter(k => !L[k]);
+    const w = (MODES[s.o.mode] || MODES.hype).w, L = locks(s, sub), ks = enabled(s).filter(k => !L[k]);   // the card is drawn by its weight; spinTo then picks one of its equal slices
     let x = R() * ks.reduce((a, k) => a + w[k], 0);
     for (const k of ks){ x -= w[k]; if (x < 0) return k; }
     return ks[ks.length - 1];
@@ -60,7 +91,11 @@ const W3 = (() => {
   const tok = s => s.sp + "." + s.step;
   const other = t => 1 - t;
   function log(s, t, d, code){ s.lg.unshift([t, d, code]); if (s.lg.length > LOG_N) s.lg.length = LOG_N; }
-  function add(s, t, v, code){ const b = s.sc[t]; s.sc[t] = Math.max(0, b + v); log(s, t, s.sc[t] - b, code); return s.sc[t] - b; }
+  function add(s, t, v, code){
+    if (v > 0 && s.debt[t] > 0){ const pay = Math.min(s.debt[t], v); s.debt[t] -= pay; v -= pay; log(s, t, pay, "repay"); if (!v) return 0; }
+    const b = s.sc[t]; s.sc[t] = Math.max(0, b + v); log(s, t, s.sc[t] - b, code); return s.sc[t] - b;
+  }
+  const net = (s, t) => s.sc[t] - (s.debt ? s.debt[t] : 0);
   // a deduction imposed on team t: immunity absorbs all of it once; own=true (a lost bet) is not covered
   function hit(s, t, v, code, own){
     if (!own && s.im[t]){ s.im[t] = 0; log(s, t, 0, "shield"); return {blocked:1, d:0}; }
@@ -71,7 +106,7 @@ const W3 = (() => {
   function question(s, p, env, lv){ const x = env.q(lv); p.ci = x.ci; return x.d; }
 
   function spinTo(s, k, R){
-    const sl = layout(s).find(x => x.k === k), m = (sl.a1 - sl.a0) * 0.18;
+    const all = layout(s).filter(x => x.k === k), sl = all[Math.min(all.length - 1, Math.floor(R() * all.length))], m = (sl.a1 - sl.a0) * 0.18;
     const theta = sl.a0 + m + R() * (sl.a1 - sl.a0 - 2 * m), target = (360 - theta) % 360, cur = ((s.rot % 360) + 360) % 360;
     s.rot = s.rot + 360 * 6 + ((target - cur + 360) % 360);
   }
@@ -101,7 +136,7 @@ const W3 = (() => {
     if (k === "box"){ s.cur = {k, st:"closed"}; return; }
     if (k === "tre"){ s.cur = {k, st:"pick"}; return; }
     if (k === "bet"){
-      if (s.sc[t] < 100){ s.cur = {k, st:"ask", free:1, q:question(s, p, env, s.o.lv === 3 ? null : s.o.lv), v:QPTS.q}; setTimer(s, env.now, s.o.t); return; }
+      if (s.sc[t] < 100){ s.cur = {k, st:"low", loanOk:s.debt[t] ? 0 : 1}; return; }
       s.cur = {k, st:"wager", ws:[100, 200, 300].filter(v => v <= s.sc[t])}; return;
     }
     if (k === "q" || k === "gold"){ s.cur = {k, st:"ask", q:question(s, p, env, k === "gold" ? 2 : (s.o.lv === 3 ? null : s.o.lv)), v:QPTS[k]}; setTimer(s, env.now, s.o.t); return; }
@@ -110,7 +145,7 @@ const W3 = (() => {
     if (k === "speed"){ s.cur = {k, st:"ask", re:0, q:question(s, p, env, s.o.lv === 3 ? null : s.o.lv)}; setTimer(s, env.now, s.o.t); return; }
   }
   function startFinal(s){
-    s.ph = "final"; const lo = s.sc[0] < s.sc[1] ? 0 : s.sc[1] < s.sc[0] ? 1 : s.first;
+    s.ph = "final"; const n0 = net(s, 0), n1 = net(s, 1), lo = n0 < n1 ? 0 : n1 < n0 ? 1 : s.first;
     s.fin = {ord:[lo, other(lo)], i:0}; s.turn = lo; s.stage = "spin"; s.cur = null; s.seg = null; s.xb = EXTRA;
   }
   function startTiebreak(s, p, env){
@@ -122,7 +157,7 @@ const W3 = (() => {
     if (s.ph === "play"){
       if (s.tn[0] === s.tn[1]){
         s.rd++;
-        if (Math.max(s.sc[0], s.sc[1]) >= s.o.goal || s.rd >= CAP[s.o.goal] || s.fnow) return startFinal(s);
+        if (Math.max(net(s, 0), net(s, 1)) >= s.o.goal || s.rd >= CAP[s.o.goal] || s.fnow) return startFinal(s);
         s.turn = s.first;
       } else s.turn = other(s.turn);
       return;
@@ -130,7 +165,9 @@ const W3 = (() => {
     if (s.ph === "final"){
       s.fin.i++;
       if (s.fin.i < 2){ s.turn = s.fin.ord[1]; return; }
-      if (s.sc[0] !== s.sc[1]){ s.ph = "end"; s.win = s.sc[0] > s.sc[1] ? 0 : 1; s.stage = "end"; return; }
+      const f0 = Math.max(0, net(s, 0)), f1 = Math.max(0, net(s, 1));      // final result: points minus any unpaid loan, never below 0
+      s.fs = [f0, f1];
+      if (f0 !== f1){ s.ph = "end"; s.win = f0 > f1 ? 0 : 1; s.stage = "end"; return; }
       return startTiebreak(s, p, env);
     }
   }
@@ -183,6 +220,13 @@ const W3 = (() => {
       const v = TREASURE.slice(); for (let i = v.length - 1; i > 0; i--){ const j = Math.floor(env.R() * (i + 1)); [v[i], v[j]] = [v[j], v[i]]; }
       c.vals = v; c.pick = arg; c.st = "open"; add(s, t, v[arg], v[arg] === 500 ? "tre500" : "tre"); return true;
     }
+    if (a === "loan" || a === "alt" || a === "skip"){
+      if (c.k !== "bet" || c.st !== "low") return false;
+      if (a === "skip"){ c.st = "skipped"; return true; }
+      if (a === "loan" && (!c.loanOk || s.debt[t])) return false;
+      if (a === "loan"){ c.loan = 1; c.v = 100; } else { c.alt = 1; c.v = QPTS.q; }
+      c.st = "ask"; c.q = question(s, p, env, s.o.lv === 3 ? null : s.o.lv); setTimer(s, env.now, s.o.t); return true;
+    }
     if (a === "wager"){
       if (c.k !== "bet" || c.st !== "wager" || !c.ws.includes(arg)) return false;
       c.v = arg; c.st = "ask"; c.q = question(s, p, env, s.o.lv === 3 ? null : s.o.lv); setTimer(s, env.now, s.o.t); return true;
@@ -196,11 +240,12 @@ const W3 = (() => {
         if (c.k === "quick"){ c.got += c.v; c.n++; c.st = c.n >= QUICK_N ? "shown" : "right"; c.ok = 1; return true; }
         c.st = "shown"; c.ok = 1; return true;
       }
-      if ((["q","gold","streak"].includes(c.k) || (c.k === "bet" && c.free)) && s.s2[t] && !c.u2){
+      if ((["q","gold","streak"].includes(c.k) || (c.k === "bet" && c.alt)) && s.s2[t] && !c.u2){
         s.s2[t] = 0; c.u2 = 1; c.retry = 1; log(s, t, 0, "sec-used"); setTimer(s, env.now, s.o.t); delete c.ci; return true;   // same question again
       }
       c.ok = 0;
-      if (c.k === "bet" && !c.free){ const h = hit(s, t, c.v, "bet", true); c.d = h.d; c.st = "shown"; return true; }
+      if (c.k === "bet" && c.loan){ s.debt[t] = Math.min(100, s.debt[t] + c.v); log(s, t, 0, "debt"); c.st = "shown"; return true; }
+      if (c.k === "bet" && !c.alt){ const h = hit(s, t, c.v, "bet", true); c.d = h.d; c.st = "shown"; return true; }
       if (c.k === "quick"){ c.n++; c.st = c.n >= QUICK_N ? "shown" : "wrong"; return true; }
       c.st = "shown"; return true;
     }
@@ -231,7 +276,7 @@ const W3 = (() => {
     }
     if (a === "next"){
       const fine = c.st === "done" ? !(c.k === "respin")
-        : c.st === "shown" || (c.k === "speed" && c.st === "cancel") || (c.k === "box" && c.st === "open" && c.r !== "respin") || (c.k === "tre" && c.st === "open");
+        : c.st === "shown" || c.st === "skipped" || (c.k === "speed" && c.st === "cancel") || (c.k === "box" && c.st === "open" && c.r !== "respin") || (c.k === "tre" && c.st === "open");
       if (!fine) return false;
       endTurn(s, p, env); return true;
     }
@@ -258,15 +303,16 @@ const W3 = (() => {
     if (c.k === "box" && c.st === "closed") m.push("open");
     if (c.k === "tre" && c.st === "pick") m.push("tpick");
     if (c.k === "bet" && c.st === "wager") m.push("wager");
+    if (c.k === "bet" && c.st === "low"){ if (c.loanOk && !s.debt[s.turn]) m.push("loan"); m.push("alt", "skip"); }
     if (judging(c)) m.push("ok", "no");
     if ((c.k === "streak" && c.st === "right") || (c.k === "quick" && (c.st === "right" || c.st === "wrong"))) m.push("more");
     if (c.k === "speed" && c.st === "ask") m.push("sg", "so", "sn", "sx");
     if (c.k === "speed" && c.st === "cancel" && c.re < SPEED_RETRY && !c.tb) m.push("sre");
-    const nx = c.st === "done" ? c.k !== "respin" : c.st === "shown" || (c.k === "speed" && c.st === "cancel") || (c.k === "box" && c.st === "open" && c.r !== "respin") || (c.k === "tre" && c.st === "open");
+    const nx = c.st === "done" ? c.k !== "respin" : c.st === "shown" || c.st === "skipped" || (c.k === "speed" && c.st === "cancel") || (c.k === "box" && c.st === "open" && c.r !== "respin") || (c.k === "tre" && c.st === "open");
     if (nx && !c.tb) m.push("next");
     return m;
   }
   return {C, ORDER, MODES, BOX, GOALS, CAP, TIMES, QPTS, STREAK, TREASURE, RARE_LOCK, EXTRA, TB_MAX, SPEED_RETRY, QUICK_N, QUICK_T, T,
-    init, enabled, layout, locks, tok, act, tick, moves};
+    CAT, UNIT, init, enabled, odds, layout, locks, tok, act, tick, moves, net};
 })();
 if (typeof module !== "undefined") module.exports = W3;

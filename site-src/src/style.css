@@ -540,3 +540,6 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .lowmo .w3card .confetti{display:none}
 @media (prefers-reduced-motion:reduce){.bulbs i,.chest{animation:none!important}}
 .bigdelta,.w3log b,.w3score .pts,.v-score b{direction:ltr;unicode-bidi:isolate}
+.debtchip{display:inline-block;margin-top:4px;font-size:.8rem;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:0 8px}
+.w3desc{margin:-4px 0 0;color:var(--muted);font-size:.95rem}
+.w3list{margin:0;padding-inline-start:1.2em;display:flex;flex-direction:column;gap:6px;font-size:.95rem}

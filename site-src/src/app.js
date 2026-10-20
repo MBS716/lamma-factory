@@ -163,6 +163,7 @@ const HELP = {
   wheel:() => sec("الفكرة", `<p>فريقان يلفّان العجلة بالتناوب. كل شريحة كرت، وحجمها يساوي احتمال ظهوره. المقدّم وحده يحكم على الإجابات والتحديات، وشاشات اللاعبين تعرض النتيجة فقط.</p>`)
     + sec("البدء", `<p>يختار المقدّم هدف الفوز (1,500 أو 3,000 أو 5,000) ووضع اللعب ووقت السؤال ومستوى الأسئلة، ويمكنه تعطيل الكروت الاختيارية. الفريق البادئ يُختار بالقرعة.</p>`)
     + sec("الكروت", w3bidi(`<ul>${W3.ORDER.map(k => `<li><b>${esc(W3.C[k].f || W3.C[k].n)}:</b> ${W3DESC[k]}</li>`).join("")}</ul>`))
+    + sec("سلفة الحظ", w3bidi(`<p>إذا ظهر كرت الرهان ورصيد الفريق أقل من 100 نقطة، يختار المقدّم مع الفريق: <b>سلفة الحظ</b> بقيمة 100 من بنك اللعبة (لا من المنافس)، أو <b>سؤال بديل بلا رهان</b> (+200)، أو <b>تجاوز الرهان</b> وإنهاء الدور.</p><ul><li>إجابة صحيحة بالسلفة: +100 صافية وتُغلق السلفة.</li><li>إجابة خاطئة: يُسجّل دين 100 يظهر للجميع بجانب نقاط الفريق.</li><li>يُسدَّد الدين تلقائيًا من أول نقاط يكسبها الفريق بعد ذلك.</li><li>سلفة واحدة فقط في كل مرة، ولا تتجاوز 100، ولا سلفة جديدة قبل سداد السابقة.</li><li>الحصانة لا تحمي من خسارة الرهان.</li><li>بلوغ الهدف والنتيجة النهائية يُحسبان بالنقاط ناقص الدين (ولا تنزل النتيجة تحت الصفر).</li></ul>`))
     + sec("صندوق الحظ", w3bidi(`<p>${W3.BOX.map(([r, v, p]) => `${r === "p" ? "+" + v : r === "m" ? "−" + v : r === "imm" ? "حصانة" : r === "respin" ? "لفّة إضافية" : "خسارة الدور"} (${p}٪)`).join("، ")}. تُسحب النتيجة لحظة الفتح ولا يمكن إعادة فتحه.</p>`))
     + sec("العدالة", `<ul><li>النقاط لا تنزل تحت الصفر.</li><li>حصانة واحدة وفرصة ثانية واحدة لكل فريق كحد أقصى، والزائدة تتحول إلى +100.</li><li>الحصانة تمنع أول خصم أو سرقة، ولا تحمي من رهان الفريق نفسه.</li><li>لفّتان إضافيتان كحد أقصى في الدور الواحد، ثم تُقفل كروت اللف الإضافي.</li><li>الكروت النادرة (الذهبي، حظك مرتين، الكنز، تبديل المزايا) تُقفل 4 لفّات بعد ظهورها.</li></ul>`)
     + sec("نهاية المباراة", `<p>بلوغ الهدف لا ينهي المباراة فورًا: تكتمل الجولة حتى يتساوى عدد الأدوار، ثم جولة ختامية بدور أخير لكل فريق (المتأخر أولًا، بلا لفّات إضافية). الأعلى نقاطًا يفوز، وعند التعادل مواجهة فاصلة بتحديات السرعة حتى 5 محاولات، ثم تعادل رسمي.</p>`),
@@ -895,18 +896,18 @@ const W3ICON = {p50:"plus", p150:"plus", p250:"plus", m50:"minus", m150:"minus",
 const wicon = k => WIC[W3ICON[k] || k] || WIC.q;
 const wsvg = (k, cls) => `<svg class="wic ${cls || ""}" viewBox="0 0 24 24" aria-hidden="true"><path d="${wicon(k)}"/></svg>`;
 const W3SHORT = {q:"سؤال", speed:"سرعة", gold:"ذهبي", bet:"رهان", streak:"سلسلة", quick:"سريعة", steal:"سرقة", imm:"حصانة", sec:"فرصة", box:"صندوق", respin:"تدوير", l2:"مرتين", tre:"كنز", swap:"تبديل"};
-const W3COL = k => k[0] === "p" ? "--green" : k[0] === "m" ? "--bad" : ["q","gold","bet","streak","quick"].includes(k) ? "--blue" : k === "speed" || k === "steal" ? "--purple" : "--gold";
+const W3COL = k => ({bonus:"--green", pen:"--bad", ask:"--blue", duel:"--purple", steal:"--orange", spec:"--gold"})[W3.CAT[k]] || "--gold";
 const W3DESC = {
   q:"سؤال للفريق صاحب الدور: الصحيحة +200.", speed:"سؤال مشترك للفريقين، والمقدّم يحدد الفائز: +250.",
   p50:"+50 تُضاف فورًا.", p150:"+150 تُضاف فورًا.", p250:"+250 تُضاف فورًا.", m50:"−50 تُخصم فورًا (الحصانة تمنعها).", m150:"−150 تُخصم فورًا (الحصانة تمنعها).", m250:"−250 تُخصم فورًا (الحصانة تمنعها).",
-  gold:"سؤال صعب: الصحيحة +400.", bet:"راهِن بـ 100 أو 200 أو 300: الصحيحة تضيف الرهان والخاطئة تخصمه.", streak:"حتى 3 أسئلة: +150 ثم +200 ثم +250، وتنتهي عند أول خطأ.",
+  gold:"سؤال صعب: الصحيحة +400.", bet:"راهِن بـ 100 أو 200 أو 300: الصحيحة تضيف الرهان والخاطئة تخصمه. برصيد أقل من 100: سلفة الحظ أو سؤال بديل أو التجاوز.", streak:"حتى 3 أسئلة: +150 ثم +200 ثم +250، وتنتهي عند أول خطأ.",
   quick:"3 أسئلة، 15 ثانية لكل سؤال: +100 لكل صحيحة.", steal:"تسرق 150 نقطة من المنافس (الحصانة تمنعها).", imm:"تحمي من أول خصم قادم (واحدة لكل فريق).",
   sec:"محاولة ثانية عند أول إجابة خاطئة (واحدة لكل فريق).", box:"صندوق مغلق يفتحه المقدّم: مكافأة أو عقوبة أو مفاجأة.", respin:"لفّة إضافية لنفس الفريق.",
   l2:"لفّتان، ويختار الفريق نتيجة واحدة منهما.", tre:"ثلاثة صناديق فيها 100 و300 و500: اختر واحدًا.", swap:"يتبادل الفريقان الحصانة والفرصة الثانية.",
 };
 const W3LOG = {p50:"بطاقة نقاط", p150:"بطاقة نقاط", p250:"بطاقة نقاط", m50:"خصم", m150:"خصم", m250:"خصم", q:"سؤال", gold:"السؤال الذهبي", bet:"الرهان", streak:"سلسلة الانتصارات",
   quick:"الجولة السريعة", speed:"تحدي السرعة", steal:"سرقة", stolen:"سُرقت منه", box:"صندوق الحظ", box400:"جائزة نادرة", tre:"الكنز", tre500:"الكنز الأكبر",
-  imm:"حصل على حصانة", imm2:"حصانة ثانية ← +100", sec:"حصل على فرصة ثانية", sec2:"فرصة ثانية إضافية ← +100", "sec-used":"استخدم الفرصة الثانية", shield:"الحصانة منعت الخصم", swap:"تبادل المزايا", tb:"فاز بالمواجهة الفاصلة"};
+  repay:"سداد السلفة من نقاطه", debt:"سُجّل عليه دين سلفة 100", imm:"حصل على حصانة", imm2:"حصانة ثانية ← +100", sec:"حصل على فرصة ثانية", sec2:"فرصة ثانية إضافية ← +100", "sec-used":"استخدم الفرصة الثانية", shield:"الحصانة منعت الخصم", swap:"تبادل المزايا", tb:"فاز بالمواجهة الفاصلة"};
 // signed numbers (+150, −50) keep their sign on the left inside Arabic text: isolate them, only in text, never inside tags
 const w3bidi = html => html.replace(/>([^<]+)</g, (m, t) => ">" + t.replace(/([+\u2212])(\d[\d,٬]*)/g, '<bdi dir="ltr">$1$2</bdi>') + "<");
 const w3rand = () => { try { return crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296; } catch(e){ return Math.random(); } };
@@ -925,11 +926,11 @@ const w3motion = () => { const v = lsGet("lm-w-mot"); return v === "1" ? true : 
 function w3applyMotion(){ document.documentElement.classList.toggle("lowmo", !w3motion()); }
 w3applyMotion();
 
-function w3wheelCanvas(s, locks){
+function w3wheelCanvas(s, locks, hi){
   const cs = getComputedStyle(document.documentElement), col = n => cs.getPropertyValue(n).trim();
   const c = document.createElement("canvas"); c.width = c.height = 640;
   const x = c.getContext("2d"), R = 306, cx = 320, rad = d => (d - 90) * Math.PI / 180;
-  for (const sl of W3.layout(s)){
+  W3.layout(s).forEach((sl, idx) => {
     const a0 = rad(sl.a0), a1 = rad(sl.a1), mid = (a0 + a1) / 2, deg = sl.a1 - sl.a0, lk = locks[sl.k];
     x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath();
     const base = col(W3COL(sl.k)), g = x.createRadialGradient(cx, cx, 40, cx, cx, R);
@@ -941,18 +942,21 @@ function w3wheelCanvas(s, locks){
     const ir = R - 42, sz = Math.max(18, Math.min(42, deg * 2.6)), ixp = cx + Math.cos(mid) * ir, iyp = cx + Math.sin(mid) * ir;
     x.save(); x.translate(ixp, iyp); x.rotate(mid + Math.PI / 2); x.scale(sz / 24, sz / 24); x.translate(-12, -12);
     x.strokeStyle = col("--on-color"); x.lineWidth = 2.2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(wicon(sl.k))); x.restore();
-    if (deg >= 9){
-      const flip = Math.cos(mid) < 0, fs = Math.max(16, Math.min(30, deg * 1.5)), txt = sl.k[0] === "p" ? "+" + sl.k.slice(1) : sl.k[0] === "m" ? "−" + sl.k.slice(1) : W3SHORT[sl.k];
-      x.save(); x.translate(cx, cx); x.rotate(flip ? mid + Math.PI : mid); x.fillStyle = col("--on-color"); x.textBaseline = "middle";
-      x.font = `${fs}px Lalezar, Tahoma, sans-serif`; x.direction = sl.k[0] === "p" || sl.k[0] === "m" ? "ltr" : "rtl"; x.textAlign = flip ? "left" : "right";
-      x.fillText(txt, flip ? -(R - 72) : R - 72, 2); x.restore();
+    if (deg >= 13){   // every label runs the same way along its spoke, from the rim toward the centre (like a real wheel)
+      const fs = Math.max(16, Math.min(30, deg * 1.5)), txt = sl.k[0] === "p" ? "+" + sl.k.slice(1) : sl.k[0] === "m" ? "−" + sl.k.slice(1) : W3SHORT[sl.k];
+      x.save(); x.translate(cx, cx); x.rotate(mid); x.fillStyle = col("--on-color"); x.textBaseline = "middle";
+      x.font = `${fs}px Lalezar, Tahoma, sans-serif`; x.direction = "rtl"; x.textAlign = "right";
+      x.fillText(sl.k[0] === "p" || sl.k[0] === "m" ? "\u2066" + txt + "\u2069" : txt, R - 72, 2); x.restore();
     }
     if (lk){
       x.save(); x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath(); x.fillStyle = "rgba(10,14,36,.62)"; x.fill();
       x.translate(cx + Math.cos(mid) * (R - 110), cx + Math.sin(mid) * (R - 110)); x.rotate(mid + Math.PI / 2); x.scale(.9, .9); x.translate(-12, -12);
       x.strokeStyle = "#fff"; x.lineWidth = 2.4; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(WIC.lock)); x.restore();
     }
-  }
+    if (idx === hi){   // the slice the wheel stopped on
+      x.save(); x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R - 3, a0, a1); x.closePath(); x.lineWidth = 7; x.strokeStyle = "#fff6c9"; x.shadowColor = "#ffd76a"; x.shadowBlur = 18; x.stroke(); x.restore();
+    }
+  });
   x.beginPath(); x.arc(cx, cx, R + 4, 0, Math.PI * 2); x.lineWidth = 12; x.strokeStyle = col("--gold"); x.stroke();
   return c;
 }
@@ -962,10 +966,14 @@ function w3mount(holder, s, st){
     holder.innerHTML = `<div class="wheelbox w3"><div class="bulbs">${range(24).map(i => `<i style="--i:${i}"></i>`).join("")}</div><div class="wclip"></div><div class="pointer"></div><div class="hub"><span>ل</span></div></div>`;
     box = holder.querySelector(".wheelbox"); st.key = null; st.sp = s.sp;
   }
-  const L = s.stage === "rolling" ? (st.locks || {}) : W3.locks(s, s.cur && s.cur.k === "l2" && (s.cur.st === "a" || s.cur.st === "b")), key = s.o.mode + "|" + (s.o.off || []).join() + "|" + JSON.stringify(L);
+  const L = s.stage === "rolling" ? (st.locks || {}) : W3.locks(s, s.cur && s.cur.k === "l2" && (s.cur.st === "a" || s.cur.st === "b"));
+  // after the wheel stops, the slice under the pointer lights up
+  let hi = -1;
+  if (s.stage !== "rolling" && s.seg && s.sp){ const ang = ((360 - (s.rot % 360)) % 360 + 360) % 360; hi = W3.layout(s).findIndex(sl => ang >= sl.a0 && ang < sl.a1); }
+  const key = s.o.mode + "|" + (s.o.off || []).join() + "|" + JSON.stringify(L) + "|" + hi;
   st.locks = L;
   let c = box.querySelector("canvas");
-  const draw = () => { const n = w3wheelCanvas(s, L); n.style.transform = `rotate(${s.rot}deg)`; if (c) c.replaceWith(n); else box.querySelector(".wclip").appendChild(n); c = n; st.key = key; };
+  const draw = () => { const n = w3wheelCanvas(s, L, hi); n.style.transform = `rotate(${s.rot}deg)`; if (c) c.replaceWith(n); else box.querySelector(".wclip").appendChild(n); c = n; st.key = key; };
   if (st.key !== key && s.stage !== "rolling") (document.fonts && document.fonts.load ? document.fonts.load('30px "Lalezar"').catch(() => {}) : Promise.resolve()).then(() => { if (box.isConnected && st.key !== key) draw(); });
   if (!c){ draw(); }
   if (st.sp !== s.sp){ box.classList.remove("spin"); void box.offsetWidth; box.classList.add("spin"); st.sp = s.sp; w3beep("spin"); }
@@ -975,10 +983,10 @@ function w3mount(holder, s, st){
 const w3team = t => `<b class="t${W3.T[t]}">الفريق ${TEAM[W3.T[t]]}</b>`;
 function w3scores(s){
   const g = s.o.goal || 1, card = t => {
-    const tm = W3.T[t], pct = Math.min(100, s.sc[t] / g * 100), turn = (s.ph === "play" || s.ph === "final") && s.turn === t;
+    const tm = W3.T[t], dbt = (s.debt || [0, 0])[t], pct = Math.max(0, Math.min(100, (s.sc[t] - dbt) / g * 100)), turn = (s.ph === "play" || s.ph === "final") && s.turn === t;
     return `<div class="w3score ${tm} ${turn ? "turn" : ""} ${s.im[t] ? "shielded" : ""}"><div class="row" style="justify-content:space-between;gap:6px"><span class="tname2">${TEAM[tm]}</span>
       <span class="perks">${s.im[t] ? `<span class="perk" title="حصانة">${wsvg("imm")}</span>` : ""}${s.s2[t] ? `<span class="perk" title="فرصة ثانية">${wsvg("sec")}</span>` : ""}${turn ? `<span class="turnchip">الدور</span>` : ""}</span></div>
-      <b class="pts">${s.sc[t].toLocaleString("en")}</b><div class="gbar" role="progressbar" aria-valuemin="0" aria-valuemax="${g}" aria-valuenow="${s.sc[t]}"><i style="width:${pct}%"></i></div></div>`;
+      <b class="pts">${s.sc[t].toLocaleString("en")}</b>${dbt ? `<span class="debtchip" title="سلفة الحظ غير المسددة">دين سلفة ${dbt}</span>` : ""}<div class="gbar" role="progressbar" aria-valuemin="0" aria-valuemax="${g}" aria-valuenow="${s.sc[t]}"><i style="width:${pct}%"></i></div></div>`;
   };
   const phase = s.ph === "final" ? `<span class="chip warn">الجولة الختامية · ${s.fin.i + 1} من 2</span>` : s.ph === "tb" ? `<span class="chip warn">المواجهة الفاصلة · ${s.tb.n + 1} من ${W3.TB_MAX}</span>`
     : s.ph === "play" ? `<span class="chip">الجولة ${s.rd + 1}</span>${s.fnow ? `<span class="chip warn">الختامية بعد هذه الجولة</span>` : ""}` : "";
@@ -986,7 +994,7 @@ function w3scores(s){
 }
 function w3log(s){
   if (!s.lg.length) return "";
-  return w3bidi(`<div class="panel w3log"><h3>آخر النتائج</h3><ul>${s.lg.map(([t, d, k]) => `<li><span class="dot ${W3.T[t]}"></span><span>${TEAM[W3.T[t]]}</span><span class="muted">${esc(W3LOG[k] || k)}</span><b class="${d > 0 ? "up" : d < 0 ? "down" : ""}">${d > 0 ? "+" + d : d < 0 ? "−" + (-d) : "•"}</b></li>`).join("")}</ul></div>`);
+  return w3bidi(`<div class="panel w3log"><h3>آخر النتائج</h3><ul>${s.lg.map(([t, d, k]) => `<li><span class="dot ${W3.T[t]}"></span><span>${TEAM[W3.T[t]]}</span><span class="muted">${esc(W3LOG[k] || k)}</span><b class="${k === "repay" ? "" : d > 0 ? "up" : d < 0 ? "down" : ""}">${k === "repay" ? d : d > 0 ? "+" + d : d < 0 ? "−" + (-d) : "•"}</b></li>`).join("")}</ul></div>`);
 }
 function w3qhtml(c, host, s){
   const q = c.q || {}, rv = c.ci != null ? c.ci : -1, mine = host && H.priv.wshow && rv < 0 ? H.priv.wp.ci : -1;
@@ -1001,7 +1009,7 @@ function w3card(s, host){
     ${host ? `<div class="row">${w3btn(s, "spin", "لُفّ العجلة", "big spinbtn")}${has("final") ? w3btn(s, "final", "ابدأ الجولة الختامية بعد هذه الجولة", "ghost sm") : ""}</div>` : `<p class="muted">بانتظار لفّ العجلة…</p>`}</div>`;
   if (s.stage === "rolling") return `<div class="w3card idle"><p class="stage-h">العجلة تدور…</p><p class="muted">${s.sub ? `حظك مرتين: اللفّة ${s.sub === "a" ? "الأولى" : "الثانية"}` : `دور ${who}`}</p></div>`;
   if (!c) return "";
-  const k = c.k, name = W3.C[k].f || W3.C[k].n, head = `<div class="w3head ${W3COL(k).slice(2)}">${wsvg(k)}<div><b>${esc(name)}</b><span class="muted">${s.ph === "tb" ? "المواجهة الفاصلة" : c.k === "speed" ? "للفريقين" : `دور الفريق ${TEAM[W3.T[t]]}`}</span></div></div>`;
+  const k = c.k, name = W3.C[k].f || W3.C[k].n, head = `<div class="w3head ${W3COL(k).slice(2)}">${wsvg(k)}<div><b>${esc(name)}</b><span class="muted">${s.ph === "tb" ? "المواجهة الفاصلة" : c.k === "speed" ? "للفريقين" : `دور الفريق ${TEAM[W3.T[t]]}`}</span></div></div>${s.ph === "tb" ? "" : `<p class="w3desc">${W3DESC[k]}</p>`}`;
   let body = "", btns = "", fx = "";
   if (k[0] === "p" || k[0] === "m"){
     if (k[0] === "p"){ body = `<p class="bigdelta up">+${c.v}</p><p class="center">أضيفت إلى ${who}</p>`; fx = "good"; }
@@ -1030,13 +1038,20 @@ function w3card(s, host){
     body = `<p class="center">${c.st === "pick" ? `ثلاثة صناديق: 100 و300 و500. يختار ${who} واحدًا.` : `اختار ${who} الصندوق ${c.pick + 1}: <b>+${c.vals[c.pick]}</b>`}</p><div class="tchests">${range(3).map(i => `<div class="tchest ${c.st === "open" ? "open" : ""} ${c.pick === i ? "picked" : ""}"><span>${c.st === "open" ? c.vals[i] : i + 1}</span>${host && has("tpick") ? w3btn(s, "tpick", "هذا", "sm", i) : ""}</div>`).join("")}</div>`;
     if (c.st === "open") fx = c.vals[c.pick] === 500 ? "rare" : "good";
   }
+  else if (k === "bet" && (c.st === "low" || c.st === "skipped")){
+    const dbt = s.debt[t];
+    body = c.st === "skipped" ? `<p class="center">تجاوز ${who} الرهان وانتهى دوره.</p>`
+      : `<p class="center">رصيد ${who} أقل من 100 نقطة، فلا يكفي للرهان. الخيارات:</p><ul class="w3list"><li><b>سلفة الحظ (100 من بنك اللعبة):</b> الصحيحة +100 صافية وتُغلق السلفة، والخاطئة تسجّل دينًا بـ100 يُسدَّد تلقائيًا من النقاط القادمة.</li><li><b>سؤال بديل بلا رهان:</b> الصحيحة +200، والخاطئة بلا خصم.</li><li><b>تجاوز الرهان:</b> ينتهي الدور بلا نقاط.</li></ul>${dbt ? `<p class="note warn">لدى ${who} سلفة غير مسددة (${dbt})، فلا تُمنح سلفة جديدة قبل سدادها.</p>` : ""}`;
+    btns = host && c.st === "low" ? `<div class="row w3btns">${has("loan") ? w3btn(s, "loan", "سلفة الحظ 100", "") : ""}${w3btn(s, "alt", "سؤال بديل بلا رهان", "ghost")}${w3btn(s, "skip", "تجاوز الرهان", "ghost")}</div>` : "";
+  }
   else if (k === "bet" && c.st === "wager"){ body = `<p class="center">يحدد ${who} رهانه (لا يتجاوز نقاطه). الصحيحة تضيف الرهان، والخاطئة تخصمه، والحصانة لا تحمي من الرهان.</p>`; btns = host ? `<div class="row">${c.ws.map(v => w3btn(s, "wager", `رهان ${v}`, "", v)).join("")}</div>` : ""; }
   else if (["q","gold","bet","streak","quick","speed"].includes(k)){
-    const pts = k === "speed" ? `+250 للفائز` : k === "bet" ? (c.free ? `سؤال عادي (+200): النقاط أقل من 100` : `الرهان ${c.v}`) : k === "streak" ? `السؤال ${c.n + (c.st === "ask" ? 1 : 0)} من 3 · ${c.v} · المجموع ${c.got}` : k === "quick" ? `السؤال ${Math.min(c.n + (c.st === "ask" ? 1 : 0), 3)} من 3 · 15 ثانية · المجموع ${c.got}` : `+${c.v}`;
+    const pts = k === "speed" ? `+250 للفائز` : k === "bet" ? (c.loan ? `سلفة الحظ: الصحيحة +100، والخاطئة دين 100` : c.alt ? `سؤال بديل بلا رهان: +200` : `الرهان ${c.v}`) : k === "streak" ? `السؤال ${c.n + (c.st === "ask" ? 1 : 0)} من 3 · ${c.v} · المجموع ${c.got}` : k === "quick" ? `السؤال ${Math.min(c.n + (c.st === "ask" ? 1 : 0), 3)} من 3 · 15 ثانية · المجموع ${c.got}` : `+${c.v}`;
     const vs = k === "speed" ? `<div class="vs"><span class="g">الأخضر</span><b>ضد</b><span class="o">البرتقالي</span></div>` : "";
     const verdict = c.st === "shown" || c.st === "right" || c.st === "wrong" || c.st === "cancel"
       ? (k === "speed" ? (c.st === "cancel" ? `<p class="verdict no">أُلغي التحدي · لا نقاط</p>` : c.w >= 0 ? `<p class="verdict ok ${W3.T[c.w]}">فاز الفريق ${TEAM[W3.T[c.w]]}${s.ph === "end" ? " بالمباراة" : " · +250"}</p>` : `<p class="verdict no">لم ينجح أي فريق · لا نقاط</p>`)
-        : c.ok ? `<p class="verdict ok ${W3.T[t]}">إجابة صحيحة · +${k === "bet" && !c.free ? c.v : c.v}</p>` : `<p class="verdict no">${s.to ? "انتهى الوقت" : "إجابة خاطئة"}${k === "bet" && !c.free ? ` · −${c.v}` : " · 0"}</p>`) : "";
+        : c.ok ? `<p class="verdict ok ${W3.T[t]}">إجابة صحيحة · +${c.v}${c.loan ? " وأُغلقت السلفة" : ""}</p>`
+          : `<p class="verdict no">${s.to ? "انتهى الوقت" : "إجابة خاطئة"}${c.loan ? " · سُجّل دين سلفة 100" : k === "bet" && !c.alt ? ` · −${c.v}` : " · 0"}</p>`) : "";
     const retry = c.retry && c.st === "ask" ? `<p class="note">استُخدمت الفرصة الثانية: محاولة أخيرة لنفس السؤال.</p>` : "";
     const tbn = s.ph === "tb" && c.last && c.st === "ask" ? `<p class="note">${c.last === "sx" ? "أُلغيت المحاولة السابقة" : "لم يُحسم التحدي السابق"} · محاولة ${s.tb.n + 1} من ${W3.TB_MAX}</p>` : "";
     body = `${vs}${tbn}${retry}<p class="muted">${pts}</p>${w3qhtml(c, host, s)}${verdict}`;
@@ -1057,9 +1072,9 @@ function w3end(s, host){
   const w = s.win, draw = w === "d", st = (lab, a, b) => `<tr><th>${lab}</th><td class="g">${a}</td><td class="o">${b}</td></tr>`;
   return `<div class="victory ${draw ? "" : W3.T[w]}">${draw ? "" : `<div class="confetti" aria-hidden="true">${range(18).map(i => `<i style="--i:${i}"></i>`).join("")}</div>`}
     <p class="v-kicker">${draw ? "انتهت المباراة" : s.tb ? "الفائز بعد المواجهة الفاصلة" : "الفائز"}</p><h2 class="v-name">${draw ? "تعادل رسمي" : `الفريق ${TEAM[W3.T[w]]}`}</h2>
-    <p class="v-score"><b>${s.sc[0].toLocaleString("en")}</b> <span>مقابل</span> <b>${s.sc[1].toLocaleString("en")}</b></p>
+    <p class="v-score"><b>${(s.fs || s.sc)[0].toLocaleString("en")}</b> <span>مقابل</span> <b>${(s.fs || s.sc)[1].toLocaleString("en")}</b></p>
     ${draw ? `<p class="muted">تعادل الفريقان ولم تحسمه ${W3.TB_MAX} تحديات فاصلة.</p>` : ""}
-    <table class="vtable"><thead><tr><th></th><th class="g">الأخضر</th><th class="o">البرتقالي</th></tr></thead><tbody>${st("النقاط", s.sc[0], s.sc[1])}${st("الإجابات والتحديات الصحيحة", s.ca[0], s.ca[1])}${st("الأدوار", s.tn[0], s.tn[1])}</tbody></table>
+    <table class="vtable"><thead><tr><th></th><th class="g">الأخضر</th><th class="o">البرتقالي</th></tr></thead><tbody>${st("النقاط", s.sc[0], s.sc[1])}${(s.debt || [0, 0]).some(x => x) ? st("سلفة غير مسددة", s.debt[0] ? "−" + s.debt[0] : "0", s.debt[1] ? "−" + s.debt[1] : "0") + st("النتيجة النهائية", (s.fs || s.sc)[0], (s.fs || s.sc)[1]) : ""}${st("الإجابات والتحديات الصحيحة", s.ca[0], s.ca[1])}${st("الأدوار", s.tn[0], s.tn[1])}</tbody></table>
     ${host ? `<div class="row" style="justify-content:center">${w3btn(s, "start", "مباراة جديدة بنفس الإعدادات", "big")}<button class="btn ghost" data-h="lobby">تغيير الإعدادات</button></div>` : ""}</div>`;
 }
 function w3prefs(){ return `<div class="row w3prefs"><button class="btn ghost sm" data-wp="snd" aria-pressed="${w3sound()}">${w3sound() ? "الصوت: يعمل" : "الصوت: متوقف"}</button><button class="btn ghost sm" data-wp="mot" aria-pressed="${w3motion()}">${w3motion() ? "الحركة: تعمل" : "الحركة: مخفّفة"}</button></div>`; }
@@ -1073,9 +1088,9 @@ function w3fx(root, st){
   if (fx === "rare" && w3motion()) el.insertAdjacentHTML("afterbegin", `<div class="confetti" aria-hidden="true">${range(18).map(i => `<i style="--i:${i}"></i>`).join("")}</div>`);
 }
 function w3lobbyExtra(s){
-  const o = s.o, L = W3.layout({o:{...o, off:[]}}), off = o.off || [];
+  const o = s.o, L = W3.ORDER.filter(k => W3.MODES[o.mode].w[k] > 0).map(k => ({k})), off = o.off || [], od = W3.odds(s);
   const rows = L.map(sl => `<tr class="${off.includes(sl.k) ? "off" : ""}"><td>${wsvg(sl.k, W3COL(sl.k).slice(2))}</td><td><b>${esc(W3.C[sl.k].f || W3.C[sl.k].n)}</b><br><span class="muted">${W3DESC[sl.k]}</span></td>
-    <td class="num">${off.includes(sl.k) ? "—" : (W3.layout(s).find(x => x.k === sl.k).p * 100).toFixed(1) + "٪"}</td>
+    <td class="num">${off.includes(sl.k) ? "—" : (od[sl.k] * 100).toFixed(1) + "٪"}</td>
     <td>${W3.C[sl.k].opt ? `<button class="tog ${off.includes(sl.k) ? "" : "on"}" data-h="tog" data-card="${sl.k}" aria-pressed="${!off.includes(sl.k)}" aria-label="${esc(W3.C[sl.k].n)}"><i></i></button>` : `<span class="muted">أساسي</span>`}</td></tr>`).join("");
   return w3bidi(`${o.goal ? "" : `<p class="note warn">اختر هدف الفوز لتبدأ المباراة.</p>`}
     <details class="w3cards" ${H && H.priv.wco ? "open" : ""}><summary>الكروت ونسب ظهورها (${W3.MODES[o.mode].n})</summary><p class="muted">حجم كل شريحة في العجلة يساوي احتمالها. الكرت المعطّل يُحذف من العجلة وتُعاد موازنة النسب.</p>

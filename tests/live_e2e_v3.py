@@ -84,6 +84,11 @@ async def wheel_v3(host, ios, android):
     t = await host.evaluate('H.s.turn'); await force('imm'); await btn('next'); await force('p50'); await btn('next')
     await host.evaluate(f'H.s.sc[{t}] = Math.max(H.s.sc[{t}], 300); pushHost()'); scb = await host.evaluate(f'H.s.sc[{t}]'); await force('m250')
     check(await host.evaluate(f'H.s.sc[{t}]') == scb and await both('الحصانة منعت'), 'wheel v3: immunity blocks the deduction, shown on both phones'); await btn('next')
+    # luck loan: below 100 points, borrowed 100, wrong answer -> debt visible to everyone, then repaid
+    t = await host.evaluate('H.s.turn'); await host.evaluate(f'H.s.sc[{t}] = 40; pushHost()'); await force('bet'); await btn('loan'); await btn('no')
+    check(await host.evaluate(f'H.s.debt[{t}]') == 100 and await both('دين سلفة 100'), 'wheel v3: luck loan lost, the 100 debt is shown on iPhone and Android')
+    await btn('next'); await force('p50'); await btn('next'); await force('p150')
+    check(await host.evaluate(f'H.s.debt[{t}] === 0 && H.s.sc[{t}] === 90') and await both('سداد السلفة'), 'wheel v3: the next gain repays the debt first (40 + 150 − 100 = 90), shown on the phones'); await btn('next')
     # host closes the tab and comes back from a new tab
     before = await host.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])'); hctx = host.context
     await host.wait_for_timeout(2500); await host.close()

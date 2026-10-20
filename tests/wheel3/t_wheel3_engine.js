@@ -55,8 +55,34 @@ const clone = x => JSON.parse(JSON.stringify(x));
   check(!A(g, "wager", 300), "bet: a wager of 300 with 250 points is refused"); A(g, "wager", 200); A(g, "ok"); check(g.s.sc[t] === 450, "bet won: +200"); }
 { const g = game(), t = team(g); g.s.sc[t] = 300; g.s.im[t] = 1; land(g, "bet"); A(g, "wager", 300); A(g, "no");
   check(g.s.sc[t] === 0 && g.s.im[t] === 1, "bet lost: −300 even with immunity (own wager), immunity kept"); }
-{ const g = game(), t = team(g); land(g, "bet"); check(g.s.cur.st === "ask" && g.s.cur.free === 1, "bet with fewer than 100 points: becomes a normal question");
-  A(g, "no"); check(g.s.sc[t] === 0, "free bet lost: nothing deducted"); }
+// ---------- luck loan (bet with fewer than 100 points)
+{ const g = game(), t = team(g); land(g, "bet");
+  check(g.s.cur.st === "low" && JSON.stringify(W.moves(g.s).filter(m => ["loan","alt","skip"].includes(m))) === '["loan","alt","skip"]', "bet with fewer than 100 points: no automatic question; the choices are loan, alternative question, skip");
+  A(g, "loan"); check(g.s.cur.st === "ask" && g.s.cur.v === 100, "loan chosen: a question for 100 borrowed points");
+  A(g, "ok"); check(g.s.sc[t] === 100 && g.s.debt[t] === 0, "loan + right answer: +100 net, loan closed (no debt)"); }
+{ const g = game(), t = team(g); g.s.sc[t] = 40; g.s.im[t] = 1; land(g, "bet"); A(g, "loan"); A(g, "no");
+  check(g.s.sc[t] === 40 && g.s.debt[t] === 100 && g.s.im[t] === 1, "loan + wrong answer: a debt of 100, points kept, immunity does not cover it (and stays)");
+  check(W.net(g.s, t) === -60, "net score counts the debt (40 − 100)");
+  A(g, "next"); land(g, "p50"); A(g, "next");
+  land(g, "p150"); check(g.s.debt[t] === 0 && g.s.sc[t] === 90, "next gain +150 repays the 100 debt first, 50 is added (40 → 90)");
+  check(g.s.lg.some(e => e[2] === "repay" && e[1] === 100), "the repayment is in the results log for everyone"); A(g, "next"); }
+{ const g = game(), t = team(g); g.s.debt[t] = 100; land(g, "p50");
+  check(g.s.debt[t] === 50 && g.s.sc[t] === 0, "a gain smaller than the debt goes entirely to the debt (100 → 50)"); A(g, "next"); }
+{ const g = game(), t = team(g); g.s.debt[t] = 100; g.s.sc[t] = 30; land(g, "bet");
+  check(!W.moves(g.s).includes("loan") && !A(g, "loan") && g.s.debt[t] === 100, "no new loan before the previous one is repaid (button absent, action refused)");
+  A(g, "alt"); check(g.s.cur.alt === 1 && g.s.cur.v === 200, "alternative question without a bet: +200 if right");
+  A(g, "no"); check(g.s.sc[t] === 30 && g.s.debt[t] === 100, "alternative question wrong: nothing deducted"); }
+{ const g = game(), t = team(g); land(g, "bet"); A(g, "skip"); check(g.s.cur.st === "skipped" && W.moves(g.s).includes("next"), "skip the bet: the turn ends");
+  A(g, "next"); check(g.s.tn[t] === 1 && g.s.sc[t] === 0, "skipped: no points, turn counted"); }
+{ const g = game(), t = team(g); g.s.s2[t] = 1; land(g, "bet"); A(g, "alt"); A(g, "no"); check(g.s.cur.st === "ask" && g.s.cur.retry === 1, "second chance applies to the alternative question"); }
+{ const g = game(), t = team(g); g.s.s2[t] = 1; land(g, "bet"); A(g, "loan"); A(g, "no"); check(g.s.cur.st === "shown" && g.s.debt[t] === 100 && g.s.s2[t] === 1, "second chance does not apply to the loan bet (it is a bet)"); }
+{ const g = game(), t = team(g); land(g, "bet"); const tk = W.tok(g.s); A(g, "loan"); A(g, "no"); const d = g.s.debt[t];
+  check(!W.act(g.s, g.p, "loan", null, tk, g.env) && d === 100, "a repeated loan tap (or a replayed update) cannot add a second loan");
+  const saved = JSON.stringify(g.s), s2 = JSON.parse(saved); check(!W.act(s2, {}, "no", null, W.tok(s2), mkEnv(3)) && s2.debt[t] === 100, "after a reload the debt is the same and cannot be counted twice"); }
+{ const g = game({goal:1500}); g.s.first = 0; g.s.turn = 0; g.s.sc = [1520, 1400]; g.s.debt = [100, 0];
+  toTurnEnd0(g, "m50"); toTurnEnd0(g, "m50"); check(g.s.ph === "play", "goal uses the net score: 1,470 points with a 100 debt has not reached 1,500"); }
+{ const g = game({goal:1500}); g.s.ph = "final"; g.s.fin = {ord:[0, 1], i:1}; g.s.turn = 1; g.s.tn = [10, 9]; g.s.sc = [1600, 1650]; g.s.debt = [0, 100];
+  toTurnEnd0(g, "m50"); check(g.s.ph === "end" && g.s.win === 0 && JSON.stringify(g.s.fs) === "[1600,1500]", "final result = points − unpaid loan: green 1,600 beats orange 1,600 − 100"); }
 
 // ---------- speed challenge (host decides)
 { const g = game(), t = team(g); land(g, "speed"); check(JSON.stringify(W.moves(g.s).filter(m => m[0] === "s" && m !== "spin")) === '["sg","so","sn","sx"]', "speed challenge: the host has exactly 4 choices");
@@ -117,18 +143,30 @@ check(true, "chained extra spins run without errors");
   check(seen === 0, "treasure is locked for the 4 spins after it appeared");
   check(!W.locks(g.s).tre, "after 4 spins the treasure can come up again"); }
 
+function toTurnEnd0(g, k){ land(g, k); A(g, "next"); }
 // ---------- odds: what the wheel shows is what happens
 for (const mode of Object.keys(W.MODES)){
   const g = game({mode}), cnt = {}; const N = 40000;
   for (let i = 0; i < N; i++){ const s = clone(g.s); s.sp = 1000 + i * 10; s.cd = {}; W.act(s, {}, "spin", null, W.tok(s), mkEnv(i * 7 + 1)); cnt[s.seg] = (cnt[s.seg] || 0) + 1; }
-  const L = W.layout(g.s); const worst = Math.max(...L.map(sl => Math.abs((cnt[sl.k] || 0) / N - sl.p) * 100));
-  check(worst < 0.6, `${mode}: landing frequencies match slice sizes (largest gap ${worst.toFixed(2)} points of %)`);
-  const wsum = L.reduce((a, sl) => a + sl.p, 0); check(Math.abs(wsum - 1) < 1e-9 && L.length === 20, `${mode}: 20 cards, slices add up to the full wheel`);
+  const L = W.layout(g.s), od = W.odds(g.s), area = {}; L.forEach(sl => area[sl.k] = (area[sl.k] || 0) + (sl.a1 - sl.a0) / 360);
+  const worst = Math.max(...Object.keys(od).map(k => Math.abs((cnt[k] || 0) / N - od[k]) * 100));
+  check(worst < 0.6, `${mode}: landing frequencies match the published odds (largest gap ${worst.toFixed(2)} points of %)`);
+  const aw = Math.max(...Object.keys(od).map(k => Math.abs(area[k] - od[k])));
+  check(aw < 1e-9 && Object.keys(area).length === 20, `${mode}: each card's total area on the wheel equals its probability exactly (20 cards, ${L.length} slices)`);
+  const cats = L.map(sl => W.CAT[sl.k]); const adj = cats.filter((c, i) => c === cats[(i + 1) % cats.length]).length;
+  const maxDeg = Math.max(...L.map(sl => sl.a1 - sl.a0));
+  check(adj === 0 && maxDeg <= 22, `${mode}: no two neighbouring slices of the same colour family; largest slice ${maxDeg.toFixed(1)}°`);
+  // the slice under the pointer when the wheel stops is always the card that was drawn, and every slice of a card is used
+  let wrong = 0; const hit = {};
+  for (let i = 0; i < 20000; i++){ const s = clone(g.s); s.sp = 2000 + i * 10; s.cd = {}; s.rot = i * 37.3; W.act(s, {}, "spin", null, W.tok(s), mkEnv(i * 13 + 5));
+    const ang = ((360 - (s.rot % 360)) % 360 + 360) % 360, idx = L.findIndex(sl => ang >= sl.a0 && ang < sl.a1); if (L[idx].k !== s.seg) wrong++; hit[idx] = (hit[idx] || 0) + 1; }
+  const spread = Math.max(...L.map((sl, idx) => Math.abs((hit[idx] || 0) / 20000 - sl.p) * 100));
+  check(wrong === 0 && spread < 0.6, `${mode}: in 20,000 spins the pointer always stops on the drawn card; each slice is hit in proportion to its size (gap ${spread.toFixed(2)} %)`);
 }
 { const g = game({off:["box","bet","tre"]}); const L = W.layout(g.s); let seen = 0;
   for (let i = 0; i < 5000; i++){ const s = clone(g.s); W.act(s, {}, "spin", null, W.tok(s), mkEnv(i + 1)); if (["box","bet","tre"].includes(s.seg)) seen++; }
-  check(L.length === 17 && seen === 0, "cards switched off by the host are not on the wheel and never come up"); }
-{ const g = game({off:["q","speed","p50"]}); check(W.layout(g.s).length === 20, "core cards (question, speed, points) cannot be switched off"); }
+  check(new Set(L.map(x => x.k)).size === 17 && !L.some(x => ["box","bet","tre"].includes(x.k)) && seen === 0, "cards switched off by the host are not on the wheel and never come up"); }
+{ const g = game({off:["q","speed","p50"]}); check(new Set(W.layout(g.s).map(x => x.k)).size === 20, "core cards (question, speed, points) cannot be switched off"); }
 
 // ---------- repeated / stale actions (reload, double tap, duplicated updates)
 { const g = game(), t = team(g); land(g, "q"); const tk = W.tok(g.s); A(g, "ok"); const sc = g.s.sc[t];
