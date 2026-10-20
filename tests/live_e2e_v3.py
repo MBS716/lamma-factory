@@ -355,6 +355,9 @@ async def run(pw):
 
 async def main():
     async with async_playwright() as pw: await run(pw)
+    # WebKit reports the Firebase SDK's own "disconnect" beacon (a script request sent while a page unloads) as a page
+    # error when a page is reloaded or closed; it is not from the site's code and nothing is shown to the player
+    R['ignored'] = [e for e in R['errors'] if '.lp?disconn=t' in e]; R['errors'] = [e for e in R['errors'] if '.lp?disconn=t' not in e]
     R['PASS'] = not R.get('exception') and not R['errors'] and all(c.startswith('OK') for c in R['checks']) and len(R['checks']) >= 25
     json.dump(R, open(f'{OUT}/result.json', 'w'), ensure_ascii=False, indent=1); print(json.dumps(R, ensure_ascii=False, indent=1))
     sys.exit(0 if R['PASS'] else 1)
