@@ -30,7 +30,7 @@ const W3 = (() => {
   const MODES = {
     classic:{n:"كلاسيكي", w:{q:22,speed:10,p50:6,p150:6,p250:4,m50:5,m150:4,m250:2,imm:4,box:6,gold:3,bet:4,respin:3,l2:2,sec:3,streak:4,steal:4,quick:4,tre:2,swap:2}},
     hype:{n:"حماسي", w:{q:14,speed:10,p50:5,p150:6,p250:5,m50:5,m150:5,m250:3,imm:5,box:9,gold:4,bet:5,respin:4,l2:2,sec:3,streak:4,steal:4,quick:3,tre:2,swap:2}},
-    legend:{n:"أسطوري", w:{q:12,speed:10,p50:3,p150:5,p250:6,m50:3,m150:5,m250:5,imm:5,box:10,gold:6,bet:7,respin:3,l2:3,sec:2,streak:4,steal:4,quick:3,tre:3,swap:1}},
+    legend:{n:"أسطوري", w:{q:11,speed:10,p50:3,p150:5,p250:6,m50:3,m150:5,m250:5,imm:5,box:10,gold:6,bet:7,respin:3,l2:3,sec:2,streak:4,steal:4,quick:3,tre:3,swap:2}}   /* Oct 20: swap 1 → 2 and question 12 → 11, approved so every slice can carry a readable label */,
   };
   const BOX = [["p",50,20],["p",150,16],["p",250,10],["p",400,4],["m",50,14],["m",150,10],["m",250,6],["imm",0,8],["respin",0,6],["lose",0,6]];
   const GOALS = [1500, 3000, 5000], CAP = {1500:30, 3000:60, 5000:100}, TIMES = [30, 45, 60];
@@ -68,6 +68,17 @@ const W3 = (() => {
         if (sc < bs - 1e-9){ bs = sc; best = c; }
       }
       out.push(best); rem.splice(rem.indexOf(best), 1);
+    }
+    // repair: swap slices while that removes neighbours of the same colour family (or the same card two apart)
+    const cost = arr => { let c = 0; for (let i = 0; i < arr.length; i++){ const n1 = arr[(i + 1) % arr.length], n2 = arr[(i + 2) % arr.length];
+      if (CAT[arr[i].k] === CAT[n1.k]) c += 100; if (arr[i].k === n2.k) c += 10; if (big(arr[i]) === big(n1)) c += 1; } return c; };
+    for (let pass = 0, cur = cost(out); pass < 40 && cur >= 100; pass++){
+      let improved = false;
+      for (let i = 0; i < out.length && !improved; i++) for (let j = i + 1; j < out.length && !improved; j++){
+        [out[i], out[j]] = [out[j], out[i]]; const c = cost(out);
+        if (c < cur){ cur = c; improved = true; } else [out[i], out[j]] = [out[j], out[i]];
+      }
+      if (!improved) break;
     }
     let a = 0; const L = out.map(x => { const d = x.w / tot * 360, sl = {k:x.k, a0:a, a1:a + d, p:x.w / tot, i:x.i, n:x.n}; a += d; return sl; });
     layoutCache.set(key, L); return L;

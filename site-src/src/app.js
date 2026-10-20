@@ -926,10 +926,39 @@ const w3motion = () => { const v = lsGet("lm-w-mot"); return v === "1" ? true : 
 function w3applyMotion(){ document.documentElement.classList.toggle("lowmo", !w3motion()); }
 w3applyMotion();
 
-function w3wheelCanvas(s, locks, hi){
+/* Label of one wheel slice. Radial text must fit the slice's width along its whole length (the slice narrows toward
+   the centre), so for each candidate (full name, then short name) the largest font that fits is found by measuring the
+   real glyphs. Wide slices: icon at the rim, text inside it. Narrow slices: text at the rim (widest part), icon inside. */
+const W3LONG = {q:"سؤال", speed:"تحدي السرعة", gold:"السؤال الذهبي", bet:"الرهان", streak:"سلسلة الانتصارات", quick:"الجولة السريعة", steal:"سرقة النقاط",
+  imm:"حصانة", sec:"فرصة ثانية", box:"صندوق الحظ", respin:"إعادة تدوير", l2:"حظك مرتين", tre:"الكنز", swap:"تبديل المزايا"};
+function w3label(x, k, deg){
+  const R_OUT = 298, R_IN = 70, th = deg * Math.PI / 180, wid = r => 2 * r * Math.sin(th / 2), num = k[0] === "p" || k[0] === "m";
+  const cands = num ? [(k[0] === "p" ? "+" : "−") + k.slice(1)] : [W3LONG[k], W3SHORT[k]].filter((t, i, a) => t && a.indexOf(t) === i);
+  const narrow = deg < 12;
+  const iconSize = r => Math.max(12, Math.min(40, wid(r) * 0.72));
+  let best = null;
+  for (const txt of cands){
+    x.font = `100px Lalezar, Tahoma, sans-serif`; x.direction = "rtl";
+    const m = x.measureText(num ? "\u2066" + txt + "\u2069" : txt), L100 = m.width, H100 = (m.actualBoundingBoxAscent || 70) + (m.actualBoundingBoxDescent || 30);
+    for (let f = 30; f >= 7; f -= 0.5){
+      const L = L100 * f / 100, H = H100 * f / 100;
+      let r0, rEnd, icon;
+      if (!narrow){ const is = iconSize(R_OUT - 22); icon = {r:R_OUT - 4 - is / 2, size:is}; r0 = R_OUT - is - 12; rEnd = r0 - L; }
+      else { r0 = R_OUT - 4; rEnd = r0 - L; const ir = rEnd - 6, is = Math.min(iconSize(ir - 8), 28); icon = {r:ir - is / 2, size:is}; if (icon.r - is / 2 < R_IN) icon = null; }
+      if (rEnd < R_IN || H > wid(rEnd) * 0.84) continue;
+      const cand = {txt, f, r0, dy:H100 * f / 100 * 0.06, num, icon};
+      // the full name when it is about as large as the short one (or comfortably large); otherwise the bigger, shorter one
+      if (!best || (txt === cands[0] ? true : f > best.f * 1.04 && best.f < 26)) best = cand;
+      break;
+    }
+  }
+  return best || {txt:cands[cands.length - 1], f:7, r0:R_OUT - 4, dy:0, num, icon:null};
+}
+function w3wheelCanvas(s, locks, hi, rest){
   const cs = getComputedStyle(document.documentElement), col = n => cs.getPropertyValue(n).trim();
   const c = document.createElement("canvas"); c.width = c.height = 640;
   const x = c.getContext("2d"), R = 306, cx = 320, rad = d => (d - 90) * Math.PI / 180;
+  window.__w3lab = [];
   W3.layout(s).forEach((sl, idx) => {
     const a0 = rad(sl.a0), a1 = rad(sl.a1), mid = (a0 + a1) / 2, deg = sl.a1 - sl.a0, lk = locks[sl.k];
     x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath();
@@ -938,16 +967,17 @@ function w3wheelCanvas(s, locks, hi){
     x.fillStyle = base; try { x.fillStyle = g; } catch(e){}
     x.fill(); x.lineWidth = 3; x.strokeStyle = col("--bg"); x.stroke();
     if (W3.C[sl.k].rare){ x.save(); x.clip(); x.strokeStyle = "rgba(255,255,255,.55)"; x.lineWidth = 2; x.setLineDash([3, 6]); x.beginPath(); x.arc(cx, cx, R - 14, a0, a1); x.stroke(); x.restore(); }
-    // icon near the rim, label along the radius
-    const ir = R - 42, sz = Math.max(18, Math.min(42, deg * 2.6)), ixp = cx + Math.cos(mid) * ir, iyp = cx + Math.sin(mid) * ir;
-    x.save(); x.translate(ixp, iyp); x.rotate(mid + Math.PI / 2); x.scale(sz / 24, sz / 24); x.translate(-12, -12);
-    x.strokeStyle = col("--on-color"); x.lineWidth = 2.2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(wicon(sl.k))); x.restore();
-    if (deg >= 13){   // every label runs the same way along its spoke, from the rim toward the centre (like a real wheel)
-      const fs = Math.max(16, Math.min(30, deg * 1.5)), txt = sl.k[0] === "p" ? "+" + sl.k.slice(1) : sl.k[0] === "m" ? "−" + sl.k.slice(1) : W3SHORT[sl.k];
-      x.save(); x.translate(cx, cx); x.rotate(mid); x.fillStyle = col("--on-color"); x.textBaseline = "middle";
-      x.font = `${fs}px Lalezar, Tahoma, sans-serif`; x.direction = "rtl"; x.textAlign = "right";
-      x.fillText(sl.k[0] === "p" || sl.k[0] === "m" ? "\u2066" + txt + "\u2069" : txt, R - 72, 2); x.restore();
-    }
+    // every slice carries its icon AND its name or value, sized to fit inside the slice (see w3label)
+    const lab = w3label(x, sl.k, deg);
+    // where this slice sits on the screen once the wheel is at rest: labels on the left half are turned so they read upright
+    const scr = mid + (rest || 0) * Math.PI / 180, flip = Math.cos(scr) < -1e-6;   // a straight-down label (cos ≈ 0) is vertical: no flip
+    const drawIcon = (r, size) => { x.save(); x.translate(cx + Math.cos(mid) * r, cx + Math.sin(mid) * r); x.rotate(mid + Math.PI / 2 + (flip ? Math.PI : 0)); x.scale(size / 24, size / 24); x.translate(-12, -12);
+      x.strokeStyle = col("--on-color"); x.lineWidth = 2.2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(wicon(sl.k))); x.restore(); };
+    if (lab.icon) drawIcon(lab.icon.r, lab.icon.size);
+    x.save(); x.translate(cx, cx); x.rotate(mid + (flip ? Math.PI : 0)); x.fillStyle = col("--on-color"); x.textBaseline = "middle";
+    x.font = `${lab.f}px Lalezar, Tahoma, sans-serif`; x.direction = "rtl"; x.textAlign = flip ? "left" : "right";
+    x.fillText(lab.num ? "\u2066" + lab.txt + "\u2069" : lab.txt, flip ? -lab.r0 : lab.r0, flip ? -lab.dy : lab.dy); x.restore();
+    (window.__w3lab = window.__w3lab || []).push({k:sl.k, txt:lab.txt, f:lab.f, deg, icon:lab.icon ? lab.icon.size : 0, up:Math.cos(scr + (flip ? Math.PI : 0)) >= -1e-6});
     if (lk){
       x.save(); x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath(); x.fillStyle = "rgba(10,14,36,.62)"; x.fill();
       x.translate(cx + Math.cos(mid) * (R - 110), cx + Math.sin(mid) * (R - 110)); x.rotate(mid + Math.PI / 2); x.scale(.9, .9); x.translate(-12, -12);
@@ -970,11 +1000,13 @@ function w3mount(holder, s, st){
   // after the wheel stops, the slice under the pointer lights up
   let hi = -1;
   if (s.stage !== "rolling" && s.seg && s.sp){ const ang = ((360 - (s.rot % 360)) % 360 + 360) % 360; hi = W3.layout(s).findIndex(sl => ang >= sl.a0 && ang < sl.a1); }
-  const key = s.o.mode + "|" + (s.o.off || []).join() + "|" + JSON.stringify(L) + "|" + hi;
+  const fontOk = !document.fonts || !document.fonts.check || document.fonts.check('30px "Lalezar"');
+  const rest = ((Math.round(s.rot) % 360) + 360) % 360;      // labels are laid out for the angle the wheel rests at
+  const key = s.o.mode + "|" + (s.o.off || []).join() + "|" + JSON.stringify(L) + "|" + hi + "|" + fontOk + "|" + rest;
   st.locks = L;
   let c = box.querySelector("canvas");
-  const draw = () => { const n = w3wheelCanvas(s, L, hi); n.style.transform = `rotate(${s.rot}deg)`; if (c) c.replaceWith(n); else box.querySelector(".wclip").appendChild(n); c = n; st.key = key; };
-  if (st.key !== key && s.stage !== "rolling") (document.fonts && document.fonts.load ? document.fonts.load('30px "Lalezar"').catch(() => {}) : Promise.resolve()).then(() => { if (box.isConnected && st.key !== key) draw(); });
+  const draw = () => { const n = w3wheelCanvas(s, L, hi, rest); n.style.transform = `rotate(${s.rot}deg)`; if (c) c.replaceWith(n); else box.querySelector(".wclip").appendChild(n); c = n; st.key = key; };
+  if (st.key !== key && s.stage !== "rolling") (document.fonts && document.fonts.load ? document.fonts.load('30px "Lalezar"').catch(() => {}) : Promise.resolve()).then(() => { if (box.isConnected && st.key !== key) draw(); if (!fontOk && box.isConnected) setTimeout(() => { if (box.isConnected && H) renderHost(); else if (box.isConnected && P) playerRender(); }, 50); });
   if (!c){ draw(); }
   if (st.sp !== s.sp){ box.classList.remove("spin"); void box.offsetWidth; box.classList.add("spin"); st.sp = s.sp; w3beep("spin"); }
   box.classList.toggle("rolling", s.stage === "rolling");
