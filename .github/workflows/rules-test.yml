@@ -1,0 +1,33 @@
+# Runs the proposed database rules on the official Firebase emulator. Nothing is sent to the real database.
+name: rules-test
+on:
+  push:
+    branches: [main]
+    paths: ["firebase/**", "tests/rules/**", ".github/workflows/rules-test.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
+      - name: rules on the emulator
+        run: |
+          echo '{"emulators":{"database":{"port":9000}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
+          npx firebase emulators:exec --only database --project demo-lamma "node tests/rules/rules.test.mjs" 2>&1 | tail -60
+          test -f reports/rules-test/result.txt && ! grep -q '^FAIL' reports/rules-test/result.txt
+      - name: save
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/rules-test || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi
+          git commit -q -m "rules emulator test" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done

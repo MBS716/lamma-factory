@@ -1,0 +1,45 @@
+{
+  "rules": {
+    "rooms": {
+      "$room": {
+        ".read": true,
+        "$peer": {
+          ".write": "!data.exists() || !data.child('u').exists() || (auth != null && data.child('u').val() === auth.uid)",
+          ".validate": "newData.hasChildren(['j', 't']) && newData.child('j').isString() && newData.child('j').val().length <= 12000 && (!newData.child('u').exists() || (auth != null && newData.child('u').val() === auth.uid))"
+        }
+      }
+    },
+    "hosts": {
+      "$room": {
+        ".read": "auth != null",
+        ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || data.child('t').val() < now - 10800000)",
+        ".validate": "newData.hasChildren(['u', 't']) && newData.child('u').val() === auth.uid && newData.child('t').isNumber() && newData.child('t').val() <= now && newData.child('t').val() > now - 60000"
+      }
+    },
+    "games": {
+      "$room": {
+        ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
+        ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
+        ".validate": "!newData.exists() || (newData.child('s').isString() && newData.child('s').val().length <= 20000)"
+      }
+    },
+    "gpriv": {
+      "$room": {
+        ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
+        ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
+        ".validate": "!newData.exists() || (newData.child('pv').isString() && newData.child('pv').val().length <= 120000)"
+      }
+    },
+    "spotseen": {
+      "$dev": {
+        ".read": true,
+        "$id": { ".write": true, ".validate": "newData.isNumber()" }
+      }
+    },
+    "spotreports": {
+      "$id": {
+        "$dev": { ".write": true, ".validate": "newData.isNumber()" }
+      }
+    }
+  }
+}
