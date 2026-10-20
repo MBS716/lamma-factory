@@ -18,6 +18,10 @@ async def visible(pg, text):
 
 async def start(host, game, opts=None):
     await host.goto(URL + f'?t={int(time.time())}', wait_until='load')
+    try: await host.wait_for_function('!window.__resuming', timeout=30000)
+    except Exception: pass
+    await host.wait_for_timeout(500)
+    if await host.is_visible('#endBtn'): await host.click('#endBtn'); await host.wait_for_timeout(800)   # back in an unfinished game: end it first
     await host.click(f'.gact [data-game={game}]'); await host.wait_for_selector('.code', timeout=30000)
     for k, v in (opts or {}).items(): await host.click(f'[data-opt={k}][data-val="{v}"]')
     return (await host.inner_text('.code')).strip().replace(' ', '')
@@ -73,7 +77,7 @@ async def wheel_v3(host, ios, android):
     await ios.screenshot(path=f'{OUT}/wheel3_iphone_box.png')
     # host reloads the page while the box is open: same result, same room
     before = await host.evaluate('JSON.stringify([H.s.sc, H.s.cur, H.s.tn])')
-    await host.reload(); await host.wait_for_selector('#resumeGo', timeout=20000); await host.click('#resumeGo')
+    await host.reload(); await host.wait_for_function('!window.__resuming', timeout=30000)
     await host.wait_for_function(f'H && H.code === "{code}" && H.s.ph === "play"', timeout=40000); await host.wait_for_timeout(1500)
     check(await host.evaluate('JSON.stringify([H.s.sc, H.s.cur, H.s.tn])') == before, 'wheel v3: host reload during the box: same room, same result, nothing applied twice')
     await btn('again' if r.get('r') == 'respin' else 'next')
@@ -90,10 +94,10 @@ async def wheel_v3(host, ios, android):
     await btn('next'); await force('p50'); await btn('next'); await force('p150')
     check(await host.evaluate(f'H.s.debt[{t}] === 0 && H.s.sc[{t}] === 90') and await both('سداد السلفة'), 'wheel v3: the next gain repays the debt first (40 + 150 − 100 = 90), shown on the phones'); await btn('next')
     # host closes the tab and comes back from a new tab
-    before = await host.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])'); hctx = host.context
+    before = await host.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])'); hctx = getattr(host, '_lctx', None) or host.context
     await host.wait_for_timeout(2500); await host.close()
     check(await both('المقدّم غير متصل مؤقتًا', 30000), 'wheel v3: host tab closed, both phones stay in the room and see «host temporarily away»')
-    host2 = await hctx.new_page(); host2.on('pageerror', lambda e: R['errors'].append(f'host (new tab): {e}')); await host2.goto(URL, wait_until='load'); await host2.wait_for_selector('#resumeGo', timeout=20000); await host2.click('#resumeGo')
+    host2 = await hctx.new_page(); host2.on('pageerror', lambda e: R['errors'].append(f'host (new tab): {e}')); await host2.goto(URL, wait_until='load'); await host2.wait_for_function('!window.__resuming', timeout=30000)
     await host2.wait_for_function(f'H && H.code === "{code}" && H.s.ph === "play"', timeout=40000); await host2.wait_for_timeout(1500)
     check(await host2.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])') == before, f'wheel v3: host back from a new tab: same room and match ({"database copy" if R["wheel_cloud"] else "device copy: rules not updated yet"})')
     check(await both('الدور على', 30000), 'wheel v3: both phones back in the match without re-joining')
@@ -111,6 +115,52 @@ async def wheel_v3(host, ios, android):
     await host2.click('#endBtn'); await host2.wait_for_timeout(1500)
     return host2
 
+async def sessions_real(host, ios, android, newctx):
+    """Seats on real Firebase: a phone reloads / closes its browser and comes back to the same seat; another device cannot
+    take a used name; the host closes its tab and comes back to the same room."""
+    code = await start(host, 'letters', {'m': 'q20', 't': 30})
+    await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
+    names = lambda: host.evaluate('hostPlayers().map(p => pname(p) + (p.away ? " (away)" : "")).sort()')
+    link = await host.evaluate('joinLink(H.code)'); b = await host.evaluate('BUILD')
+    check(('?v=' + b) in link and link.endswith('#' + code), f'sessions: invite link carries the version ({link[-30:]})')
+    vj = await host.evaluate('fetch("version.json?t=" + Date.now(), {cache:"no-store"}).then(r => r.json()).catch(() => ({}))')
+    check(vj.get('b') == b, f'sessions: version.json matches the page ({vj.get("b")} = {b})')
+    await host.click('[data-h=start]'); await host.wait_for_function('H.s.st === "pick"', timeout=20000)
+    pid = await ios.evaluate('P.pid')
+    await ios.reload(); await ios.wait_for_function('P && P.joined', timeout=30000)
+    check(await ios.evaluate('P.pid') == pid and await ios.evaluate('P.name') == 'آيفون' and await ios.locator('#pName').count() == 0, 'sessions: iPhone reloads, back in the same seat with no form')
+    actx = getattr(android, '_lctx', None) or android.context; await android.close(); await host.wait_for_timeout(3000)
+    n = await names(); check(n == sorted(['آيفون', 'أندرويد (away)']), f'sessions: Android browser closed, its seat is kept as away {n}')
+    android = await actx.new_page(); android.on('pageerror', lambda e: R['errors'].append(f'Android (sessions): {e}'))
+    await android.goto(URL, wait_until='load'); await android.wait_for_function('P && P.joined', timeout=30000)
+    check(await android.evaluate('P.name') == 'أندرويد' and await android.evaluate('P.team') == 'o', 'sessions: Android opens the site again (no code), back automatically with its name and team')
+    await host.wait_for_timeout(2000); n = await names(); check(n == sorted(['آيفون', 'أندرويد']), f'sessions: still two players, none twice {n}')
+    other = await (await newctx()).new_page(); await other.goto(URL + '#' + code, wait_until='load'); await other.wait_for_selector('#pName', timeout=30000)
+    await other.fill('#pName', 'آيفون'); await other.click('[data-team=o]'); await other.click('[data-act=enter]'); await other.wait_for_timeout(2500)
+    err = await other.inner_text('#pErr') if await other.locator('#pErr').count() else ''; n = await names()
+    check('مستخدم' in err and n == sorted(['آيفون', 'أندرويد']), f'sessions: another device cannot take a name already in the game ({err[:40]})')
+    await other.close()
+    await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "ask"', timeout=20000)
+    before = await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])'); hctx = getattr(host, '_lctx', None) or host.context
+    await host.close()
+    ok = True
+    try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("غير متصل مؤقتًا")', timeout=30000)
+    except Exception: ok = False
+    check(ok, 'sessions: host closed the tab, the phones stay and show "host temporarily away"')
+    host = await hctx.new_page(); host.on('pageerror', lambda e: R['errors'].append(f'host (sessions): {e}'))
+    await host.goto(URL, wait_until='load'); await host.wait_for_function('!window.__resuming && H && H.code', timeout=40000); await host.wait_for_timeout(1500)
+    check(await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])') == before, 'sessions: host opens the site again, back in the same room and question, no new code')
+    ok = True
+    try: await android.wait_for_function('!document.querySelector("#playerMain").innerText.includes("غير متصل مؤقتًا")', timeout=30000)
+    except Exception: ok = False
+    check(ok, 'sessions: phones carry on without re-joining')
+    await host.click('#endBtn'); await host.wait_for_timeout(1500)
+    ok = True
+    try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("انتهت")', timeout=30000)
+    except Exception: ok = False
+    check(ok, 'sessions: host ends the game, phones are told')
+    return host, android
+
 async def run(pw):
     if os.environ.get('FAKEFB'):     # local dry run: one Chromium context shared by all pages so the in-browser Firebase stand-in can relay
         cb = wb = await pw.chromium.launch(); shared = await cb.new_context(has_touch=True); fake = open(os.environ['FAKEFB']).read()
@@ -120,10 +170,16 @@ async def run(pw):
             elif 'localhost' in u: await r.continue_()
             else: await r.fulfill(body='', content_type='application/javascript')
         await shared.route('**/*', route)
-        class Ctx:
-            def __init__(self, vp): self.vp = vp
+        DEV = ("(() => { const dev = '__DEV__', P = Storage.prototype, g = P.getItem, st = P.setItem, rm = P.removeItem;"
+               " const k = (self, key) => self === window.localStorage && !String(key).startsWith('fake') ? 'dev:' + dev + ':' + key : key;"
+               " P.getItem = function(key){ return g.call(this, k(this, key)); }; P.setItem = function(key, v){ return st.call(this, k(this, key), v); };"
+               " P.removeItem = function(key){ return rm.call(this, k(this, key)); }; })();")
+        class Ctx:     # one stand-in "browser" per context: its pages share their own localStorage, like real contexts
+            n = 0
+            def __init__(self, vp): self.vp = vp; Ctx.n += 1; self.dev = f'd{Ctx.n}'
             async def new_page(self):
-                pg = await shared.new_page(); await pg.set_viewport_size(self.vp); return pg
+                pg = await shared.new_page(); await pg.add_init_script(DEV.replace('__DEV__', self.dev)); await pg.set_viewport_size(self.vp)
+                pg._lctx = self; return pg
         async def ctx(**kw): return Ctx(kw.get('viewport', {'width': 1280, 'height': 900}))
         cb.new_context = ctx
     else:
@@ -185,6 +241,11 @@ async def run(pw):
         check(True, 'letters: winner screen on host, iPhone and Android')
         await ios.screenshot(path=f'{OUT}/letters_iphone_victory.png', full_page=True)
 
+        # ---------------- player and host seats (when the site has them)
+        if await host.evaluate('typeof seatGet === "function"'):
+            async def newctx(): return await cb.new_context(viewport=pw.devices['Pixel 7']['viewport']) if os.environ.get('FAKEFB') else await cb.new_context(**pw.devices['Pixel 7'])
+            host, android = await sessions_real(host, ios, android, newctx)
+            for pg in (ios, android): await pg.goto(URL, wait_until='load')
         # ---------------- wheel (v3 with cards when the site has it, otherwise the older wheel)
         if await host.evaluate('typeof W3 !== "undefined"'):
             host = await wheel_v3(host, ios, android)

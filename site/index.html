@@ -585,6 +585,13 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .w3desc{margin:-4px 0 0;color:var(--muted);font-size:.95rem}
 .w3list{margin:0;padding-inline-start:1.2em;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
 @media (max-width:560px){.panel.w3wheel{padding:8px}}
+
+/* ===== sessions (v3.1) ===== */
+.chip.away{opacity:.55;border-style:dashed}
+.note.ok{border-color:var(--green);color:var(--green)}
+.btn.warnbtn{border-color:var(--bad);color:var(--bad)}
+.updbar{margin:8px 0 0;padding:8px 14px;border-radius:12px;background:color-mix(in srgb,var(--gold) 16%,var(--bg2));border:1px solid var(--gold);color:var(--ink);font-size:.92rem}
+.previewbar{margin:8px 0 0;padding:6px 12px;border-radius:12px;border:1px dashed var(--orange);color:var(--orange);font-size:.9rem;text-align:center}
 </style>
 </head>
 <body>
@@ -596,6 +603,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
     </div>
     <div class="conn" id="conn"><span class="dot" id="connDot"></span><span id="connTxt">جارٍ فحص الاتصال المباشر…</span></div>
   </header>
+  <div class="updbar" id="updBar" hidden></div>
 
   <section id="home">
     <div class="resume" id="resume" hidden></div>
@@ -652,7 +660,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.0 · 2026-10-20</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.1-sessions · 2026-10-20</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1639,40 +1647,65 @@ const SCENES = ["الصحراء","البحر","المدينة ليلًا","ال�
 const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "authDomain": "lamma-b3804.firebaseapp.com", "databaseURL": "https://lamma-b3804-default-rtdb.europe-west1.firebasedatabase.app", "projectId": "lamma-b3804", "storageBucket": "lamma-b3804.firebasestorage.app", "messagingSenderId": "75949188252", "appId": "1:75949188252:web:f2e58971af02071b8a7959"};
 /* Rooms of this version live apart from the rooms of the current public site, so a phone that opens the other
    version with the same code finds no game instead of a game it cannot read. */
-const APP_V = 3, ROOM_PREFIX = "lm3-";
+/* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
+   A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
+   one and a host on the other can never meet half-way: the phone is told where the game really is. */
+const BUILD = "876139dcad", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
+const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
+const TAB_ID = Math.random().toString(36).slice(2, 10);
+/* one clock for everybody: the database server's time (Firebase tells each device its offset). Deadlines are stored in
+   this time, so a countdown keeps running on the phones even while the host's browser is asleep in the background. */
+let SRV_OFF = 0;
+const srvNow = () => Date.now() + SRV_OFF;
+const newId = () => { try { return [...crypto.getRandomValues(new Uint8Array(12))].map(b => b.toString(16).padStart(2, "0")).join(""); } catch(e){ return (Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)).slice(0, 24); } };
+const SEAT_H = 6 * 3600e3;
 const BASE_URL = "";
 let ROOM = null, NR = null, H = null, P = null, connState = "checking";
+/* A room is rooms/<prefix><code>/<seat id>. The seat id is fixed for a player (or host) in that room and kept on the
+   device, so coming back writes the same seat again: nobody is listed twice. Losing the connection (another app, a
+   closed browser, no network) marks the seat "away" instead of deleting it; only «خروج» / «إنهاء» removes it. */
 function makeFirebaseRoom(db){
-  const me = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  try { db.ref(".info/serverTimeOffset").on("value", sn => { SRV_OFF = +sn.val() || 0; }); } catch(e){}
   return {
-    async join(name){
+    async join(name, opt){
+      opt = opt || {};
       await Promise.race([authReady, sleep(6000)]);
+      const me = opt.id || newId();
       const ref = db.ref("rooms/" + name), mine = ref.child(me), ci = db.ref(".info/connected");
       let local = {}, peersArr = Object.freeze([]), handlers = [], conn = false, left = false;
-      const write = () => mine.set({j:JSON.stringify(local), t:firebase.database.ServerValue.TIMESTAMP, ...(AUTH_UID ? {u:AUTH_UID} : {})});
+      const TS = () => firebase.database.ServerValue.TIMESTAMP, uid = () => AUTH_UID ? {u:AUTH_UID} : {};
+      const arm = () => { try { if (opt.keep) mine.onDisconnect().set({j:JSON.stringify({...local, away:1}), t:TS(), ...uid()}); else mine.onDisconnect().remove(); } catch(e){} };
+      const write = () => { const pr = mine.set({j:JSON.stringify(local), t:TS(), ...uid()}); arm(); return pr; };
       const build = val => {
         const prev = new Map(peersArr.map(p => [p.peer, p])), now = Date.now();
         peersArr = Object.freeze(Object.entries(val || {}).map(([id, v]) => {
           let pres = {}; try { pres = JSON.parse((v && v.j) || "{}") || {}; } catch(e){}
           const old = prev.get(id);
-          return old && old.raw === (v && v.j) ? old : {peer:id, presence:pres, raw:v && v.j, sameTab:id === me, isMe:id === me, updatedAt:now};
+          return old && old.raw === (v && v.j) && old.ts === (v && v.t) ? old : {peer:id, presence:pres, raw:v && v.j, ts:v && v.t, away:!!pres.away, sameTab:id === me, isMe:id === me, updatedAt:now};
         }));
         handlers.slice().forEach(h => { try { h({peers:peersArr}); } catch(e){ console.error(e); } });
       };
       const cb = snap => build(snap.val());
-      const ccb = s => { const was = conn; conn = !!s.val(); if (conn && !left){ mine.onDisconnect().remove(); write(); } if (was !== conn) setTimeout(() => window.dispatchEvent(new Event("lm-conn")), 0); };
-      mine.onDisconnect().remove();
+      const ccb = sn => { const was = conn; conn = !!sn.val(); if (conn && !left) write(); if (was !== conn) setTimeout(() => window.dispatchEvent(new Event("lm-conn")), 0); };
+      arm();
       await Promise.race([write(), sleep(25000).then(() => { throw new Error("timeout"); })]);   // slow mobile networks need longer than 10 s
       ref.on("value", cb); ci.on("value", ccb);
       return {
-        name,
+        name, id:me,
         presence(patch){ for (const [k, v] of Object.entries(patch)){ if (v === null) delete local[k]; else local[k] = v; } return left ? Promise.resolve() : write(); },
         peers: () => peersArr,
         onPeers(h){ handlers.push(h); setTimeout(() => h({peers:peersArr}), 0); return () => { handlers = handlers.filter(x => x !== h); }; },
         connected: () => conn,
+        // stop using the seat in this tab without touching it (another tab of this device took it over)
+        async detach(){ if (left) return; left = true; ref.off("value", cb); ci.off("value", ccb); handlers = []; try { await mine.onDisconnect().cancel(); } catch(e){} },
+        // remove a stale seat of somebody else (only possible where the database rules allow it)
+        drop(id){ try { return ref.child(id).remove().catch(() => {}); } catch(e){ return Promise.resolve(); } },
         async leave(){ if (left) return; left = true; ref.off("value", cb); ci.off("value", ccb); handlers = []; try { await mine.onDisconnect().cancel(); } catch(e){} await mine.remove(); },
       };
     },
+    // look into a room without joining it (used to recognise games made by another version)
+    async peek(name){ try { const sn = await Promise.race([db.ref("rooms/" + name).once("value"), sleep(6000).then(() => null)]); return sn ? sn.val() : null; } catch(e){ return null; } },
   };
 }
 async function getClaude(){ for (let i = 0; i < 40; i++){ if (window.claude && window.claude.use) return window.claude; await sleep(100); } return null; }
@@ -1703,9 +1736,26 @@ function updateConn(){
 }
 const peerKey = peer => "p_" + String(peer).replace(/[^A-Za-z0-9_-]/g, "").slice(0, 40);
 const pname = p => clean(p.presence && p.presence.n) || "لاعب";
-function hostPlayers(){ return NR ? NR.peers().filter(p => !p.sameTab && p.presence && p.presence.r === "p") : []; }
+// players of this game: seats in the room that joined this host session (old games that used the same code are ignored)
+function sessionPlayers(){ return NR && H ? NR.peers().filter(p => !p.sameTab && p.presence && p.presence.r === "p" && (!p.presence.hs || p.presence.hs === H.hs) && !(p.away && srvNow() - (+p.ts || 0) > SEAT_H)) : []; }
+function hostPlayers(){ const dup = new Set((H && H.priv.dup) || []); return sessionPlayers().filter(p => !dup.has(p.peer)); }
+const activePlayers = list => list.filter(p => !p.away);
+const normName = n => clean(n || "").replace(/\s+/g, " ").trim().toLowerCase().replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي");
+// one seat per name: a second device using a name already taken in this game is refused (the first seat keeps it)
+function updateDup(){
+  const by = new Map(), dup = [];
+  for (const p of sessionPlayers().slice().sort((a, b) => (+a.presence.jt || +a.ts || 0) - (+b.presence.jt || +b.ts || 0) || (a.peer < b.peer ? -1 : 1))){
+    const k = normName(p.presence.n); if (!k) continue;
+    if (by.has(k)) dup.push(p.peer); else by.set(k, p.peer);
+  }
+  const was = JSON.stringify(H.priv.dup || []), now = JSON.stringify(dup.sort());
+  H.priv.dup = dup; return was !== now;
+}
 function myPeer(){ const me = NR && NR.peers().find(p => p.sameTab); return me ? me.peer : ""; }
-const joinLink = code => (BASE_URL || (location.protocol.startsWith("http") ? location.origin + location.pathname : "")) + "#" + code;
+/* invite links and QR codes: on the official site they always point to the official address, with the version in the
+   address so a phone that still has an older copy in its cache gets the same version as the host */
+const joinLink = code => BASE_URL ? BASE_URL + "#" + code
+  : location.protocol.startsWith("http") ? (SITE_URL && !PREVIEW && (location.origin + location.pathname).startsWith(SITE_URL.replace(/\/$/, "")) ? SITE_URL : location.origin + location.pathname) + "?v=" + encodeURIComponent(BUILD) + "#" + code : "";
 
 /* ================= GAMES REGISTRY ================= */
 const LV3 = [[0,"سهل"],[1,"متوسط"],[2,"صعب"]];
@@ -1803,10 +1853,11 @@ function show(v){ for (const id of ["home","host","player"]) $("#" + id).hidden 
 
 /* ================= HOST ================= */
 async function hostStart(g){
+  resumeTok = null; window.__resuming = false;
   dropSaved(); { const r = $("#resume"); if (r) r.hidden = true; }
   const o = {}; for (const op of GAMES[g].opts) o[op.key] = op.def;
   if (g === "puzzle" && PHOTOS_OK === false) o.src = "draw";
-  H = {g, code:null, s:{...MOD[g].init(), o, ph:"lobby"}, priv:{}};
+  H = {g, code:null, s:{...MOD[g].init(), o, ph:"lobby"}, priv:{}, hs:newId(), hid:newId(), c:0};
   for (const id of ["#hostMain","#hostBar"]){ $(id).innerHTML = ""; $(id).dataset.k = ""; }
   show("host"); renderHost();
   await roomReady;
@@ -1820,7 +1871,7 @@ const FS = {
   async set(path, v){ const db = FS.db(); if (!db || !AUTH_UID) return false; try { await Promise.race([db.ref(path).set(v), sleep(8000).then(() => { throw new Error("timeout"); })]); return true; } catch(e){ return false; } },
   async del(path){ const db = FS.db(); if (!db || !AUTH_UID) return; try { await db.ref(path).remove(); } catch(e){} },
 };
-const cloudGame = g => !!(MOD[g] && MOD[g].cloudResume);
+const cloudGame = g => !!MOD[g];      // every game resumes after the host closes the tab (same room, same state)
 // a code whose host stepped away (less than 3 hours ago) is kept for that host
 async function codeFree(code, prefer){
   if (!cloudGame(H.g)) return true;
@@ -1833,23 +1884,29 @@ async function claimCode(prefer){
     const code = k === 0 && prefer ? prefer : String(1000 + Math.floor(Math.random() * 9000));
     if (!(await codeFree(code, prefer)) && k < 3) continue;
     let nr;
-    try { nr = await ROOM.join(ROOM_PREFIX + code); } catch(e){ console.error(e); if (H) H.failed = true; return; }
-    try { await nr.presence({r:"h", v:APP_V, g:H.g, s:H.s}); } catch(e){}
+    try { nr = await ROOM.join(ROOM_PREFIX + code, {id:H.hid, keep:true}); } catch(e){ console.error(e); if (H) H.failed = true; return; }
+    if (!H.c) H.c = srvNow();
+    try { await nr.presence(hostPresence()); } catch(e){}
     await sleep(1300);
-    const other = () => nr.peers().some(p => !p.sameTab && p.presence && p.presence.r === "h");
+    // another host in this room: an active one, or one who stepped away less than 3 hours ago, keeps the code
+    const live = p => !p.sameTab && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H);
+    const other = () => nr.peers().some(live);
+    if (!other()) nr.peers().filter(p => !p.sameTab && srvNow() - (+p.ts || 0) > SEAT_H).forEach(p => nr.drop(p.peer));   // tidy seats left from old games
     if (other() && k === 0 && prefer) for (let w = 0; w < 8 && other(); w++) await sleep(500);   // our old tab may take a moment to leave
     if (other()){ try { await nr.leave(); } catch(e){} continue; }
     if (!H){ try { await nr.leave(); } catch(e){} return; }
-    NR = nr; H.code = code;
+    NR = nr; H.code = code; claimTab("h:" + code + ":" + H.hid);
     if (cloudGame(H.g)) H.cloud = await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP});
-    NR.onPeers(() => { if (H && MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
+    NR.onPeers(() => { if (!H) return; if (updateDup()) pushHost(); if (MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
+    saveHost();                // the room can be found again even if the tab is closed right away
     return;
   }
 }
+function hostPresence(){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; return {r:"h", v:APP_V, b:BUILD, g:H.g, s, hs:H.hs, c:H.c || 0, dup:H.priv.dup || []}; }
 function pushHost(){
   if (!H) return;
   saveHost();
-  if (NR){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; NR.presence({r:"h", v:APP_V, g:H.g, s}).catch(() => {}); }
+  if (NR) NR.presence(hostPresence()).catch(() => {});
   renderHost();
 }
 /* ---- the host's game survives a page reload or a dropped connection: the state is kept in this tab
@@ -1858,7 +1915,7 @@ const HS_KEY = "lm-host";
 const HL_KEY = "lm-host3";     // device copy (survives closing the tab), only for games that resume across tabs
 function saveHost(){
   if (!H || !H.code) return;
-  const pv = MOD[H.g].savePriv ? MOD[H.g].savePriv() : null, x = {g:H.g, code:H.code, s:H.s, pv, at:Date.now()};
+  const pv = MOD[H.g].savePriv ? MOD[H.g].savePriv() : null, x = {g:H.g, code:H.code, s:H.s, pv, at:Date.now(), hs:H.hs, hid:H.hid, c:H.c};
   try { sessionStorage.setItem(HS_KEY, JSON.stringify(x)); } catch(e){}
   if (cloudGame(H.g)){ try { localStorage.setItem(HL_KEY, JSON.stringify(x)); } catch(e){} saveCloud(); }
 }
@@ -1884,10 +1941,18 @@ function savedHost(){
 }
 function dropSaved(){ try { sessionStorage.removeItem(HS_KEY); localStorage.removeItem(HL_KEY); } catch(e){} }
 async function dropCloud(code){ if (!code) return; const room = ROOM_PREFIX + code; await FS.del("games/" + room); await FS.del("gpriv/" + room); await FS.del("hosts/" + room); }
+let resumeTok = null;
 async function hostResume(){
   let x = savedHost(); if (!x) return;
+  const tok = resumeTok = {}; window.__resuming = true;
+  show("host"); $("#hostBar").innerHTML = ""; $("#hostBar").dataset.k = "";
+  $("#hostMain").innerHTML = `<div class="panel center stack" style="margin-top:18px"><div class="spinner"></div><p class="bigmsg">نعيدك إلى لعبتك…</p><p class="muted">${esc(GAMES[x.g] ? GAMES[x.g].name : "")} · الكود ${esc(x.code)}</p></div>`; $("#hostMain").dataset.k = "";
+  try { await hostResumeIn(x, tok); } finally { if (resumeTok === tok){ resumeTok = null; window.__resuming = false; } }
+}
+async function hostResumeIn(x, tok){
+  const gone = () => resumeTok !== tok;
   if (cloudGame(x.g)){
-    await roomReady; await Promise.race([authReady, sleep(6000)]);
+    await roomReady; await Promise.race([authReady, sleep(6000)]); if (gone()) return;
     const room = ROOM_PREFIX + x.code, lk = await FS.get("hosts/" + room);
     if (lk && lk.u === AUTH_UID){
       const gm = await FS.get("games/" + room), gp = await FS.get("gpriv/" + room);
@@ -1895,12 +1960,16 @@ async function hostResume(){
       try { if (gm && gm.g === x.g && gm.v === APP_V){ const cs = JSON.parse(gm.s); if (stateOrder(cs) > stateOrder(x.s)) x = {...x, s:cs, pv:gp && gp.pv ? JSON.parse(gp.pv) : x.pv}; } } catch(e){}
     }
   }
-  H = {g:x.g, code:null, s:x.s, priv:{}};
+  if (gone()) return;
+  H = {g:x.g, code:null, s:x.s, priv:{}, hs:x.hs || newId(), hid:x.hid || newId(), c:x.c || 0};
+  // the game's own data first (question bank, scores, hidden answers), then the screen
+  if (MOD[x.g].restore) await MOD[x.g].restore(x.pv || {}); else if (H.s.ph !== "lobby" && !MOD[x.g].keepState){ H.s.ph = "lobby"; }
+  if (gone() || !H) return;
   for (const id of ["#hostMain","#hostBar"]){ $(id).innerHTML = ""; $(id).dataset.k = ""; }
   show("host"); renderHost();
-  if (MOD[x.g].restore) await MOD[x.g].restore(x.pv || {}); else if (H.s.ph !== "lobby" && !MOD[x.g].keepState){ H.s.ph = "lobby"; }
   await roomReady;
   if (ROOM && H && H.g === x.g) await claimCode(x.code);
+  if (H && H.code && H.code !== x.code) H.priv.newCode = x.code;     // the old code was taken meanwhile (more than 3 h away)
   pushHost();
 }
 function resumeBanner(){
@@ -1912,13 +1981,14 @@ function resumeBanner(){
   $("#resumeNo").onclick = async () => { const c = x.code, g = x.g; dropSaved(); el.hidden = true; if (cloudGame(g)){ await roomReady; await Promise.race([authReady, sleep(6000)]); dropCloud(c); } };
 }
 async function hostEnd(){
-  dropSaved(); if (H && H.cloud) dropCloud(H.code);
+  dropSaved(); if (H && H.cloud) dropCloud(H.code); tabKey = "";
   if (H){ clearInterval(H.priv.tick); clearInterval(H.priv.mtick); }
   if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
   H = null; show("home");
 }
 function renderHost(){
   if (!H) return;
+  if (UPD && updateNow()) return;
   const g = GAMES[H.g], players = hostPlayers();
   let codeHtml;
   if (H.code) codeHtml = `<div><span class="muted">كود الدخول</span><div class="code">${H.code}</div></div><div class="qr" id="qr"></div><button class="btn ghost sm" id="copyLink">نسخ رابط الدخول</button>`;
@@ -1973,57 +2043,150 @@ function soloNote(){
 }
 function playerChips(players, teams){
   if (!players.length) return `<p class="muted">لم ينضم أحد بعد. اعرض الكود على الشاشة.</p>`;
-  if (!teams) return `<div class="chips">${players.map(p => `<span class="chip">${esc(pname(p))}</span>`).join("")}</div>`;
-  const col = t => players.filter(p => p.presence.tm === t).map(p => `<span class="chip ${t}">${esc(pname(p))}</span>`).join("") || `<span class="muted">لا أحد</span>`;
+  const chip = (p, t) => `<span class="chip ${t || ""} ${p.away ? "away" : ""}" ${p.away ? 'title="غير متصل الآن، مقعده محفوظ"' : ""}>${esc(pname(p))}${p.away ? " · غائب" : ""}</span>`;
+  if (!teams) return `<div class="chips">${players.map(p => chip(p)).join("")}</div>`;
+  const col = t => players.filter(p => p.presence.tm === t).map(p => chip(p, t)).join("") || `<span class="muted">لا أحد</span>`;
   return `<div class="stack"><div><b class="tg">الفريق الأخضر</b><div class="chips">${col("g")}</div></div><div><b class="to">الفريق البرتقالي</b><div class="chips">${col("o")}</div></div></div>`;
 }
 function setMain(html){ const m = $("#hostMain"); if (m.dataset.k !== html){ m.innerHTML = html; m.dataset.k = html; return true; } return false; }
 function setEl(el, html){ if (el && el.dataset.k !== html){ el.innerHTML = html; el.dataset.k = html; return true; } return false; }
 
 /* ================= PLAYER ================= */
+/* A player's seat in a room is kept on the device (localStorage, 6 hours): the seat id, the host session it belongs to,
+   the name and team, and personal progress (puzzle board, differences found, the answer to the current question).
+   Coming back to لمّة - after a reload, a closed browser, another app or a dropped network - rejoins the same seat
+   automatically. A seat of a game that has ended (or a new game on the same code) is never restored. */
+const SEATS = "lm-seats";
+function seatsAll(){ try { return JSON.parse(lsGet(SEATS) || "{}") || {}; } catch(e){ return {}; } }
+function seatGet(code){ const x = seatsAll()[code]; return x && x.pid && Date.now() - (+x.at || 0) < SEAT_H ? x : null; }
+function seatSet(code, patch){
+  const all = seatsAll(), x = {...(all[code] || {}), ...patch, at:Date.now()}; all[code] = x;
+  const keep = Object.entries(all).filter(([, v]) => v && Date.now() - (+v.at || 0) < SEAT_H).sort((a, b) => b[1].at - a[1].at).slice(0, 8);
+  lsSet(SEATS, JSON.stringify(Object.fromEntries(keep))); return x;
+}
+function seatDrop(code){ const all = seatsAll(); delete all[code]; lsSet(SEATS, JSON.stringify(all)); }
+function seatLatest(){ const e = Object.entries(seatsAll()).filter(([c, v]) => /^\d{4}$/.test(c) && v && v.pid && v.hs && Date.now() - (+v.at || 0) < SEAT_H).sort((a, b) => b[1].at - a[1].at)[0]; return e ? {code:e[0], ...e[1]} : null; }
+// personal progress of this player in the current game (kept with the seat)
+function seatProg(key, val){ if (!P || !P.code) return null; const st = seatGet(P.code); if (!st) return null; if (val === undefined) return (st.prog || {})[key] || null; seatSet(P.code, {prog:{...(st.prog || {}), [key]:val}}); return val; }
+
+/* the same game open in two tabs of this device: the newest tab plays, the older one steps aside (no split seat) */
+let tabBC = null, tabKey = "";
+try { tabBC = new BroadcastChannel("lamma-tabs"); tabBC.onmessage = e => { const m = e.data || {}; if (m.t === "take" && m.key === tabKey && m.tab !== TAB_ID) goIdle(); }; } catch(e){}
+function claimTab(key){ tabKey = key; try { tabBC && tabBC.postMessage({t:"take", key, tab:TAB_ID}); } catch(e){} }
+async function goIdle(){
+  const key = tabKey; tabKey = "";
+  if (H){ clearInterval(H.priv.tick); clearInterval(H.priv.mtick); clearTimeout(H.priv.cloudT); }
+  if (NR){ try { await NR.detach(); } catch(e){} NR = null; }
+  const wasHost = key.startsWith("h:"), code = key.split(":")[1] || "";
+  H = null; P = null;
+  show("player");
+  $("#playerMain").innerHTML = `<div class="panel center stack"><p class="bigmsg">اللعبة مفتوحة في تبويب آخر</p><p class="muted">${wasHost ? "تُدار اللعبة الآن من التبويب الآخر." : "تلعب الآن من التبويب الآخر بنفس اسمك ومكانك."} الكود ${esc(code)}</p>
+    <div class="row" style="justify-content:center"><button class="btn" data-act="here" data-code="${esc(code)}" data-role="${wasHost ? "h" : "p"}">${wasHost ? "إدارة اللعبة من هنا" : "العب من هذا التبويب"}</button></div></div>`;
+  $("#playerMain").dataset.k = "";
+  $("#playerMain").onclick = e => { const b = e.target.closest("[data-act=here]"); if (!b) return; if (b.dataset.role === "h") hostResume(); else playerJoin(b.dataset.code); };
+}
+
 let joining = null, joinTok = null;
 function joinStatus(html){ $("#playerMain").innerHTML = `<div class="panel center stack">${html}<div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`; $("#playerMain").dataset.k = ""; bindPlayer(); }
-async function playerJoin(code){
+async function playerJoin(code, opt){
+  opt = opt || {};
+  if (!opt.auto){ resumeTok = null; window.__resuming = false; }
   $("#joinErr").textContent = "";
   if (!/^\d{4}$/.test(code)){ $("#joinErr").textContent = "الكود مكوّن من 4 أرقام."; return; }
   if (joining === code) return;                     // a second tap while connecting does nothing
   joining = code; const tok = joinTok = {};
   const btn = $("#joinForm button"); if (btn) btn.disabled = true;
-  show("player"); joinStatus(`<div class="spinner"></div><p class="bigmsg">جارٍ الاتصال باللعبة…</p><p class="muted">الكود ${esc(code)}</p>`);
+  const seat = seatGet(code);
+  show("player"); joinStatus(`<div class="spinner"></div><p class="bigmsg">${seat ? "نعيدك إلى مكانك في اللعبة…" : "جارٍ الاتصال باللعبة…"}</p><p class="muted">الكود ${esc(code)}${seat && seat.n ? ` · ${esc(seat.n)}` : ""}</p>`);
   try {
     await roomReady;
     if (!ROOM){ joinStatus(`<p class="bigmsg">تعذّر تشغيل الاتصال المباشر</p><p class="muted">تأكد من الإنترنت، ثم أعد فتح الصفحة. إن كنت تستخدم متصفحًا داخل تطبيق (مثل واتساب أو إنستغرام) فافتح الرابط في Safari أو Chrome.</p>`); return; }
-    if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
+    if (NR){ try { await NR.detach(); } catch(e){} NR = null; }
     let nr;
-    try { nr = await ROOM.join(ROOM_PREFIX + code); }
+    try { nr = await ROOM.join(ROOM_PREFIX + code, {id:seat ? seat.pid : newId(), keep:true}); }
     catch(e){ console.error(e); if (joinTok !== tok) return; joinStatus(`<p class="bigmsg">تعذّر الاتصال باللعبة</p><p class="muted">الاتصال بطيء أو مقطوع. تأكد من الإنترنت ثم أعد المحاولة.</p><button class="btn" data-act="retry" data-code="${esc(code)}">إعادة المحاولة</button>`); return; }
-    if (joinTok !== tok){ try { await nr.leave(); } catch(e){} return; }      // the player pressed «رجوع» while connecting
-    NR = nr;
+    if (joinTok !== tok){ try { await nr.detach(); } catch(e){} return; }      // the player pressed «رجوع» while connecting
+    NR = nr; claimTab("p:" + code + ":" + nr.id);
     $("#playerMain").innerHTML = ""; $("#playerMain").dataset.k = "";
-    P = {code, name:lsGet("lm-name"), team:null, joined:false, g:null, view:{}, searching:true, t0:Date.now()};
-    // a phone that reloads (or loses the page) comes straight back into the same game with the same name and team
-    let prev = null; try { prev = JSON.parse(sessionStorage.getItem("lm-in") || "null"); } catch(e){}
-    if (prev && prev.code === code && P.name && Date.now() - (prev.at || 0) < 6 * 3600e3){ P.team = prev.team || null; P.joined = true; NR.presence({r:"p", n:P.name, tm:P.team, dv:devId}).catch(() => {}); }
-    else { try { sessionStorage.removeItem("lm-in"); } catch(e){} }
+    P = {code, pid:nr.id, name:seat ? seat.n : lsGet("lm-name"), team:seat ? seat.tm || null : null, joined:false, seat, g:null, view:{}, searching:true, t0:Date.now(), auto:!!opt.auto};
     playerRender();
     NR.onPeers(() => playerRender());
     setTimeout(() => { if (P && P.code === code){ P.searching = false; playerRender(); } }, 8000);
   } finally { joining = null; if (btn) btn.disabled = false; }
 }
-async function playerLeave(){ joinTok = null; try { sessionStorage.removeItem("lm-in"); } catch(e){} if (NR){ try { await NR.leave(); } catch(e){} NR = null; } P = null; show("home"); }
-function findHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && p.presence.v === APP_V && GAMES[p.presence.g]) : null; }
+// «خروج» frees the seat for good (two taps, so an accidental tap does not throw a player out)
+async function playerLeave(force){
+  if (!force && P && P.joined && !(P.leaveAsk && Date.now() - P.leaveAsk < 4000)){ P.leaveAsk = Date.now(); const b = $("#playerMain [data-act=leave]"); if (b){ b.textContent = "تأكيد الخروج؟"; b.classList.add("warnbtn"); } setTimeout(() => { if (P && P.leaveAsk){ P.leaveAsk = 0; $("#playerMain").dataset.k = ""; playerRender(); } }, 4000); return; }
+  joinTok = null; if (P && P.code && (P.joined || force)) seatDrop(P.code);
+  tabKey = "";
+  if (NR){ try { await (P && (P.joined || P.seat) ? NR.leave() : NR.detach()); } catch(e){} NR = null; }
+  P = null; history.replaceState(null, "", location.pathname + location.search); show("home");
+}
+/* the host of this game: the host seat that started it first (players stay with that one; a later "host" is ignored) */
+function findHost(){
+  if (!NR) return null;
+  const hs = NR.peers().filter(p => !p.sameTab && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H));
+  const ok = hs.filter(p => p.presence.v === APP_V && GAMES[p.presence.g]);
+  if (P && P.hostId){ const h = ok.find(p => p.peer === P.hostId); if (h) return h; }
+  const mine = P && P.seat ? ok.find(p => p.presence.hs === P.seat.hs) : null;
+  const h = mine || ok.slice().sort((a, b) => (+a.presence.c || 0) - (+b.presence.c || 0))[0] || null;
+  if (h && P) P.hostId = h.peer;
+  return h;
+}
+// a host on another version of لمّة in the same room (or an older version's rooms): explain instead of "not found"
+function otherVersionHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && p.presence.v !== APP_V && !p.away) : null; }
+async function probeOldRooms(code){
+  if (!ROOM || !ROOM.peek || !P) return;
+  for (const pre of OTHER_PREFIXES){
+    const v = await ROOM.peek(pre + code); if (!v || !P || P.code !== code) continue;
+    if (Object.values(v).some(x => x && typeof x.j === "string" && x.j.includes('"r":"h"'))){ P.oldRoom = pre; $("#playerMain").dataset.k = ""; playerRender(); return; }
+  }
+}
+function reloadOfficial(code, b){
+  const here = location.origin + location.pathname, base = SITE_URL && !PREVIEW && here.startsWith(SITE_URL.replace(/\/$/, "")) ? SITE_URL : here;
+  try { const last = +sessionStorage.getItem("lm-upd") || 0; if (Date.now() - last < 60000) return false; sessionStorage.setItem("lm-upd", String(Date.now())); } catch(e){}
+  location.replace(base + "?v=" + encodeURIComponent(b || Date.now()) + (code ? "#" + code : "")); return true;
+}
 function pSet(html){ const m = $("#playerMain"); if (m.dataset.k !== html){ m.innerHTML = html; m.dataset.k = html; return true; } return false; }
 function playerRender(){
   if (!P) return;
+  if (UPD && updateNow()) return;
   const host = findHost();
   if (!host){
-    pSet(`<div class="panel center stack">${P.searching || P.joined
-      ? (P.joined && P.g && cloudGame(P.g) ? `<p class="bigmsg">المقدّم غير متصل مؤقتًا</p><p class="muted">ابقَ في هذه الصفحة. المباراة محفوظة، وتعود كما كانت فور عودة المقدّم (خلال 3 ساعات). الكود ${esc(P.code)}</p>`
-        : `<p class="bigmsg">${P.joined ? "بانتظار المقدّم…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`)
-      : `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم، وأن الجوال يفتح نفس رابط الموقع الذي يستخدمه المقدّم.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`}
-      <div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
+    const ov = otherVersionHost();
+    let msg;
+    if (ov && (+ov.presence.v || 0) > APP_V && reloadOfficial(P.code, ov.presence.b)) msg = `<div class="spinner"></div><p class="bigmsg">نحدّث لمّة إلى الإصدار الذي يستخدمه المقدّم…</p>`;
+    else if (ov) msg = (+ov.presence.v || 0) > APP_V
+      ? `<p class="bigmsg">هذه اللعبة على إصدار أحدث من لمّة</p><p class="muted">حدّث الصفحة ليعمل جوالك بنفس إصدار المقدّم.</p><button class="btn" data-act="update" data-code="${esc(P.code)}">تحديث الصفحة</button>`
+      : `<p class="bigmsg">المقدّم يستخدم إصدارًا أقدم من لمّة</p><p class="muted">اطلب من المقدّم تحديث صفحته (أو فتح ${esc((SITE_URL || "").replace(/^https?:\/\//, ""))})، ثم أعد المحاولة.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
+    else if (P.oldRoom === "lm3-" && SITE_URL) msg = `<p class="bigmsg">هذه اللعبة على موقع لمّة الرسمي</p><p class="muted">أنت تفتح نسخة المعاينة، والمقدّم يلعب على الموقع الرسمي.</p><a class="btn" href="${esc(SITE_URL)}?v=${encodeURIComponent(BUILD)}#${esc(P.code)}">افتح اللعبة على الموقع الرسمي</a>`;
+    else if (P.oldRoom === "lmp3-" && PREVIEW_URL) msg = `<p class="bigmsg">هذه اللعبة على نسخة المعاينة</p><p class="muted">المقدّم يجرّب نسخة المعاينة، وأنت على الموقع الرسمي.</p><a class="btn" href="${esc(PREVIEW_URL)}#${esc(P.code)}">افتح اللعبة على نسخة المعاينة</a>`;
+    else if (P.oldRoom) msg = `<p class="bigmsg">هذه اللعبة أُنشئت بإصدار قديم من لمّة</p><p class="muted">اطلب من المقدّم فتح الرابط الرسمي ${esc((SITE_URL || "").replace(/^https?:\/\//, ""))} وإنشاء غرفة جديدة، ثم ادخل بالكود الجديد.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
+    else if (P.joined || P.g){
+      // the host's seat was removed: the game was ended by the host. The seat is not kept.
+      seatDrop(P.code); P.joined = false;
+      msg = `<p class="bigmsg">انتهت هذه اللعبة</p><p class="muted">أنهى المقدّم اللعبة. شكرًا للعب! الكود ${esc(P.code)}</p>`;
+    }
+    else if (P.searching) msg = `<div class="spinner"></div><p class="bigmsg">${P.seat ? "نعيدك إلى مكانك في اللعبة…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`;
+    else {
+      if (P.seat){ seatDrop(P.code); P.seat = null; }
+      if (!P.probed){ P.probed = true; probeOldRooms(P.code); }
+      if (P.auto){ const c = P.code; setTimeout(() => { if (P && P.code === c && P.auto && !findHost()){ playerLeave(true); } }, 50); }
+      msg = `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم. إن انتهت اللعبة فاطلب كودًا جديدًا.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
+    }
+    pSet(`<div class="panel center stack">${msg}<div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
     bindPlayer(); return;
   }
+  // the saved seat belongs to this game: come back with the same name, team and place
+  const hp = host.presence;
+  if (P.seat && !P.joined){
+    if (P.seat.hs && hp.hs && P.seat.hs === hp.hs && P.seat.n){
+      P.joined = true; P.name = P.seat.n; P.team = P.seat.tm || null; P.back = Date.now();
+      NR.presence({r:"p", n:P.name, tm:P.team, dv:devId, hs:hp.hs, jt:P.seat.jt || Date.now(), ...((P.seat.prog || {}).pres || {})}).catch(() => {});
+      seatSet(P.code, {});
+    } else { seatDrop(P.code); P.seat = null; }       // a different game now uses this code: start fresh
+  }
+  if (P.joined && (hp.dup || []).includes(P.pid)){ P.joined = false; P.dupName = P.name; seatDrop(P.code); P.seat = null; NR.presence({r:"q"}).catch(() => {}); }
   if (P.g && P.g !== host.presence.g){ P.view = {}; $("#playerMain").dataset.k = ""; }
   P.g = host.presence.g;
   $("#playerMain").classList.toggle("wide", P.g === "diff");     // two pictures side by side need room on tablets and computers
@@ -2035,7 +2198,7 @@ function playerRender(){
       <label for="pName">اسمك</label>
       <input class="field" id="pName" maxlength="20" value="${esc(P.name)}" placeholder="اكتب اسمك">
       ${game.teams ? `<span>اختر فريقك</span><div class="teampick"><button class="g ${P.team === "g" ? "on" : ""}" data-team="g">الأخضر</button><button class="o ${P.team === "o" ? "on" : ""}" data-team="o">البرتقالي</button></div>` : ""}
-      <p class="err" id="pErr"></p>
+      <p class="err" id="pErr">${P.dupName ? `الاسم «${esc(P.dupName)}» مستخدم في هذه اللعبة من جهاز آخر. اختر اسمًا آخر.` : ""}</p>
       <button class="btn" data-act="enter">دخول</button></div>`);
     bindPlayer(); return;
   }
@@ -2053,20 +2216,29 @@ function bindPlayer(){
     const t = e.target.closest("button"); if (!t) return;
     if (t.dataset.act === "leave") return playerLeave();
     if (t.dataset.act === "retry") return playerJoin(t.dataset.code);
+    if (t.dataset.act === "update") return reloadOfficial(t.dataset.code, "u" + Date.now());
     if (t.dataset.team){ P.team = t.dataset.team; P.name = clean($("#pName") ? $("#pName").value : P.name); m.querySelectorAll("[data-team]").forEach(b => b.classList.toggle("on", b.dataset.team === P.team)); return; }
     if (t.dataset.act === "enter"){
       const name = clean($("#pName").value);
       if (!name){ $("#pErr").textContent = "اكتب اسمك أولًا."; return; }
       if (GAMES[P.g].teams && !P.team){ $("#pErr").textContent = "اختر فريقك."; return; }
-      P.name = name; lsSet("lm-name", name); P.joined = true;
-      try { sessionStorage.setItem("lm-in", JSON.stringify({code:P.code, team:P.team || null, at:Date.now()})); } catch(e){}
-      NR.presence({r:"p", n:name, tm:P.team || null, dv:devId}).catch(() => {});
+      const host = findHost(); if (!host){ $("#pErr").textContent = "انتظر ظهور اللعبة ثم حاول مرة أخرى."; return; }
+      const taken = NR.peers().some(p => !p.sameTab && p.presence && p.presence.r === "p" && p.presence.hs === host.presence.hs && normName(p.presence.n) === normName(name) && !(host.presence.dup || []).includes(p.peer));
+      if (taken){ $("#pErr").textContent = "هذا الاسم مستخدم في هذه اللعبة. اختر اسمًا آخر (مثلًا أضف حرفًا أو رقمًا)."; return; }
+      P.name = name; lsSet("lm-name", name); P.joined = true; P.dupName = "";
+      const jt = Date.now(); P.seat = seatSet(P.code, {pid:P.pid, hs:host.presence.hs, n:name, tm:P.team || null, jt, prog:{}});
+      NR.presence({r:"p", n:name, tm:P.team || null, dv:devId, hs:host.presence.hs, jt}).catch(() => {});
       $("#playerMain").dataset.k = ""; playerRender(); return;
     }
     if (P && P.g && MOD[P.g].pclick) MOD[P.g].pclick(t);
   };
 }
-const lostNote = () => NR && NR.connected && !NR.connected() ? `<p class="note lost">انقطع الاتصال بالإنترنت… نعيد الاتصال تلقائيًا، ولن تضيع نقاطك.</p>` : "";
+const lostNote = () => {
+  if (NR && NR.connected && !NR.connected()) return `<p class="note lost">انقطع الاتصال بالإنترنت… نعيد الاتصال تلقائيًا، ومكانك ونقاطك محفوظة.</p>`;
+  if (P && P.joined){ const h = findHost(); if (h && h.away) return `<p class="note lost">المقدّم غير متصل مؤقتًا. ابقَ هنا؛ تستمر اللعبة كما هي فور عودته.</p>`; }
+  if (P && P.back && Date.now() - P.back < 6000) return `<p class="note ok">أهلًا بعودتك يا ${esc(P.name)}، رجعت إلى مكانك.</p>`;
+  return "";
+};
 function phead(extra){ return lostNote() + `<div class="phead"><span class="who">${esc(P.name)}${P.team ? ` · <span class="t${P.team}">${TEAM[P.team]}</span>` : ""}</span><span class="row">${extra || ""}<button class="btn ghost sm icon" data-help="${P.g}" aria-label="طريقة اللعب">❔</button><button class="btn ghost sm" data-act="leave">خروج</button></span></div>`; }
 function raceHTML(prog, total, unit){
   return prog.length ? `<div class="race">${prog.map(r => `<div class="r"><span>${esc(r.n)}</span><div class="bar"><i style="width:${Math.round(r.v / total * 100)}%"></i></div><b>${unit ? `${r.v}/${total}` : `${Math.round(r.v / total * 100)}%`}</b></div>`).join("")}</div>` : `<p class="muted">بانتظار أول حركة…</p>`;
@@ -2155,31 +2327,41 @@ const Quiz = {
     seenAdd("lm-qseen", [hashStr(item[2])], 4000);
     H.priv.ci = q.ci; H.priv.lastCi = q.ci;
     s.qd = q.d; s.ci = -1; s.i++; s.ph = "q"; s.t = s.T; s.cnt = 0; s.res = {}; s.dist = null;
-    H.priv.seen = {}; H.priv.qStart = Date.now();
+    H.priv.seen = {}; s.qs = srvNow(); H.priv.tickAt = Date.now();
     clearInterval(H.priv.tick); H.priv.tick = setInterval(Quiz.tick, 250);
     pushHost();
   },
-  savePriv(){ const p = H.priv; return {order:p.order, scores:p.scores, local:p.local, ci:p.ci, lastCi:p.lastCi, revealedK:p.revealedK}; },
+  savePriv(){ const p = H.priv; return {order:p.order, scores:p.scores, local:p.local, ci:p.ci, lastCi:p.lastCi, revealedK:p.revealedK, seen:p.seen}; },
   async restore(pv){
     if (H.s.ph === "lobby") return;
     const B = await loadBank("quiz"); if (!H) return;
-    Object.assign(H.priv, {B, order:pv.order || [], scores:pv.scores || {}, local:pv.local || {g:0, o:0}, ci:pv.ci, lastCi:pv.lastCi, revealedK:pv.revealedK, seen:{}});
-    if (H.s.ph === "q"){ H.priv.qStart = Date.now() - (H.s.T - H.s.t) * 1000; H.priv.tick = setInterval(Quiz.tick, 250); }
+    Object.assign(H.priv, {B, order:pv.order || [], scores:pv.scores || {}, local:pv.local || {g:0, o:0}, ci:pv.ci, lastCi:pv.lastCi, revealedK:pv.revealedK, seen:pv.seen || {}});
+    if (H.s.ph === "q"){ if (!H.s.qs) H.s.qs = srvNow() - (H.s.T - H.s.t) * 1000; H.priv.tickAt = 0; H.priv.tick = setInterval(Quiz.tick, 250); }
   },
   tick(){
     if (!H || H.g !== "quiz" || H.s.ph !== "q") return;
-    const left = Math.max(0, Math.ceil((H.s.T * 1000 - (Date.now() - H.priv.qStart)) / 1000));
+    const left = Math.max(0, Math.ceil((H.s.T * 1000 - (srvNow() - H.s.qs)) / 1000));
+    if (left <= 0){ if (MOD.quiz.hostPeers) MOD.quiz.hostPeers(hostPlayers()); Quiz.reveal(); H.priv.tickAt = Date.now(); return; }   // answers that arrived while the host was away count first
+    H.priv.tickAt = Date.now();
     if (left !== H.s.t){ H.s.t = left; pushHost(); }
-    if (left <= 0) Quiz.reveal();
   },
   hostPeers(players){
     if (H.s.ph !== "q") return;
     let ch = false;
     for (const p of players){
       const a = p.presence.a;
-      if (a && a.i === H.s.i && Number.isInteger(a.c) && a.c >= 0 && a.c < 4 && !H.priv.seen[p.peer]){ H.priv.seen[p.peer] = {c:a.c, ms:Date.now() - H.priv.qStart, n:pname(p)}; ch = true; }
+      if (a && a.i === H.s.i && Number.isInteger(a.c) && a.c >= 0 && a.c < 4 && !H.priv.seen[p.peer]){
+        // answer time on the shared clock. While the host's page runs normally, a phone cannot claim to be more than
+        // 3 s faster than the moment its answer arrived; after the host's page was asleep, the phone's own time counts.
+        const T = H.s.T * 1000, rec = srvNow() - H.s.qs, said = Number.isFinite(+a.at) ? +a.at - H.s.qs : rec;
+        const asleep = Date.now() - (H.priv.tickAt || 0) > 1500;
+        if (said > T + 1000){ continue; }                      // answered after the time was up
+        const ms = Math.max(0, Math.min(T, asleep ? said : Math.max(said, rec - 3000)));
+        H.priv.seen[p.peer] = {c:a.c, ms, n:pname(p)}; ch = true;
+      }
     }
-    if (ch){ H.s.cnt = Object.keys(H.priv.seen).length; if (players.length && H.s.cnt >= players.length) Quiz.reveal(); else pushHost(); }
+    const act = activePlayers(players);
+    if (ch){ H.s.cnt = Object.keys(H.priv.seen).length; if (act.length && act.every(p => H.priv.seen[p.peer])) Quiz.reveal(); else pushHost(); }
   },
   reveal(){
     const s = H.s; if (s.ph !== "q") return;          // only once per question
@@ -2230,9 +2412,13 @@ const Quiz = {
     setMain(html);
   },
   player(s){
+    if (!P.ans){ const sv = seatProg("quiz"); if (sv) P.ans = sv; }        // the answer given before a reload or a closed browser
     const me = peerKey(myPeer()), mine = P.ans && P.ans.i === s.i && P.ans.q === (s.qd && s.qd.q) ? P.ans.c : null;
+    const left = s.ph === "q" && s.qs ? Math.max(0, Math.ceil((s.T * 1000 - (srvNow() - s.qs)) / 1000)) : s.t;
+    s = {...s, t:left};
     let body;
-    if (s.ph === "q"){
+    if (s.ph === "q" && mine === null && left <= 0) body = `<div class="panel center stack"><p class="bigmsg">انتهى الوقت</p><p class="muted">بانتظار إظهار الإجابة…</p></div>`;
+    else if (s.ph === "q"){
       if (mine !== null) body = `<div class="panel center stack"><p class="bigmsg">تم تسجيل إجابتك</p><div class="opt c${mine}" style="justify-content:center"><span class="sh">${SHAPES[mine]}</span><span>${esc(s.qd.o[mine])}</span></div><p class="muted">بانتظار البقية… ${s.t} ث</p></div>`;
       else body = `<div class="panel stack"><div class="row" style="justify-content:space-between">${Quiz.qhead(s)}<span class="timer" style="font-size:2rem">${s.t}</span></div>
         <p style="font-size:1.3rem;font-weight:700">${esc(s.qd.q)}</p>
@@ -2253,8 +2439,10 @@ const Quiz = {
     if (t.dataset.ans === undefined) return;
     const host = findHost(); if (!host) return;
     const s = host.presence.s; if (s.ph !== "q" || (P.ans && P.ans.i === s.i && P.ans.q === s.qd.q)) return;
-    P.ans = {i:s.i, q:s.qd.q, c:+t.dataset.ans};
-    NR.presence({a:{i:s.i, c:P.ans.c}}).catch(() => {});
+    if (s.qs && srvNow() - s.qs > s.T * 1000) return;            // the time is up on the shared clock
+    P.ans = {i:s.i, q:s.qd.q, c:+t.dataset.ans, at:srvNow()};
+    seatProg("quiz", P.ans); seatProg("pres", {a:{i:s.i, c:P.ans.c, at:P.ans.at}});
+    NR.presence({a:{i:s.i, c:P.ans.c, at:P.ans.at}}).catch(() => {});
     playerRender();
   },
 };
@@ -2309,7 +2497,7 @@ const Letters = {
     const o = H.s.o, m = ltMode(o);
     H.s = {...Letters.init(), o, ph:"play", T:o.t, k:rnd() * 64};    // question keys never repeat across matches (stale phone presses are ignored)
     Letters.board();
-    if (m.time){ H.priv.m0 = Date.now(); H.s.mt = m.v * 60; H.priv.mtick = setInterval(Letters.matchTick, 500); }
+    if (m.time){ H.s.m0 = srvNow(); H.s.mt = m.v * 60; H.priv.mtick = setInterval(Letters.matchTick, 500); }
     pushHost();
   },
   savePriv(){ return {used:[...(H.priv.used || [])], ans:H.priv.ans, flash:H.priv.flash || ""}; },
@@ -2319,12 +2507,12 @@ const Letters = {
     H.priv.B = B; H.priv.idx = {}; B.forEach((q, i) => (H.priv.idx[q[0]] = H.priv.idx[q[0]] || []).push(i));
     H.priv.used = new Set(pv.used || []); H.priv.ans = pv.ans || ""; H.priv.flash = pv.flash; H.priv.devSeen = seenGet("lm-lseen");
     const m = ltMode(H.s.o);
-    if (m.time && H.s.mt > 0){ H.priv.m0 = Date.now() - (m.v * 60 - H.s.mt) * 1000; H.priv.mtick = setInterval(Letters.matchTick, 500); }
-    if (H.s.st === "ask"){ H.priv.q0 = Date.now() - (H.s.T - H.s.t) * 1000; H.priv.tick = setInterval(Letters.tick, 200); }
+    if (m.time && H.s.mt > 0){ if (!H.s.m0) H.s.m0 = srvNow() - (m.v * 60 - H.s.mt) * 1000; H.priv.mtick = setInterval(Letters.matchTick, 500); }
+    if (H.s.st === "ask"){ if (!H.s.q0) H.s.q0 = srvNow() - (H.s.T - H.s.t) * 1000; H.priv.tick = setInterval(Letters.tick, 200); }
   },
   matchTick(){
     if (!H || H.g !== "letters" || H.s.ph !== "play"){ clearInterval(H && H.priv.mtick); return; }
-    const m = ltMode(H.s.o), left = Math.max(0, m.v * 60 - Math.floor((Date.now() - H.priv.m0) / 1000));
+    const m = ltMode(H.s.o), left = Math.max(0, m.v * 60 - Math.floor((srvNow() - H.s.m0) / 1000));
     if (left !== H.s.mt){ H.s.mt = left; if (!left){ H.s.over = true; clearInterval(H.priv.mtick); } pushHost(); }
   },
   /* question for a letter: requested level first, then the nearest levels; never one already used in this match;
@@ -2345,21 +2533,26 @@ const Letters = {
     if (qi < 0){ if (!swap){ const arr = s.b.split(""); arr[cell] = "x"; s.b = arr.join(""); s.cur = -1; s.st = "pick"; H.priv.flash = `لا توجد أسئلة متبقية لحرف ${L}، اختر حرفًا آخر.`; pushHost(); } return; }
     const q = H.priv.B[qi];
     H.priv.used.add(qi); seenAdd("lm-lseen", [hashStr(q[3])], 3000); H.priv.ans = q[4]; H.priv.flash = "";
-    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.a = ""; s.am = -1; s.by = ""; s.rq = ""; s.k++; s.st = "ask"; s.t = s.T;
-    H.priv.q0 = Date.now(); H.priv.showAns = false;
+    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.a = ""; s.am = -1; s.by = ""; s.rq = ""; s.k++; s.st = "ask"; s.t = s.T; s.away = 0;
+    s.q0 = srvNow(); H.priv.showAns = false;
     clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.tick, 200);
     pushHost();
   },
   tick(){
     if (!H || H.g !== "letters" || H.s.st !== "ask"){ clearInterval(H && H.priv.tick); return; }
-    const el = Date.now() - H.priv.q0, left = Math.max(0, Math.ceil((H.s.T * 1000 - el) / 1000));
-    if (el >= H.s.T * 1000){ Letters.finishQ(false, true); return; }
+    const el = srvNow() - H.s.q0, left = Math.max(0, Math.ceil((H.s.T * 1000 - el) / 1000));
+    if (el >= H.s.T * 1000){
+      // the time ran out while this page was asleep (another app): no automatic result, the host decides on return
+      if (el - H.s.T * 1000 > 1500 || document.hidden){ if (!H.s.away){ H.s.away = 1; H.s.t = 0; clearInterval(H.priv.tick); pushHost(); } return; }
+      Letters.finishQ(false, true); return;
+    }
     if (left !== H.s.t){ H.s.t = left; pushHost(); } else if (H.priv.liveEl !== Math.floor(el / 1000)){ H.priv.liveEl = Math.floor(el / 1000); renderHost(); }
   },
   /* the team announced its answer: freeze the clock (judging time does not count) */
   stop(by){
     const s = H.s; if (s.st !== "ask") return;
-    const ms = Date.now() - H.priv.q0;
+    if (s.away) return;
+    const ms = srvNow() - s.q0;
     if (ms >= s.T * 1000){ Letters.finishQ(false, true); return; }
     clearInterval(H.priv.tick);
     s.am = ms; s.by = ""; s.st = "judge"; s.t = Math.max(0, Math.ceil((s.T * 1000 - ms) / 1000));
@@ -2368,6 +2561,7 @@ const Letters = {
   /* result of a question: runs once per question (st changes immediately), so repeated taps can't score twice */
   finishQ(ok, timeout){
     const s = H.s; if (s.st !== "judge" && !(timeout && s.st === "ask")) return;
+    s.away = 0;
     clearInterval(H.priv.tick);
     const team = s.sc[s.tn], ms = timeout ? -1 : s.am, pts = ok && !timeout ? speedPoints(ms, s.T) : 0;
     if (pts > 0){ team.p += pts; team.c++; team.ms += ms; team.best = team.best ? Math.min(team.best, ms) : ms; }
@@ -2407,7 +2601,8 @@ const Letters = {
     else if (a === "ok") Letters.finishQ(true);
     else if (a === "no") Letters.finishQ(false);
     else if (a === "next") Letters.next();
-    else if (a === "swap"){ if (s.st === "ask") Letters.ask(s.cur, true); }
+    else if (a === "swap"){ if (s.st === "ask"){ s.away = 0; Letters.ask(s.cur, true); } }
+    else if (a === "tout"){ if (s.st === "ask" && s.away) Letters.finishQ(false, true); }
     else if (a === "ans"){ H.priv.showAns = !H.priv.showAns; renderHost(); }
   },
   /* a phone may only SIGNAL that its team wants to answer: it never stops the clock and never affects points */
@@ -2424,7 +2619,8 @@ const Letters = {
   progress(s){
     const m = ltMode(s.o), n = ltPlayed(s.sc.g) + ltPlayed(s.sc.o);
     if (s.tb) return `<span class="chip warn">جولة فاصلة</span>`;
-    if (m.time) return s.over ? `<span class="chip warn">انتهى الوقت · تُستكمل الأسئلة لتتساوى الفرص</span>` : `<span class="clock ${s.mt <= 30 ? "warn" : ""}">${fmtT(s.mt)}</span>`;
+    const mt = s.m0 ? Math.max(0, m.v * 60 - Math.floor((srvNow() - s.m0) / 1000)) : s.mt;
+    if (m.time) return s.over ? `<span class="chip warn">انتهى الوقت · تُستكمل الأسئلة لتتساوى الفرص</span>` : `<span class="clock ${mt <= 30 ? "warn" : ""}">${fmtT(mt)}</span>`;
     return `<span class="chip">السؤال ${Math.min(n + (s.st === "pick" ? 1 : s.st === "done" ? 0 : 1), m.v)} من ${m.v}</span>`;
   },
   stage(s, host){
@@ -2433,10 +2629,12 @@ const Letters = {
       ${host && H.priv.flash ? `<p class="note">${esc(H.priv.flash)}</p>` : ""}${host ? `<div class="row"><button class="btn" data-h="rand">حرف عشوائي</button></div>` : ""}</div>`;
     const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">حرف ${esc(s.lt)} · دور ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span></div><p class="qtext">${esc(s.q)}</p></div></div>`;
     if (s.st === "ask"){
-      const el = H && host ? Date.now() - H.priv.q0 : (T - s.t) * 1000, now = speedPoints(Math.max(0, el), T);
+      const el = s.q0 ? srvNow() - s.q0 : (T - s.t) * 1000, now = speedPoints(Math.max(0, Math.min(el, T * 1000)), T);
+      s = {...s, t:s.away ? 0 : Math.max(0, Math.ceil((T * 1000 - el) / 1000))};
       return `<div class="stage">${head}<div class="qclock"><span class="timer ${s.t <= 5 ? "warn" : ""}">${s.t}</span><div class="tbar"><i style="width:${s.t / T * 100}%"></i></div>${host ? `<span class="chip">الإجابة الآن = ${now} نقطة</span>` : ""}</div>
         ${s.rq ? `<div class="rqnote">✋ الفريق ${TEAM[s.tn]} يطلب الإجابة${host ? ` (${esc(s.rq)})` : ""}. الوقت لا يتوقف حتى ${host ? "تثبّته عند سماع الإجابة" : "يثبّته المقدّم عند سماع الإجابة"}.</div>` : ""}
-        ${host ? `<button class="btn big stopbtn" data-h="stop">⏱ تثبيت وقت الإجابة</button><p class="muted" style="margin-top:-6px">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p>
+        ${s.away ? `<p class="note warn">انتهى وقت السؤال أثناء غياب المقدّم. ${host ? "اختر كيف يُحتسب:" : "بانتظار قرار المقدّم…"}</p>${host ? `<div class="row"><button class="btn bad" data-h="tout">احتسابه وقتًا منتهيًا (0 نقطة)</button><button class="btn ghost" data-h="swap">سؤال بديل لنفس الفريق</button></div>` : ""}`
+        : host ? `<button class="btn big stopbtn" data-h="stop">⏱ تثبيت وقت الإجابة</button><p class="muted" style="margin-top:-6px">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p>
         <div class="row"><button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(H.priv.ans)}` : "إظهار الإجابة لي"}</button><button class="btn ghost sm" data-h="swap">تبديل السؤال</button></div>` : ""}</div>`;
     }
     if (s.st === "judge") return `<div class="stage">${head}<div class="judge"><p>وقت الإجابة المثبّت <b>${fmtS(s.am)} ث</b></p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة</p></div>
@@ -2651,7 +2849,9 @@ function w3log(s){
 }
 function w3qhtml(c, host, s){
   const q = c.q || {}, rv = c.ci != null ? c.ci : -1, mine = host && H.priv.wshow && rv < 0 ? H.priv.wp.ci : -1;
-  const timer = s.dl || s.to ? `<div class="qclock"><span class="timer ${s.left <= 5 ? "warn" : ""}">${s.to ? "0" : s.left}</span><div class="tbar"><i style="width:${s.tt ? (s.left / s.tt * 100) : 0}%"></i></div>${s.to ? `<span class="chip warn">انتهى الوقت</span>` : ""}</div>` : "";
+  // every screen counts down from the same deadline (shared clock), so the phones keep time even if the host's page sleeps
+  const left = s.dl ? Math.max(0, Math.ceil((s.dl - srvNow()) / 1000)) : 0, to = s.to || (s.dl && left <= 0);
+  const timer = s.dl || s.to ? `<div class="qclock"><span class="timer ${left <= 5 ? "warn" : ""}">${to ? "0" : left}</span><div class="tbar"><i style="width:${s.tt ? (left / s.tt * 100) : 0}%"></i></div>${to ? `<span class="chip warn">انتهى الوقت${host ? "" : " · بانتظار حكم المقدّم"}</span>` : ""}</div>` : "";
   return `<p class="qtext">${esc(q.q || "")}</p><div class="opts mini">${(q.o || []).map((o, i) => `<div class="opt c${i} ${rv >= 0 ? (i === rv ? "right" : "dim") : i === mine ? "hint" : ""}"><span class="sh">${SHAPES[i]}</span><span>${esc(o)}</span></div>`).join("")}</div>${timer}`;
 }
 const w3btn = (s, a, label, cls, arg) => `<button class="btn ${cls || ""}" data-w="${a}" data-tk="${W3.tok(s)}" ${arg != null ? `data-arg="${esc(String(arg))}"` : ""}>${label}</button>`;
@@ -2753,7 +2953,7 @@ const Wheel = {
   keepState:true, cloudResume:true,
   init: () => W3.init({}),
   canStart: o => W3.GOALS.includes(o.goal),
-  env(){ return {R:w3rand, now:Date.now(), q:lv => {
+  env(){ return {R:w3rand, now:srvNow(), q:lv => {
     const B = bankNow("quiz") || QB, p = H.priv.wp, used = new Set(p.used || []);
     const lvOf = k => B[k][1]; const want = lv == null ? null : lv;
     let pool = range(B.length).filter(k => (want == null || lvOf(k) === want) && !used.has(k));
@@ -2769,8 +2969,8 @@ const Wheel = {
     H.priv.tick = setInterval(() => {
       if (!H || H.g !== "wheel") return;
       const s = H.s;
-      if (s.stage === "rolling" && Date.now() - s.t0 >= (w3motion() ? 4900 : 600)){ if (W3.act(s, H.priv.wp, "land", null, W3.tok(s), Wheel.env())) pushHost(); return; }
-      if (W3.tick(s, Date.now())){ if (s.left && s.left <= 5) w3beep("tick"); pushHost(); }
+      if (s.stage === "rolling" && srvNow() - s.t0 >= (w3motion() ? 4900 : 600)){ if (W3.act(s, H.priv.wp, "land", null, W3.tok(s), Wheel.env())) pushHost(); return; }
+      if (W3.tick(s, srvNow())){ if (s.left && s.left <= 5) w3beep("tick"); pushHost(); }
     }, 200);
   },
   onOpt(key){ if (key === "mode" || key === "goal") H.s.o.off = H.s.o.off || []; },
@@ -2825,12 +3025,12 @@ function mountWheelP(s){ w3mount($("#playerMain .wh-holder"), s, P.view.w3 || (P
 
 /* ================= RACE CLOCK (puzzle + spot the difference) ================= */
 const fmtT = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
-function startRaceClock(){
-  clearInterval(H.priv.tick); H.priv.t0 = Date.now(); H.s.el = 0; H.s.left = H.s.o.lim || -1;
+function startRaceClock(resume){
+  clearInterval(H.priv.tick); if (!resume || !H.s.t0) H.s.t0 = srvNow(); H.priv.tickAt = Date.now(); if (!resume){ H.s.el = 0; H.s.left = H.s.o.lim || -1; }
   const g = H.g;
   H.priv.tick = setInterval(() => {
     if (!H || H.g !== g || H.s.ph !== "play"){ clearInterval(H.priv.tick); return; }
-    const el = Math.floor((Date.now() - H.priv.t0) / 1000); let ch = false;
+    const el = Math.floor((srvNow() - H.s.t0) / 1000); let ch = false; H.priv.tickAt = Date.now();
     if (el !== H.s.el){ H.s.el = el; ch = true; }
     if (H.s.o.lim){ const l = Math.max(0, H.s.o.lim - el); if (l !== H.s.left){ H.s.left = l; ch = true; } if (!l){ endRace(); return; } }
     if (ch) pushHost();
@@ -2843,8 +3043,14 @@ function endRace(){
   s.rest = Object.entries(H.priv.prog || {}).filter(([peer]) => !s.fin.some(f => f[3] === peerKey(peer))).map(([, r]) => [r.n, r.v]).sort((a, b) => b[1] - a[1]).slice(0, 20);
   pushHost();
 }
-function maybeAllDone(players){ const s = H.s; if (s.ph === "play" && players.length && s.fin.length >= players.length) endRace(); }
-const clockChip = s => s.ph === "over" ? `<span class="chip warn">انتهت الجولة</span>` : s.left >= 0 ? `<span class="clock ${s.left <= 10 ? "warn" : ""}">${fmtT(s.left)}</span>` : `<span class="clock">${fmtT(s.el || 0)}</span>`;
+function maybeAllDone(players){ const s = H.s, act = activePlayers(players); if (s.ph === "play" && act.length && s.fin.length >= act.length && act.every(p => s.fin.some(f => f[3] === peerKey(p.peer)))) endRace(); }
+function finishSec(z){
+  const rec = srvNow() - H.s.t0, said = Number.isFinite(+z.at) ? +z.at - H.s.t0 : rec, asleep = Date.now() - (H.priv.tickAt || 0) > 1500;
+  return Math.max(0, Math.round((asleep ? said : Math.max(said, rec - 3000)) / 1000));
+}
+const raceEl = s => s.t0 ? Math.max(0, Math.floor((srvNow() - s.t0) / 1000)) : (s.el || 0);
+const clockChip = s => { if (s.t0 && s.ph === "play"){ const el = raceEl(s); s = {...s, el, left:s.o && s.o.lim ? Math.max(0, s.o.lim - el) : -1}; } return clockChipRaw(s); };
+const clockChipRaw = s => s.ph === "over" ? `<span class="chip warn">انتهت الجولة</span>` : s.left >= 0 ? `<span class="clock ${s.left <= 10 ? "warn" : ""}">${fmtT(s.left)}</span>` : `<span class="clock">${fmtT(s.el || 0)}</span>`;
 function standingsHTML(s, unit, total, pct){
   const rest = (s.rest || []).map(([n, v], i) => `<div><span>${s.fin.length + i + 1}. ${esc(n)}</span><span class="muted">${pct ? `${v}%` : `${v}/${total}`}</span></div>`).join("");
   return `<div class="lb">${s.fin.map((f, i) => `<div><span>${i + 1}. ${esc(f[0])}</span><span class="muted">${fmtT(f[2])} · ${f[1]} ${unit}</span></div>`).join("")}${rest}</div>`;
@@ -2853,11 +3059,13 @@ function standingsHTML(s, unit, total, pct){
 /* ================= PUZZLE ================= */
 /* Puzzle board: drag a piece onto another to swap them (finger or mouse), or tap two pieces.
    The board itself has touch-action:none so dragging never scrolls the page. */
-function mountPuzzle(el, cfg, onChange){
+function mountPuzzle(el, cfg, onChange, init){
   const n = cfg.n, N = n * n, url = cfg.src === "photo" ? photoURL(cfg.img) : sceneURL(cfg.img);
   let perm = shuffle(range(N), cfg.seed);
   if (perm.every((v, k) => v === k)) [perm[0], perm[1]] = [perm[1], perm[0]];
-  let sel = -1, mv = 0, done = false, locked = false, drag = null;
+  // a board saved before a reload or a closed browser continues where it was
+  if (init && Array.isArray(init.perm) && init.perm.length === N && [...init.perm].sort((a, b) => a - b).every((v, i) => v === i)) perm = init.perm.slice();
+  let sel = -1, mv = init && +init.mv || 0, done = perm.every((v, i) => v === i), locked = false, drag = null;
   const pos = id => { const r = Math.floor(id / n), c = id % n; return `${c / (n - 1) * 100}% ${r / (n - 1) * 100}%`; };
   el.innerHTML = `<div class="pzwrap"><div class="pzbar"><button class="btn ghost sm" data-pzbig="1">⤢ تكبير</button></div><div class="pz" style="grid-template-columns:repeat(${n},1fr)"></div></div>`;
   const wrap = el.querySelector(".pzwrap"), board = el.querySelector(".pz");
@@ -2868,7 +3076,7 @@ function mountPuzzle(el, cfg, onChange){
   function swap(a, b){
     if (a === b || done || locked) return;
     [perm[a], perm[b]] = [perm[b], perm[a]]; sel = -1; mv++; done = perm.every((v, i) => v === i);
-    onChange && onChange({p:Math.round(perm.filter((v, i) => v === i).length / N * 100), d:done, mv});
+    onChange && onChange({p:Math.round(perm.filter((v, i) => v === i).length / N * 100), d:done, mv, perm:perm.slice()});
     draw();
     if (done && wrap.classList.contains("big")) setTimeout(() => toggleBig(false), 900);
   }
@@ -2939,6 +3147,8 @@ function mountPuzzle(el, cfg, onChange){
 const imgURL = (src, img, size) => src === "photo" ? photoURL(img, size) : sceneURL(img);
 const Puzzle = {
   init: () => ({rd:0, img:0, src:"draw", n:4, seed:1, fin:[]}),
+  // the host came back during a round: the round goes on with the same start time (shared clock)
+  async restore(){ if (H.s.ph === "play"){ H.priv.prog = {}; H.priv.mounted = null; startRaceClock(true); } },
   onOpt(key){ if (key === "src") H.s.o.img = null; },
   choices(){
     const o = H.s.o;
@@ -2959,9 +3169,9 @@ const Puzzle = {
     for (const p of players){
       const z = p.presence.pz; if (!z || z.rd !== s.rd) continue;
       H.priv.prog[p.peer] = {n:pname(p), v:Math.max(0, Math.min(100, +z.p || 0))};
-      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){ s.fin.push([pname(p), Math.max(0, +z.mv || 0), Math.round((Date.now() - H.priv.t0) / 1000), peerKey(p.peer)]); ch = true; }
+      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){ s.fin.push([pname(p), Math.max(0, +z.mv || 0), finishSec(z), peerKey(p.peer)]); ch = true; }
     }
-    if (ch){ pushHost(); maybeAllDone(players); }
+    if (ch){ s.fin.sort((a, b) => a[2] - b[2] || a[1] - b[1]); pushHost(); maybeAllDone(players); }
   },
   host(players){
     const s = H.s;
@@ -2990,8 +3200,14 @@ const Puzzle = {
       P.view.pzRd = s.rd;
       pSet(phead(`<span id="pClock"></span>`) + `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>رتّب الصورة · ${s.n}×${s.n}</h3><img class="ref" style="width:80px" src="${imgURL(s.src, s.img, 240)}" alt="الصورة الأصلية"></div><p class="muted">اسحب القطعة إلى مكانها، أو اضغط قطعتين لتبديلهما.</p><div id="pPz"></div></div><div id="pPzStatus"></div>`);
       bindPlayer();
-      if (!over){ NR.presence({pz:{rd:s.rd, p:0, d:false, mv:0}}).catch(() => {}); }
-      P.view.pzm = mountPuzzle($("#pPz"), s, z => NR.presence({pz:{rd:s.rd, ...z}}).catch(() => {}));
+      const sv = seatProg("pz"), init = sv && sv.rd === s.rd && sv.seed === s.seed ? sv : null;
+      if (!over && !init) NR.presence({pz:{rd:s.rd, p:0, d:false, mv:0}}).catch(() => {});
+      P.view.pzm = mountPuzzle($("#pPz"), s, z => {
+        const pres = {pz:{rd:s.rd, p:z.p, d:z.d, mv:z.mv, at:srvNow()}};
+        seatProg("pz", {rd:s.rd, seed:s.seed, perm:z.perm, mv:z.mv}); seatProg("pres", pres);
+        NR.presence(pres).catch(() => {});
+      }, init);
+      if (init && !over){ const pr = seatProg("pres"); if (pr && pr.pz && pr.pz.rd === s.rd) NR.presence(pr).catch(() => {}); }
     }
     if (over && P.view.pzm) P.view.pzm.lock();
     setEl($("#pClock"), clockChip(s));
@@ -3082,8 +3298,9 @@ const preloadSpot = p => Promise.all([loadSpotImg(p.a), loadSpotImg(p.b)]);
 
 /* Two synced photo panes with pinch/scroll zoom and drag-to-pan.
    A tap counts only when the finger did not move and no second finger touched. */
-function mountPair(el, pair, onChange){
-  const found = new Set(); let wrong = 0, revealed = false, locked = false;
+function mountPair(el, pair, onChange, init){
+  const found = new Set((init && Array.isArray(init.found) ? init.found : []).filter(i => Number.isInteger(i) && i >= 0 && i < pair.diffs.length));
+  let wrong = init && +init.w || 0, revealed = false, locked = false;
   const W = pair.w, Hh = pair.h, TOL = 8;
   el.innerHTML = `<div class="dfbar"><button class="btn ghost sm" data-z="in" aria-label="تكبير">＋</button><button class="btn ghost sm" data-z="out" aria-label="تصغير">－</button><button class="btn ghost sm" data-z="reset">حجم كامل</button><span class="muted dfhint">كبّر بإصبعين أو بعجلة الفأرة، واسحب للتحريك.</span></div>
     <div class="dfpair">${[pair.a, pair.b].map((f, i) => `<div class="dfimg" style="aspect-ratio:${W}/${Hh}"><div class="dfzoom"><img src="${esc(f)}" alt="${i ? "الصورة الثانية" : "الصورة الأولى"}" draggable="false"><div class="dfmarks"></div></div></div>`).join("")}</div>`;
@@ -3113,7 +3330,7 @@ function mountPair(el, pair, onChange){
       const xm = document.createElement("span"); xm.className = "dfx"; xm.style.left = px / W * 100 + "%"; xm.style.top = py / Hh * 100 + "%"; xm.textContent = "✕";
       pane.querySelector(".dfmarks").appendChild(xm); setTimeout(() => xm.remove(), 700);
     }
-    onChange && onChange({f:found.size, d:found.size === pair.diffs.length, w:wrong});
+    onChange && onChange({f:found.size, d:found.size === pair.diffs.length, w:wrong, ids:[...found]});
   };
   // pointer handling (shared state across both panes so zoom stays in sync)
   const pts = new Map(); let start = null, multi = false, pinch0 = null;
@@ -3179,7 +3396,11 @@ function imageInfo(p, running){
 const reportBtn = attr => `<button class="btn ghost sm dfreport" ${attr}>إبلاغ عن مشكلة في الصورة</button>`;
 const Diff = {
   savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}}; },
-  async restore(pv){ H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; if (H.s.ph !== "lobby" && H.s.ph !== "done"){ H.s.ph = "lobby"; } },
+  async restore(pv){
+    H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {};
+    if (H.s.ph === "play" && H.s.pair){ H.priv.prog = {}; H.priv.dfRd = null; startRaceClock(true); }      // the round goes on
+    else if (H.s.ph === "prep") H.s.ph = "lobby";
+  },
   init: () => ({rd:0, pair:null, nd:0, lv:1, rev:false, fin:[], fresh:true}),
   async start(replay){
     if (H.priv.picking) return;
@@ -3219,9 +3440,9 @@ const Diff = {
     for (const p of players){
       const z = p.presence.df; if (!z || z.rd !== s.rd) continue;
       H.priv.prog[p.peer] = {n:pname(p), v:Math.max(0, Math.min(s.nd, +z.f || 0))};
-      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){ s.fin.push([pname(p), Math.max(0, +z.w || 0), Math.round((Date.now() - H.priv.t0) / 1000), peerKey(p.peer)]); ch = true; }
+      if (z.d && !s.fin.some(f => f[3] === peerKey(p.peer)) && s.fin.length < 30){ s.fin.push([pname(p), Math.max(0, +z.w || 0), finishSec(z), peerKey(p.peer)]); ch = true; }
     }
-    if (ch){ pushHost(); maybeAllDone(players); }
+    if (ch){ s.fin.sort((a, b) => a[2] - b[2] || a[1] - b[1]); pushHost(); maybeAllDone(players); }
   },
   host(players){
     const s = H.s, m = $("#hostMain");
@@ -3265,11 +3486,18 @@ const Diff = {
       pSet(phead(`<span id="pClock"></span>`) + `<div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${s.nd} فروق</h3><b id="dfCount" class="count">0 / ${s.nd}</b></div><p class="muted">اضغط على مكان الفرق في أي من الصورتين.</p><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><div class="row dfmeta">${infoBtn('data-act="dfinfo"')}</div></div><div id="pDfStatus"></div>`);
       rememberLocal(pair.id);
       bindPlayer();
-      if (s.ph === "play") NR.presence({df:{rd:s.rd, f:0, d:false, w:0}}).catch(() => {});
+      if (s.ph === "play" && !(seatProg("df") && seatProg("df").rd === s.rd)) NR.presence({df:{rd:s.rd, f:0, d:false, w:0}}).catch(() => {});
       const rd = s.rd;
       preloadSpot(pair).then(() => {
         if (!P || P.view.dfRd !== rd) return;
-        P.view.dfm = mountPair($("#pDf"), pair, st => { const c = $("#dfCount"); if (c) c.textContent = `${st.f} / ${s.nd}`; NR.presence({df:{rd, ...st}}).catch(() => {}); });
+        const sv = seatProg("df"), init = sv && sv.rd === rd && sv.id === pair.id ? sv : null;
+        P.view.dfm = mountPair($("#pDf"), pair, st => {
+          const c = $("#dfCount"); if (c) c.textContent = `${st.f} / ${s.nd}`;
+          const pres = {df:{rd, f:st.f, d:st.d, w:st.w, at:srvNow()}};
+          seatProg("df", {rd, id:pair.id, found:st.ids, w:st.w}); seatProg("pres", pres);
+          NR.presence(pres).catch(() => {});
+        }, init);
+        if (init){ const c = $("#dfCount"); if (c) c.textContent = `${(init.found || []).length} / ${s.nd}`; const pr = seatProg("pres"); if (pr && pr.df && pr.df.rd === rd) NR.presence(pr).catch(() => {}); }
         const h = findHost(); if (h && h.presence.s.rev) P.view.dfm.reveal();
       }).catch(() => { if (P && P.view.dfRd === rd) spotFail($("#pDf"), 'data-act="dfretry"'); });
     }
@@ -3291,14 +3519,48 @@ const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
 /* ================= FOOTER ================= */
 { const b = $("#copyId"); if (b) b.onclick = () => copyText("10000003", b); }
 
+/* phones redraw the clocks every half second from the shared deadlines (no dependence on the host's page being awake) */
+setInterval(() => { if (P && P.joined && document.visibilityState === "visible"){ const h = findHost(), st = h && h.presence.s; if (st && (st.dl || st.qs || st.q0 || st.m0 || (st.t0 && st.ph === "play"))) playerRender(); } }, 500);
+
+/* ================= VERSION ================= */
+/* The page asks for version.json (never cached). A newer version is applied by reloading - right away when nothing is
+   being played, otherwise only after the round (seats and the host's game come back by themselves after the reload). */
+let UPD = null;
+function midRound(){
+  const ph = H ? H.s.ph : (P && P.joined && findHost() ? findHost().presence.s.ph : null);
+  return !!ph && !["lobby", "end", "over", "done", "fail"].includes(ph);
+}
+function updateNow(){
+  if (!UPD || midRound()) return false;
+  const hc = (location.hash || "").replace("#", ""), code = H ? H.code : P ? P.code : /^\d{4}$/.test(hc) ? hc : "";
+  return reloadOfficial(code || "", UPD);          // the game code (an invite link's #code) survives the update
+}
+async function checkUpdate(){
+  if (BUILD === "dev" || !location.protocol.startsWith("http")) return;
+  try {
+    const r = await fetch("version.json?t=" + Date.now(), {cache:"no-store"}); if (!r.ok) return;
+    const j = await r.json(); if (!j || !j.b || j.b === BUILD) return;
+    UPD = j.b; if (!updateNow()) updBar();
+  } catch(e){}
+}
+function updBar(){ const el = $("#updBar"); if (!el) return; el.hidden = !UPD; if (UPD) el.innerHTML = `<span>يتوفر إصدار أحدث من لمّة. سيُحدَّث تلقائيًا بعد انتهاء الجولة الحالية.</span>`; }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkUpdate(); });
+setTimeout(checkUpdate, 1500);
+if (PREVIEW){ const u = $("#updBar"); if (u) u.insertAdjacentHTML("afterend", `<div class="previewbar">نسخة معاينة للاختبار، وليست الموقع الرسمي. الموقع الرسمي: ${esc((SITE_URL || "").replace(/^https?:\/\//, ""))}</div>`); }
+
 /* ================= JOIN ================= */
 window.addEventListener("lm-conn", () => { if (P){ $("#playerMain").dataset.k = ""; playerRender(); } if (H) renderHost(); });
-resumeBanner();
 $("#joinForm").addEventListener("submit", e => { e.preventDefault(); playerJoin($("#joinCode").value.trim()); });
 $("#joinCode").addEventListener("input", e => { e.target.value = e.target.value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)).replace(/\D/g, "").slice(0, 4); });
 photosReady.then(() => { if (H && H.s.ph === "lobby" && H.g === "puzzle"){ if (PHOTOS_OK === false) H.s.o.src = "draw"; renderHost(); } });
-{ const hc = (location.hash || "").replace("#", "") || new URLSearchParams(location.search).get("code") || "";
-  if (/^\d{4}$/.test(hc)){ $("#joinCode").value = hc; playerJoin(hc); } }
+/* opening لمّة: a game link (#code) joins that game; otherwise a game this device was in comes back automatically
+   (the host's game or the player's seat, whichever is more recent) */
+{ const q = new URLSearchParams(location.search), hc = (location.hash || "").replace("#", "") || q.get("code") || "";
+  if (q.has("v")) history.replaceState(null, "", location.pathname + (q.get("code") ? "?code=" + q.get("code") : "") + location.hash);   // the version tag has done its job
+  const sh = savedHost(), st = seatLatest();
+  if (/^\d{4}$/.test(hc)){ $("#joinCode").value = hc; playerJoin(hc); }          // a game link always joins as a player
+  else if (sh && (!st || sh.at >= st.at)) hostResume();
+  else if (st) playerJoin(st.code, {auto:true}); }
 /* opening another game link in the same tab (only the #code changes) joins that game */
 window.addEventListener("hashchange", () => { const hc = (location.hash || "").replace("#", ""); if (/^\d{4}$/.test(hc) && !H && (!P || P.code !== hc)){ $("#joinCode").value = hc; playerJoin(hc); } });
 

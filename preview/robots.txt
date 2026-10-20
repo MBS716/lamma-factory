@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://mbs716.github.io/lamma/sitemap.xml

@@ -16,7 +16,7 @@ jobs:
           O=reports/version-inspect; mkdir -p $O
           {
           echo "time (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
-          for u in https://mbs716.github.io/lamma/ https://mbs716.github.io/lamma/index.html https://mbs716.github.io/lamma https://mbs716.github.io/lamma-factory/preview/ https://mbs716.github.io/lamma-factory/preview-wheel/ http://mbs716.github.io/lamma/; do
+          for u in https://mbs716.github.io/lamma/ https://mbs716.github.io/lamma/index.html https://mbs716.github.io/lamma https://mbs716.github.io/lamma-factory/preview/ https://mbs716.github.io/lamma-factory/preview-wheel/ https://mbs716.github.io/lamma-factory/preview-next/ http://mbs716.github.io/lamma/; do
             echo; echo "== $u"
             curl -s -o /tmp/p.html -D /tmp/h.txt -L "$u"
             grep -iE '^(HTTP/|location|cache-control|age|x-cache|last-modified|etag|expires)' /tmp/h.txt | tr -d '\r'
