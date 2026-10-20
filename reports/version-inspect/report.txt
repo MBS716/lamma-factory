@@ -1,0 +1,83 @@
+time (UTC): 2026-10-20 17:05:18
+
+== https://mbs716.github.io/lamma/
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:05:54 GMT
+etag: "6ad79162-46bc7"
+expires: Tue, 20 Oct 2026 17:15:18 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+version in page: v3.0 · 2026-10-20
+room prefix: ROOM_PREFIX = "lm3-"
+
+== https://mbs716.github.io/lamma/index.html
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:05:54 GMT
+etag: "6ad79162-46bc7"
+expires: Tue, 20 Oct 2026 17:15:18 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+version in page: v3.0 · 2026-10-20
+room prefix: ROOM_PREFIX = "lm3-"
+
+== https://mbs716.github.io/lamma
+HTTP/2 301 
+location: https://mbs716.github.io/lamma/
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:05:54 GMT
+etag: "6ad79162-46bc7"
+expires: Tue, 20 Oct 2026 17:15:18 GMT
+cache-control: max-age=600
+age: 0
+x-cache: HIT
+x-cache-hits: 1
+version in page: v3.0 · 2026-10-20
+room prefix: ROOM_PREFIX = "lm3-"
+
+== https://mbs716.github.io/lamma-factory/preview/
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:11:18 GMT
+etag: "6ad792a6-360f2"
+expires: Tue, 20 Oct 2026 17:15:19 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+version in page: v2.2-mobile · 2026-10-19
+room prefix: ROOM_PREFIX = "lm2-"
+
+== https://mbs716.github.io/lamma-factory/preview-wheel/
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:11:18 GMT
+etag: "6ad792a6-46bc7"
+expires: Tue, 20 Oct 2026 17:15:19 GMT
+cache-control: max-age=600
+age: 0
+x-cache: MISS
+x-cache-hits: 0
+version in page: v3.0 · 2026-10-20
+room prefix: ROOM_PREFIX = "lm3-"
+
+== http://mbs716.github.io/lamma/
+HTTP/1.1 301 Moved Permanently
+Location: https://mbs716.github.io/lamma/
+Age: 0
+X-Cache: MISS
+X-Cache-Hits: 0
+HTTP/2 200 
+last-modified: Tue, 20 Oct 2026 16:05:54 GMT
+etag: "6ad79162-46bc7"
+expires: Tue, 20 Oct 2026 17:15:18 GMT
+cache-control: max-age=600
+age: 1
+x-cache: HIT
+x-cache-hits: 1
+version in page: v3.0 · 2026-10-20
+room prefix: ROOM_PREFIX = "lm3-"
