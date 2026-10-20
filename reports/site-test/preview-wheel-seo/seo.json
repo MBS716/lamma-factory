@@ -1,0 +1,38 @@
+{
+ "url": "https://mbs716.github.io/lamma-factory/preview-wheel/",
+ "checks": [
+  "OK page answers 200 (200)",
+  "OK no X-Robots-Tag noindex header (none)",
+  "OK title: لمّة | ألعاب جماعية ومسابقات مباشرة",
+  "OK description 169 characters",
+  "OK robots meta: index,follow,max-image-preview:large",
+  "OK canonical: https://mbs716.github.io/lamma/",
+  "OK html lang=ar dir=rtl",
+  "OK og:title: لمّة | ألعاب جماعية ومسابقات مباشرة",
+  "OK og:description: العب مع أصدقائك من جوالاتكم بكود واحد: سباق الحروف، وعجلة التحديات، وت",
+  "OK og:url: https://mbs716.github.io/lamma/",
+  "OK og:image: https://mbs716.github.io/lamma/og-image.png",
+  "OK og:type: website",
+  "OK og:locale: ar_SA",
+  "OK og:site_name: لمّة",
+  "OK twitter card: large image",
+  "OK structured data parses: ['WebSite', 'WebApplication']",
+  "OK og-image.png: 200, 74521 bytes, image/png",
+  "OK preview image size 1200x630",
+  "OK favicon.ico: 200, 4038 bytes, image/vnd.microsoft.icon",
+  "OK favicon-32.png: 200, 1369 bytes, image/png",
+  "OK apple-touch-icon.png: 200, 3399 bytes, image/png",
+  "OK icon-192.png: 200, 7250 bytes, image/png",
+  "OK icon-512.png: 200, 9455 bytes, image/png",
+  "OK site.webmanifest: 200, 872 bytes, application/manifest+json; charset=utf-8",
+  "OK sitemap.xml: 200, 250 bytes, application/xml",
+  "OK sitemap lists ['https://mbs716.github.io/lamma/']",
+  "OK robots.txt: 200, 76 bytes, text/plain; charset=utf-8",
+  "OK host robots.txt (https://mbs716.github.io/robots.txt): 404, does not block the site"
+ ],
+ "host_robots": {
+  "status": 404,
+  "body": ""
+ },
+ "PASS": true
+}
