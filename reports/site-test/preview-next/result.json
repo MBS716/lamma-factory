@@ -1,25 +1,27 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview-next/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=1959f5d494#3853)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=1959f5d494#3853)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=6129da81eb#2323)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=6129da81eb#2323)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
   "OK letters: the team pressing on its phone does NOT stop the clock",
-  "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
+  "OK letters fairness: pressed at 0 s, answered at 19.2 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
   "OK letters: both teams had the same number of questions (10/10)",
   "OK letters: totals equal the points awarded (860/900)",
   "OK letters: no question repeated",
   "OK letters: winner screen on host, iPhone and Android",
-  "OK sessions: invite link carries the version (review-next/?v=1959f5d494#6100)",
-  "OK sessions: version.json matches the page (1959f5d494 = 1959f5d494)",
+  "OK sessions: preview rooms are separate (lmp3-) and the invite link stays on this site",
+  "OK sessions: invite link carries the version (review-next/?v=6129da81eb#4821)",
+  "OK sessions: version.json matches the page (6129da81eb = 6129da81eb)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
   "OK sessions: Android opens the site again (no code), back automatically with its name and team",
   "OK sessions: still two players, none twice ['آيفون', 'أندرويد']",
   "OK sessions: another device cannot take a name already in the game (هذا الاسم مستخدم في هذه اللعبة. اختر اسم)",
+  "OK sessions: a new version during a round: no reload on host or phone, round and scores kept, a notice instead",
   "OK sessions: host closed the tab, the phones stay and show \"host temporarily away\"",
   "OK sessions: host opens the site again, back in the same room and question, no new code",
   "OK sessions: phones carry on without re-joining",
@@ -31,7 +33,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 150)",
+  "OK wheel v3: phones receive the same box result as the host (m 50)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -43,7 +45,7 @@
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
   "OK wheel v3: state sent to phones stays small (487 characters)",
-  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: iPhone found every difference by touch (5/5)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
   "OK spot: after the round the source link is shown (licence attribution)",
@@ -51,7 +53,7 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3480], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3479], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
@@ -85,7 +87,7 @@
   ]
  },
  "ignored": [
-  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=746541&pw=Ga0vatCsjh."
+  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=747593&pw=qnWyYLPmgV."
  ],
  "PASS": true
 }
