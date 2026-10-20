@@ -1,8 +1,8 @@
 {
  "url": "http://localhost:8799/",
  "checks": [
-  "OK invite link points to this site (http://localhost:8799/?v=876139dcad#5008)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=876139dcad#5008)",
+  "OK invite link points to this site (http://localhost:8799/?v=68be0a4dc5#4078)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=68be0a4dc5#4078)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
@@ -12,13 +12,15 @@
   "OK letters: totals equal the points awarded (860/900)",
   "OK letters: no question repeated",
   "OK letters: winner screen on host, iPhone and Android",
-  "OK sessions: invite link carries the version (alhost:8799/?v=876139dcad#8423)",
-  "OK sessions: version.json matches the page (876139dcad = 876139dcad)",
+  "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
+  "OK sessions: invite link carries the version (alhost:8799/?v=68be0a4dc5#3465)",
+  "OK sessions: version.json matches the page (68be0a4dc5 = 68be0a4dc5)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
   "OK sessions: Android opens the site again (no code), back automatically with its name and team",
   "OK sessions: still two players, none twice ['آيفون', 'أندرويد']",
   "OK sessions: another device cannot take a name already in the game (هذا الاسم مستخدم في هذه اللعبة. اختر اسم)",
+  "OK sessions: a new version during a round: no reload on host or phone, round and scores kept, a notice instead",
   "OK sessions: host closed the tab, the phones stay and show \"host temporarily away\"",
   "OK sessions: host opens the site again, back in the same room and question, no new code",
   "OK sessions: phones carry on without re-joining",
@@ -30,7 +32,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (p 250)",
+  "OK wheel v3: phones receive the same box result as the host (imm 0)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -41,7 +43,7 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (487 characters)",
+  "OK wheel v3: state sent to phones stays small (486 characters)",
   "OK spot: iPhone found every difference by touch (6/6)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
@@ -56,9 +58,7 @@
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)"
  ],
- "errors": [
-  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=746279&pw=m4CzapAabS."
- ],
+ "errors": [],
  "not_tested": [
   "public-site phone with a new-version code",
   "real phones on mobile networks (only browser engines on GitHub servers)",
@@ -86,5 +86,8 @@
    }
   ]
  },
- "PASS": false
+ "ignored": [
+  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=747544&pw=b4a8oRnF28."
+ ],
+ "PASS": true
 }
