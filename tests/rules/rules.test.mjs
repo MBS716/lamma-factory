@@ -2,10 +2,11 @@
 // Every "device" below is a separate anonymous identity, like a phone or computer after anonymous sign-in.
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
-import { ref, set, get, update, remove, serverTimestamp, onDisconnect, goOffline } from "firebase/database";
+import { ref, set, get, update, remove, serverTimestamp, onDisconnect, goOffline, goOnline } from "firebase/database";
 const env = await initializeTestEnvironment({ projectId: "demo-lamma", database: { rules: readFileSync("firebase/database.rules.json", "utf8"), host: "127.0.0.1", port: 9000 } });
 const out = []; let fails = 0;
-async function t(name, p){ try { await p; out.push("OK   " + name); } catch(e){ fails++; out.push("FAIL " + name + " :: " + (e.message || e)); } }
+const limit = p => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("no answer in 15 s")), 15000))]);
+async function t(name, p){ try { await limit(p); out.push("OK   " + name); } catch(e){ fails++; out.push("FAIL " + name + " :: " + (e.message || e)); } }
 const db = uid => uid ? env.authenticatedContext(uid).database() : env.unauthenticatedContext().database();
 const A = db("hostA"), B = db("phoneB"), C = db("phoneC"), N = db(null);
 const admin = async f => { let r; await env.withSecurityRulesDisabled(async c => { r = await f(c.database()); }); return r; };
@@ -67,7 +68,7 @@ await t("phone registers its 'away' mark for when it disconnects", assertSucceed
 goOffline(B); await new Promise(r => setTimeout(r, 1500));
 const afterDrop = await admin(d => get(ref(d, `${R}/seatphoneB01`)).then(s => s.val()));
 await t("connection lost (WhatsApp, closed browser): the seat stays, marked away, join time kept", Promise.resolve().then(() => { if (!afterDrop || !afterDrop.j.includes('"away":1') || !afterDrop.c) throw new Error(JSON.stringify(afterDrop)); }));
-const B2 = db("phoneB");      // same device, same anonymous identity, new page
+goOnline(B); const B2 = B;      // same device, same anonymous identity, connected again
 await t("same device returns: writes the same seat again (same join time)", assertSucceeds(set(ref(B2, `${R}/seatphoneB01`), { ...seat("phoneB", { r: "p", n: "سارة", tm: "g" }), c: afterDrop.c })));
 await t("…or simply updates it", assertSucceeds(update(ref(B2, `${R}/seatphoneB01`), { j: JSON.stringify({ r: "p", n: "سارة", tm: "g" }), t: TS() })));
 const A2 = db("hostA");
