@@ -19,7 +19,8 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap">\n')
 QR = '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>\n'
 FB = ('<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>\n'
-      '<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>\n')
+      '<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>\n'
+      '<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>\n')
 RESET = ('*,*::before,*::after{box-sizing:border-box}\n'
          'html{-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}\n'
          'body{margin:0}\nimg{max-width:100%}\n[hidden]{display:none!important}\n')
@@ -63,7 +64,7 @@ def banks():
 EMB, BANKV = banks()
 
 def js(firebase, base, spot_cdn='spot/', embed=False):
-    code = '\n'.join([S('data.js'), S('photo.js'), S('draw.js'), S('app.js')])
+    code = '\n'.join([S('data.js'), S('photo.js'), S('draw.js'), S('wheel3.js'), S('app.js')])
     if embed: code = 'window.EMBED_BANKS = ' + json.dumps(EMB, ensure_ascii=False, separators=(',', ':')) + ';\n' + code
     code = code.replace('/*@@FIREBASE@@*/null', json.dumps(firebase, ensure_ascii=False) if firebase else 'null')
     code = code.replace('/*@@BASE@@*/""', json.dumps(base))

@@ -74,14 +74,14 @@ async def main():
             await snap(host, 'letters_host_ask'); await snap(g, 'letters_player_ask')
             await hc('[data-h=stop]'); await host.wait_for_function('H.s.st === "judge"'); await snap(host, 'letters_host_judge')
             await hc('[data-h=ok]'); await snap(host, 'letters_host_done')
-            # wheel
-            code = await start('wheel', {'goal': 0}); await join(g, code, 'سارة', 'g'); await host.wait_for_timeout(300)
-            await hc('[data-h=start]'); await host.wait_for_timeout(300)
-            for i in range(30):
-                await host.evaluate('Wheel.spin()'); await host.wait_for_function('H.s.show === true', timeout=8000)
-                if await host.evaluate('!!H.s.wq'): break
-                await host.evaluate('Wheel.next()')
+            # wheel v3: a long card (speed challenge face-off) and the box
+            code = await start('wheel', {'goal': 1500}); await join(g, code, 'سارة', 'g'); await host.wait_for_timeout(300)
+            await hc('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"')
+            await snap(host, 'wheel_host_spin'); await snap(g, 'wheel_player_spin')
+            await host.evaluate('W3.act(H.s, H.priv.wp, "spin", null, W3.tok(H.s), Wheel.env()); H.s.seg = "speed"; W3.act(H.s, H.priv.wp, "land", null, W3.tok(H.s), Wheel.env()); pushHost()')
             await snap(host, 'wheel_host_q'); await snap(g, 'wheel_player_q')
+            await host.evaluate('W3.act(H.s, H.priv.wp, "sx", null, W3.tok(H.s), Wheel.env()); W3.act(H.s, H.priv.wp, "next", null, W3.tok(H.s), Wheel.env()); W3.act(H.s, H.priv.wp, "spin", null, W3.tok(H.s), Wheel.env()); H.s.seg = "l2"; W3.act(H.s, H.priv.wp, "land", null, W3.tok(H.s), Wheel.env()); H.s.cur = {k:"l2", st:"choose", a:"bet", b:"m250"}; pushHost()')
+            await snap(host, 'wheel_host_l2'); await snap(g, 'wheel_player_l2')
             # quiz
             code = await start('quiz'); await join(g, code, 'سارة'); await host.wait_for_timeout(300)
             await hc('[data-h=start]'); await host.wait_for_function('H.s.ph === "q"'); await g.wait_for_selector('[data-ans]')

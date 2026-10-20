@@ -1,0 +1,34 @@
+# Real test of the wheel v3 preview (served from preview-wheel/ by GitHub Pages of this repo).
+name: preview-wheel-test
+on:
+  push:
+    branches: [main]
+    paths: ["preview-wheel/**", "tests/live_e2e_v3.py", ".github/workflows/preview-wheel.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium webkit
+      - name: wait until GitHub Pages serves this commit
+        run: |
+          want=$(md5sum preview-wheel/index.html | cut -c1-32)
+          for i in $(seq 1 40); do
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-wheel/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
+          done; echo "pages did not update"; exit 1
+      - run: python tests/live_e2e_v3.py https://mbs716.github.io/lamma-factory/preview-wheel/ reports/site-test/preview-wheel https://mbs716.github.io/lamma/
+      - run: python tests/seo_check.py https://mbs716.github.io/lamma-factory/preview-wheel/ reports/site-test/preview-wheel-seo https://mbs716.github.io/lamma/
+        if: always()
+      - if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git pull -q --rebase || true
+          git add reports/site-test
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit: credential-like text found"; exit 1; fi
+          git commit -m "preview test results" && git push || true

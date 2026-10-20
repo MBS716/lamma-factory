@@ -18,16 +18,17 @@ const SCENES = ["الصحراء","البحر","المدينة ليلًا","ال�
 const FIREBASE_CONFIG = /*@@FIREBASE@@*/null;
 /* Rooms of this version live apart from the rooms of the current public site, so a phone that opens the other
    version with the same code finds no game instead of a game it cannot read. */
-const APP_V = 2, ROOM_PREFIX = "lm2-";
+const APP_V = 3, ROOM_PREFIX = "lm3-";
 const BASE_URL = /*@@BASE@@*/"";
 let ROOM = null, NR = null, H = null, P = null, connState = "checking";
 function makeFirebaseRoom(db){
   const me = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   return {
     async join(name){
+      await Promise.race([authReady, sleep(6000)]);
       const ref = db.ref("rooms/" + name), mine = ref.child(me), ci = db.ref(".info/connected");
       let local = {}, peersArr = Object.freeze([]), handlers = [], conn = false, left = false;
-      const write = () => mine.set({j:JSON.stringify(local), t:firebase.database.ServerValue.TIMESTAMP});
+      const write = () => mine.set({j:JSON.stringify(local), t:firebase.database.ServerValue.TIMESTAMP, ...(AUTH_UID ? {u:AUTH_UID} : {})});
       const build = val => {
         const prev = new Map(peersArr.map(p => [p.peer, p])), now = Date.now();
         peersArr = Object.freeze(Object.entries(val || {}).map(([id, v]) => {
@@ -54,11 +55,25 @@ function makeFirebaseRoom(db){
   };
 }
 async function getClaude(){ for (let i = 0; i < 40; i++){ if (window.claude && window.claude.use) return window.claude; await sleep(100); } return null; }
+/* A device identity without any account: Firebase anonymous sign-in, kept by the browser on this device. The database
+   rules only let that identity write the host's saved game, so a host who closes the tab can come back to the same room
+   for 3 hours and nobody else can take it over. If anonymous sign-in is not switched on, everything works as before. */
+let AUTH_UID = null, authDone = null;
+const authReady = new Promise(r => { authDone = r; });
+async function fbSignIn(){
+  try {
+    if (!firebase.auth) return null;
+    const a = firebase.auth(); if (a.currentUser) return a.currentUser.uid;
+    const r = await Promise.race([a.signInAnonymously(), sleep(8000).then(() => null)]);
+    return r && r.user ? r.user.uid : null;
+  } catch(e){ return null; }
+}
 const roomReady = (async () => {
   try {
-    if (FIREBASE_CONFIG && window.firebase){ if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG); ROOM = makeFirebaseRoom(firebase.database()); }
+    if (FIREBASE_CONFIG && window.firebase){ if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG); fbSignIn().then(u => { AUTH_UID = u; authDone(u); }); ROOM = makeFirebaseRoom(firebase.database()); }
     else { const c = await getClaude(); if (c){ try { ROOM = await c.use("room"); } catch(e){ ROOM = null; } } }
   } catch(e){ console.error(e); ROOM = null; }
+  if (!AUTH_UID && !(FIREBASE_CONFIG && window.firebase)) authDone(null);
   connState = ROOM ? "on" : "off"; updateConn(); return ROOM;
 })();
 function updateConn(){
@@ -81,11 +96,13 @@ const GAMES = {
           {key:"lv", label:"مستوى الأسئلة", def:3, choices:() => [...LV3, [3,"منوّع"]]},
           {key:"t", label:"وقت السؤال", def:30, choices:() => [[20,"20 ث"],[30,"30 ث"],[45,"45 ث"]]}],
     art:`<div class="art-hex"><span style="background:var(--green)">م</span><span style="background:var(--gold)">ل</span><span style="background:var(--orange)">ع</span></div>`},
-  wheel:{name:"عجلة التحديات", group:"team", teams:true, tag:"36 تحديًا · أسئلة · سرقة نقاط",
-    desc:"لفّ العجلة: نقاط، تحديات، أسئلة، سرقة، مضاعفة أو خسارة الدور.",
-    how:"الفريقان يلفّان بالتناوب. تظهر النتيجة على كل الجوالات، والمقدّم يحتسب النقاط. أول فريق يصل للهدف يفوز.",
-    opts:[{key:"lv", label:"مستوى التحديات والأسئلة", def:1, choices:() => LV3},
-          {key:"goal", label:"هدف الفوز", def:2000, choices:() => [[1000,"1000"],[2000,"2000"],[3000,"3000"],[0,"مفتوح"]]}],
+  wheel:{name:"عجلة التحديات", group:"team", teams:true, tag:"20 كرتًا · صندوق الحظ · تحدي السرعة",
+    desc:"لفّ العجلة: أسئلة وتحديات سرعة وصندوق الحظ والكنز والحصانة والرهان وغيرها، حتى هدف 1,500 أو 3,000 أو 5,000.",
+    how:"الفريقان يلفّان بالتناوب، والمقدّم يحكم على الإجابات والتحديات. عند بلوغ الهدف تكتمل الجولة ثم تُلعب جولة ختامية، والأعلى نقاطًا يفوز.",
+    opts:[{key:"goal", label:"هدف الفوز", def:null, choices:() => [[1500,"1,500"],[3000,"3,000"],[5000,"5,000"]]},
+          {key:"mode", label:"وضع اللعب", def:"hype", choices:() => [["classic","كلاسيكي"],["hype","حماسي"],["legend","أسطوري"]]},
+          {key:"t", label:"وقت السؤال", def:30, choices:() => [[30,"30 ث"],[45,"45 ث"],[60,"60 ث"]]},
+          {key:"lv", label:"مستوى الأسئلة", def:1, choices:() => [...LV3, [3,"منوّع"]]}],
     art:`<div class="art-wheel"></div>`},
   quiz:{name:"تحدي الأسئلة", group:"race", teams:false, tag:"أكثر من 2000 سؤال · 8 تصنيفات · 3 مستويات",
     desc:"أسئلة اختيار من متعدد بمؤقت، ونقاط أعلى للأسرع وللأسئلة الأصعب.",
@@ -143,10 +160,12 @@ const HELP = {
     + sec("النقاط", `<p>الإجابة الصحيحة: 500 (سهل) أو 750 (متوسط) أو 1000 (صعب)، وتنقص كلما تأخرت حتى تصل إلى النصف عند نهاية الوقت. الإجابة الخاطئة صفر.</p>`)
     + sec("الفوز", `<p>صاحب أعلى مجموع بعد آخر سؤال يتصدر منصة التتويج.</p>`)
     + sec("ميزات", `<p>أكثر من 2000 سؤال في 8 تصنيفات، ولا يتكرر سؤال داخل المسابقة، وتُقدَّم الأسئلة التي لم تظهر على جهاز المقدّم من قبل.</p>`),
-  wheel:() => sec("الفكرة", `<p>فريقان يلفّان العجلة بالتناوب، والنتيجة قد تكون نقاطًا أو تحديًا أو سؤالًا أو سرقة أو مضاعفة أو خسارة الدور.</p>`)
-    + sec("الدخول والبدء", `<p>يدخل اللاعبون الكود ويختارون فريقهم. يحدد المقدّم مستوى التحديات وهدف الفوز ثم يبدأ.</p>`)
-    + sec("طريقة اللعب", `<ul><li><b>نقاط:</b> تُضاف مباشرة للفريق صاحب الدور.</li><li><b>تحدٍّ:</b> مهمة يؤديها الفريق، ويحتسب المقدّم من نجح.</li><li><b>سؤال:</b> يظهر بأربعة خيارات، ويحكم المقدّم.</li><li><b>سرقة:</b> تُنقل 200 نقطة من الفريق الآخر.</li><li><b>ضعف النقاط</b> أو <b>خسارة الدور</b>.</li></ul>`)
-    + sec("الفوز", `<p>أول فريق يصل إلى الهدف (1000 أو 2000 أو 3000) يفوز، أو تُلعب مفتوحة بلا هدف.</p>`),
+  wheel:() => sec("الفكرة", `<p>فريقان يلفّان العجلة بالتناوب. كل شريحة كرت، وحجمها يساوي احتمال ظهوره. المقدّم وحده يحكم على الإجابات والتحديات، وشاشات اللاعبين تعرض النتيجة فقط.</p>`)
+    + sec("البدء", `<p>يختار المقدّم هدف الفوز (1,500 أو 3,000 أو 5,000) ووضع اللعب ووقت السؤال ومستوى الأسئلة، ويمكنه تعطيل الكروت الاختيارية. الفريق البادئ يُختار بالقرعة.</p>`)
+    + sec("الكروت", w3bidi(`<ul>${W3.ORDER.map(k => `<li><b>${esc(W3.C[k].f || W3.C[k].n)}:</b> ${W3DESC[k]}</li>`).join("")}</ul>`))
+    + sec("صندوق الحظ", w3bidi(`<p>${W3.BOX.map(([r, v, p]) => `${r === "p" ? "+" + v : r === "m" ? "−" + v : r === "imm" ? "حصانة" : r === "respin" ? "لفّة إضافية" : "خسارة الدور"} (${p}٪)`).join("، ")}. تُسحب النتيجة لحظة الفتح ولا يمكن إعادة فتحه.</p>`))
+    + sec("العدالة", `<ul><li>النقاط لا تنزل تحت الصفر.</li><li>حصانة واحدة وفرصة ثانية واحدة لكل فريق كحد أقصى، والزائدة تتحول إلى +100.</li><li>الحصانة تمنع أول خصم أو سرقة، ولا تحمي من رهان الفريق نفسه.</li><li>لفّتان إضافيتان كحد أقصى في الدور الواحد، ثم تُقفل كروت اللف الإضافي.</li><li>الكروت النادرة (الذهبي، حظك مرتين، الكنز، تبديل المزايا) تُقفل 4 لفّات بعد ظهورها.</li></ul>`)
+    + sec("نهاية المباراة", `<p>بلوغ الهدف لا ينهي المباراة فورًا: تكتمل الجولة حتى يتساوى عدد الأدوار، ثم جولة ختامية بدور أخير لكل فريق (المتأخر أولًا، بلا لفّات إضافية). الأعلى نقاطًا يفوز، وعند التعادل مواجهة فاصلة بتحديات السرعة حتى 5 محاولات، ثم تعادل رسمي.</p>`),
   diff:() => sec("الفكرة", `<p>صورتان متطابقتان تقريبًا، وفي الثانية فروق صغيرة طبيعية: شيء اختفى أو أضيف أو تغيّر. ابحث عنها قبل الآخرين.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يختار المستوى ووقت الجولة ثم يبدأ، فيحصل كل اللاعبين على نفس الصورتين في الوقت نفسه.</p>`)
     + sec("طريقة اللعب", `<ul><li>اضغط على مكان الفرق في أي من الصورتين، فتظهر دائرة خضراء.</li><li>كبّر بإصبعين أو بأزرار ＋ و－، واسحب بإصبع واحد للتحرك داخل الصورة. التكبير والسحب لا يُحسبان أخطاء.</li><li>الضغطة الخاطئة تظهر ✕ وتُحسب في عدد الأخطاء.</li></ul>`)
@@ -172,9 +191,25 @@ async function hostStart(g){
   if (ROOM && H && H.g === g) await claimCode();
   renderHost();
 }
+const CLOUD_H = 3 * 3600e3;
+const FS = {
+  db: () => fbdb(),
+  async get(path){ const db = FS.db(); if (!db || !AUTH_UID) return undefined; try { const sn = await Promise.race([db.ref(path).once("value"), sleep(6000).then(() => { throw new Error("timeout"); })]); return sn.val(); } catch(e){ return undefined; } },
+  async set(path, v){ const db = FS.db(); if (!db || !AUTH_UID) return false; try { await Promise.race([db.ref(path).set(v), sleep(8000).then(() => { throw new Error("timeout"); })]); return true; } catch(e){ return false; } },
+  async del(path){ const db = FS.db(); if (!db || !AUTH_UID) return; try { await db.ref(path).remove(); } catch(e){} },
+};
+const cloudGame = g => !!(MOD[g] && MOD[g].cloudResume);
+// a code whose host stepped away (less than 3 hours ago) is kept for that host
+async function codeFree(code, prefer){
+  if (!cloudGame(H.g)) return true;
+  const lk = await FS.get("hosts/" + ROOM_PREFIX + code);
+  if (!lk || lk.u === AUTH_UID) return true;
+  return Date.now() - (+lk.t || 0) > CLOUD_H;
+}
 async function claimCode(prefer){
   for (let k = 0; k < 4; k++){
     const code = k === 0 && prefer ? prefer : String(1000 + Math.floor(Math.random() * 9000));
+    if (!(await codeFree(code, prefer)) && k < 3) continue;
     let nr;
     try { nr = await ROOM.join(ROOM_PREFIX + code); } catch(e){ console.error(e); if (H) H.failed = true; return; }
     try { await nr.presence({r:"h", v:APP_V, g:H.g, s:H.s}); } catch(e){}
@@ -184,6 +219,7 @@ async function claimCode(prefer){
     if (other()){ try { await nr.leave(); } catch(e){} continue; }
     if (!H){ try { await nr.leave(); } catch(e){} return; }
     NR = nr; H.code = code;
+    if (cloudGame(H.g)) H.cloud = await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP});
     NR.onPeers(() => { if (H && MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
     return;
   }
@@ -197,14 +233,46 @@ function pushHost(){
 /* ---- the host's game survives a page reload or a dropped connection: the state is kept in this tab
    (sessionStorage) and the same code is claimed again, so players stay in the game and nothing is scored twice */
 const HS_KEY = "lm-host";
+const HL_KEY = "lm-host3";     // device copy (survives closing the tab), only for games that resume across tabs
 function saveHost(){
   if (!H || !H.code) return;
-  try { const pv = MOD[H.g].savePriv ? MOD[H.g].savePriv() : null; sessionStorage.setItem(HS_KEY, JSON.stringify({g:H.g, code:H.code, s:H.s, pv, at:Date.now()})); } catch(e){}
+  const pv = MOD[H.g].savePriv ? MOD[H.g].savePriv() : null, x = {g:H.g, code:H.code, s:H.s, pv, at:Date.now()};
+  try { sessionStorage.setItem(HS_KEY, JSON.stringify(x)); } catch(e){}
+  if (cloudGame(H.g)){ try { localStorage.setItem(HL_KEY, JSON.stringify(x)); } catch(e){} saveCloud(); }
 }
-function savedHost(){ try { const x = JSON.parse(sessionStorage.getItem(HS_KEY) || "null"); return x && GAMES[x.g] && Date.now() - x.at < 3 * 3600e3 ? x : null; } catch(e){ return null; } }
-function dropSaved(){ try { sessionStorage.removeItem(HS_KEY); } catch(e){} }
+// the database copy: written at once when the match moves on (a card, a verdict…), clock ticks at most every 1.5 s
+const stateOrder = s => s && typeof s.sp === "number" ? s.sp * 1e6 + (s.step || 0) : -1;
+function saveCloud(){
+  if (!H || !H.cloud) return;
+  const moved = stateOrder(H.s) !== H.priv.cloudOrd;
+  if (H.priv.cloudT && !moved) return;
+  clearTimeout(H.priv.cloudT);
+  H.priv.cloudT = setTimeout(async () => {
+    if (!H || !H.cloud) return; H.priv.cloudT = null; H.priv.cloudOrd = stateOrder(H.s); const room = ROOM_PREFIX + H.code, TS = firebase.database.ServerValue.TIMESTAMP;
+    await FS.set("games/" + room, {g:H.g, v:APP_V, s:JSON.stringify(H.s), at:TS});
+    await FS.set("gpriv/" + room, {pv:JSON.stringify(MOD[H.g].savePriv ? MOD[H.g].savePriv() : {}), at:TS});
+    if (!H.priv.lockAt || Date.now() - H.priv.lockAt > 60000){ H.priv.lockAt = Date.now(); FS.set("hosts/" + room, {u:AUTH_UID, g:H.g, t:TS}); }
+  }, moved ? 0 : 1500);
+}
+function savedHost(){
+  const ok = x => x && GAMES[x.g] && Date.now() - x.at < CLOUD_H ? x : null;
+  try { const x = ok(JSON.parse(sessionStorage.getItem(HS_KEY) || "null")); if (x) return x; } catch(e){}
+  try { const x = ok(JSON.parse(localStorage.getItem(HL_KEY) || "null")); if (x && cloudGame(x.g)) return {...x, dev:1}; } catch(e){}
+  return null;
+}
+function dropSaved(){ try { sessionStorage.removeItem(HS_KEY); localStorage.removeItem(HL_KEY); } catch(e){} }
+async function dropCloud(code){ if (!code) return; const room = ROOM_PREFIX + code; await FS.del("games/" + room); await FS.del("gpriv/" + room); await FS.del("hosts/" + room); }
 async function hostResume(){
-  const x = savedHost(); if (!x) return;
+  let x = savedHost(); if (!x) return;
+  if (cloudGame(x.g)){
+    await roomReady; await Promise.race([authReady, sleep(6000)]);
+    const room = ROOM_PREFIX + x.code, lk = await FS.get("hosts/" + room);
+    if (lk && lk.u === AUTH_UID){
+      const gm = await FS.get("games/" + room), gp = await FS.get("gpriv/" + room);
+      // the copy that went further in the match wins (never an older one: a box opened just before closing stays opened)
+      try { if (gm && gm.g === x.g && gm.v === APP_V){ const cs = JSON.parse(gm.s); if (stateOrder(cs) > stateOrder(x.s)) x = {...x, s:cs, pv:gp && gp.pv ? JSON.parse(gp.pv) : x.pv}; } } catch(e){}
+    }
+  }
   H = {g:x.g, code:null, s:x.s, priv:{}};
   for (const id of ["#hostMain","#hostBar"]){ $(id).innerHTML = ""; $(id).dataset.k = ""; }
   show("host"); renderHost();
@@ -219,10 +287,10 @@ function resumeBanner(){
   el.hidden = false;
   el.innerHTML = `<div><b>لديك لعبة لم تنتهِ</b><span class="muted"> · ${esc(GAMES[x.g].name)} · الكود ${esc(x.code)}</span></div><div class="row"><button class="btn sm" id="resumeGo">متابعة اللعبة</button><button class="btn ghost sm" id="resumeNo">تجاهل</button></div>`;
   $("#resumeGo").onclick = () => { el.hidden = true; hostResume(); };
-  $("#resumeNo").onclick = () => { dropSaved(); el.hidden = true; };
+  $("#resumeNo").onclick = async () => { const c = x.code, g = x.g; dropSaved(); el.hidden = true; if (cloudGame(g)){ await roomReady; await Promise.race([authReady, sleep(6000)]); dropCloud(c); } };
 }
 async function hostEnd(){
-  dropSaved();
+  dropSaved(); if (H && H.cloud) dropCloud(H.code);
   if (H){ clearInterval(H.priv.tick); clearInterval(H.priv.mtick); }
   if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
   H = null; show("home");
@@ -234,7 +302,7 @@ function renderHost(){
   if (H.code) codeHtml = `<div><span class="muted">كود الدخول</span><div class="code">${H.code}</div></div><div class="qr" id="qr"></div><button class="btn ghost sm" id="copyLink">نسخ رابط الدخول</button>`;
   else if (connState === "checking" || (ROOM && !H.failed)) codeHtml = `<span class="muted">جارٍ تجهيز الكود…</span>`;
   else codeHtml = `<span class="muted">وضع الشاشة الواحدة</span>`;
-  const lvBadge = H.s.o.lv != null && H.s.ph !== "lobby" ? `<span class="chip lv">${H.s.o.lv === 3 ? "متدرّج" : LV_NAMES[H.s.o.lv]}</span>` : "";
+  const lvBadge = H.s.o.lv != null && H.s.ph !== "lobby" ? `<span class="chip lv">${H.s.o.lv === 3 ? (H.g === "wheel" ? "منوّع" : "متدرّج") : LV_NAMES[H.s.o.lv]}</span>` : "";
   const bar = `${lostNote()}<div><span class="muted">${g.group === "team" ? "لعبة فرق" : "سباق من الجوال"}</span><h2>${g.name}</h2></div>
     <div class="codebox">${codeHtml}</div>
     <div class="row">${lvBadge}<span class="chip">${players.length} لاعب</span><button class="btn ghost sm" data-help="${H.g}">❔ طريقة اللعب</button>${H.s.ph !== "lobby" ? `<button class="btn ghost sm" id="setBtn">الإعدادات</button>` : ""}<button class="btn ghost sm" id="endBtn">إنهاء</button></div>`;
@@ -253,6 +321,7 @@ function renderHost(){
       if (!H) return;
       const op = e.target.closest("[data-opt]");
       if (op && !op.disabled){ const def = GAMES[H.g].opts.find(x => x.key === op.dataset.opt), ch = def.choices().find(c => String(c[0]) === op.dataset.val); if (ch){ H.s.o[def.key] = ch[0]; if (MOD[H.g].onOpt) MOD[H.g].onOpt(def.key); pushHost(); } return; }
+      const wb = e.target.closest("button"); if (wb && !wb.disabled && MOD[H.g].hostClick && MOD[H.g].hostClick(wb)) return;
       const b = e.target.closest("[data-h]"); if (b && !b.disabled && MOD[H.g].act) MOD[H.g].act(b.dataset.h, b);
     });
   }
@@ -266,7 +335,7 @@ function lobbyHTML(players, extra, startLabel){
   const photoNote = def.opts.some(op => op.key === "src") && PHOTOS_OK === false ? `<p class="note">الصور الحقيقية غير متاحة في هذا العرض، فتُستخدم الرسوم.</p>` : "";
   return `<div class="layout"><div class="panel stack"><h2 class="lob-h">${def.name}</h2><p class="muted">${def.how}</p>
       <div class="optbox">${rows}</div>${photoNote}${extra || ""}
-      <div><button class="btn big" data-h="start">${startLabel || "ابدأ اللعب"}</button></div></div>
+      <div><button class="btn big" data-h="start" ${MOD[H.g].canStart && !MOD[H.g].canStart(o) ? "disabled" : ""}>${startLabel || "ابدأ اللعب"}</button></div></div>
     <div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, def.teams)}${soloNote()}</div></div>`;
 }
 function copyText(t, btn){
@@ -327,7 +396,8 @@ function playerRender(){
   const host = findHost();
   if (!host){
     pSet(`<div class="panel center stack">${P.searching || P.joined
-      ? `<p class="bigmsg">${P.joined ? "بانتظار المقدّم…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`
+      ? (P.joined && P.g && cloudGame(P.g) ? `<p class="bigmsg">المقدّم غير متصل مؤقتًا</p><p class="muted">ابقَ في هذه الصفحة. المباراة محفوظة، وتعود كما كانت فور عودة المقدّم (خلال 3 ساعات). الكود ${esc(P.code)}</p>`
+        : `<p class="bigmsg">${P.joined ? "بانتظار المقدّم…" : "نبحث عن اللعبة…"}</p><p class="muted">الكود ${esc(P.code)}</p>`)
       : `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم، وأن الجوال يفتح نفس رابط الموقع الذي يستخدمه المقدّم.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`}
       <div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
     bindPlayer(); return;
@@ -800,126 +870,290 @@ const Letters = {
   },
 };
 
-/* ================= WHEEL ================= */
-const SEGS = [
-  {t:"+100", p:100}, {t:"تحدّي", ch:1}, {t:"+200", p:200}, {t:"سؤال", q:1}, {t:"خسارة الدور", lose:1},
-  {t:"+300", p:300}, {t:"سرقة 200", steal:200}, {t:"ضعف النقاط", x2:1}, {t:"+500", p:500}, {t:"سؤال", q:1},
-];
-let wheelImg = null;
-async function wheelCanvas(){
-  try { await document.fonts.load('40px "Lalezar"'); } catch(e){}
+/* ================= WHEEL OF FORTUNE v3 (rules in wheel3.js) ================= */
+// card icons: 24×24 line drawings, used on the wheel (canvas Path2D) and in the cards (inline SVG)
+const WIC = {
+  plus:"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM12 7.5v9M7.5 12h9",
+  minus:"M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM7.5 12h9",
+  q:"M9 9.2a3 3 0 1 1 4.3 2.7c-.8.4-1.3 1.1-1.3 2v.6M12 18v.2",
+  speed:"M13.5 2 5 13.5h6.5L10 22l9-12h-6.5z",
+  gold:"M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.6L12 17.2l-5.9 3.2 1.3-6.6-4.9-4.5 6.6-.8z",
+  bet:"M5 3.5h14a1.5 1.5 0 0 1 1.5 1.5v14a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V5A1.5 1.5 0 0 1 5 3.5zM8.5 8.5h.01M15.5 15.5h.01M12 12h.01M15.5 8.5h.01M8.5 15.5h.01",
+  streak:"M12 22c4.2 0 7-2.8 7-6.8 0-4.4-3.4-6.6-4.6-10.2-.9 2-2.1 3.1-3.6 3.6.2-2.2-.6-4.3-2.3-6.1.2 4-5.5 6.8-5.5 12.5C3 19.1 6.6 22 12 22z",
+  quick:"M12 22a8 8 0 1 0 0-16a8 8 0 1 0 0 16zM12 10v4.5l2.5 2M9.5 2.5h5M12 2.5V6",
+  steal:"M3 12h11M10 7.5l4.5 4.5-4.5 4.5M20.5 4v16",
+  imm:"M12 2.5l8 3v6c0 5-3.4 8.8-8 10.5-4.6-1.7-8-5.5-8-10.5v-6z",
+  sec:"M4 12a8 8 0 1 0 2.4-5.7M4 4.5v4.5h4.5M10.5 9.5h3l-3 5h3",
+  box:"M3 8.5h18v4H3zM4.5 12.5h15V21h-15zM12 8.5V21M12 8.5c-1.5-3.5-5.5-4-5.5-1.5s5.5 1.5 5.5 1.5zm0 0c1.5-3.5 5.5-4 5.5-1.5S12 8.5 12 8.5z",
+  respin:"M20 12a8 8 0 0 1-14 5.3M4 12a8 8 0 0 1 14-5.3M18.5 3v4h-4M5.5 21v-4h4",
+  l2:"M3 8h10v12H3zM11 4h10v12h-2",
+  tre:"M6.5 3.5h11l4 5.5L12 21 2.5 9zM2.5 9h19M12 21 8.5 9l3.5-5.5L15.5 9z",
+  swap:"M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7",
+  lock:"M6 11h12v10H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3",
+};
+const W3ICON = {p50:"plus", p150:"plus", p250:"plus", m50:"minus", m150:"minus", m250:"minus"};
+const wicon = k => WIC[W3ICON[k] || k] || WIC.q;
+const wsvg = (k, cls) => `<svg class="wic ${cls || ""}" viewBox="0 0 24 24" aria-hidden="true"><path d="${wicon(k)}"/></svg>`;
+const W3SHORT = {q:"سؤال", speed:"سرعة", gold:"ذهبي", bet:"رهان", streak:"سلسلة", quick:"سريعة", steal:"سرقة", imm:"حصانة", sec:"فرصة", box:"صندوق", respin:"تدوير", l2:"مرتين", tre:"كنز", swap:"تبديل"};
+const W3COL = k => k[0] === "p" ? "--green" : k[0] === "m" ? "--bad" : ["q","gold","bet","streak","quick"].includes(k) ? "--blue" : k === "speed" || k === "steal" ? "--purple" : "--gold";
+const W3DESC = {
+  q:"سؤال للفريق صاحب الدور: الصحيحة +200.", speed:"سؤال مشترك للفريقين، والمقدّم يحدد الفائز: +250.",
+  p50:"+50 تُضاف فورًا.", p150:"+150 تُضاف فورًا.", p250:"+250 تُضاف فورًا.", m50:"−50 تُخصم فورًا (الحصانة تمنعها).", m150:"−150 تُخصم فورًا (الحصانة تمنعها).", m250:"−250 تُخصم فورًا (الحصانة تمنعها).",
+  gold:"سؤال صعب: الصحيحة +400.", bet:"راهِن بـ 100 أو 200 أو 300: الصحيحة تضيف الرهان والخاطئة تخصمه.", streak:"حتى 3 أسئلة: +150 ثم +200 ثم +250، وتنتهي عند أول خطأ.",
+  quick:"3 أسئلة، 15 ثانية لكل سؤال: +100 لكل صحيحة.", steal:"تسرق 150 نقطة من المنافس (الحصانة تمنعها).", imm:"تحمي من أول خصم قادم (واحدة لكل فريق).",
+  sec:"محاولة ثانية عند أول إجابة خاطئة (واحدة لكل فريق).", box:"صندوق مغلق يفتحه المقدّم: مكافأة أو عقوبة أو مفاجأة.", respin:"لفّة إضافية لنفس الفريق.",
+  l2:"لفّتان، ويختار الفريق نتيجة واحدة منهما.", tre:"ثلاثة صناديق فيها 100 و300 و500: اختر واحدًا.", swap:"يتبادل الفريقان الحصانة والفرصة الثانية.",
+};
+const W3LOG = {p50:"بطاقة نقاط", p150:"بطاقة نقاط", p250:"بطاقة نقاط", m50:"خصم", m150:"خصم", m250:"خصم", q:"سؤال", gold:"السؤال الذهبي", bet:"الرهان", streak:"سلسلة الانتصارات",
+  quick:"الجولة السريعة", speed:"تحدي السرعة", steal:"سرقة", stolen:"سُرقت منه", box:"صندوق الحظ", box400:"جائزة نادرة", tre:"الكنز", tre500:"الكنز الأكبر",
+  imm:"حصل على حصانة", imm2:"حصانة ثانية ← +100", sec:"حصل على فرصة ثانية", sec2:"فرصة ثانية إضافية ← +100", "sec-used":"استخدم الفرصة الثانية", shield:"الحصانة منعت الخصم", swap:"تبادل المزايا", tb:"فاز بالمواجهة الفاصلة"};
+// signed numbers (+150, −50) keep their sign on the left inside Arabic text: isolate them, only in text, never inside tags
+const w3bidi = html => html.replace(/>([^<]+)</g, (m, t) => ">" + t.replace(/([+\u2212])(\d[\d,٬]*)/g, '<bdi dir="ltr">$1$2</bdi>') + "<");
+const w3rand = () => { try { return crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296; } catch(e){ return Math.random(); } };
+function w3sound(){ return H ? lsGet("lm-w-snd") !== "0" : lsGet("lm-w-snd") === "1"; }
+let w3ac = null;
+function w3beep(kind){
+  if (!w3sound()) return;
+  try {
+    w3ac = w3ac || new (window.AudioContext || window.webkitAudioContext)();
+    const notes = {spin:[[330,.05],[392,.05]], good:[[523,.09],[659,.12]], bad:[[220,.14],[165,.2]], rare:[[523,.08],[659,.08],[784,.08],[1047,.22]], shield:[[880,.06],[1175,.16]], tick:[[880,.03]]}[kind] || [];
+    let t = w3ac.currentTime;
+    for (const [f, d] of notes){ const o = w3ac.createOscillator(), g = w3ac.createGain(); o.type = "triangle"; o.frequency.value = f; g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.001, t + d); o.connect(g); g.connect(w3ac.destination); o.start(t); o.stop(t + d); t += d * .9; }
+  } catch(e){}
+}
+const w3motion = () => { const v = lsGet("lm-w-mot"); return v === "1" ? true : v === "0" ? false : !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); };
+function w3applyMotion(){ document.documentElement.classList.toggle("lowmo", !w3motion()); }
+w3applyMotion();
+
+function w3wheelCanvas(s, locks){
   const cs = getComputedStyle(document.documentElement), col = n => cs.getPropertyValue(n).trim();
-  const fills = [col("--gold"), col("--green"), col("--orange"), col("--blue"), col("--purple")];
   const c = document.createElement("canvas"); c.width = c.height = 640;
-  const x = c.getContext("2d"), R = 310, cx = 320, step = Math.PI * 2 / SEGS.length;
-  SEGS.forEach((sg, i) => {
-    const a0 = -Math.PI / 2 + i * step;
-    x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a0 + step); x.closePath();
-    x.fillStyle = fills[i % fills.length]; x.fill(); x.lineWidth = 4; x.strokeStyle = col("--bg"); x.stroke();
-    const mid = a0 + step / 2, flip = Math.cos(mid) < 0;
-    x.save(); x.translate(cx, cx); x.rotate(flip ? mid + Math.PI : mid);
-    x.fillStyle = col("--on-color"); x.textBaseline = "middle";
-    x.font = `${sg.t.length > 6 ? 27 : 38}px Lalezar, Tahoma, sans-serif`;
-    x.direction = sg.p ? "ltr" : "rtl"; x.textAlign = flip ? "left" : "right";
-    x.fillText(sg.t, flip ? -(R - 20) : R - 20, 4); x.restore();
-  });
-  x.beginPath(); x.arc(cx, cx, R, 0, Math.PI * 2); x.lineWidth = 10; x.strokeStyle = col("--ink"); x.stroke();
+  const x = c.getContext("2d"), R = 306, cx = 320, rad = d => (d - 90) * Math.PI / 180;
+  for (const sl of W3.layout(s)){
+    const a0 = rad(sl.a0), a1 = rad(sl.a1), mid = (a0 + a1) / 2, deg = sl.a1 - sl.a0, lk = locks[sl.k];
+    x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath();
+    const base = col(W3COL(sl.k)), g = x.createRadialGradient(cx, cx, 40, cx, cx, R);
+    g.addColorStop(0, `color-mix(in srgb, ${base} 70%, #000)`); g.addColorStop(1, base);
+    x.fillStyle = base; try { x.fillStyle = g; } catch(e){}
+    x.fill(); x.lineWidth = 3; x.strokeStyle = col("--bg"); x.stroke();
+    if (W3.C[sl.k].rare){ x.save(); x.clip(); x.strokeStyle = "rgba(255,255,255,.55)"; x.lineWidth = 2; x.setLineDash([3, 6]); x.beginPath(); x.arc(cx, cx, R - 14, a0, a1); x.stroke(); x.restore(); }
+    // icon near the rim, label along the radius
+    const ir = R - 42, sz = Math.max(18, Math.min(42, deg * 2.6)), ixp = cx + Math.cos(mid) * ir, iyp = cx + Math.sin(mid) * ir;
+    x.save(); x.translate(ixp, iyp); x.rotate(mid + Math.PI / 2); x.scale(sz / 24, sz / 24); x.translate(-12, -12);
+    x.strokeStyle = col("--on-color"); x.lineWidth = 2.2; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(wicon(sl.k))); x.restore();
+    if (deg >= 9){
+      const flip = Math.cos(mid) < 0, fs = Math.max(16, Math.min(30, deg * 1.5)), txt = sl.k[0] === "p" ? "+" + sl.k.slice(1) : sl.k[0] === "m" ? "−" + sl.k.slice(1) : W3SHORT[sl.k];
+      x.save(); x.translate(cx, cx); x.rotate(flip ? mid + Math.PI : mid); x.fillStyle = col("--on-color"); x.textBaseline = "middle";
+      x.font = `${fs}px Lalezar, Tahoma, sans-serif`; x.direction = sl.k[0] === "p" || sl.k[0] === "m" ? "ltr" : "rtl"; x.textAlign = flip ? "left" : "right";
+      x.fillText(txt, flip ? -(R - 72) : R - 72, 2); x.restore();
+    }
+    if (lk){
+      x.save(); x.beginPath(); x.moveTo(cx, cx); x.arc(cx, cx, R, a0, a1); x.closePath(); x.fillStyle = "rgba(10,14,36,.62)"; x.fill();
+      x.translate(cx + Math.cos(mid) * (R - 110), cx + Math.sin(mid) * (R - 110)); x.rotate(mid + Math.PI / 2); x.scale(.9, .9); x.translate(-12, -12);
+      x.strokeStyle = "#fff"; x.lineWidth = 2.4; x.lineCap = x.lineJoin = "round"; x.stroke(new Path2D(WIC.lock)); x.restore();
+    }
+  }
+  x.beginPath(); x.arc(cx, cx, R + 4, 0, Math.PI * 2); x.lineWidth = 12; x.strokeStyle = col("--gold"); x.stroke();
   return c;
 }
-function mountWheel(holder, s, state){
+function w3mount(holder, s, st){
   let box = holder.querySelector(".wheelbox");
   if (!box){
-    holder.innerHTML = `<div class="wheelbox"><div class="wclip"></div><div class="pointer"></div><div class="hub"></div></div>`;
-    box = holder.querySelector(".wheelbox");
-    (wheelImg ? Promise.resolve(wheelImg) : wheelCanvas().then(c => wheelImg = c)).then(src => {
-      const c = document.createElement("canvas"); c.width = c.height = 640; c.getContext("2d").drawImage(src, 0, 0);
-      c.style.transform = `rotate(${s.rot}deg)`; box.querySelector(".wclip").appendChild(c); state.sp = s.sp;
-    });
-    state.sp = s.sp; return;
+    holder.innerHTML = `<div class="wheelbox w3"><div class="bulbs">${range(24).map(i => `<i style="--i:${i}"></i>`).join("")}</div><div class="wclip"></div><div class="pointer"></div><div class="hub"><span>ل</span></div></div>`;
+    box = holder.querySelector(".wheelbox"); st.key = null; st.sp = s.sp;
   }
-  const c = box.querySelector("canvas"); if (!c) return;
-  if (state.sp !== s.sp){ box.classList.add("spin"); state.sp = s.sp; }
+  const L = s.stage === "rolling" ? (st.locks || {}) : W3.locks(s, s.cur && s.cur.k === "l2" && (s.cur.st === "a" || s.cur.st === "b")), key = s.o.mode + "|" + (s.o.off || []).join() + "|" + JSON.stringify(L);
+  st.locks = L;
+  let c = box.querySelector("canvas");
+  const draw = () => { const n = w3wheelCanvas(s, L); n.style.transform = `rotate(${s.rot}deg)`; if (c) c.replaceWith(n); else box.querySelector(".wclip").appendChild(n); c = n; st.key = key; };
+  if (st.key !== key && s.stage !== "rolling") (document.fonts && document.fonts.load ? document.fonts.load('30px "Lalezar"').catch(() => {}) : Promise.resolve()).then(() => { if (box.isConnected && st.key !== key) draw(); });
+  if (!c){ draw(); }
+  if (st.sp !== s.sp){ box.classList.remove("spin"); void box.offsetWidth; box.classList.add("spin"); st.sp = s.sp; w3beep("spin"); }
+  box.classList.toggle("rolling", s.stage === "rolling");
   c.style.transform = `rotate(${s.rot}deg)`;
 }
+const w3team = t => `<b class="t${W3.T[t]}">الفريق ${TEAM[W3.T[t]]}</b>`;
+function w3scores(s){
+  const g = s.o.goal || 1, card = t => {
+    const tm = W3.T[t], pct = Math.min(100, s.sc[t] / g * 100), turn = (s.ph === "play" || s.ph === "final") && s.turn === t;
+    return `<div class="w3score ${tm} ${turn ? "turn" : ""} ${s.im[t] ? "shielded" : ""}"><div class="row" style="justify-content:space-between;gap:6px"><span class="tname2">${TEAM[tm]}</span>
+      <span class="perks">${s.im[t] ? `<span class="perk" title="حصانة">${wsvg("imm")}</span>` : ""}${s.s2[t] ? `<span class="perk" title="فرصة ثانية">${wsvg("sec")}</span>` : ""}${turn ? `<span class="turnchip">الدور</span>` : ""}</span></div>
+      <b class="pts">${s.sc[t].toLocaleString("en")}</b><div class="gbar" role="progressbar" aria-valuemin="0" aria-valuemax="${g}" aria-valuenow="${s.sc[t]}"><i style="width:${pct}%"></i></div></div>`;
+  };
+  const phase = s.ph === "final" ? `<span class="chip warn">الجولة الختامية · ${s.fin.i + 1} من 2</span>` : s.ph === "tb" ? `<span class="chip warn">المواجهة الفاصلة · ${s.tb.n + 1} من ${W3.TB_MAX}</span>`
+    : s.ph === "play" ? `<span class="chip">الجولة ${s.rd + 1}</span>${s.fnow ? `<span class="chip warn">الختامية بعد هذه الجولة</span>` : ""}` : "";
+  return `<div class="scores">${card(0)}${card(1)}</div><div class="row w3meta"><span class="muted">الهدف ${(s.o.goal || 0).toLocaleString("en")}</span>${phase}<span class="muted">${W3.MODES[s.o.mode].n}</span></div>`;
+}
+function w3log(s){
+  if (!s.lg.length) return "";
+  return w3bidi(`<div class="panel w3log"><h3>آخر النتائج</h3><ul>${s.lg.map(([t, d, k]) => `<li><span class="dot ${W3.T[t]}"></span><span>${TEAM[W3.T[t]]}</span><span class="muted">${esc(W3LOG[k] || k)}</span><b class="${d > 0 ? "up" : d < 0 ? "down" : ""}">${d > 0 ? "+" + d : d < 0 ? "−" + (-d) : "•"}</b></li>`).join("")}</ul></div>`);
+}
+function w3qhtml(c, host, s){
+  const q = c.q || {}, rv = c.ci != null ? c.ci : -1, mine = host && H.priv.wshow && rv < 0 ? H.priv.wp.ci : -1;
+  const timer = s.dl || s.to ? `<div class="qclock"><span class="timer ${s.left <= 5 ? "warn" : ""}">${s.to ? "0" : s.left}</span><div class="tbar"><i style="width:${s.tt ? (s.left / s.tt * 100) : 0}%"></i></div>${s.to ? `<span class="chip warn">انتهى الوقت</span>` : ""}</div>` : "";
+  return `<p class="qtext">${esc(q.q || "")}</p><div class="opts mini">${(q.o || []).map((o, i) => `<div class="opt c${i} ${rv >= 0 ? (i === rv ? "right" : "dim") : i === mine ? "hint" : ""}"><span class="sh">${SHAPES[i]}</span><span>${esc(o)}</span></div>`).join("")}</div>${timer}`;
+}
+const w3btn = (s, a, label, cls, arg) => `<button class="btn ${cls || ""}" data-w="${a}" data-tk="${W3.tok(s)}" ${arg != null ? `data-arg="${esc(String(arg))}"` : ""}>${label}</button>`;
+function w3card(s, host){
+  const c = s.cur, t = s.turn, who = w3team(t), mv = host ? W3.moves(s) : [], has = a => mv.includes(a);
+  const next = has("next") ? w3btn(s, "next", s.ph === "final" && s.fin && s.fin.i === 1 ? "إعلان النتيجة" : "الدور التالي ←", "big") : "";
+  if (s.stage === "spin") return `<div class="w3card idle"><p class="stage-h">الدور على ${who}</p>${s.ph === "final" ? `<p class="muted">الجولة الختامية: دور أخير لكل فريق.</p>` : ""}
+    ${host ? `<div class="row">${w3btn(s, "spin", "لُفّ العجلة", "big spinbtn")}${has("final") ? w3btn(s, "final", "ابدأ الجولة الختامية بعد هذه الجولة", "ghost sm") : ""}</div>` : `<p class="muted">بانتظار لفّ العجلة…</p>`}</div>`;
+  if (s.stage === "rolling") return `<div class="w3card idle"><p class="stage-h">العجلة تدور…</p><p class="muted">${s.sub ? `حظك مرتين: اللفّة ${s.sub === "a" ? "الأولى" : "الثانية"}` : `دور ${who}`}</p></div>`;
+  if (!c) return "";
+  const k = c.k, name = W3.C[k].f || W3.C[k].n, head = `<div class="w3head ${W3COL(k).slice(2)}">${wsvg(k)}<div><b>${esc(name)}</b><span class="muted">${s.ph === "tb" ? "المواجهة الفاصلة" : c.k === "speed" ? "للفريقين" : `دور الفريق ${TEAM[W3.T[t]]}`}</span></div></div>`;
+  let body = "", btns = "", fx = "";
+  if (k[0] === "p" || k[0] === "m"){
+    if (k[0] === "p"){ body = `<p class="bigdelta up">+${c.v}</p><p class="center">أضيفت إلى ${who}</p>`; fx = "good"; }
+    else if (c.blocked){ body = `<div class="shieldfx">${wsvg("imm")}</div><p class="center">الحصانة منعت خصم ${c.v} عن ${who}</p>`; fx = "shield"; }
+    else { body = `<p class="bigdelta down">${c.d ? "−" + (-c.d) : "0"}</p><p class="center">${c.d ? `خُصمت من ${who}` : `لا نقاط لدى ${who} لتُخصم`}</p>`; fx = "bad"; }
+  }
+  else if (k === "imm" || k === "sec"){
+    const nm = k === "imm" ? "حصانة" : "فرصة ثانية";
+    body = c.conv ? `<p class="bigdelta up">+100</p><p class="center">لدى ${who} ${nm} بالفعل (الحد واحدة)، فتحوّلت إلى 100 نقطة.</p>` : `<div class="${k === "imm" ? "shieldfx" : "secfx"}">${wsvg(k)}</div><p class="center">حصل ${who} على ${nm}. ${k === "imm" ? "تحميه من أول خصم قادم." : "تُستخدم تلقائيًا عند أول إجابة خاطئة."}</p>`; fx = k === "imm" ? "shield" : "good";
+  }
+  else if (k === "swap") body = c.none ? `<p class="center">لا توجد حصانة أو فرصة ثانية لدى أي فريق، فلا شيء يتبدّل.</p>` : `<p class="center">تبادل الفريقان المزايا. الآن: الأخضر ${s.im[0] ? "🛡" : ""}${s.s2[0] ? " ٢" : ""}${!s.im[0] && !s.s2[0] ? "بلا مزايا" : ""} · البرتقالي ${s.im[1] ? "🛡" : ""}${s.s2[1] ? " ٢" : ""}${!s.im[1] && !s.s2[1] ? "بلا مزايا" : ""}</p>`;
+  else if (k === "steal") body = c.blocked ? `<div class="shieldfx">${wsvg("imm")}</div><p class="center">حصانة الفريق ${TEAM[W3.T[1 - t]]} منعت السرقة واستُهلكت.</p>` : c.v ? `<p class="bigdelta up">+${c.v}</p><p class="center">سرق ${who} ${c.v} نقطة من الفريق ${TEAM[W3.T[1 - t]]}.</p>` : `<p class="center">لا نقاط لدى المنافس لسرقتها.</p>`;
+  else if (k === "respin"){ body = `<p class="center">لفّة إضافية لـ${who}.</p>`; btns = has("again") ? w3btn(s, "again", "لُفّ مرة أخرى", "big") : ""; }
+  else if (k === "l2"){
+    if (c.st === "a" || c.st === "b") { body = `<p class="center">لفّتان، ثم يختار ${who} نتيجة واحدة. لا يُطبّق شيء قبل الاختيار.</p>${c.a ? `<div class="l2opts">${w3opt(c.a)}</div>` : ""}`; btns = has("l2spin") ? w3btn(s, "l2spin", c.st === "a" ? "اللفّة الأولى" : "اللفّة الثانية", "big") : ""; }
+    else { body = `<p class="center">اختاروا نتيجة واحدة:</p><div class="l2opts">${w3opt(c.a, host && w3btn(s, "l2pick", "اختيار هذه", "", "a"))}${w3opt(c.b, host && w3btn(s, "l2pick", "اختيار هذه", "", "b"))}</div>`; }
+  }
+  else if (k === "box"){
+    const r = c.r, res = !r ? "" : r === "p" ? `<p class="bigdelta up">+${c.v}</p>${c.v === 400 ? `<p class="center rare">جائزة نادرة!</p>` : ""}` : r === "m" ? (c.blocked ? `<p class="center">الحصانة منعت خصم ${c.v}.</p>` : `<p class="bigdelta down">${c.d ? "−" + (-c.d) : "0"}</p>`)
+      : r === "imm" ? (c.conv ? `<p class="center">حصانة، ولديكم واحدة ← +100</p>` : `<p class="center">حصانة!</p>`) : r === "respin" ? `<p class="center">لفّة إضافية!</p>` : `<p class="center">خسارة الدور</p>`;
+    body = `<div class="chest ${c.st === "open" ? "open" : ""} ${r === "p" && c.v === 400 ? "rare" : ""}"><div class="lid"></div><div class="base"></div><div class="glow"></div></div>${res}`;
+    btns = has("open") ? w3btn(s, "open", "افتح الصندوق", "big") : has("again") ? w3btn(s, "again", "لُفّ مرة أخرى", "big") : "";
+    if (c.st === "open") fx = r === "p" ? (c.v === 400 ? "rare" : "good") : r === "m" ? (c.blocked ? "shield" : "bad") : r === "imm" ? "shield" : "";
+  }
+  else if (k === "tre"){
+    body = `<p class="center">${c.st === "pick" ? `ثلاثة صناديق: 100 و300 و500. يختار ${who} واحدًا.` : `اختار ${who} الصندوق ${c.pick + 1}: <b>+${c.vals[c.pick]}</b>`}</p><div class="tchests">${range(3).map(i => `<div class="tchest ${c.st === "open" ? "open" : ""} ${c.pick === i ? "picked" : ""}"><span>${c.st === "open" ? c.vals[i] : i + 1}</span>${host && has("tpick") ? w3btn(s, "tpick", "هذا", "sm", i) : ""}</div>`).join("")}</div>`;
+    if (c.st === "open") fx = c.vals[c.pick] === 500 ? "rare" : "good";
+  }
+  else if (k === "bet" && c.st === "wager"){ body = `<p class="center">يحدد ${who} رهانه (لا يتجاوز نقاطه). الصحيحة تضيف الرهان، والخاطئة تخصمه، والحصانة لا تحمي من الرهان.</p>`; btns = host ? `<div class="row">${c.ws.map(v => w3btn(s, "wager", `رهان ${v}`, "", v)).join("")}</div>` : ""; }
+  else if (["q","gold","bet","streak","quick","speed"].includes(k)){
+    const pts = k === "speed" ? `+250 للفائز` : k === "bet" ? (c.free ? `سؤال عادي (+200): النقاط أقل من 100` : `الرهان ${c.v}`) : k === "streak" ? `السؤال ${c.n + (c.st === "ask" ? 1 : 0)} من 3 · ${c.v} · المجموع ${c.got}` : k === "quick" ? `السؤال ${Math.min(c.n + (c.st === "ask" ? 1 : 0), 3)} من 3 · 15 ثانية · المجموع ${c.got}` : `+${c.v}`;
+    const vs = k === "speed" ? `<div class="vs"><span class="g">الأخضر</span><b>ضد</b><span class="o">البرتقالي</span></div>` : "";
+    const verdict = c.st === "shown" || c.st === "right" || c.st === "wrong" || c.st === "cancel"
+      ? (k === "speed" ? (c.st === "cancel" ? `<p class="verdict no">أُلغي التحدي · لا نقاط</p>` : c.w >= 0 ? `<p class="verdict ok ${W3.T[c.w]}">فاز الفريق ${TEAM[W3.T[c.w]]}${s.ph === "end" ? " بالمباراة" : " · +250"}</p>` : `<p class="verdict no">لم ينجح أي فريق · لا نقاط</p>`)
+        : c.ok ? `<p class="verdict ok ${W3.T[t]}">إجابة صحيحة · +${k === "bet" && !c.free ? c.v : c.v}</p>` : `<p class="verdict no">${s.to ? "انتهى الوقت" : "إجابة خاطئة"}${k === "bet" && !c.free ? ` · −${c.v}` : " · 0"}</p>`) : "";
+    const retry = c.retry && c.st === "ask" ? `<p class="note">استُخدمت الفرصة الثانية: محاولة أخيرة لنفس السؤال.</p>` : "";
+    const tbn = s.ph === "tb" && c.last && c.st === "ask" ? `<p class="note">${c.last === "sx" ? "أُلغيت المحاولة السابقة" : "لم يُحسم التحدي السابق"} · محاولة ${s.tb.n + 1} من ${W3.TB_MAX}</p>` : "";
+    body = `${vs}${tbn}${retry}<p class="muted">${pts}</p>${w3qhtml(c, host, s)}${verdict}`;
+    if (host){
+      const b = [];
+      if (has("ok")) b.push(`<button class="btn ghost sm" data-w="peek">${H.priv.wshow ? "إخفاء الإجابة" : "إظهار الإجابة لي"}</button>`, w3btn(s, "ok", "✓ صحيحة", "g"), w3btn(s, "no", "✗ خاطئة", "bad"));
+      if (has("sg")) b.push(`<button class="btn ghost sm" data-w="peek">${H.priv.wshow ? "إخفاء الإجابة" : "إظهار الإجابة لي"}</button>`, w3btn(s, "sg", "فاز الأخضر +250", "g"), w3btn(s, "so", "فاز البرتقالي +250", "o"), w3btn(s, "sn", "خسر الفريقان", "ghost"), w3btn(s, "sx", "إلغاء التحدي", "ghost"));
+      if (has("more")) b.push(w3btn(s, "more", "السؤال التالي", ""));
+      if (has("sre")) b.push(w3btn(s, "sre", `إعادة التحدي بسؤال آخر (${W3.SPEED_RETRY - c.re} متبقية)`, ""));
+      btns = `<div class="row w3btns">${b.join("")}</div>`;
+    }
+    if (c.st === "shown" || c.st === "right") fx = (k === "speed" ? c.w >= 0 : c.ok) ? (k === "gold" ? "rare" : "good") : "bad";
+  }
+  return w3bidi(`<div class="w3card ${k}" data-fx="${fx}" data-ev="${s.sp}.${s.step}">${head}${body}${host ? `<div class="w3act">${btns}${next}</div>` : ""}</div>`);
+}
+function w3opt(k, btn){ return `<div class="l2opt ${W3COL(k).slice(2)}">${wsvg(k)}<b>${esc(W3.C[k].f || W3.C[k].n)}</b><span class="muted">${W3DESC[k]}</span>${btn || ""}</div>`; }
+function w3end(s, host){
+  const w = s.win, draw = w === "d", st = (lab, a, b) => `<tr><th>${lab}</th><td class="g">${a}</td><td class="o">${b}</td></tr>`;
+  return `<div class="victory ${draw ? "" : W3.T[w]}">${draw ? "" : `<div class="confetti" aria-hidden="true">${range(18).map(i => `<i style="--i:${i}"></i>`).join("")}</div>`}
+    <p class="v-kicker">${draw ? "انتهت المباراة" : s.tb ? "الفائز بعد المواجهة الفاصلة" : "الفائز"}</p><h2 class="v-name">${draw ? "تعادل رسمي" : `الفريق ${TEAM[W3.T[w]]}`}</h2>
+    <p class="v-score"><b>${s.sc[0].toLocaleString("en")}</b> <span>مقابل</span> <b>${s.sc[1].toLocaleString("en")}</b></p>
+    ${draw ? `<p class="muted">تعادل الفريقان ولم تحسمه ${W3.TB_MAX} تحديات فاصلة.</p>` : ""}
+    <table class="vtable"><thead><tr><th></th><th class="g">الأخضر</th><th class="o">البرتقالي</th></tr></thead><tbody>${st("النقاط", s.sc[0], s.sc[1])}${st("الإجابات والتحديات الصحيحة", s.ca[0], s.ca[1])}${st("الأدوار", s.tn[0], s.tn[1])}</tbody></table>
+    ${host ? `<div class="row" style="justify-content:center">${w3btn(s, "start", "مباراة جديدة بنفس الإعدادات", "big")}<button class="btn ghost" data-h="lobby">تغيير الإعدادات</button></div>` : ""}</div>`;
+}
+function w3prefs(){ return `<div class="row w3prefs"><button class="btn ghost sm" data-wp="snd" aria-pressed="${w3sound()}">${w3sound() ? "الصوت: يعمل" : "الصوت: متوقف"}</button><button class="btn ghost sm" data-wp="mot" aria-pressed="${w3motion()}">${w3motion() ? "الحركة: تعمل" : "الحركة: مخفّفة"}</button></div>`; }
+function w3pref(k){ if (k === "snd") lsSet("lm-w-snd", w3sound() ? "0" : "1"); else { lsSet("lm-w-mot", w3motion() ? "0" : "1"); w3applyMotion(); } }
+// one-off effects (sound, confetti) when a new result appears on this device
+function w3fx(root, st){
+  const el = root.querySelector(".w3card[data-ev]"); if (!el) return;
+  const ev = el.dataset.ev + el.dataset.fx; if (st.ev === ev) return; const first = st.ev == null; st.ev = ev;
+  const fx = el.dataset.fx; if (!fx || first) return;
+  w3beep(fx);
+  if (fx === "rare" && w3motion()) el.insertAdjacentHTML("afterbegin", `<div class="confetti" aria-hidden="true">${range(18).map(i => `<i style="--i:${i}"></i>`).join("")}</div>`);
+}
+function w3lobbyExtra(s){
+  const o = s.o, L = W3.layout({o:{...o, off:[]}}), off = o.off || [];
+  const rows = L.map(sl => `<tr class="${off.includes(sl.k) ? "off" : ""}"><td>${wsvg(sl.k, W3COL(sl.k).slice(2))}</td><td><b>${esc(W3.C[sl.k].f || W3.C[sl.k].n)}</b><br><span class="muted">${W3DESC[sl.k]}</span></td>
+    <td class="num">${off.includes(sl.k) ? "—" : (W3.layout(s).find(x => x.k === sl.k).p * 100).toFixed(1) + "٪"}</td>
+    <td>${W3.C[sl.k].opt ? `<button class="tog ${off.includes(sl.k) ? "" : "on"}" data-h="tog" data-card="${sl.k}" aria-pressed="${!off.includes(sl.k)}" aria-label="${esc(W3.C[sl.k].n)}"><i></i></button>` : `<span class="muted">أساسي</span>`}</td></tr>`).join("");
+  return w3bidi(`${o.goal ? "" : `<p class="note warn">اختر هدف الفوز لتبدأ المباراة.</p>`}
+    <details class="w3cards" ${H && H.priv.wco ? "open" : ""}><summary>الكروت ونسب ظهورها (${W3.MODES[o.mode].n})</summary><p class="muted">حجم كل شريحة في العجلة يساوي احتمالها. الكرت المعطّل يُحذف من العجلة وتُعاد موازنة النسب.</p>
+    <div class="tablewrap"><table class="w3table"><tbody>${rows}</tbody></table></div></details>`);
+}
 const Wheel = {
-  keepScore:true, keepState:true,
-  init: () => ({rot:0, sp:0, seg:-1, ch:"", wq:null, wci:-1, qrev:false, turn:"g", sc:[0,0], show:false, win:null}),
-  spin(){
-    const s = H.s, n = SEGS.length, i = Math.floor(Math.random() * n), seg = 360 / n;
-    const target = (360 - (i * seg + seg / 2) + (Math.random() - .5) * seg * .6) % 360, cur = ((s.rot % 360) + 360) % 360;
-    s.rot = s.rot + 360 * 6 + ((target - cur + 360) % 360); s.seg = i; s.sp++; s.show = false; s.qrev = false;
-    const lv = s.o.lv;
-    s.ch = SEGS[i].ch ? (pool => pool[Math.floor(Math.random() * pool.length)][1])(CHALLENGES.filter(c => c[0] === lv)) : "";
-    s.wq = null; s.wci = -1;
-    if (SEGS[i].q){
-      const B = bankNow("quiz") || QB, used = H.priv.wused || (H.priv.wused = new Set());
-      let pool = range(B.length).filter(k => B[k][1] === lv && !used.has(k)); if (!pool.length){ used.clear(); pool = range(B.length).filter(k => B[k][1] === lv); }
-      const k = pool[Math.floor(Math.random() * pool.length)], q = makeQ(B[k], -1); used.add(k); s.wq = q.d; H.priv.wci = q.ci;
-    }
-    pushHost();
-    const sp = s.sp;
-    setTimeout(() => { if (H && H.g === "wheel" && H.s.sp === sp){ H.s.show = true; pushHost(); } }, 4800);
+  keepState:true, cloudResume:true,
+  init: () => W3.init({}),
+  canStart: o => W3.GOALS.includes(o.goal),
+  env(){ return {R:w3rand, now:Date.now(), q:lv => {
+    const B = bankNow("quiz") || QB, p = H.priv.wp, used = new Set(p.used || []);
+    const lvOf = k => B[k][1]; const want = lv == null ? null : lv;
+    let pool = range(B.length).filter(k => (want == null || lvOf(k) === want) && !used.has(k));
+    if (!pool.length){ p.used = (p.used || []).filter(k => want != null && lvOf(k) !== want); pool = range(B.length).filter(k => want == null || lvOf(k) === want); }
+    const k = pool[Math.floor(w3rand() * pool.length)], q = makeQ(B[k], -1); (p.used = p.used || []).push(k); if (p.used.length > 3000) p.used.shift();
+    return {d:{q:q.d.q, o:q.d.o}, ci:q.ci};
+  }}; },
+  savePriv(){ return {wp:H.priv.wp || {}}; },
+  async restore(pv){ H.priv.wp = pv.wp || {}; loadBank("quiz"); Wheel.arm(); },
+  // the host's clocks: question timer and the moment the wheel stops
+  arm(){
+    clearInterval(H.priv.tick);
+    H.priv.tick = setInterval(() => {
+      if (!H || H.g !== "wheel") return;
+      const s = H.s;
+      if (s.stage === "rolling" && Date.now() - s.t0 >= (w3motion() ? 4900 : 600)){ if (W3.act(s, H.priv.wp, "land", null, W3.tok(s), Wheel.env())) pushHost(); return; }
+      if (W3.tick(s, Date.now())){ if (s.left && s.left <= 5) w3beep("tick"); pushHost(); }
+    }, 200);
   },
-  award(team, pts){ const s = H.s, i = team === "g" ? 0 : 1; s.sc[i] = Math.max(0, s.sc[i] + pts); },
-  next(){ const s = H.s; s.turn = s.turn === "g" ? "o" : "g"; s.show = false; s.seg = -1; s.ch = ""; s.wq = null; s.wci = -1; s.qrev = false;
-    if (s.o.goal){ if (s.sc[0] >= s.o.goal) s.win = "g"; else if (s.sc[1] >= s.o.goal) s.win = "o"; } pushHost(); },
-  act(a){
-    const s = H.s, other = s.turn === "g" ? "o" : "g";
-    if (a === "start"){ loadBank("quiz"); s.ph = "play"; s.sc = [0, 0]; s.win = null; s.turn = "g"; pushHost(); return; }
-    if (a === "again"){ s.sc = [0, 0]; s.win = null; s.turn = "g"; Wheel.next(); return; }
-    if (a === "spin"){ if (!s.win && (s.seg < 0)) Wheel.spin(); return; }
-    if (!s.show || s.seg < 0 || s.win) return;          // result buttons act once per spin
-    if (a === "qrev"){ s.qrev = true; s.wci = H.priv.wci; pushHost(); }
-    else if (a === "pts"){ Wheel.award(s.turn, SEGS[s.seg].p); Wheel.next(); }
-    else if (a === "ch-g" || a === "ch-o"){ Wheel.award(a.slice(3), [200, 300, 400][s.o.lv]); Wheel.next(); }
-    else if (a === "q-ok"){ Wheel.award(s.turn, [200, 300, 400][s.o.lv]); Wheel.next(); }
-    else if (a === "steal"){ const i = other === "g" ? 0 : 1, take = Math.min(SEGS[s.seg].steal, s.sc[i]); Wheel.award(other, -take); Wheel.award(s.turn, take); Wheel.next(); }
-    else if (a === "x2"){ s.sc[s.turn === "g" ? 0 : 1] *= 2; Wheel.next(); }
-    else if (a === "skip") Wheel.next();
+  onOpt(key){ if (key === "mode" || key === "goal") H.s.o.off = H.s.o.off || []; },
+  act(a, el){
+    const s = H.s;
+    if (a === "tog"){ const k = el.dataset.card; if (!W3.C[k] || !W3.C[k].opt) return; const off = new Set(s.o.off || []); off.has(k) ? off.delete(k) : off.add(k); s.o.off = [...off]; pushHost(); return; }
+    if (a === "start"){ if (!W3.GOALS.includes(s.o.goal)) return; H.priv.wp = H.priv.wp || {}; loadBank("quiz"); if (W3.act(s, H.priv.wp, "start", null, W3.tok(s), Wheel.env())){ Wheel.arm(); pushHost(); } return; }
+    if (a === "lobby"){ clearInterval(H.priv.tick); H.s = {...W3.init(H.s.o), sp:H.s.sp, rot:H.s.rot, step:H.s.step}; pushHost(); }
   },
-  resultHtml(s, host){
-    if (s.win) return `<div class="winner ${s.win}">الفريق ${TEAM[s.win]} وصل إلى ${s.o.goal} وفاز!</div>${host ? `<button class="btn" data-h="again">لعبة جديدة</button>` : ""}`;
-    if (!s.show || s.seg < 0) return "";
-    const sg = SEGS[s.seg], who = `الفريق ${TEAM[s.turn]}`, pts = [200, 300, 400][s.o.lv];
-    let txt, btns = "";
-    if (sg.p){ txt = `${sg.p} نقطة لـ${who}`; btns = `<button class="btn" data-h="pts">احتساب النقاط</button>`; }
-    else if (sg.ch){ txt = `${esc(s.ch)} <span class="muted">(${pts} نقطة)</span>`; btns = `<div class="row"><button class="btn g sm" data-h="ch-g">نجح الأخضر</button><button class="btn o sm" data-h="ch-o">نجح البرتقالي</button><button class="btn ghost sm" data-h="skip">لم ينجح أحد</button></div>`; }
-    else if (sg.q){
-      const q = s.wq, corr = s.wci;
-      txt = `<b>${esc(q.q)}</b><div class="opts mini">${range(4).map(i => `<div class="opt c${i} ${s.qrev ? (i === corr ? "right" : "dim") : ""}"><span class="sh">${SHAPES[i]}</span><span>${esc(q.o[i])}</span></div>`).join("")}</div><span class="muted">سؤال ${who} · ${pts} نقطة</span>`;
-      btns = s.qrev ? `<div class="row"><button class="btn" data-h="q-ok">أجاب ${who} صح</button><button class="btn ghost sm" data-h="skip">إجابة خاطئة</button></div>` : `<button class="btn ghost sm" data-h="qrev">إظهار الإجابة</button>`;
-    }
-    else if (sg.steal){ txt = `${who} يسرق ${sg.steal} نقطة من الفريق ${TEAM[s.turn === "g" ? "o" : "g"]}`; btns = `<button class="btn" data-h="steal">تنفيذ السرقة</button>`; }
-    else if (sg.x2){ txt = `مضاعفة نقاط ${who}`; btns = `<button class="btn" data-h="x2">ضاعف النقاط</button>`; }
-    else { txt = `${who} خسر دوره`; btns = `<button class="btn" data-h="skip">الدور التالي</button>`; }
-    return `<div class="result stack"><h3>${esc(sg.t)}</h3><div style="font-size:1.15rem">${txt}</div>${host ? btns : ""}</div>`;
-  },
-  scoresHtml(s){
-    return `<div class="scores"><div class="score g ${s.turn === "g" ? "turn" : ""}"><span>الأخضر</span><b>${s.sc[0]}</b></div><div class="score o ${s.turn === "o" ? "turn" : ""}"><span>البرتقالي</span><b>${s.sc[1]}</b></div></div>${s.o.goal ? `<p class="muted center">الهدف: ${s.o.goal} نقطة</p>` : ""}`;
+  hostClick(t){
+    if (t.dataset.wp){ w3pref(t.dataset.wp); renderHost(); return true; }
+    const a = t.dataset.w; if (!a) return false;
+    if (a === "peek"){ H.priv.wshow = !H.priv.wshow; $("#hostMain").dataset.k = ""; renderHost(); return true; }
+    // a double tap must not press the button that replaces the first one under the finger
+    if (Date.now() - (H.priv.wlast || 0) < 450) return true;
+    const arg = t.dataset.arg == null ? null : /^\d+$/.test(t.dataset.arg) ? +t.dataset.arg : t.dataset.arg;
+    if (a === "start") return Wheel.act("start"), true;
+    H.priv.wp = H.priv.wp || {};
+    if (W3.act(H.s, H.priv.wp, a, arg, t.dataset.tk, Wheel.env())){ H.priv.wlast = Date.now(); H.priv.wshow = false; if (a === "spin" || a === "again" || a === "l2spin") Wheel.arm(); pushHost(); }
+    return true;
   },
   host(players){
     const s = H.s, m = $("#hostMain");
-    if (s.ph === "lobby"){ H.priv.wstate = null; setMain(lobbyHTML(players, `<p class="muted">العجلة فيها: نقاط من 100 إلى 500، وتحديات، وأسئلة، وسرقة 200 نقطة، ومضاعفة، وخسارة الدور. التحدي والسؤال يمنحان ${[200, 300, 400][s.o.lv]} نقطة في هذا المستوى.</p>`, "ابدأ العجلة")); return; }
-    if (!m.querySelector(".wh-holder")){
-      m.innerHTML = `<div class="layout"><div class="panel"><div class="wh-holder"></div></div><div class="stack" id="whSide"></div></div>`; m.dataset.k = ""; H.priv.wstate = {};
+    if (s.ph === "lobby"){ H.priv.wst = null; if (!s.o.off) s.o.off = []; setMain(lobbyHTML(players, w3lobbyExtra(s), "ابدأ المباراة")); const d = m.querySelector(".w3cards"); if (d) d.ontoggle = () => { H.priv.wco = d.open; }; return; }
+    if (s.ph === "end"){ H.priv.wst = null; setMain(`${w3scores(s)}${w3end(s, true)}`); w3fx(m, H.priv.wfx || (H.priv.wfx = {})); return; }
+    if (!m.querySelector(".w3lay")){
+      m.innerHTML = `<div class="layout w3lay"><div class="stack"><div class="panel w3wheel"><div class="wh-holder"></div></div></div><div class="stack" id="w3side"></div></div>`; m.dataset.k = ""; H.priv.wst = {};
+      if (!H.priv.tick) Wheel.arm();
     }
-    mountWheel(m.querySelector(".wh-holder"), s, H.priv.wstate);
-    const spinning = s.seg >= 0 && !s.show;
-    const side = `${Wheel.scoresHtml(s)}<div class="panel stack">${s.win ? "" : `<p style="font-size:1.2rem">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>`}
-      ${Wheel.resultHtml(s, true) || `<button class="btn" data-h="spin" ${spinning ? "disabled" : ""}>${spinning ? "العجلة تدور…" : "لُفّ العجلة"}</button>`}</div>
-      <div class="panel stack"><h3>اللاعبون</h3>${playerChips(players, true)}${soloNote()}</div>`;
-    setEl($("#whSide"), side);
+    m.querySelector(".w3lay").className = `layout w3lay st-${s.stage}`;
+    w3mount(m.querySelector(".wh-holder"), s, H.priv.wst);
+    setEl($("#w3side"), `<div class="w3sc">${w3scores(s)}</div><div class="panel w3panel">${w3card(s, true)}</div>${w3log(s)}${w3prefs()}<details class="panel w3players"><summary>اللاعبون (${players.length})</summary>${playerChips(players, true)}${soloNote()}</details>`);
+    w3fx(m, H.priv.wfx || (H.priv.wfx = {}));
   },
   player(s){
-    if (!$("#playerMain .wh-holder")){
-      $("#playerMain").innerHTML = `${phead()}<div id="whP" class="stack"></div><div class="panel"><div class="wh-holder"></div></div>`;     // result first: on a phone it must be visible without scrolling
-      $("#playerMain").dataset.k = ""; P.view.w = {}; bindPlayer();
+    if (s.ph === "lobby"){ P.view.w3 = null; pSet(phead() + `<div class="panel center stack"><p class="bigmsg">بانتظار بدء المباراة…</p><p class="muted">المقدّم يختار هدف الفوز والإعدادات.</p></div>${w3prefs()}`); bindPlayer(); return; }
+    if (s.ph === "end"){ P.view.w3 = null; pSet(phead() + w3scores(s) + w3end(s, false)); bindPlayer(); w3fx($("#playerMain"), P.view.wfx || (P.view.wfx = {})); return; }
+    if (!$("#playerMain .w3p")){
+      $("#playerMain").innerHTML = `<div class="w3p"><div id="w3ph"></div><div id="w3pc" class="stack"></div><div class="panel w3wheel small"><div class="wh-holder"></div></div><div id="w3pl"></div></div>`;
+      $("#playerMain").dataset.k = ""; P.view.w3 = {}; bindPlayer();
     }
-    mountWheel($("#playerMain .wh-holder"), s, P.view.w);
-    const ch = setEl($("#whP"), `${Wheel.scoresHtml(s)}${s.win ? "" : `<p class="center">الدور على <b class="t${s.turn}">الفريق ${TEAM[s.turn]}</b></p>`}${Wheel.resultHtml(s, false)}`);
-    if (ch && s.show){ const r = $("#whP .result, #whP .winner"); if (r && r.scrollIntoView) r.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+    setEl($("#w3ph"), phead());
+    const ch = setEl($("#w3pc"), `${w3scores(s)}<div class="panel w3panel">${w3card(s, false)}</div>`);
+    mountWheelP(s);
+    setEl($("#w3pl"), w3log(s) + w3prefs());
+    w3fx($("#playerMain"), P.view.wfx || (P.view.wfx = {}));
+    if (ch && s.stage === "card"){ const r = $("#w3pc .w3panel"); if (r && r.scrollIntoView) r.scrollIntoView({block:"nearest", behavior:w3motion() ? "smooth" : "auto"}); }
   },
+  pclick(t){ if (t.dataset.wp){ w3pref(t.dataset.wp); $("#playerMain").dataset.k = ""; const pl = $("#w3pl"); if (pl) pl.dataset.k = ""; playerRender(); } },
 };
+function mountWheelP(s){ w3mount($("#playerMain .wh-holder"), s, P.view.w3 || (P.view.w3 = {})); }
 
 /* ================= RACE CLOCK (puzzle + spot the difference) ================= */
 const fmtT = sec => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;

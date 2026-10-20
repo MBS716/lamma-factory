@@ -36,6 +36,76 @@ async def join_link(pg, link, name, team=None):
 
 async def players(host, n): await host.wait_for_function(f'hostPlayers().length >= {n}', timeout=40000)
 
+async def wheel_v3(host, ios, android):
+    """Wheel v3 on real Firebase: host on a computer, iPhone (WebKit) green, Android (Chromium) orange."""
+    await host.evaluate("localStorage.setItem('lm-w-mot','0')")
+    code = await start(host, 'wheel', {'goal': 1500})
+    await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
+    await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"', timeout=15000)
+    R['wheel_cloud'] = await host.evaluate('!!H.cloud'); R['wheel_auth'] = await host.evaluate('!!AUTH_UID')
+    async def both(text, t=20000):
+        ok = []
+        for pg in (ios, android):
+            try: await pg.wait_for_function(f'document.querySelector("#playerMain").innerText.includes({json.dumps(text)})', timeout=t); ok.append(True)
+            except Exception: ok.append(False)
+        return ok == [True, True]
+    async def btn(a, arg=None):
+        sel = f'[data-w="{a}"]' + (f'[data-arg="{arg}"]' if arg is not None else '')
+        await host.wait_for_selector(sel, timeout=15000); await host.wait_for_timeout(500); await host.locator(sel).first.click(); await host.wait_for_timeout(300)
+    async def force(k):
+        await btn('spin'); await host.evaluate(f'H.s.seg = "{k}"'); await host.wait_for_function('H.s.stage !== "rolling"', timeout=15000)
+    check(await both('الهدف 1,500'), 'wheel v3: both phones show the scoreboard and the 1,500 goal')
+    await force('q'); qtext = await host.evaluate('H.s.cur.q.q')
+    check(await both(qtext[:20]), 'wheel v3: the question reaches iPhone and Android')
+    hidden = await ios.evaluate('!document.querySelector("#playerMain .opt.right") && document.querySelectorAll("#playerMain .opt").length === 4')
+    check(hidden and await host.evaluate('!("ci" in H.s.cur)'), 'wheel v3: 4 options on the phone, the right answer is not sent before judging')
+    await ios.screenshot(path=f'{OUT}/wheel3_iphone_question.png')
+    t = await host.evaluate('H.s.turn'); sc0 = await host.evaluate(f'H.s.sc[{t}]'); await btn('ok')
+    check(await host.evaluate(f'H.s.sc[{t}]') - sc0 == 200 and await both('إجابة صحيحة'), 'wheel v3: host judges right: +200, phones see the verdict')
+    await btn('next')
+    await force('speed'); check(await both('ضد'), 'wheel v3: speed challenge face-off on both phones'); await android.screenshot(path=f'{OUT}/wheel3_android_speed.png')
+    sc = await host.evaluate('H.s.sc'); await btn('sx')
+    check(await host.evaluate('H.s.sc') == sc and await both('أُلغي التحدي'), 'wheel v3: cancelled challenge, scores unchanged on every screen'); await btn('next')
+    await force('box'); check(await both('صندوق الحظ'), 'wheel v3: the closed box on both phones'); await btn('open')
+    r = await host.evaluate('H.s.cur'); await host.wait_for_timeout(1500)
+    pr = await android.evaluate('(() => { const h = findHost(); return h && h.presence.s.cur; })()')
+    check(pr and pr.get('r') == r.get('r') and pr.get('v') == r.get('v'), f'wheel v3: phones receive the same box result as the host ({r.get("r")} {r.get("v")})')
+    await ios.screenshot(path=f'{OUT}/wheel3_iphone_box.png')
+    # host reloads the page while the box is open: same result, same room
+    before = await host.evaluate('JSON.stringify([H.s.sc, H.s.cur, H.s.tn])')
+    await host.reload(); await host.wait_for_selector('#resumeGo', timeout=20000); await host.click('#resumeGo')
+    await host.wait_for_function(f'H && H.code === "{code}" && H.s.ph === "play"', timeout=40000); await host.wait_for_timeout(1500)
+    check(await host.evaluate('JSON.stringify([H.s.sc, H.s.cur, H.s.tn])') == before, 'wheel v3: host reload during the box: same room, same result, nothing applied twice')
+    await btn('again' if r.get('r') == 'respin' else 'next')
+    if r.get('r') == 'respin': await force('p50'); await btn('next')
+    await force('l2'); await btn('l2spin'); await host.evaluate('H.s.seg = "p250"'); await host.wait_for_function('H.s.cur.st === "b"', timeout=15000)
+    await btn('l2spin'); await host.evaluate('H.s.seg = "m150"'); await host.wait_for_function('H.s.cur.st === "choose"', timeout=15000)
+    check(await both('اختاروا نتيجة واحدة'), 'wheel v3: luck twice, both results on the phones before the choice'); await btn('l2pick', 'a'); await btn('next')
+    t = await host.evaluate('H.s.turn'); await force('imm'); await btn('next'); await force('p50'); await btn('next')
+    await host.evaluate(f'H.s.sc[{t}] = Math.max(H.s.sc[{t}], 300); pushHost()'); scb = await host.evaluate(f'H.s.sc[{t}]'); await force('m250')
+    check(await host.evaluate(f'H.s.sc[{t}]') == scb and await both('الحصانة منعت'), 'wheel v3: immunity blocks the deduction, shown on both phones'); await btn('next')
+    # host closes the tab and comes back from a new tab
+    before = await host.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])'); hctx = host.context
+    await host.wait_for_timeout(2500); await host.close()
+    check(await both('المقدّم غير متصل مؤقتًا', 30000), 'wheel v3: host tab closed, both phones stay in the room and see «host temporarily away»')
+    host2 = await hctx.new_page(); host2.on('pageerror', lambda e: R['errors'].append(f'host (new tab): {e}')); await host2.goto(URL, wait_until='load'); await host2.wait_for_selector('#resumeGo', timeout=20000); await host2.click('#resumeGo')
+    await host2.wait_for_function(f'H && H.code === "{code}" && H.s.ph === "play"', timeout=40000); await host2.wait_for_timeout(1500)
+    check(await host2.evaluate('JSON.stringify([H.s.sc, H.s.tn, H.s.im])') == before, f'wheel v3: host back from a new tab: same room and match ({"database copy" if R["wheel_cloud"] else "device copy: rules not updated yet"})')
+    check(await both('الدور على', 30000), 'wheel v3: both phones back in the match without re-joining')
+    # end of the match
+    await host2.evaluate('H.s.sc = [1450, 1000]; pushHost()')
+    async def btn2(a):
+        await host2.wait_for_selector(f'[data-w="{a}"]', timeout=15000); await host2.wait_for_timeout(500); await host2.locator(f'[data-w="{a}"]').first.click(); await host2.wait_for_timeout(300)
+    for i in range(6):
+        if await host2.evaluate('H.s.ph === "end"'): break
+        await btn2('spin'); await host2.evaluate('H.s.seg = "p50"'); await host2.wait_for_function('H.s.stage !== "rolling"', timeout=15000); await btn2('next')
+    s = await host2.evaluate('H.s')
+    check(s['ph'] == 'end' and s['tn'][0] == s['tn'][1], f'wheel v3: goal reached, final round, match ends with equal turns {s["tn"]}')
+    check(await both('الفائز'), 'wheel v3: winner screen on iPhone and Android'); await ios.screenshot(path=f'{OUT}/wheel3_iphone_end.png', full_page=True)
+    size = await host2.evaluate('JSON.stringify(H.s).length'); check(size < 6000, f'wheel v3: state sent to phones stays small ({size} characters)')
+    await host2.click('#endBtn'); await host2.wait_for_timeout(1500)
+    return host2
+
 async def run(pw):
     if os.environ.get('FAKEFB'):     # local dry run: one Chromium context shared by all pages so the in-browser Firebase stand-in can relay
         cb = wb = await pw.chromium.launch(); shared = await cb.new_context(has_touch=True); fake = open(os.environ['FAKEFB']).read()
@@ -110,29 +180,32 @@ async def run(pw):
         check(True, 'letters: winner screen on host, iPhone and Android')
         await ios.screenshot(path=f'{OUT}/letters_iphone_victory.png', full_page=True)
 
-        # ---------------- wheel: question and challenge visible on the phones
-        code = await start(host, 'wheel', {'goal': 0})     # open game: reaching the goal would end it before both kinds of result are seen
-        await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
-        await host.click('[data-h=start]'); await host.wait_for_timeout(800)
-        got = {}
-        for i in range(40):
-            await host.click('[data-h=spin]'); await host.wait_for_function('H.s.show === true', timeout=15000)
-            seg = await host.evaluate('SEGS[H.s.seg]'); kind = 'q' if seg.get('q') else 'ch' if seg.get('ch') else None
-            if kind and kind not in got:
-                text = await host.evaluate('H.s.wq ? H.s.wq.q : H.s.ch'); await ios.wait_for_timeout(1500)
-                got[kind] = (await visible(ios, text), await visible(android, text))
-                if kind == 'q':
-                    await ios.screenshot(path=f'{OUT}/wheel_iphone_question.png')
-                    opts_ok = await ios.evaluate('document.querySelectorAll("#whP .opt").length') == 4
-                    right_hidden = await ios.evaluate('!document.querySelector("#whP .opt.right")')
-                    check(opts_ok and right_hidden, 'wheel: 4 options on the phone, correct answer not marked before the host reveals it')
-                    await host.click('[data-h=qrev]'); await ios.wait_for_timeout(1500)
-                    check(await ios.evaluate('!!document.querySelector("#whP .opt.right")'), 'wheel: phones see the correct answer after the host reveals it')
-            if await host.locator('#whSide [data-h=qrev]').count(): await host.click('#whSide [data-h=qrev]')
-            await host.locator('#whSide [data-h=skip], #whSide [data-h=pts], #whSide [data-h=steal], #whSide [data-h=x2], #whSide [data-h=q-ok]').first.click()
-            if len(got) == 2: break
-        check(got.get('q') == (True, True), f'wheel: question visible on iPhone and Android screens {got.get("q")}')
-        check(got.get('ch') == (True, True), f'wheel: challenge visible on iPhone and Android screens {got.get("ch")}')
+        # ---------------- wheel (v3 with cards when the site has it, otherwise the older wheel)
+        if await host.evaluate('typeof W3 !== "undefined"'):
+            host = await wheel_v3(host, ios, android)
+        else:
+            code = await start(host, 'wheel', {'goal': 0})     # open game: reaching the goal would end it before both kinds of result are seen
+            await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
+            await host.click('[data-h=start]'); await host.wait_for_timeout(800)
+            got = {}
+            for i in range(40):
+                await host.click('[data-h=spin]'); await host.wait_for_function('H.s.show === true', timeout=15000)
+                seg = await host.evaluate('SEGS[H.s.seg]'); kind = 'q' if seg.get('q') else 'ch' if seg.get('ch') else None
+                if kind and kind not in got:
+                    text = await host.evaluate('H.s.wq ? H.s.wq.q : H.s.ch'); await ios.wait_for_timeout(1500)
+                    got[kind] = (await visible(ios, text), await visible(android, text))
+                    if kind == 'q':
+                        await ios.screenshot(path=f'{OUT}/wheel_iphone_question.png')
+                        opts_ok = await ios.evaluate('document.querySelectorAll("#whP .opt").length') == 4
+                        right_hidden = await ios.evaluate('!document.querySelector("#whP .opt.right")')
+                        check(opts_ok and right_hidden, 'wheel: 4 options on the phone, correct answer not marked before the host reveals it')
+                        await host.click('[data-h=qrev]'); await ios.wait_for_timeout(1500)
+                        check(await ios.evaluate('!!document.querySelector("#whP .opt.right")'), 'wheel: phones see the correct answer after the host reveals it')
+                if await host.locator('#whSide [data-h=qrev]').count(): await host.click('#whSide [data-h=qrev]')
+                await host.locator('#whSide [data-h=skip], #whSide [data-h=pts], #whSide [data-h=steal], #whSide [data-h=x2], #whSide [data-h=q-ok]').first.click()
+                if len(got) == 2: break
+            check(got.get('q') == (True, True), f'wheel: question visible on iPhone and Android screens {got.get("q")}')
+            check(got.get('ch') == (True, True), f'wheel: challenge visible on iPhone and Android screens {got.get("ch")}')
 
         # ---------------- spot the difference
         code = await start(host, 'diff', {'lv': 2})
