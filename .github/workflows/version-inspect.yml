@@ -1,0 +1,32 @@
+# Read-only: which version each public address serves, and its cache headers. Changes nothing.
+name: version-inspect
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/version-inspect.yml"]
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: inspect
+        run: |
+          O=reports/version-inspect; mkdir -p $O
+          {
+          echo "time (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+          for u in https://mbs716.github.io/lamma/ https://mbs716.github.io/lamma/index.html https://mbs716.github.io/lamma https://mbs716.github.io/lamma-factory/preview/ https://mbs716.github.io/lamma-factory/preview-wheel/ http://mbs716.github.io/lamma/; do
+            echo; echo "== $u"
+            curl -s -o /tmp/p.html -D /tmp/h.txt -L "$u"
+            grep -iE '^(HTTP/|location|cache-control|age|x-cache|last-modified|etag|expires)' /tmp/h.txt | tr -d '\r'
+            echo "version in page: $(grep -oE 'v[0-9][^<]{0,30}2026-10-[0-9]{2}' /tmp/p.html | head -1)"
+            echo "room prefix: $(grep -oE 'ROOM_PREFIX = \"[a-z0-9-]+\"' /tmp/p.html | head -1)"
+          done
+          } 2>&1 | tee $O/report.txt
+      - name: save
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/version-inspect
+          git commit -q -m "version inspection" || exit 0
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done
