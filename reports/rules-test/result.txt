@@ -1,0 +1,32 @@
+OK   signed-in device writes its own presence
+OK   another visitor cannot overwrite it (no host impersonation)
+OK   another visitor cannot delete it
+OK   a visitor cannot write a presence claiming someone else's id
+OK   not signed in: cannot claim an id
+OK   presence must have the expected shape
+OK   presence size is limited
+OK   nobody can delete a whole room
+OK   nobody can list all rooms
+OK   a room can be read with its code (players need it)
+OK   the owner removes its own presence when leaving
+OK   current site: presence without sign-in still works
+OK   current site: it can update and remove its presence
+OK   host locks its room
+OK   another device cannot take a locked room
+OK   the lock cannot be faked into the future
+OK   host saves the match
+OK   host saves the hidden answers
+OK   another device cannot change the saved match (no score tampering)
+OK   another device cannot read the hidden answers
+OK   not signed in: cannot read the saved match
+OK   the host device reads its saved match back (resume)
+OK   another device cannot delete the saved match
+OK   after 3 hours without the host, the room can be taken by another device
+OK   the host ends the match: removes its copies
+OK   spot: a device records a seen picture
+OK   spot: the room reads a device's history
+OK   spot: nobody lists all devices
+OK   spot: a report is recorded
+OK   other paths stay closed (write)
+OK   the whole database cannot be read
+31/31 passed
