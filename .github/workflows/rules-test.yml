@@ -1,9 +1,12 @@
-# Runs the proposed database rules on the official Firebase emulator. Nothing is sent to the real database.
+# The final database rules on the official Firebase emulators (Database + Auth). Nothing is sent to the real database.
+#  1. tests/rules/rules.test.mjs: allowed and forbidden writes (score tampering, host/player impersonation, sessions)
+#  2. the whole site (tests/emu-site = a TEST build that talks only to the emulators) played end to end with anonymous
+#     sign-in, a computer host, an iPhone (WebKit) and an Android (Chromium) phone
 name: rules-test
 on:
   push:
     branches: [main]
-    paths: ["firebase/**", "tests/rules/**", ".github/workflows/rules-test.yml"]
+    paths: ["firebase/**", "tests/rules/**", "tests/emu-site/**", ".github/workflows/rules-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,16 +19,20 @@ jobs:
         with: {distribution: temurin, java-version: "21"}
       - uses: actions/setup-node@v4
         with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
       - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
-      - name: rules on the emulator
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: rules and the whole site on the emulators
         run: |
-          echo '{"emulators":{"database":{"port":9000}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
-          npx firebase emulators:exec --only database --project demo-lamma "node tests/rules/rules.test.mjs" 2>&1 | tail -60
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
+          npx firebase emulators:exec --only database,auth --project demo-lamma "bash tests/rules/run_all.sh" 2>&1 | tail -120
           test -f reports/rules-test/result.txt && ! grep -q '^FAIL' reports/rules-test/result.txt
+          python -c "import json,sys; d=json.load(open('reports/rules-test/site-e2e/result.json')); sys.exit(0 if d['PASS'] else 1)"
       - name: save
         if: always()
         run: |
-          rm -f firebase.json database-debug.log
+          rm -f firebase.json database-debug.log firebase-debug.log
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
           git add reports/rules-test || true
           if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi

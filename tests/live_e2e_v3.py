@@ -122,6 +122,10 @@ async def sessions_real(host, ios, android, newctx):
     await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
     names = lambda: host.evaluate('hostPlayers().map(p => pname(p) + (p.away ? " (away)" : "")).sort()')
     link = await host.evaluate('joinLink(H.code)'); b = await host.evaluate('BUILD')
+    if os.environ.get('RULES_ON'):      # run against the emulator with the final rules: everyone is signed in anonymously
+        ids = [await pg.evaluate('AUTH_UID') for pg in (host, ios, android)]
+        check(all(ids) and len(set(ids)) == 3, f'rules: host, iPhone and Android each signed in anonymously, no form ({len(set(i for i in ids if i))} identities)')
+        check(await host.evaluate('!!H.cloud') and await ios.evaluate('!!(findHost() && findHost().hv)'), 'rules: host holds the room lock; phones see a host seat verified by the database')
     pre = await host.evaluate('ROOM_PREFIX'); prev = 'preview' in URL
     check(pre == ('lmp3-' if prev else 'lm3-') and link.startswith(URL), f'sessions: {"preview" if prev else "official"} rooms are separate ({pre}) and the invite link stays on this site')
     check(('?v=' + b) in link and link.endswith('#' + code), f'sessions: invite link carries the version ({link[-30:]})')

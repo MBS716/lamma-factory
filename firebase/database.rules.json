@@ -1,11 +1,19 @@
 {
   "rules": {
+    ".read": false,
+    ".write": false,
     "rooms": {
       "$room": {
-        ".read": true,
+        ".read": "auth != null && $room.matches(/^lm(p?3|2)-[0-9]{4}$/)",
         "$peer": {
-          ".write": "!data.exists() || !data.child('u').exists() || (auth != null && data.child('u').val() === auth.uid)",
-          ".validate": "newData.hasChildren(['j', 't']) && newData.child('j').isString() && newData.child('j').val().length <= 12000 && (!newData.child('u').exists() || (auth != null && newData.child('u').val() === auth.uid))"
+          ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || (!newData.exists() && root.child('hosts').child($room).child('u').val() === auth.uid))",
+          ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && $peer.matches(/^[A-Za-z0-9_-]{8,40}$/) && newData.hasChildren(['j', 't', 'u', 'c'])",
+          "j": { ".validate": "newData.isString() && newData.val().length <= 12000" },
+          "t": { ".validate": "newData.isNumber()" },
+          "u": { ".validate": "newData.val() === auth.uid" },
+          "c": { ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === now) || newData.val() === data.val())" },
+          "h": { ".validate": "newData.val() === true && root.child('hosts').child($room).child('u').val() === auth.uid" },
+          "$other": { ".validate": false }
         }
       }
     },
@@ -13,32 +21,50 @@
       "$room": {
         ".read": "auth != null",
         ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || data.child('t').val() < now - 10800000)",
-        ".validate": "newData.hasChildren(['u', 't']) && newData.child('u').val() === auth.uid && newData.child('t').isNumber() && newData.child('t').val() <= now && newData.child('t').val() > now - 60000"
+        ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && newData.hasChildren(['u', 't', 'g'])",
+        "u": { ".validate": "newData.val() === auth.uid" },
+        "t": { ".validate": "newData.isNumber() && newData.val() <= now && newData.val() > now - 60000" },
+        "g": { ".validate": "newData.isString() && newData.val().length <= 12" },
+        "$other": { ".validate": false }
       }
     },
     "games": {
       "$room": {
         ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
-        ".validate": "!newData.exists() || (newData.child('s').isString() && newData.child('s').val().length <= 20000)"
+        ".validate": "newData.hasChildren(['g', 'v', 's', 'at'])",
+        "g": { ".validate": "newData.isString() && newData.val().length <= 12" },
+        "v": { ".validate": "newData.isNumber()" },
+        "s": { ".validate": "newData.isString() && newData.val().length <= 20000" },
+        "at": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
       }
     },
     "gpriv": {
       "$room": {
         ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
-        ".validate": "!newData.exists() || (newData.child('pv').isString() && newData.child('pv').val().length <= 120000)"
+        ".validate": "newData.hasChildren(['pv', 'at'])",
+        "pv": { ".validate": "newData.isString() && newData.val().length <= 120000" },
+        "at": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
       }
     },
     "spotseen": {
       "$dev": {
-        ".read": true,
-        "$id": { ".write": true, ".validate": "newData.isNumber()" }
+        ".read": "auth != null",
+        "$id": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && $dev.length <= 40 && $id.length <= 40"
+        }
       }
     },
     "spotreports": {
       "$id": {
-        "$dev": { ".write": true, ".validate": "newData.isNumber()" }
+        "$dev": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && $id.length <= 40 && $dev.length <= 40"
+        }
       }
     }
   }
