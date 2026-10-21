@@ -660,7 +660,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.1-sessions · 2026-10-20</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.2-secure · 2026-10-21</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1650,7 +1650,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "68be0a4dc5", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "575f0dda70", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -1671,28 +1671,42 @@ function makeFirebaseRoom(db){
     async join(name, opt){
       opt = opt || {};
       await Promise.race([authReady, sleep(6000)]);
-      const me = opt.id || newId();
-      const ref = db.ref("rooms/" + name), mine = ref.child(me), ci = db.ref(".info/connected");
-      let local = {}, peersArr = Object.freeze([]), handlers = [], conn = false, left = false;
-      const TS = () => firebase.database.ServerValue.TIMESTAMP, uid = () => AUTH_UID ? {u:AUTH_UID} : {};
-      const arm = () => { try { if (opt.keep) mine.onDisconnect().set({j:JSON.stringify({...local, away:1}), t:TS(), ...uid()}); else mine.onDisconnect().remove(); } catch(e){} };
-      const write = () => { const pr = mine.set({j:JSON.stringify(local), t:TS(), ...uid()}); arm(); return pr; };
+      if (!AUTH_UID){ const u = await fbSignIn(); if (u) AUTH_UID = u; }      // one more try: the database may accept signed-in devices only
+      let me = opt.id || newId();
+      const ref = db.ref("rooms/" + name), ci = db.ref(".info/connected");
+      let mine = ref.child(me);
+      let local = {}, peersArr = Object.freeze([]), handlers = [], conn = false, left = false, made = false, since = null;
+      /* each seat carries: u = the device's anonymous identity (only it may change the seat), c = the server time of the
+         seat's first join (fixed for good: an earlier claim to a name cannot be faked), h = true on the host's seat (the
+         database accepts it only from the device that holds the room's host lock) */
+      const TS = () => firebase.database.ServerValue.TIMESTAMP, uid = () => AUTH_UID ? {u:AUTH_UID} : {}, hm = () => opt.host ? {h:true} : {};
+      const body = extra => ({j:JSON.stringify(extra ? {...local, ...extra} : local), t:TS(), ...uid(), ...hm()});
+      const arm = () => { try { (opt.keep ? mine.onDisconnect().update(body({away:1})) : mine.onDisconnect().remove()).catch(() => {}); } catch(e){} };
+      const write = () => { const pr = made ? mine.update(body()) : mine.set({...body(), c:since || TS()}); return pr.then(() => { made = true; arm(); }); };
+      const readSince = async () => { try { const sn = await Promise.race([mine.once("value"), sleep(6000).then(() => null)]); since = sn && +sn.child("c").val() || null; } catch(e){ since = null; } };
+      const first = async () => {
+        await readSince();
+        try { return await write(); } catch(e){}
+        await readSince(); try { return await write(); } catch(e){ if (!opt.id) throw e; }
+        // this seat belongs to another identity (site data cleared on this device): take a new seat
+        me = newId(); mine = ref.child(me); since = null; return write();
+      };
       const build = val => {
         const prev = new Map(peersArr.map(p => [p.peer, p])), now = Date.now();
         peersArr = Object.freeze(Object.entries(val || {}).map(([id, v]) => {
           let pres = {}; try { pres = JSON.parse((v && v.j) || "{}") || {}; } catch(e){}
           const old = prev.get(id);
-          return old && old.raw === (v && v.j) && old.ts === (v && v.t) ? old : {peer:id, presence:pres, raw:v && v.j, ts:v && v.t, away:!!pres.away, sameTab:id === me, isMe:id === me, updatedAt:now};
+          const hv = !!(v && v.h === true), c = v && +v.c || 0;
+          return old && old.raw === (v && v.j) && old.ts === (v && v.t) && old.hv === hv && old.since === c ? old : {peer:id, presence:pres, raw:v && v.j, ts:v && v.t, away:!!pres.away, hv, since:c, sameTab:id === me, isMe:id === me, updatedAt:now};
         }));
         handlers.slice().forEach(h => { try { h({peers:peersArr}); } catch(e){ console.error(e); } });
       };
       const cb = snap => build(snap.val());
       const ccb = sn => { const was = conn; conn = !!sn.val(); if (conn && !left) write(); if (was !== conn) setTimeout(() => window.dispatchEvent(new Event("lm-conn")), 0); };
-      arm();
-      await Promise.race([write(), sleep(25000).then(() => { throw new Error("timeout"); })]);   // slow mobile networks need longer than 10 s
+      await Promise.race([first(), sleep(25000).then(() => { throw new Error("timeout"); })]);   // slow mobile networks need longer than 10 s
       ref.on("value", cb); ci.on("value", ccb);
       return {
-        name, id:me,
+        name, get id(){ return me; },
         presence(patch){ for (const [k, v] of Object.entries(patch)){ if (v === null) delete local[k]; else local[k] = v; } return left ? Promise.resolve() : write(); },
         peers: () => peersArr,
         onPeers(h){ handlers.push(h); setTimeout(() => h({peers:peersArr}), 0); return () => { handlers = handlers.filter(x => x !== h); }; },
@@ -1724,7 +1738,7 @@ async function fbSignIn(){
 }
 const roomReady = (async () => {
   try {
-    if (FIREBASE_CONFIG && window.firebase){ if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG); fbSignIn().then(u => { AUTH_UID = u; authDone(u); }); ROOM = makeFirebaseRoom(firebase.database()); }
+    if (FIREBASE_CONFIG && window.firebase){ if (!firebase.apps.length){ firebase.initializeApp(FIREBASE_CONFIG);  } fbSignIn().then(u => { AUTH_UID = u; authDone(u); }); ROOM = makeFirebaseRoom(firebase.database()); }
     else { const c = await getClaude(); if (c){ try { ROOM = await c.use("room"); } catch(e){ ROOM = null; } } }
   } catch(e){ console.error(e); ROOM = null; }
   if (!AUTH_UID && !(FIREBASE_CONFIG && window.firebase)) authDone(null);
@@ -1744,7 +1758,8 @@ const normName = n => clean(n || "").replace(/\s+/g, " ").trim().toLowerCase().r
 // one seat per name: a second device using a name already taken in this game is refused (the first seat keeps it)
 function updateDup(){
   const by = new Map(), dup = [];
-  for (const p of sessionPlayers().slice().sort((a, b) => (+a.presence.jt || +a.ts || 0) - (+b.presence.jt || +b.ts || 0) || (a.peer < b.peer ? -1 : 1))){
+  const t0 = p => +p.since || +p.presence.jt || +p.ts || 0;
+  for (const p of sessionPlayers().slice().sort((a, b) => t0(a) - t0(b) || (a.peer < b.peer ? -1 : 1))){
     const k = normName(p.presence.n); if (!k) continue;
     if (by.has(k)) dup.push(p.peer); else by.set(k, p.peer);
   }
@@ -1877,30 +1892,39 @@ async function codeFree(code, prefer){
   if (!cloudGame(H.g)) return true;
   const lk = await FS.get("hosts/" + ROOM_PREFIX + code);
   if (!lk || lk.u === AUTH_UID) return true;
-  return Date.now() - (+lk.t || 0) > CLOUD_H;
+  return srvNow() - (+lk.t || 0) > CLOUD_H;
 }
 async function claimCode(prefer){
   for (let k = 0; k < 4; k++){
     const code = k === 0 && prefer ? prefer : String(1000 + Math.floor(Math.random() * 9000));
     if (!(await codeFree(code, prefer)) && k < 3) continue;
+    // the host lock comes first: where the database rules are on, only the lock holder may mark a seat as the host's
+    const lockMine = cloudGame(H.g) && AUTH_UID ? await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP}) : false;
+    if (!H) return;
+    if (!lockMine && AUTH_UID && cloudGame(H.g) && !(await codeFree(code, prefer))) continue;   // another host took this code a moment ago
+    if (!H) return;
+    H.priv.lockAt = lockMine ? Date.now() : 0; H.priv.lockLost = false;
     let nr;
-    try { nr = await ROOM.join(ROOM_PREFIX + code, {id:H.hid, keep:true}); } catch(e){ console.error(e); if (H) H.failed = true; return; }
+    try { nr = await ROOM.join(ROOM_PREFIX + code, {id:H.hid, keep:true, host:true}); } catch(e){ console.error(e); if (lockMine && !(prefer && k === 0)) FS.del("hosts/" + ROOM_PREFIX + code); if (H) H.failed = true; return; }
+    if (H) H.hid = nr.id;
     if (!H.c) H.c = srvNow();
     try { await nr.presence(hostPresence()); } catch(e){}
     await sleep(1300);
     // another host in this room: an active one, or one who stepped away less than 3 hours ago, keeps the code
-    const live = p => !p.sameTab && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H);
+    // with the lock in hand, a seat that only claims to be the host (not verified by the database) does not hold the code
+    const live = p => !p.sameTab && p.presence && p.presence.r === "h" && (p.hv || !lockMine) && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H);
     const other = () => nr.peers().some(live);
     if (!other()) nr.peers().filter(p => !p.sameTab && p.away && srvNow() - (+p.ts || 0) > SEAT_H).forEach(p => nr.drop(p.peer));   // tidy seats left from old games
     if (other() && k === 0 && prefer) for (let w = 0; w < 8 && other(); w++) await sleep(500);   // our old tab may take a moment to leave
-    if (other()){ try { await nr.leave(); } catch(e){} continue; }
+    if (other()){ try { await nr.leave(); } catch(e){} if (lockMine && !(prefer && k === 0)) FS.del("hosts/" + ROOM_PREFIX + code); continue; }
     if (!H){ try { await nr.leave(); } catch(e){} return; }
     NR = nr; H.code = code; claimTab("h:" + code + ":" + H.hid);
-    if (cloudGame(H.g)) H.cloud = await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP});
+    if (cloudGame(H.g)) H.cloud = lockMine || await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP});
     NR.onPeers(() => { if (!H) return; if (updateDup()) pushHost(); if (MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
     saveHost();                // the room can be found again even if the tab is closed right away
     return;
   }
+  if (H && !H.code) H.failed = true;      // no free code after 4 tries
 }
 function hostPresence(){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; return {r:"h", v:APP_V, b:BUILD, g:H.g, s, hs:H.hs, c:H.c || 0, dup:H.priv.dup || []}; }
 function pushHost(){
@@ -1930,7 +1954,7 @@ function saveCloud(){
     if (!H || !H.cloud) return; H.priv.cloudT = null; H.priv.cloudOrd = stateOrder(H.s); const room = ROOM_PREFIX + H.code, TS = firebase.database.ServerValue.TIMESTAMP;
     await FS.set("games/" + room, {g:H.g, v:APP_V, s:JSON.stringify(H.s), at:TS});
     await FS.set("gpriv/" + room, {pv:JSON.stringify(MOD[H.g].savePriv ? MOD[H.g].savePriv() : {}), at:TS});
-    if (!H.priv.lockAt || Date.now() - H.priv.lockAt > 60000){ H.priv.lockAt = Date.now(); FS.set("hosts/" + room, {u:AUTH_UID, g:H.g, t:TS}); }
+    refreshLock();
   }, moved ? 0 : 1500);
 }
 function savedHost(){
@@ -2104,9 +2128,10 @@ async function playerJoin(code, opt){
     if (NR){ try { await NR.detach(); } catch(e){} NR = null; }
     let nr;
     try { nr = await ROOM.join(ROOM_PREFIX + code, {id:seat ? seat.pid : newId(), keep:true}); }
-    catch(e){ console.error(e); if (joinTok !== tok) return; joinStatus(`<p class="bigmsg">تعذّر الاتصال باللعبة</p><p class="muted">الاتصال بطيء أو مقطوع. تأكد من الإنترنت ثم أعد المحاولة.</p><button class="btn" data-act="retry" data-code="${esc(code)}">إعادة المحاولة</button>`); return; }
+    catch(e){ console.error(e); if (joinTok !== tok) return; joinStatus(`<p class="bigmsg">تعذّر الاتصال باللعبة</p><p class="muted">${AUTH_UID ? "الاتصال بطيء أو مقطوع. تأكد من الإنترنت ثم أعد المحاولة." : "تعذّر تجهيز اتصال آمن لهذا الجهاز. تأكد من الإنترنت، وإن كنت داخل تطبيق (مثل واتساب أو إنستغرام) فافتح الرابط في Safari أو Chrome."}</p><button class="btn" data-act="retry" data-code="${esc(code)}">إعادة المحاولة</button>`); return; }
     if (joinTok !== tok){ try { await nr.detach(); } catch(e){} return; }      // the player pressed «رجوع» while connecting
     NR = nr; claimTab("p:" + code + ":" + nr.id);
+    if (seat && nr.id !== seat.pid) seatSet(code, {pid:nr.id});
     $("#playerMain").innerHTML = ""; $("#playerMain").dataset.k = "";
     P = {code, pid:nr.id, name:seat ? seat.n : lsGet("lm-name"), team:seat ? seat.tm || null : null, joined:false, seat, g:null, view:{}, searching:true, t0:Date.now(), auto:!!opt.auto};
     playerRender();
@@ -2125,7 +2150,7 @@ async function playerLeave(force){
 /* the host of this game: the host seat that started it first (players stay with that one; a later "host" is ignored) */
 function findHost(){
   if (!NR) return null;
-  const hs = NR.peers().filter(p => !p.sameTab && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H));
+  const hs = NR.peers().filter(p => !p.sameTab && p.hv && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H));
   const ok = hs.filter(p => p.presence.v === APP_V && GAMES[p.presence.g]);
   if (P && P.hostId){ const h = ok.find(p => p.peer === P.hostId); if (h) return h; }
   const mine = P && P.seat ? ok.find(p => p.presence.hs === P.seat.hs) : null;
@@ -2134,7 +2159,7 @@ function findHost(){
   return h;
 }
 // a host on another version of لمّة in the same room (or an older version's rooms): explain instead of "not found"
-function otherVersionHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && p.presence.v !== APP_V && !p.away) : null; }
+function otherVersionHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && (p.presence.v !== APP_V || !p.hv) && !p.away) : null; }
 async function probeOldRooms(code){
   if (!ROOM || !ROOM.peek || !P) return;
   for (const pre of OTHER_PREFIXES){
@@ -2155,7 +2180,8 @@ function playerRender(){
   if (!host){
     const ov = otherVersionHost();
     let msg;
-    if (ov && (+ov.presence.v || 0) > APP_V && reloadOfficial(P.code, ov.presence.b)) msg = `<div class="spinner"></div><p class="bigmsg">نحدّث لمّة إلى الإصدار الذي يستخدمه المقدّم…</p>`;
+    if (ov && (+ov.presence.v || 0) === APP_V) msg = `<p class="bigmsg">صفحة المقدّم تحتاج تحديثًا</p><p class="muted">صفحة المقدّم على نسخة سابقة من لمّة وستتحدّث تلقائيًا بعد الجولة الحالية. ابقَ هنا، أو اطلب من المقدّم تحديث صفحته.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
+    else if (ov && (+ov.presence.v || 0) > APP_V && reloadOfficial(P.code, ov.presence.b)) msg = `<div class="spinner"></div><p class="bigmsg">نحدّث لمّة إلى الإصدار الذي يستخدمه المقدّم…</p>`;
     else if (ov) msg = (+ov.presence.v || 0) > APP_V
       ? `<p class="bigmsg">هذه اللعبة على إصدار أحدث من لمّة</p><p class="muted">حدّث الصفحة ليعمل جوالك بنفس إصدار المقدّم.</p><button class="btn" data-act="update" data-code="${esc(P.code)}">تحديث الصفحة</button>`
       : `<p class="bigmsg">المقدّم يستخدم إصدارًا أقدم من لمّة</p><p class="muted">اطلب من المقدّم تحديث صفحته (أو فتح ${esc((SITE_URL || "").replace(/^https?:\/\//, ""))})، ثم أعد المحاولة.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
@@ -3551,7 +3577,28 @@ function touchSession(){
   if (window.__resuming || !NR) return;
   try { if (P && P.joined && P.code && seatGet(P.code)) seatSet(P.code, {}); if (H && H.code) saveHost(); } catch(e){}
 }
-setInterval(() => { if (NR && NR.connected()) touchSession(); }, 60000);
+/* The host lock (who owns the room) is renewed every minute while the host is connected, and at once when the host comes
+   back to the tab, so a room can only pass to another host after its own host has really been gone for 3 hours. If it did
+   pass meanwhile, this page says so: it is no longer the host of that room (the database refuses its changes). */
+async function refreshLock(force){
+  if (!H || !H.code || !AUTH_UID || !cloudGame(H.g) || !NR || !NR.connected() || window.__resuming) return;
+  if (!force && H.priv.lockAt && Date.now() - H.priv.lockAt < 50000) return;
+  H.priv.lockAt = Date.now(); const room = ROOM_PREFIX + H.code, g = H.g;
+  const ok = await FS.set("hosts/" + room, {u:AUTH_UID, g, t:firebase.database.ServerValue.TIMESTAMP});
+  if (!H || ROOM_PREFIX + H.code !== room) return;
+  if (ok){ H.cloud = true; if (H.priv.lockLost){ H.priv.lockLost = false; lockBar(); } return; }
+  const lk = await FS.get("hosts/" + room);
+  if (H && lk && lk.u && lk.u !== AUTH_UID){ H.priv.lockLost = true; lockBar(); }
+}
+function lockBar(){
+  let b = $("#lockBar"); const on = !!(H && H.priv.lockLost);
+  if (!b && on){ const u = $("#updBar"); if (!u) return; u.insertAdjacentHTML("afterend", `<div class="updbar" id="lockBar"></div>`); b = $("#lockBar"); }
+  if (!b) return; b.hidden = !on;
+  if (on) b.innerHTML = `<span>انتقلت هذه الغرفة إلى مقدّم آخر بعد غيابك أكثر من 3 ساعات، ولن تصل تغييراتك إلى اللاعبين.</span> <button class="btn sm" data-lock="end">إنهاء اللعبة</button>`;
+  b.onclick = e => { if (e.target.closest("[data-lock=end]")){ const x = $("#endBtn"); if (x) x.click(); b.hidden = true; } };
+}
+setInterval(() => { if (NR && NR.connected()){ touchSession(); refreshLock(); } }, 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshLock(true); });
 window.addEventListener("pagehide", touchSession);
 document.addEventListener("visibilitychange", () => { if (document.hidden) touchSession(); });
 setTimeout(checkUpdate, 1500);
