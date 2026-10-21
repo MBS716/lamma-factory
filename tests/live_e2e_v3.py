@@ -167,6 +167,30 @@ async def sessions_real(host, ios, android, newctx):
     try: await android.wait_for_function('!document.querySelector("#playerMain").innerText.includes("غير متصل مؤقتًا")', timeout=30000)
     except Exception: ok = False
     check(ok, 'sessions: phones carry on without re-joining')
+    if os.environ.get('RULES_ON'):      # emulator only: attacks from a real phone page, and the room lock over time
+        res = await android.evaluate('''(async () => { const r = firebase.database().ref("rooms/" + ROOM_PREFIX + P.code), TS = firebase.database.ServerValue.TIMESTAMP, out = [];
+          try { await r.child("fakehostxx01").set({j: JSON.stringify({r:"h", v:APP_V, g:"letters", c:0, s:{ph:"play", sc:[999, 0]}}), t:TS, u:AUTH_UID, c:TS, h:true}); out.push("fake host accepted"); } catch(e){ out.push("fake host refused"); }
+          const hid = findHost().peer;
+          try { await r.child(hid).update({j:"{}"}); out.push("host seat changed"); } catch(e){ out.push("host seat protected"); }
+          try { await firebase.database().ref("games/" + ROOM_PREFIX + P.code).set({g:"letters", v:3, s:"{}", at:TS}); out.push("saved match changed"); } catch(e){ out.push("saved match protected"); }
+          return out; })()''')
+        check(res == ['fake host refused', 'host seat protected', 'saved match protected'], f'rules: from a player phone, faking the host, changing the host seat (scores) and the saved match are all refused {res}')
+        import urllib.request
+        uid = await host.evaluate('AUTH_UID'); room = await host.evaluate('ROOM_PREFIX + H.code')
+        def emu(method, path, body=None):
+            rq = urllib.request.Request(f'http://127.0.0.1:9000/{path}.json?ns=demo-lamma-default-rtdb', method=method,
+                                        data=None if body is None else json.dumps(body).encode(), headers={'Authorization': 'Bearer owner'})
+            return json.loads(urllib.request.urlopen(rq).read() or b'null')
+        now = lambda: int(time.time() * 1000)
+        emu('PUT', f'hosts/{room}', {'u': uid, 'g': 'letters', 't': now() - 2 * 3600000})
+        await host.evaluate('refreshLock(true)'); await host.wait_for_timeout(2000)
+        check(now() - emu('GET', f'hosts/{room}')['t'] < 60000, 'rules: a connected host renews its room lock (an active room never counts as abandoned)')
+        emu('PUT', f'hosts/{room}', {'u': 'another-host', 'g': 'letters', 't': now()})
+        await host.evaluate('refreshLock(true)'); await host.wait_for_timeout(2000)
+        check(await host.is_visible('#lockBar') and 'مقدّم آخر' in await host.inner_text('#lockBar'), 'rules: if the room did pass to another host, the old host page says so')
+        emu('PUT', f'hosts/{room}', {'u': uid, 'g': 'letters', 't': now()})
+        await host.evaluate('refreshLock(true)'); await host.wait_for_timeout(2000)
+        check(not await host.is_visible('#lockBar'), 'rules: lock back with this host: the notice goes away')
     await host.click('#endBtn'); await host.wait_for_timeout(1500)
     ok = True
     try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("انتهت")', timeout=30000)

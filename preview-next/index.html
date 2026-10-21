@@ -660,7 +660,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.2-secure · 2026-10-20 · معاينة</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.2-secure · 2026-10-21 · معاينة</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1650,7 +1650,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "31819eef5b", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "e222376bfa", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -1901,6 +1901,9 @@ async function claimCode(prefer){
     // the host lock comes first: where the database rules are on, only the lock holder may mark a seat as the host's
     const lockMine = cloudGame(H.g) && AUTH_UID ? await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP}) : false;
     if (!H) return;
+    if (!lockMine && AUTH_UID && cloudGame(H.g) && !(await codeFree(code, prefer))) continue;   // another host took this code a moment ago
+    if (!H) return;
+    H.priv.lockAt = lockMine ? Date.now() : 0; H.priv.lockLost = false;
     let nr;
     try { nr = await ROOM.join(ROOM_PREFIX + code, {id:H.hid, keep:true, host:true}); } catch(e){ console.error(e); if (lockMine && !(prefer && k === 0)) FS.del("hosts/" + ROOM_PREFIX + code); if (H) H.failed = true; return; }
     if (H) H.hid = nr.id;
@@ -1921,6 +1924,7 @@ async function claimCode(prefer){
     saveHost();                // the room can be found again even if the tab is closed right away
     return;
   }
+  if (H && !H.code) H.failed = true;      // no free code after 4 tries
 }
 function hostPresence(){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}}; return {r:"h", v:APP_V, b:BUILD, g:H.g, s, hs:H.hs, c:H.c || 0, dup:H.priv.dup || []}; }
 function pushHost(){
@@ -1950,7 +1954,7 @@ function saveCloud(){
     if (!H || !H.cloud) return; H.priv.cloudT = null; H.priv.cloudOrd = stateOrder(H.s); const room = ROOM_PREFIX + H.code, TS = firebase.database.ServerValue.TIMESTAMP;
     await FS.set("games/" + room, {g:H.g, v:APP_V, s:JSON.stringify(H.s), at:TS});
     await FS.set("gpriv/" + room, {pv:JSON.stringify(MOD[H.g].savePriv ? MOD[H.g].savePriv() : {}), at:TS});
-    if (!H.priv.lockAt || Date.now() - H.priv.lockAt > 60000){ H.priv.lockAt = Date.now(); FS.set("hosts/" + room, {u:AUTH_UID, g:H.g, t:TS}); }
+    refreshLock();
   }, moved ? 0 : 1500);
 }
 function savedHost(){
@@ -3573,7 +3577,28 @@ function touchSession(){
   if (window.__resuming || !NR) return;
   try { if (P && P.joined && P.code && seatGet(P.code)) seatSet(P.code, {}); if (H && H.code) saveHost(); } catch(e){}
 }
-setInterval(() => { if (NR && NR.connected()) touchSession(); }, 60000);
+/* The host lock (who owns the room) is renewed every minute while the host is connected, and at once when the host comes
+   back to the tab, so a room can only pass to another host after its own host has really been gone for 3 hours. If it did
+   pass meanwhile, this page says so: it is no longer the host of that room (the database refuses its changes). */
+async function refreshLock(force){
+  if (!H || !H.code || !AUTH_UID || !cloudGame(H.g) || !NR || !NR.connected() || window.__resuming) return;
+  if (!force && H.priv.lockAt && Date.now() - H.priv.lockAt < 50000) return;
+  H.priv.lockAt = Date.now(); const room = ROOM_PREFIX + H.code, g = H.g;
+  const ok = await FS.set("hosts/" + room, {u:AUTH_UID, g, t:firebase.database.ServerValue.TIMESTAMP});
+  if (!H || ROOM_PREFIX + H.code !== room) return;
+  if (ok){ H.cloud = true; if (H.priv.lockLost){ H.priv.lockLost = false; lockBar(); } return; }
+  const lk = await FS.get("hosts/" + room);
+  if (H && lk && lk.u && lk.u !== AUTH_UID){ H.priv.lockLost = true; lockBar(); }
+}
+function lockBar(){
+  let b = $("#lockBar"); const on = !!(H && H.priv.lockLost);
+  if (!b && on){ const u = $("#updBar"); if (!u) return; u.insertAdjacentHTML("afterend", `<div class="updbar" id="lockBar"></div>`); b = $("#lockBar"); }
+  if (!b) return; b.hidden = !on;
+  if (on) b.innerHTML = `<span>انتقلت هذه الغرفة إلى مقدّم آخر بعد غيابك أكثر من 3 ساعات، ولن تصل تغييراتك إلى اللاعبين.</span> <button class="btn sm" data-lock="end">إنهاء اللعبة</button>`;
+  b.onclick = e => { if (e.target.closest("[data-lock=end]")){ const x = $("#endBtn"); if (x) x.click(); b.hidden = true; } };
+}
+setInterval(() => { if (NR && NR.connected()){ touchSession(); refreshLock(); } }, 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshLock(true); });
 window.addEventListener("pagehide", touchSession);
 document.addEventListener("visibilitychange", () => { if (document.hidden) touchSession(); });
 setTimeout(checkUpdate, 1500);
