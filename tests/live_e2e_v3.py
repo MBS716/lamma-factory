@@ -122,9 +122,17 @@ async def sessions_real(host, ios, android, newctx):
     await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
     names = lambda: host.evaluate('hostPlayers().map(p => pname(p) + (p.away ? " (away)" : "")).sort()')
     link = await host.evaluate('joinLink(H.code)'); b = await host.evaluate('BUILD')
-    if os.environ.get('RULES_ON'):      # run against the emulator with the final rules: everyone is signed in anonymously
+    AUTH = os.environ.get('AUTH_ON') or os.environ.get('RULES_ON')
+    if AUTH:      # anonymous sign-in is on: every device has its own identity, and each seat carries it
         ids = [await pg.evaluate('AUTH_UID') for pg in (host, ios, android)]
-        check(all(ids) and len(set(ids)) == 3, f'rules: host, iPhone and Android each signed in anonymously, no form ({len(set(i for i in ids if i))} identities)')
+        check(all(ids) and len(set(ids)) == 3, f'identity: host, iPhone and Android each signed in anonymously, no form ({len(set(i for i in ids if i))} different identities)')
+        raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(s => s.val())')
+        own = {k: (v or {}).get('u') for k, v in (raw or {}).items()}
+        hid, ip, ap = await host.evaluate('NR.id'), await ios.evaluate('P.pid'), await android.evaluate('P.pid')
+        check(own.get(hid) == ids[0] and own.get(ip) == ids[1] and own.get(ap) == ids[2], 'identity: each seat in the database carries its own device identity (host, iPhone, Android)')
+        check(all(isinstance((raw or {}).get(k, {}).get('c'), (int, float)) for k in (hid, ip, ap)) and (raw or {}).get(hid, {}).get('h') is True, 'identity: seats carry the server join time; the host seat carries the host mark')
+        uid_ios, uid_host = ids[1], ids[0]
+    if os.environ.get('RULES_ON'):
         check(await host.evaluate('!!H.cloud') and await ios.evaluate('!!(findHost() && findHost().hv)'), 'rules: host holds the room lock; phones see a host seat verified by the database')
     pre = await host.evaluate('ROOM_PREFIX'); prev = 'preview' in URL
     check(pre == ('lmp3-' if prev else 'lm3-') and link.startswith(URL), f'sessions: {"preview" if prev else "official"} rooms are separate ({pre}) and the invite link stays on this site')
@@ -135,6 +143,7 @@ async def sessions_real(host, ios, android, newctx):
     pid = await ios.evaluate('P.pid')
     await ios.reload(); await ios.wait_for_function('P && P.joined', timeout=30000)
     check(await ios.evaluate('P.pid') == pid and await ios.evaluate('P.name') == 'آيفون' and await ios.locator('#pName').count() == 0, 'sessions: iPhone reloads, back in the same seat with no form')
+    if AUTH: check(await ios.evaluate('AUTH_UID') == uid_ios, 'identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)')
     actx = getattr(android, '_lctx', None) or android.context; await android.close(); await host.wait_for_timeout(3000)
     n = await names(); check(n == sorted(['آيفون', 'أندرويد (away)']), f'sessions: Android browser closed, its seat is kept as away {n}')
     android = await actx.new_page(); android.on('pageerror', lambda e: R['errors'].append(f'Android (sessions): {e}'))
@@ -163,11 +172,12 @@ async def sessions_real(host, ios, android, newctx):
     host = await hctx.new_page(); host.on('pageerror', lambda e: R['errors'].append(f'host (sessions): {e}'))
     await host.goto(URL, wait_until='load'); await host.wait_for_function('!window.__resuming && H && H.code', timeout=40000); await host.wait_for_timeout(1500)
     check(await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])') == before, 'sessions: host opens the site again, back in the same room and question, no new code')
+    if AUTH: check(await host.evaluate('AUTH_UID') == uid_host, 'identity: the host comes back with the same identity (host rights are not given to a new identity)')
     ok = True
     try: await android.wait_for_function('!document.querySelector("#playerMain").innerText.includes("غير متصل مؤقتًا")', timeout=30000)
     except Exception: ok = False
     check(ok, 'sessions: phones carry on without re-joining')
-    if os.environ.get('RULES_ON'):      # emulator only: attacks from a real phone page, and the room lock over time
+    if os.environ.get('RULES_ON'):      # with the final rules on (emulator, or the live site after publishing): attacks from a real phone page
         res = await android.evaluate('''(async () => { const r = firebase.database().ref("rooms/" + ROOM_PREFIX + P.code), TS = firebase.database.ServerValue.TIMESTAMP, out = [];
           try { await r.child("fakehostxx01").set({j: JSON.stringify({r:"h", v:APP_V, g:"letters", c:0, s:{ph:"play", sc:[999, 0]}}), t:TS, u:AUTH_UID, c:TS, h:true}); out.push("fake host accepted"); } catch(e){ out.push("fake host refused"); }
           const hid = findHost().peer;
@@ -175,6 +185,7 @@ async def sessions_real(host, ios, android, newctx):
           try { await firebase.database().ref("games/" + ROOM_PREFIX + P.code).set({g:"letters", v:3, s:"{}", at:TS}); out.push("saved match changed"); } catch(e){ out.push("saved match protected"); }
           return out; })()''')
         check(res == ['fake host refused', 'host seat protected', 'saved match protected'], f'rules: from a player phone, faking the host, changing the host seat (scores) and the saved match are all refused {res}')
+    if os.environ.get('EMU'):           # emulator only: the room lock over time (the emulator lets the test age a lock)
         import urllib.request
         uid = await host.evaluate('AUTH_UID'); room = await host.evaluate('ROOM_PREFIX + H.code')
         def emu(method, path, body=None):
@@ -197,6 +208,12 @@ async def sessions_real(host, ios, android, newctx):
     except Exception: ok = False
     check(ok, 'sessions: host ends the game, phones are told')
     return host, android
+
+SIZES = '''setInterval(() => { try { if (typeof H !== "undefined" && H && H.code && typeof hostPresence === "function"){
+  const m = JSON.parse(localStorage.getItem("__sz") || "{}"), o = m[H.g] || [0, 0, 0];
+  m[H.g] = [Math.max(o[0], JSON.stringify(hostPresence()).length), Math.max(o[1], JSON.stringify(H.s).length),
+            Math.max(o[2], MOD[H.g].savePriv ? JSON.stringify(MOD[H.g].savePriv()).length : 0)];
+  localStorage.setItem("__sz", JSON.stringify(m)); } } catch(e){} }, 700);'''
 
 async def run(pw):
     if os.environ.get('FAKEFB'):     # local dry run: one Chromium context shared by all pages so the in-browser Firebase stand-in can relay
@@ -221,7 +238,9 @@ async def run(pw):
         cb.new_context = ctx
     else:
         cb, wb = await pw.chromium.launch(), await pw.webkit.launch()
-    host = await (await cb.new_context(viewport={'width': 1366, 'height': 900})).new_page()
+    hc = await cb.new_context(viewport={'width': 1366, 'height': 900})
+    if hasattr(hc, 'add_init_script'): await hc.add_init_script(SIZES); R['sizes'] = {}
+    host = await hc.new_page()
     ios = await (await wb.new_context(**pw.devices['iPhone 13'])).new_page()
     android = await (await cb.new_context(**pw.devices['Pixel 7'])).new_page()
     for pg, n in ((host, 'host'), (ios, 'iPhone/WebKit'), (android, 'Android/Chromium')): pg.on('pageerror', lambda e, n=n: R['errors'].append(f'{n}: {e}'))
@@ -381,6 +400,13 @@ async def run(pw):
         check(a1[0] == a0[8] and a1[8] == a0[0] and await android.evaluate('scrollY') == s0, 'puzzle: Android drag swaps pieces without scrolling the page')
         for pg, n in ((ios, 'iPhone'), (android, 'Android')):
             w = await pg.evaluate('[document.documentElement.scrollWidth, innerWidth]'); check(w[0] <= w[1], f'{n}: no sideways scrolling ({w[0]} <= {w[1]})')
+        if 'sizes' in R:
+          try:
+            sz = json.loads(await host.evaluate('localStorage.getItem("__sz") || "{}"')); R['sizes'] = sz
+            big = [max(v[i] for v in sz.values()) for i in range(3)] if sz else [0, 0, 0]
+            check(len(sz) >= 5 and big[0] <= 12000 and big[1] <= 20000 and big[2] <= 120000,
+                  f'sizes: the largest host seat {big[0]} (limit 12000), saved match {big[1]} (limit 20000), hidden data {big[2]} (limit 120000), over {len(sz)} games')
+          except Exception as e: check(False, f'sizes could not be read: {e}')
         R['not_tested'] += ['real phones on mobile networks (only browser engines on GitHub servers)', 'in-app browsers (WhatsApp/Instagram/camera QR)', 'scanning the QR with a camera (the QR content is checked instead)']
     except Exception:
         R['exception'] = traceback.format_exc()[-2000:]

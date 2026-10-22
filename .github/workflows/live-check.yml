@@ -22,7 +22,10 @@ jobs:
             echo "live index.html md5: $(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
             echo "verification tag on the live page: $(curl -s "https://mbs716.github.io/lamma/?nc=$RANDOM" | grep -o '<meta name="google-site-verification"[^>]*>')"; } | tee reports/site-test/live-check/live.txt
       - run: GSV=o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-check
-      - run: python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live-check
+      # .github/live-check-request containing "rules-on" (only after the new database rules are published) adds the attack checks
+      - run: |
+          RON=""; grep -q "rules-on" .github/live-check-request 2>/dev/null && RON=1
+          AUTH_ON=1 RULES_ON=$RON python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live-check
         if: always()
       - if: always()
         run: |
