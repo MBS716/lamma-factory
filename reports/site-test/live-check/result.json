@@ -1,8 +1,8 @@
 {
  "url": "https://mbs716.github.io/lamma/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=68be0a4dc5#8752)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=68be0a4dc5#8752)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=575f0dda70#3714)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=575f0dda70#3714)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
@@ -12,10 +12,14 @@
   "OK letters: totals equal the points awarded (860/900)",
   "OK letters: no question repeated",
   "OK letters: winner screen on host, iPhone and Android",
+  "OK identity: host, iPhone and Android each signed in anonymously, no form (3 different identities)",
+  "OK identity: each seat in the database carries its own device identity (host, iPhone, Android)",
+  "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (ub.io/lamma/?v=68be0a4dc5#8811)",
-  "OK sessions: version.json matches the page (68be0a4dc5 = 68be0a4dc5)",
+  "OK sessions: invite link carries the version (ub.io/lamma/?v=575f0dda70#2867)",
+  "OK sessions: version.json matches the page (575f0dda70 = 575f0dda70)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
+  "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
   "OK sessions: Android opens the site again (no code), back automatically with its name and team",
   "OK sessions: still two players, none twice ['آيفون', 'أندرويد']",
@@ -23,6 +27,7 @@
   "OK sessions: a new version during a round: no reload on host or phone, round and scores kept, a notice instead",
   "OK sessions: host closed the tab, the phones stay and show \"host temporarily away\"",
   "OK sessions: host opens the site again, back in the same room and question, no new code",
+  "OK identity: the host comes back with the same identity (host rights are not given to a new identity)",
   "OK sessions: phones carry on without re-joining",
   "OK sessions: host ends the game, phones are told",
   "OK wheel v3: both phones show the scoreboard and the 1,500 goal",
@@ -32,7 +37,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (imm 0)",
+  "OK wheel v3: phones receive the same box result as the host (m 150)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -43,8 +48,8 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (484 characters)",
-  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK wheel v3: state sent to phones stays small (487 characters)",
+  "OK spot: iPhone found every difference by touch (5/5)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
   "OK spot: after the round the source link is shown (licence attribution)",
@@ -52,11 +57,12 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3479], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
-  "OK Android: no sideways scrolling (412 <= 412)"
+  "OK Android: no sideways scrolling (412 <= 412)",
+  "OK sizes: the largest host seat 825 (limit 12000), saved match 715 (limit 20000), hidden data 427 (limit 120000), over 5 games"
  ],
  "errors": [],
  "not_tested": [
@@ -65,8 +71,35 @@
   "in-app browsers (WhatsApp/Instagram/camera QR)",
   "scanning the QR with a camera (the QR content is checked instead)"
  ],
+ "sizes": {
+  "letters": [
+   825,
+   715,
+   116
+  ],
+  "wheel": [
+   763,
+   655,
+   37
+  ],
+  "diff": [
+   791,
+   684,
+   427
+  ],
+  "quiz": [
+   459,
+   352,
+   334
+  ],
+  "puzzle": [
+   272,
+   163,
+   0
+  ]
+ },
  "wheel_cloud": false,
- "wheel_auth": false,
+ "wheel_auth": true,
  "spot_index": {
   "total": 46,
   "levels": [
@@ -86,8 +119,6 @@
    }
   ]
  },
- "ignored": [
-  "iPhone/WebKit: /s-gke-euw1-nssi3-7.europe-west1.firebasedatabase.app/.lp?disconn=t&id=747945&pw=jiP0pVMU7t."
- ],
+ "ignored": [],
  "PASS": true
 }
