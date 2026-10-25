@@ -6,7 +6,7 @@ name: rules-test
 on:
   push:
     branches: [main]
-    paths: ["firebase/**", "tests/rules/**", "tests/emu-site/**", ".github/workflows/rules-test.yml"]
+    paths: ["firebase/**", "tests/rules/**", "tests/emu-site/**", "tests/live_e2e_v3.py", ".github/workflows/rules-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write

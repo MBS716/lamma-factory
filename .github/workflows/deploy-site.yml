@@ -75,25 +75,28 @@ jobs:
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
         env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
         run: |
-          [ -n "$T" ] || { echo "secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }
+          # plain progress messages (never the token or git output) are kept in reports/ so failures can be diagnosed
+          mkdir -p reports/site-test; ST="$PWD/reports/site-test/upload-steps-$B.txt"; : > "$ST"
+          say(){ echo "$1"; echo "$(date -u +%H:%M:%S) $1" >> "$ST"; }
+          [ -n "$T" ] || { say "secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
           echo "::add-mask::$AUTH"
           g() { git -c "http.https://github.com/.extraheader=$AUTH" "$@" > /dev/null 2>&1; }
-          g clone -q https://github.com/MBS716/lamma.git lamma || { echo "clone failed (token invalid or no access)"; exit 1; }
-          cd lamma
+          g clone -q https://github.com/MBS716/lamma.git lamma || { say "clone failed (token invalid or no access)"; exit 1; }
+          say "cloned MBS716/lamma"; cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           git ls-remote --exit-code origin backup-before-spot-update > /dev/null 2>&1 || true
           if [ "$MODE" = "main-approved" ]; then
             # keep the current live version: backup branch named after today's date (never overwritten)
             BK="backup-main-$(date -u +%Y%m%d-%H%M)"
-            g push -q origin "refs/remotes/origin/main:refs/heads/$BK" || { echo "backup failed, not publishing"; exit 1; }
-            git ls-remote --exit-code https://github.com/MBS716/lamma.git "refs/heads/$BK" > /dev/null || { echo "backup not found, not publishing"; exit 1; }
+            g push -q origin "refs/remotes/origin/main:refs/heads/$BK" || { say "backup failed, not publishing"; exit 1; }
+            git ls-remote --exit-code https://github.com/MBS716/lamma.git "refs/heads/$BK" > /dev/null || { say "backup not found, not publishing"; exit 1; }
             echo "backup of the previous main: $BK ($(git rev-parse origin/main))" | tee ../backup.txt
             git checkout -q main
           else git checkout -q -B "$B"; fi
           rm -rf index.html spot data tiger.webp; cp -r ../site/. .
           git add -A; git commit -q -m "$(cat ../.github/deploy-message 2>/dev/null || echo 'Update the Lamma site')" || echo "nothing to commit"
-          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin "$B"; fi || { echo "push failed"; exit 1; }
+          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin "$B"; fi || { say "push failed"; exit 1; }
           echo "uploaded to $B: $(find spot -type f | wc -l) spot files + index.html + data"
           cd .. && rm -rf lamma
           # read the branch back (public repo, no token) and compare it with site/

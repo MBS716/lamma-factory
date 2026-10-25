@@ -224,6 +224,7 @@ async def sessions_real(host, ios, android, newctx):
         await android.wait_for_timeout(1500); R['_attack'] = False
         check(res == ['fake host refused', 'host seat protected', 'saved match protected'], f'rules: from a player phone, faking the host, changing the host seat (scores) and the saved match are all refused {res}')
     if os.environ.get('EMU'):           # emulator only: the room lock over time (the emulator lets the test age a lock)
+        R['_attack'] = True                 # the lock is handed to another host on purpose: refusals here are expected
         import urllib.request
         uid = await host.evaluate('AUTH_UID'); room = await host.evaluate('ROOM_PREFIX + H.code')
         def emu(method, path, body=None):
@@ -240,6 +241,7 @@ async def sessions_real(host, ios, android, newctx):
         emu('PUT', f'hosts/{room}', {'u': uid, 'g': 'letters', 't': now()})
         await host.evaluate('refreshLock(true)'); await host.wait_for_timeout(2000)
         check(not await host.is_visible('#lockBar'), 'rules: lock back with this host: the notice goes away')
+        await host.wait_for_timeout(1500); R['_attack'] = False
     await host.click('#endBtn'); await host.wait_for_timeout(1500)
     ok = True
     try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("انتهت")', timeout=30000)
