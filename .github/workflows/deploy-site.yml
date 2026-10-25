@@ -67,25 +67,32 @@ jobs:
           echo "old" > index.html; git add -A; git commit -qm old; git branch -M main; git push -q origin main
           git checkout -q -B "$B"
           rm -rf index.html spot data tiger.webp; cp -r ../site/. .
-          git add -A; git commit -qm "update"; git push -q -f origin "$B"
+          git add -A; git commit -qm "update"; git push -q origin "$B"
           cd .. && git clone -q -b "$B" /tmp/fake-lamma.git check
           diff -r --exclude=.git site check && echo "dry run OK: $B would contain exactly site/"
           rm -rf work check
       - name: upload to MBS716/lamma
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
+        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", K: "${{ secrets.LAMMA_DEPLOY_KEY }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
         run: |
-          # plain progress messages (never the token or git output) are kept in reports/ so failures can be diagnosed
+          # Credentials: a deploy key (SSH, write access to MBS716/lamma only) is preferred; the older token is the fallback.
+          # Neither is ever printed: no shell tracing, git output discarded, plain progress messages only (kept in reports/).
           mkdir -p reports/site-test; ST="$PWD/reports/site-test/upload-steps-$B.txt"; : > "$ST"
           say(){ echo "$1"; echo "$(date -u +%H:%M:%S) $1" >> "$ST"; }
-          [ -n "$T" ] || { say "secret LAMMA_DEPLOY_TOKEN is missing"; exit 1; }
-          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
-          echo "::add-mask::$AUTH"
-          g() { git -c "http.https://github.com/.extraheader=$AUTH" "$@" > /dev/null 2>&1; }
-          g clone -q https://github.com/MBS716/lamma.git lamma || { say "clone failed (token invalid or no access)"; exit 1; }
+          if [ -n "$K" ]; then
+            KF="$RUNNER_TEMP/deploy_key"; KH="$RUNNER_TEMP/known_hosts"; umask 077
+            printf '%s\n' "$K" > "$KF"
+            echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$KH"
+            export GIT_SSH_COMMAND="ssh -i $KF -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$KH"
+            URL="git@github.com:MBS716/lamma.git"; g() { git "$@" > /dev/null 2>&1; }; say "using the deploy key"
+          elif [ -n "$T" ]; then
+            AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
+            echo "::add-mask::$AUTH"
+            URL="https://github.com/MBS716/lamma.git"; g() { git -c "http.https://github.com/.extraheader=$AUTH" "$@" > /dev/null 2>&1; }; say "using the token"
+          else say "no deploy key and no token configured"; exit 1; fi
+          g clone -q "$URL" lamma || { say "clone failed (credential invalid, expired or without access to MBS716/lamma)"; rm -f "${KF:-/nonexistent}"; exit 1; }
           say "cloned MBS716/lamma"; cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
-          git ls-remote --exit-code origin backup-before-spot-update > /dev/null 2>&1 || true
           if [ "$MODE" = "main-approved" ]; then
             # keep the current live version: backup branch named after today's date (never overwritten)
             BK="backup-main-$(date -u +%Y%m%d-%H%M)"
@@ -93,10 +100,13 @@ jobs:
             git ls-remote --exit-code https://github.com/MBS716/lamma.git "refs/heads/$BK" > /dev/null || { say "backup not found, not publishing"; exit 1; }
             echo "backup of the previous main: $BK ($(git rev-parse origin/main))" | tee ../backup.txt
             git checkout -q main
-          else git checkout -q -B "$B"; fi
+          elif git rev-parse -q --verify "refs/remotes/origin/$B" > /dev/null; then
+            git checkout -q -B "$B" "origin/$B"        # an existing preview branch: add a commit on top (history is never rewritten)
+          else git checkout -q -B "$B" origin/main; fi
           rm -rf index.html spot data tiger.webp; cp -r ../site/. .
           git add -A; git commit -q -m "$(cat ../.github/deploy-message 2>/dev/null || echo 'Update the Lamma site')" || echo "nothing to commit"
-          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q -f origin "$B"; fi || { say "push failed"; exit 1; }
+          if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q origin "$B"; fi || { say "push failed"; rm -f "${KF:-/nonexistent}"; exit 1; }
+          say "pushed to $B"; rm -f "${KF:-/nonexistent}"
           echo "uploaded to $B: $(find spot -type f | wc -l) spot files + index.html + data"
           cd .. && rm -rf lamma
           # read the branch back (public repo, no token) and compare it with site/
