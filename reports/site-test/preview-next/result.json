@@ -4,13 +4,13 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=50af2ad01f#2601)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=50af2ad01f#2601)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=50af2ad01f#6268)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=50af2ad01f#6268)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
   "OK letters: the team pressing on its phone does NOT stop the clock",
-  "OK letters fairness: pressed at 0 s, answered at 19.2 s -> 60 points (not 100)",
+  "OK letters fairness: pressed at 0 s, answered at 19.1 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
   "OK letters: both teams had the same number of questions (10/10)",
   "OK letters: totals equal the points awarded (860/900)",
@@ -19,7 +19,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10001 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -28,7 +28,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: preview rooms are separate (lmp3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (review-next/?v=50af2ad01f#6377)",
+  "OK sessions: invite link carries the version (review-next/?v=50af2ad01f#1968)",
   "OK sessions: version.json matches the page (50af2ad01f = 50af2ad01f)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -51,7 +51,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 250)",
+  "OK wheel v3: phones receive the same box result as the host (m 50)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -62,7 +62,7 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (486 characters)",
+  "OK wheel v3: state sent to phones stays small (485 characters)",
   "OK spot: iPhone found every difference by touch (6/6)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
@@ -71,12 +71,12 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3478], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1245 (limit 12000), saved match 1135 (limit 20000), hidden data 427 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1243 (limit 12000), saved match 1133 (limit 20000), hidden data 425 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -87,24 +87,24 @@
  ],
  "sizes": {
   "letters": [
-   1245,
-   1135,
-   241
+   1243,
+   1133,
+   251
   ],
   "wheel": [
-   722,
-   614,
+   769,
+   661,
    37
   ],
   "diff": [
-   970,
-   863,
-   427
+   917,
+   810,
+   425
   ],
   "quiz": [
-   487,
-   380,
-   333
+   488,
+   381,
+   335
   ],
   "puzzle": [
    272,
@@ -114,9 +114,9 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-10-25T21:52:04.874Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-6377/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-10-25T21:52:04.995Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-6377/f67852ec8aa623a9d339fa05 failed: permission_denied ",
-  "Android: [2026-10-25T21:52:05.114Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-6377 failed: permission_denied "
+  "Android: [2026-10-25T22:33:02.251Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-1968/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-10-25T22:33:02.360Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-1968/242df1c349b73bb58babe9f9 failed: permission_denied ",
+  "Android: [2026-10-25T22:33:02.472Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-1968 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
