@@ -8,12 +8,24 @@
         "$peer": {
           ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || (!newData.exists() && root.child('hosts').child($room).child('u').val() === auth.uid))",
           ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && $peer.matches(/^[A-Za-z0-9_-]{8,40}$/) && newData.hasChildren(['j', 't', 'u', 'c'])",
-          "j": { ".validate": "newData.isString() && newData.val().length <= 12000" },
-          "t": { ".validate": "newData.isNumber()" },
-          "u": { ".validate": "newData.val() === auth.uid" },
-          "c": { ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === now) || newData.val() === data.val())" },
-          "h": { ".validate": "newData.val() === true && root.child('hosts').child($room).child('u').val() === auth.uid" },
-          "$other": { ".validate": false }
+          "j": {
+            ".validate": "newData.isString() && newData.val().length <= 12000"
+          },
+          "t": {
+            ".validate": "newData.isNumber()"
+          },
+          "u": {
+            ".validate": "newData.val() === auth.uid"
+          },
+          "c": {
+            ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === now) || newData.val() === data.val())"
+          },
+          "h": {
+            ".validate": "newData.val() === true && root.child('hosts').child($room).child('u').val() === auth.uid"
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       }
     },
@@ -22,10 +34,18 @@
         ".read": "auth != null",
         ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || data.child('t').val() < now - 10800000)",
         ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && newData.hasChildren(['u', 't', 'g'])",
-        "u": { ".validate": "newData.val() === auth.uid" },
-        "t": { ".validate": "newData.isNumber() && newData.val() <= now && newData.val() > now - 60000" },
-        "g": { ".validate": "newData.isString() && newData.val().length <= 12" },
-        "$other": { ".validate": false }
+        "u": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "t": {
+          ".validate": "newData.isNumber() && newData.val() <= now && newData.val() > now - 60000"
+        },
+        "g": {
+          ".validate": "newData.isString() && newData.val().length <= 12"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
     "games": {
@@ -33,11 +53,21 @@
         ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".validate": "newData.hasChildren(['g', 'v', 's', 'at'])",
-        "g": { ".validate": "newData.isString() && newData.val().length <= 12" },
-        "v": { ".validate": "newData.isNumber()" },
-        "s": { ".validate": "newData.isString() && newData.val().length <= 20000" },
-        "at": { ".validate": "newData.isNumber()" },
-        "$other": { ".validate": false }
+        "g": {
+          ".validate": "newData.isString() && newData.val().length <= 12"
+        },
+        "v": {
+          ".validate": "newData.isNumber()"
+        },
+        "s": {
+          ".validate": "newData.isString() && newData.val().length <= 20000"
+        },
+        "at": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
     "gpriv": {
@@ -45,25 +75,31 @@
         ".read": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".write": "auth != null && root.child('hosts').child($room).child('u').val() === auth.uid",
         ".validate": "newData.hasChildren(['pv', 'at'])",
-        "pv": { ".validate": "newData.isString() && newData.val().length <= 120000" },
-        "at": { ".validate": "newData.isNumber()" },
-        "$other": { ".validate": false }
+        "pv": {
+          ".validate": "newData.isString() && newData.val().length <= 120000"
+        },
+        "at": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
     "spotseen": {
       "$dev": {
         ".read": "auth != null",
         "$id": {
-          ".write": "auth != null",
-          ".validate": "newData.isNumber() && $dev.length <= 40 && $id.length <= 40"
+          ".write": "auth != null && newData.exists()",
+          ".validate": "$dev.matches(/^[a-z0-9]{10,24}$/) && $id.matches(/^[A-Za-z0-9_-]{1,40}$/) && newData.isNumber() && newData.val() <= now + 600000 && (!data.exists() || newData.val() >= data.val())"
         }
       }
     },
     "spotreports": {
       "$id": {
         "$dev": {
-          ".write": "auth != null",
-          ".validate": "newData.isNumber() && $id.length <= 40 && $dev.length <= 40"
+          ".write": "auth != null && !data.exists() && newData.exists()",
+          ".validate": "$id.matches(/^[A-Za-z0-9_-]{1,40}$/) && $dev.matches(/^[a-z0-9]{10,24}$/) && newData.isNumber() && newData.val() <= now + 600000"
         }
       }
     }

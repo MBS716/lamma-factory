@@ -63,6 +63,22 @@ await t("nobody can list all rooms", assertFails(get(ref(B, "rooms"))));
 await t("other paths stay closed", assertFails(set(ref(B, "probe/x"), 1)));
 await t("the whole database cannot be read", assertFails(get(ref(B, "/"))));
 
+out.push("-- deleting (\".validate\" does not run on deletes: only \".write\" protects them)");
+await admin(d => set(ref(d, "rooms/lm3-2222/seatvictimC1"), { j: "{}", t: Date.now(), u: "phoneC", c: Date.now() }));
+await t("a phone cannot delete the host's seat", assertFails(remove(ref(B, `${R}/hostseat000001`))));
+await t("a phone cannot delete the host's seat through its room (multi-child update)", assertFails(update(ref(B, R), { hostseat000001: null })));
+await t("a phone cannot delete several things at once from the top (multi-path update)", assertFails(update(ref(B, "/"), { [`${R}/hostseat000001`]: null, "hosts/lm3-1000": null, "games/lm3-1000": null })));
+await t("a phone cannot delete the room lock", assertFails(remove(ref(B, "hosts/lm3-1000"))));
+await t("a phone cannot delete the saved match", assertFails(remove(ref(B, "games/lm3-1000"))));
+await t("a phone cannot delete the hidden answers", assertFails(remove(ref(B, "gpriv/lm3-1000"))));
+await t("a phone cannot delete another player's seat", assertFails(remove(ref(C, `${R}/seatphoneB01`))));
+await t("not signed in: cannot delete a seat", assertFails(remove(ref(N, `${R}/seatphoneB01`))));
+await t("not signed in: cannot delete the lock", assertFails(remove(ref(N, "hosts/lm3-1000"))));
+await t("nobody deletes all locks / matches / hidden answers / rooms at once", Promise.all([remove(ref(A, "hosts")), remove(ref(A, "games")), remove(ref(A, "gpriv")), remove(ref(A, "rooms"))].map(x => assertFails(x))));
+await t("a host cannot delete seats in a room it does not hold", assertFails(remove(ref(A, "rooms/lm3-2222/seatvictimC1"))));
+const kept = await admin(async d => [(await get(ref(d, `${R}/hostseat000001`))).exists(), (await get(ref(d, "hosts/lm3-1000"))).exists(), (await get(ref(d, "games/lm3-1000"))).exists(), (await get(ref(d, "gpriv/lm3-1000"))).exists(), (await get(ref(d, `${R}/seatphoneB01`))).exists(), (await get(ref(d, "rooms/lm3-2222/seatvictimC1"))).exists()]);
+await t("after all those attempts everything is still there", Promise.resolve().then(() => { if (kept.some(x => !x)) throw new Error(JSON.stringify(kept)); }));
+
 out.push("-- leaving and coming back (session restore)");
 await t("phone registers its 'away' mark for when it disconnects", assertSucceeds(onDisconnect(ref(B, `${R}/seatphoneB01`)).update({ j: JSON.stringify({ r: "p", n: "سارة", tm: "g", away: 1 }), t: TS(), u: "phoneB" })));
 goOffline(B); await new Promise(r => setTimeout(r, 1500));
@@ -85,6 +101,9 @@ await admin(d => set(ref(d, "hosts/lm3-3000"), { u: "hostA", g: "wheel", t: Date
 await t("another host can take the room after 3 hours", assertSucceeds(set(ref(C, "hosts/lm3-3000"), { u: "phoneC", g: "quiz", t: TS() })));
 await t("the old host can no longer mark a host seat there", assertFails(set(ref(A, "rooms/lm3-3000/hostseat000009"), seat("hostA", { r: "h" }, { h: true }))));
 await t("the old host cannot read the new host's saved match", assertFails(get(ref(A, "games/lm3-3000"))));
+await t("the new host saves its match", assertSucceeds(set(ref(C, "games/lm3-3000"), { g: "quiz", v: 3, s: "{}", at: TS() })));
+await t("the old host cannot delete the new host's saved match", assertFails(remove(ref(A, "games/lm3-3000"))));
+await t("the old host cannot delete the new host's lock", assertFails(remove(ref(A, "hosts/lm3-3000"))));
 
 out.push("-- the host ends the game");
 await t("host deletes its saved match", assertSucceeds(remove(ref(A2, "games/lm3-1000"))));
@@ -96,8 +115,22 @@ out.push("-- spot the difference");
 await t("spot: a signed-in device records a seen picture", assertSucceeds(set(ref(B2, "spotseen/dev123abc45/p0001"), Date.now())));
 await t("spot: the room reads a device's history", assertSucceeds(get(ref(A2, "spotseen/dev123abc45"))));
 await t("spot: nobody lists all devices", assertFails(get(ref(B2, "spotseen"))));
-await t("spot: a report is recorded", assertSucceeds(set(ref(B2, "spotreports/p0001/dev123abc45"), Date.now())));
 await t("spot: not signed in: refused", assertFails(set(ref(N, "spotseen/dev123abc45/p0002"), Date.now())));
+await admin(d => set(ref(d, "spotseen/devvictim0001/p0001"), Date.now()));
+await t("spot: nobody deletes another device's history entry", assertFails(remove(ref(C, "spotseen/devvictim0001/p0001"))));
+await t("spot: nobody deletes another device's whole history", assertFails(remove(ref(C, "spotseen/devvictim0001"))));
+await t("spot: nobody rolls a history entry back to an older time", assertFails(set(ref(C, "spotseen/devvictim0001/p0001"), 1)));
+await t("spot: no far-future times (to pin an entry)", assertFails(set(ref(C, "spotseen/devvictim0001/p0003"), Date.now() + 864e5)));
+await t("spot: numbers only", assertFails(set(ref(C, "spotseen/devvictim0001/p0004"), "x")));
+await t("spot: only real device ids and picture ids (no junk keys)", Promise.all([set(ref(C, "spotseen/Bad Dev!/p1"), Date.now()), set(ref(C, "spotseen/devvictim0001/" + "x".repeat(60)), Date.now())].map(x => assertFails(x))));
+await t("spot: a host marks a picture as seen for its players (newer time: allowed, as the game needs)", assertSucceeds(set(ref(A2, "spotseen/devvictim0001/p0001"), Date.now() + 1000)));
+await t("spot: a report is recorded once", assertSucceeds(set(ref(B2, "spotreports/p0001/dev123abc45"), Date.now())));
+await t("spot: a report cannot be overwritten", assertFails(set(ref(C, "spotreports/p0001/dev123abc45"), Date.now())));
+await t("spot: a report cannot be deleted by anyone (other device or the same one)", Promise.all([remove(ref(C, "spotreports/p0001/dev123abc45")), remove(ref(B2, "spotreports/p0001/dev123abc45")), remove(ref(C, "spotreports/p0001")), remove(ref(C, "spotreports"))].map(x => assertFails(x))));
+await t("spot: reports cannot be read by visitors", assertFails(get(ref(B2, "spotreports"))));
+await t("spot: report keys must be a picture id and a device id", assertFails(set(ref(C, "spotreports/p0001/NOT-A-DEVICE"), Date.now())));
+const rep = await admin(d => get(ref(d, "spotreports/p0001/dev123abc45")).then(x => x.exists()));
+await t("spot: the report is still there", Promise.resolve().then(() => { if (!rep) throw new Error("gone"); }));
 
 out.push("-- the site version live today (v3.1) after the switch");
 await t("a page that is not signed in (old version) can no longer write: the site must be updated first", assertFails(set(ref(N, "rooms/lm3-2000/oldpage00001"), { j: "{}", t: TS() })));
