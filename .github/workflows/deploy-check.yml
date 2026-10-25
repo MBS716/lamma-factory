@@ -16,17 +16,18 @@ jobs:
       - name: check (no secret is ever printed)
         env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", K: "${{ secrets.LAMMA_DEPLOY_KEY }}"}
         run: |
+          set +e
+          # masking first, OUTSIDE the report: the report file only ever gets status codes and dates
+          if [ -n "$T" ]; then echo "::add-mask::$T"; AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"; echo "::add-mask::$AUTH"; fi
           mkdir -p reports/deploy-check; R=reports/deploy-check/report.txt
           {
           echo "checked (UTC): $(date -u '+%Y-%m-%d %H:%M')"
           if [ -n "$T" ]; then
-            echo "::add-mask::$T"
             code=$(curl -s -o /dev/null -D "$RUNNER_TEMP/h" -w "%{http_code}" -H "Authorization: Bearer $T" https://api.github.com/repos/MBS716/lamma)
             exp=$(grep -i '^github-authentication-token-expiration:' "$RUNNER_TEMP/h" | cut -d' ' -f2- | tr -d '\r')
             echo "token LAMMA_DEPLOY_TOKEN: set"
             echo "  GitHub API for MBS716/lamma: HTTP $code  (200 = valid and can see the repository, 401 = invalid / expired / revoked, 403 or 404 = no access to this repository)"
             echo "  expiry date reported by GitHub: ${exp:-not reported (classic token, or the token is not valid)}"
-            AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"; echo "::add-mask::$AUTH"
             git -c "http.https://github.com/.extraheader=$AUTH" ls-remote https://github.com/MBS716/lamma.git HEAD > /dev/null 2>&1; echo "  git read with the token: exit $?  (0 = works)"
             rm -f "$RUNNER_TEMP/h"
           else echo "token LAMMA_DEPLOY_TOKEN: not set"; fi
@@ -37,7 +38,8 @@ jobs:
             echo "deploy key LAMMA_DEPLOY_KEY: set; git read over SSH: exit $r  (0 = the key is accepted for MBS716/lamma)"
             rm -f "$KF"
           else echo "deploy key LAMMA_DEPLOY_KEY: not set"; fi
-          } 2>&1 | tee "$R"
+          } > "$R" 2>/dev/null
+          cat "$R"
       - name: save
         run: |
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
