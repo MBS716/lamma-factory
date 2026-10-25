@@ -41,6 +41,19 @@ OK   nobody can delete a whole room
 OK   nobody can list all rooms
 OK   other paths stay closed
 OK   the whole database cannot be read
+-- deleting (".validate" does not run on deletes: only ".write" protects them)
+OK   a phone cannot delete the host's seat
+OK   a phone cannot delete the host's seat through its room (multi-child update)
+OK   a phone cannot delete several things at once from the top (multi-path update)
+OK   a phone cannot delete the room lock
+OK   a phone cannot delete the saved match
+OK   a phone cannot delete the hidden answers
+OK   a phone cannot delete another player's seat
+OK   not signed in: cannot delete a seat
+OK   not signed in: cannot delete the lock
+OK   nobody deletes all locks / matches / hidden answers / rooms at once
+OK   a host cannot delete seats in a room it does not hold
+OK   after all those attempts everything is still there
 -- leaving and coming back (session restore)
 OK   phone registers its 'away' mark for when it disconnects
 OK   connection lost (WhatsApp, closed browser): the seat stays, marked away, join time kept
@@ -56,6 +69,9 @@ OK   …it joins with a new seat instead
 OK   another host can take the room after 3 hours
 OK   the old host can no longer mark a host seat there
 OK   the old host cannot read the new host's saved match
+OK   the new host saves its match
+OK   the old host cannot delete the new host's saved match
+OK   the old host cannot delete the new host's lock
 -- the host ends the game
 OK   host deletes its saved match
 OK   host deletes its hidden answers
@@ -65,8 +81,20 @@ OK   host removes its seat
 OK   spot: a signed-in device records a seen picture
 OK   spot: the room reads a device's history
 OK   spot: nobody lists all devices
-OK   spot: a report is recorded
 OK   spot: not signed in: refused
+OK   spot: nobody deletes another device's history entry
+OK   spot: nobody deletes another device's whole history
+OK   spot: nobody rolls a history entry back to an older time
+OK   spot: no far-future times (to pin an entry)
+OK   spot: numbers only
+OK   spot: only real device ids and picture ids (no junk keys)
+OK   spot: a host marks a picture as seen for its players (newer time: allowed, as the game needs)
+OK   spot: a report is recorded once
+OK   spot: a report cannot be overwritten
+OK   spot: a report cannot be deleted by anyone (other device or the same one)
+OK   spot: reports cannot be read by visitors
+OK   spot: report keys must be a picture id and a device id
+OK   spot: the report is still there
 -- the site version live today (v3.1) after the switch
 OK   a page that is not signed in (old version) can no longer write: the site must be updated first
-60/60 passed
+87/87 passed

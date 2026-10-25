@@ -1,12 +1,12 @@
 {
  "url": "http://localhost:8799/",
  "checks": [
-  "OK invite link points to this site (http://localhost:8799/?v=484d8109b8#5637)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=484d8109b8#5637)",
+  "OK invite link points to this site (http://localhost:8799/?v=484d8109b8#7268)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=484d8109b8#7268)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
-  "OK letters fairness: pressed at 0 s, answered at 18.9 s -> 60 points (not 100)",
+  "OK letters fairness: pressed at 0 s, answered at 19.0 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
   "OK letters: both teams had the same number of questions (10/10)",
   "OK letters: totals equal the points awarded (860/900)",
@@ -17,7 +17,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (alhost:8799/?v=484d8109b8#4782)",
+  "OK sessions: invite link carries the version (alhost:8799/?v=484d8109b8#9766)",
   "OK sessions: version.json matches the page (484d8109b8 = 484d8109b8)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -42,7 +42,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (p 150)",
+  "OK wheel v3: phones receive the same box result as the host (p 250)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -54,7 +54,7 @@
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
   "OK wheel v3: state sent to phones stays small (486 characters)",
-  "OK spot: iPhone found every difference by touch (6/6)",
+  "OK spot: iPhone found every difference by touch (5/5)",
   "OK spot: no report button during the round",
   "OK spot: no link to the original picture during the round",
   "OK spot: after the round the source link is shown (licence attribution)",
@@ -62,12 +62,12 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3492], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3493], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 917 (limit 12000), saved match 810 (limit 20000), hidden data 427 (limit 120000), over 5 games"
+  "OK sizes: the largest host seat 879 (limit 12000), saved match 772 (limit 20000), hidden data 425 (limit 120000), over 5 games"
  ],
  "errors": [],
  "not_tested": [
@@ -78,24 +78,24 @@
  ],
  "sizes": {
   "letters": [
-   805,
-   695,
-   114
+   806,
+   696,
+   117
   ],
   "wheel": [
-   717,
-   609,
+   753,
+   645,
    38
   ],
   "diff": [
-   917,
-   810,
-   427
+   879,
+   772,
+   425
   ],
   "quiz": [
-   524,
-   417,
-   336
+   497,
+   390,
+   334
   ],
   "puzzle": [
    272,
