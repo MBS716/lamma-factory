@@ -682,7 +682,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.3-letters · 2026-10-25 · معاينة</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.3-letters · 2026-10-25</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1672,7 +1672,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "012ad28f55", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "2c727cf157", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -2303,7 +2303,7 @@ function finHTML(fin, unit){ return fin.length ? `<div class="lb">${fin.map((f, 
    data/letters.json [letter, level 0-2, category, question, answer]
    The small built-in sets in data.js (QB, LETTERS) are only a fallback if the files can't be loaded. */
 const BANKS = {}, BANK_WAIT = {};
-const BANK_V = "983cdbca08";
+const BANK_V = "c523532e4c";
 function fallbackBank(name){
   if (name === "quiz") return QB;
   return LETTERS.flatMap(([L, ...qs]) => qs.map(([q, a], lv) => [L, lv, "gen", q, a]));
@@ -2529,7 +2529,12 @@ const LT_REPL = 2;                                                   // question
 const LT_TYPES = {0:"إجابة مباشرة", 3:"3 خيارات", 4:"4 خيارات"};
 const OPT_LBL = ["أ", "ب", "ج", "د"];
 // options a question can be shown with: 0 (direct) always; 3/4 only with enough REVIEWED wrong options in the bank
-const ltCan = (q, n) => !n || (Array.isArray(q[5]) ? q[5].length : 0) >= n - 1;
+// bank row: [letter, level, category, question, answer, wrong options, accepted alternatives, off, linked questions]
+const ltCan = (q, n) => !q[7] && (!n || (Array.isArray(q[5]) ? q[5].length : 0) >= n - 1);
+// a question is free when it was not asked in this match and no asked question gives its answer away
+const ltFree = i => !H.priv.used.has(i) && !(H.priv.skip && H.priv.skip.has(i));
+// the answer as the host and the result show it: the main answer plus any other accepted forms
+const ltAnsTxt = () => H.priv.ans + (H.priv.alts && H.priv.alts.length ? ` (وتُقبل أيضًا: ${H.priv.alts.join("، ")})` : "");
 const ltStrict = o => ({d:0, "3":3, "4":4, mx:4})[String(o.qt || "d")] || 0;
 function ltEligible(B, n){ return B ? B.filter(q => ltCan(q, n)).length : 0; }
 function hexBoard(s, clickable, small){
@@ -2550,7 +2555,7 @@ const Letters = {
   board(){
     const s = H.s, B = H.priv.idx || {};
     // letters that still have unused questions come first
-    const n = ltStrict(s.o), avail = ALPHA.filter(L => (B[L] || []).some(i => !H.priv.used.has(i) && ltCan(H.priv.B[i], n)));
+    const n = ltStrict(s.o), avail = ALPHA.filter(L => (B[L] || []).some(i => ltFree(i) && ltCan(H.priv.B[i], n)));
     s.L = shuffle(avail.length >= 25 ? avail : ALPHA, rnd()).slice(0, 25); s.b = ".".repeat(25); s.cur = -1;
   },
   async start(){
@@ -2560,7 +2565,7 @@ const Letters = {
     BANKS.letters = B; if (!Letters.canStart(H.s.o)){ renderHost(); return; }
     clearInterval(H.priv.tick); clearInterval(H.priv.mtick);
     H.priv.B = B; H.priv.idx = {}; B.forEach((q, i) => (H.priv.idx[q[0]] = H.priv.idx[q[0]] || []).push(i));
-    H.priv.used = new Set(); H.priv.devSeen = seenGet("lm-lseen"); H.priv.pend = null; H.priv.pos = {3:[0,0,0], 4:[0,0,0,0]}; H.priv.lastPos = {};
+    H.priv.used = new Set(); H.priv.skip = new Set(); H.priv.alts = []; H.priv.devSeen = seenGet("lm-lseen"); H.priv.pend = null; H.priv.pos = {3:[0,0,0], 4:[0,0,0,0]}; H.priv.lastPos = {};
     const o = H.s.o, m = ltMode(o);
     H.s = {...Letters.init(), o, ph:"play", T:o.t, k:rnd() * 64};    // question keys never repeat across matches (stale phone presses are ignored)
     Letters.board();
@@ -2569,12 +2574,12 @@ const Letters = {
   },
   // a mode with options needs enough reviewed questions (at least 30) before a match can start
   canStart(o){ const n = ltStrict(o), B = bankNow("letters"); return !n || !B || ltEligible(B, n) >= 30; },
-  savePriv(){ return {used:[...(H.priv.used || [])], ans:H.priv.ans, flash:H.priv.flash || "", pend:H.priv.pend || null, pos:H.priv.pos || null, lastPos:H.priv.lastPos || {}}; },
+  savePriv(){ return {used:[...(H.priv.used || [])], skip:[...(H.priv.skip || [])], ans:H.priv.ans, alts:H.priv.alts || [], flash:H.priv.flash || "", pend:H.priv.pend || null, pos:H.priv.pos || null, lastPos:H.priv.lastPos || {}}; },
   async restore(pv){
     if (H.s.ph !== "play") return;
     const B = await loadBank("letters"); if (!H) return;
     H.priv.B = B; H.priv.idx = {}; B.forEach((q, i) => (H.priv.idx[q[0]] = H.priv.idx[q[0]] || []).push(i));
-    H.priv.used = new Set(pv.used || []); H.priv.ans = pv.ans || ""; H.priv.flash = pv.flash; H.priv.devSeen = seenGet("lm-lseen");
+    H.priv.used = new Set(pv.used || []); H.priv.skip = new Set(pv.skip || []); H.priv.ans = pv.ans || ""; H.priv.alts = pv.alts || []; H.priv.flash = pv.flash; H.priv.devSeen = seenGet("lm-lseen");
     H.priv.pend = pv.pend || null; H.priv.pos = pv.pos || {3:[0,0,0], 4:[0,0,0,0]}; H.priv.lastPos = pv.lastPos || {};
     if (!H.s.rp) H.s.rp = {g:LT_REPL, o:LT_REPL}; if (!H.s.plan) H.s.plan = [];
     if (H.s.st === "read"){ clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.readTick, 250); }
@@ -2606,7 +2611,7 @@ const Letters = {
     return s.plan[k];
   },
   pickQ(L, n, lv, exact){
-    const s = H.s, B = H.priv.B, list = (H.priv.idx[L] || []).filter(i => !H.priv.used.has(i) && ltCan(B[i], n));
+    const s = H.s, B = H.priv.B, list = (H.priv.idx[L] || []).filter(i => ltFree(i) && ltCan(B[i], n));
     if (!list.length) return -1;
     for (const l of exact ? [lv] : [lv, lv + 1, lv - 1, lv + 2, lv - 2]){
       const pool = list.filter(i => B[i][1] === l); if (!pool.length) continue;
@@ -2643,7 +2648,7 @@ const Letters = {
       return false; }
     const q = H.priv.B[qi];
     if (lk === undefined){ pl.lk = q[1]; pl.lkBy = s.tn; }
-    H.priv.used.add(qi); seenAdd("lm-lseen", [hashStr(q[3])], 3000); H.priv.ans = q[4]; H.priv.flash = "";
+    H.priv.used.add(qi); (q[8] || []).forEach(j => H.priv.skip.add(j)); seenAdd("lm-lseen", [hashStr(q[3])], 3000); H.priv.ans = q[4]; H.priv.alts = Array.isArray(q[6]) ? q[6] : []; H.priv.flash = "";
     // options are prepared now but stay on the host until the answer time starts
     if (pl.t){ const wrong = shuffle(q[5].slice(), rnd()).slice(0, pl.t - 1), ci = Letters.placeFor(pl.t), o = []; for (let i = 0, w = 0; i < pl.t; i++) o.push(i === ci ? q[4] : wrong[w++]); H.priv.pend = {o, ci}; }
     else H.priv.pend = null;
@@ -2702,7 +2707,7 @@ const Letters = {
     if (pts > 0){ team.p += pts; team.c++; team.ms += ms; team.best = team.best ? Math.min(team.best, ms) : ms; }
     else team.w++;
     const arr = s.b.split(""); arr[s.cur] = pts > 0 ? s.tn : "x"; s.b = arr.join("");
-    s.last = {tm:s.tn, ok:pts > 0, to:!!timeout, pts, ms}; s.a = H.priv.ans; s.ci = s.pt && H.priv.pend ? H.priv.pend.ci : -1; s.st = "done"; s.t = timeout ? 0 : s.t;
+    s.last = {tm:s.tn, ok:pts > 0, to:!!timeout, pts, ms}; s.a = ltAnsTxt(); s.ci = s.pt && H.priv.pend ? H.priv.pend.ci : -1; s.st = "done"; s.t = timeout ? 0 : s.t;
     pushHost();
   },
   next(){
@@ -2772,7 +2777,7 @@ const Letters = {
       ${host && H.priv.flash ? `<p class="note">${esc(H.priv.flash)}</p>` : ""}${host ? `<div class="row"><button class="btn" data-h="rand">حرف عشوائي</button></div>` : ""}</div>`;
     const kind = `<span class="chip qt">${LT_TYPES[s.pt || 0]}</span>`;
     const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">حرف ${esc(s.lt)} · دور ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span>${kind}</div><p class="qtext">${esc(s.q)}</p></div></div>`;
-    const ansBtn = host ? `<button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(H.priv.ans)}` : "إظهار الإجابة لي"}</button>` : "";
+    const ansBtn = host ? `<button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(ltAnsTxt())}` : "إظهار الإجابة لي"}</button>` : "";
     if (s.st === "read"){
       // reading: the host needs the start button first; nothing is timed yet
       const left = s.go ? Math.max(0, Math.ceil((s.go * 1000 - (srvNow() - s.r0)) / 1000)) : 0;
@@ -2795,7 +2800,7 @@ const Letters = {
         ${host ? `<p class="muted" style="margin:0">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p><div class="row">${ansBtn}</div>` : ""}</div>`;
     }
     if (s.st === "judge") return `<div class="stage"><div class="judge"><p>وقت الإجابة المثبّت <b>${fmtS(s.am)} ث</b></p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة · مدة التحكيم لا تُحتسب</p></div>
-      ${host ? `<div class="row judgebtns"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div><p class="answer">الإجابة: ${esc(H.priv.ans)}${s.pt && H.priv.pend ? ` (الخيار ${OPT_LBL[H.priv.pend.ci]})` : ""}</p>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}${head}${Letters.optsHTML(s)}</div>`;
+      ${host ? `<div class="row judgebtns"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div><p class="answer">الإجابة: ${esc(ltAnsTxt())}${s.pt && H.priv.pend ? ` (الخيار ${OPT_LBL[H.priv.pend.ci]})` : ""}</p>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}${head}${Letters.optsHTML(s)}</div>`;
     if (s.st === "done"){
       const l = s.last || {}, msg = l.ok ? `إجابة صحيحة! <b>+${l.pts}</b> للفريق ${TEAM[l.tm]}` : l.to ? `انتهى الوقت · 0 نقطة` : `إجابة خاطئة · 0 نقطة`;
       return `<div class="stage"><div class="verdict ${l.ok ? "ok " + l.tm : "no"}"><span>${msg}</span>${l.ok ? `<small>في ${fmtS(l.ms)} ث</small>` : ""}</div><p class="answer big">الإجابة الصحيحة: ${esc(s.a)}</p>
@@ -2820,7 +2825,7 @@ const Letters = {
     if (s.ph === "lobby"){
       if (!bankNow("letters") && !H.priv.bankAsked){ H.priv.bankAsked = true; loadBank("letters").then(() => { if (H && H.g === "letters") renderHost(); }); }
       const B = bankNow("letters");
-      const cnt = B ? `${B.length.toLocaleString("ar")} سؤال على ${ALPHA.length} حرفًا (${ltEligible(B, 3).toLocaleString("ar")} مؤهلة لثلاثة خيارات، و${ltEligible(B, 4).toLocaleString("ar")} لأربعة). ` : "";
+      const cnt = B ? `${B.filter(q => !q[7]).length.toLocaleString("ar")} سؤال على ${ALPHA.length} حرفًا (${ltEligible(B, 3).toLocaleString("ar")} مؤهلة لثلاثة خيارات، و${ltEligible(B, 4).toLocaleString("ar")} لأربعة). ` : "";
       const few = B && !Letters.canStart(s.o) ? `<p class="note warn">لا توجد أسئلة كافية مراجَعة لهذا النمط بعد. اختر «إجابة مباشرة».</p>` : "";
       setMain(lobbyHTML(players, `${few}<p class="muted">${cnt}الفوز بالنقاط فقط: كل فريق يحصل على نفس عدد الأسئلة. يقرأ المقدّم السؤال أولًا، ثم يبدأ وقت الإجابة، والإجابة الصحيحة الأسرع تأخذ نقاطًا أكثر (من 100 إلى 30).</p>`, "ابدأ المباراة"));
       return;

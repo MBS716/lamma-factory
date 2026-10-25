@@ -1,0 +1,1343 @@
+{
+ "summary": {
+  "total": 1147,
+  "active": 1147,
+  "direct": 1147,
+  "three": 553,
+  "four": 351,
+  "changes": {
+   "options dropped": 110,
+   "moved to direct mode only": 54,
+   "question reworded": 19,
+   "4 options -> 3 options": 16,
+   "alternatives added": 14,
+   "answer changed": 1,
+   "linked questions": 453
+  },
+  "per_level": {
+   "0": [
+    433,
+    211,
+    135
+   ],
+   "1": [
+    443,
+    209,
+    142
+   ],
+   "2": [
+    271,
+    133,
+    74
+   ]
+  }
+ },
+ "log": [
+  {
+   "id": 58,
+   "type": "option dropped",
+   "option": "بنغلاديش",
+   "question": "دولة خليجية عاصمتها المنامة؟",
+   "answer": "البحرين"
+  },
+  {
+   "id": 58,
+   "type": "option dropped",
+   "option": "البرتغال",
+   "question": "دولة خليجية عاصمتها المنامة؟",
+   "answer": "البحرين"
+  },
+  {
+   "id": 58,
+   "type": "option dropped",
+   "option": "بروناي",
+   "question": "دولة خليجية عاصمتها المنامة؟",
+   "answer": "البحرين"
+  },
+  {
+   "id": 58,
+   "type": "now direct mode only",
+   "question": "دولة خليجية عاصمتها المنامة؟"
+  },
+  {
+   "id": 75,
+   "type": "question reworded",
+   "before": "الدولة التي عاصمتها برازيليا؟",
+   "after": "أكبر دول أمريكا الجنوبية مساحةً؟",
+   "reason": "نص السؤال كان يحتوي الإجابة نفسها"
+  },
+  {
+   "id": 75,
+   "type": "option dropped",
+   "option": "البرتغال",
+   "question": "أكبر دول أمريكا الجنوبية مساحةً؟",
+   "answer": "البرازيل"
+  },
+  {
+   "id": 77,
+   "type": "option dropped",
+   "option": "بكسل",
+   "question": "أصغر وحدة لتخزين البيانات في الحاسوب؟",
+   "answer": "بت"
+  },
+  {
+   "id": 77,
+   "type": "now direct mode only",
+   "question": "أصغر وحدة لتخزين البيانات في الحاسوب؟"
+  },
+  {
+   "id": 85,
+   "type": "option dropped",
+   "option": "تونة",
+   "question": "زاحف ضخم يعيش في الأنهار وله فكان قويان؟",
+   "answer": "تمساح"
+  },
+  {
+   "id": 85,
+   "type": "now direct mode only",
+   "question": "زاحف ضخم يعيش في الأنهار وله فكان قويان؟"
+  },
+  {
+   "id": 86,
+   "type": "accepted alternatives added",
+   "answer": "تلفاز",
+   "alternatives": [
+    "تلفزيون"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 86,
+   "type": "option dropped",
+   "option": "تلفون",
+   "question": "جهاز نشاهد عليه القنوات والبرامج؟",
+   "answer": "تلفاز"
+  },
+  {
+   "id": 89,
+   "type": "option dropped",
+   "option": "تركيا",
+   "question": "دولة عربية عاصمتها تحمل اسمها نفسه وتقع بين الجزائر وليبيا؟",
+   "answer": "تونس"
+  },
+  {
+   "id": 89,
+   "type": "option dropped",
+   "option": "تشاد",
+   "question": "دولة عربية عاصمتها تحمل اسمها نفسه وتقع بين الجزائر وليبيا؟",
+   "answer": "تونس"
+  },
+  {
+   "id": 89,
+   "type": "option dropped",
+   "option": "تنزانيا",
+   "question": "دولة عربية عاصمتها تحمل اسمها نفسه وتقع بين الجزائر وليبيا؟",
+   "answer": "تونس"
+  },
+  {
+   "id": 89,
+   "type": "now direct mode only",
+   "question": "دولة عربية عاصمتها تحمل اسمها نفسه وتقع بين الجزائر وليبيا؟"
+  },
+  {
+   "id": 96,
+   "type": "option dropped",
+   "option": "تلفاز",
+   "question": "أداة لرصد النجوم والكواكب البعيدة؟",
+   "answer": "تلسكوب"
+  },
+  {
+   "id": 96,
+   "type": "now direct mode only",
+   "question": "أداة لرصد النجوم والكواكب البعيدة؟"
+  },
+  {
+   "id": 101,
+   "type": "option dropped",
+   "option": "تمثال الحرية",
+   "question": "الضريح الرخامي الذي بناه شاه جهان في الهند؟",
+   "answer": "تاج محل"
+  },
+  {
+   "id": 101,
+   "type": "now direct mode only",
+   "question": "الضريح الرخامي الذي بناه شاه جهان في الهند؟"
+  },
+  {
+   "id": 102,
+   "type": "option dropped",
+   "option": "تصحر",
+   "question": "موجة بحرية عملاقة تسببها الزلازل تحت البحر؟",
+   "answer": "تسونامي"
+  },
+  {
+   "id": 102,
+   "type": "now direct mode only",
+   "question": "موجة بحرية عملاقة تسببها الزلازل تحت البحر؟"
+  },
+  {
+   "id": 112,
+   "type": "accepted alternatives added",
+   "answer": "تزلج",
+   "alternatives": [
+    "تزحلق"
+   ],
+   "reason": "التزحلق على الثلج مرادف شائع يبدأ بالتاء"
+  },
+  {
+   "id": 123,
+   "type": "option dropped",
+   "option": "تولستوي",
+   "question": "الموسيقار الروسي مؤلف باليه \"بحيرة البجع\"؟",
+   "answer": "تشايكوفسكي"
+  },
+  {
+   "id": 123,
+   "type": "option dropped",
+   "option": "تشيخوف",
+   "question": "الموسيقار الروسي مؤلف باليه \"بحيرة البجع\"؟",
+   "answer": "تشايكوفسكي"
+  },
+  {
+   "id": 123,
+   "type": "now direct mode only",
+   "question": "الموسيقار الروسي مؤلف باليه \"بحيرة البجع\"؟"
+  },
+  {
+   "id": 187,
+   "type": "option dropped",
+   "option": "جمباز",
+   "question": "فن قتالي ياباني أصبح رياضة أولمبية؟",
+   "answer": "جودو"
+  },
+  {
+   "id": 187,
+   "type": "now direct mode only",
+   "question": "فن قتالي ياباني أصبح رياضة أولمبية؟"
+  },
+  {
+   "id": 188,
+   "type": "option dropped",
+   "option": "جامايكا",
+   "question": "دولة عربية في القرن الأفريقي عاصمتها تحمل اسمها؟",
+   "answer": "جيبوتي"
+  },
+  {
+   "id": 188,
+   "type": "option dropped",
+   "option": "جورجيا",
+   "question": "دولة عربية في القرن الأفريقي عاصمتها تحمل اسمها؟",
+   "answer": "جيبوتي"
+  },
+  {
+   "id": 188,
+   "type": "now direct mode only",
+   "question": "دولة عربية في القرن الأفريقي عاصمتها تحمل اسمها؟"
+  },
+  {
+   "id": 189,
+   "type": "option dropped",
+   "option": "جنوب أفريقيا",
+   "question": "أكبر دولة عربية وأفريقية مساحة؟",
+   "answer": "الجزائر"
+  },
+  {
+   "id": 208,
+   "type": "option dropped",
+   "option": "حوت",
+   "question": "حيوان يركب ويشارك في سباقات الفروسية؟",
+   "answer": "حصان"
+  },
+  {
+   "id": 213,
+   "type": "question reworded",
+   "before": "طبق شامي من الحمص المهروس والطحينة يسمى؟",
+   "after": "طبق شامي من حبوب مسلوقة مهروسة مع الطحينة وزيت الزيتون؟",
+   "reason": "الصياغة الأصلية تكشف الإجابة"
+  },
+  {
+   "id": 218,
+   "type": "accepted alternatives added",
+   "answer": "حاسوب",
+   "alternatives": [
+    "حاسب آلي"
+   ],
+   "reason": "حاسب آلي اسم عربي شائع جداً (خاصة في السعودية) ويبدأ بالحاء فيجب قبوله"
+  },
+  {
+   "id": 233,
+   "type": "question reworded",
+   "before": "حيوان رخوي بطيء يحمل صدفة حلزونية على ظهره؟",
+   "after": "حيوان رخوي بطيء يحمل صدفة ملتفة على ظهره؟",
+   "reason": "نص السؤال كان يحتوي الإجابة نفسها"
+  },
+  {
+   "id": 250,
+   "type": "option dropped",
+   "option": "خلد",
+   "question": "الحيوان الذي يضحى به عادة في عيد الأضحى؟",
+   "answer": "خروف"
+  },
+  {
+   "id": 250,
+   "type": "now direct mode only",
+   "question": "الحيوان الذي يضحى به عادة في عيد الأضحى؟"
+  },
+  {
+   "id": 252,
+   "type": "option dropped",
+   "option": "خفاش",
+   "question": "حيوان يحرم أكل لحمه في الإسلام وله أنف عريض؟",
+   "answer": "خنزير"
+  },
+  {
+   "id": 252,
+   "type": "option dropped",
+   "option": "خلد",
+   "question": "حيوان يحرم أكل لحمه في الإسلام وله أنف عريض؟",
+   "answer": "خنزير"
+  },
+  {
+   "id": 252,
+   "type": "now direct mode only",
+   "question": "حيوان يحرم أكل لحمه في الإسلام وله أنف عريض؟"
+  },
+  {
+   "id": 253,
+   "type": "question reworded",
+   "before": "طعام من العجين يخبز في الفرن أو التنور؟",
+   "after": "طعام أساسي من عجين الدقيق يُنضج في الفرن أو التنور؟",
+   "reason": "نص السؤال كان يحتوي الإجابة نفسها"
+  },
+  {
+   "id": 260,
+   "type": "option dropped",
+   "option": "خرز",
+   "question": "حلية دائرية تلبس في الإصبع؟",
+   "answer": "خاتم"
+  },
+  {
+   "id": 260,
+   "type": "now direct mode only",
+   "question": "حلية دائرية تلبس في الإصبع؟"
+  },
+  {
+   "id": 265,
+   "type": "question reworded",
+   "before": "جزء من البحر يمتد داخل اليابسة؟",
+   "after": "مسطح مائي واسع يتوغل من البحر داخل اليابسة، ومن أمثلته العربي وعدن والمكسيك؟",
+   "reason": "الخور إجابة صحيحة أيضاً للصياغة الأصلية"
+  },
+  {
+   "id": 307,
+   "type": "question reworded",
+   "before": "نهر يمر بمدينة بغداد؟",
+   "after": "النهر الذي يشطر بغداد إلى الكرخ والرصافة؟",
+   "reason": "ديالى يمكن أن يُقال للصياغة الأصلية"
+  },
+  {
+   "id": 312,
+   "type": "option dropped",
+   "option": "دجلة",
+   "question": "نهر أوروبي يمر بفيينا وبودابست؟",
+   "answer": "الدانوب"
+  },
+  {
+   "id": 317,
+   "type": "option dropped",
+   "option": "دوناتيلو",
+   "question": "الرسام الإيطالي صاحب لوحة الموناليزا؟",
+   "answer": "دافنشي"
+  },
+  {
+   "id": 355,
+   "type": "question reworded",
+   "before": "الحيوان الذي يُذبح ليؤكل لحمه؟",
+   "after": "الشاة أو البهيمة بعد أن تُذبح تُسمّى؟",
+   "reason": "الذِّبح يطلق على المُعدّ للذبح قبل ذبحه، فتحديد ما بعد الذبح يحصر الإجابة في ذبيحة"
+  },
+  {
+   "id": 381,
+   "type": "accepted alternatives added",
+   "answer": "روبوت",
+   "alternatives": [
+    "رجل آلي"
+   ],
+   "reason": "الرجل الآلي مرادف شائع يبدأ بالراء فيجب قبوله"
+  },
+  {
+   "id": 391,
+   "type": "option dropped",
+   "option": "رز",
+   "question": "التمر الطري قبل أن يجف؟",
+   "answer": "رطب"
+  },
+  {
+   "id": 391,
+   "type": "option dropped",
+   "option": "رقاق",
+   "question": "التمر الطري قبل أن يجف؟",
+   "answer": "رطب"
+  },
+  {
+   "id": 391,
+   "type": "now direct mode only",
+   "question": "التمر الطري قبل أن يجف؟"
+  },
+  {
+   "id": 410,
+   "type": "option dropped",
+   "option": "الريو غراندي",
+   "question": "نهر أوروبي يمر بألمانيا ويصب في بحر الشمال؟",
+   "answer": "الراين"
+  },
+  {
+   "id": 410,
+   "type": "now direct mode only",
+   "question": "نهر أوروبي يمر بألمانيا ويصب في بحر الشمال؟"
+  },
+  {
+   "id": 415,
+   "type": "option dropped",
+   "option": "ريمان",
+   "question": "مقياس شهير لقوة الزلازل؟",
+   "answer": "ريختر"
+  },
+  {
+   "id": 437,
+   "type": "option dropped",
+   "option": "زغرب",
+   "question": "أكبر مدن سويسرا؟",
+   "answer": "زيورخ"
+  },
+  {
+   "id": 437,
+   "type": "option dropped",
+   "option": "زالتسبورغ",
+   "question": "أكبر مدن سويسرا؟",
+   "answer": "زيورخ"
+  },
+  {
+   "id": 437,
+   "type": "now direct mode only",
+   "question": "أكبر مدن سويسرا؟"
+  },
+  {
+   "id": 458,
+   "type": "option dropped",
+   "option": "سنجاب",
+   "question": "زاحف بطيء يحمل صدفة على ظهره؟",
+   "answer": "سلحفاة"
+  },
+  {
+   "id": 471,
+   "type": "option dropped",
+   "option": "سلوفينيا",
+   "question": "دولة مدينة في جنوب شرق آسيا؟",
+   "answer": "سنغافورة"
+  },
+  {
+   "id": 471,
+   "type": "option dropped",
+   "option": "سورينام",
+   "question": "دولة مدينة في جنوب شرق آسيا؟",
+   "answer": "سنغافورة"
+  },
+  {
+   "id": 471,
+   "type": "now direct mode only",
+   "question": "دولة مدينة في جنوب شرق آسيا؟"
+  },
+  {
+   "id": 474,
+   "type": "question reworded",
+   "before": "طائر صغير مهاجر ذو ذيل مشقوق؟",
+   "after": "طائر صغير مهاجر ذو ذيل مشقوق يُسمّى أيضًا الخطّاف؟",
+   "reason": "ذكر اسم الخطّاف يحصر الإجابة في السنونو ويستبعد السمامة"
+  },
+  {
+   "id": 477,
+   "type": "option dropped",
+   "option": "سمن",
+   "question": "بذور تُصنع منها الطحينة؟",
+   "answer": "سمسم"
+  },
+  {
+   "id": 479,
+   "type": "accepted alternatives added",
+   "answer": "سماعة الطبيب",
+   "alternatives": [
+    "سماعة"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 482,
+   "type": "option dropped",
+   "option": "السلاجقة",
+   "question": "حضارة في جنوب العراق اخترعت الكتابة المسمارية؟",
+   "answer": "السومريون"
+  },
+  {
+   "id": 498,
+   "type": "option dropped",
+   "option": "شوربة",
+   "question": "مشروب ساخن من أوراق نبات مجففة؟",
+   "answer": "شاي"
+  },
+  {
+   "id": 498,
+   "type": "now direct mode only",
+   "question": "مشروب ساخن من أوراق نبات مجففة؟"
+  },
+  {
+   "id": 499,
+   "type": "option dropped",
+   "option": "شعيرية",
+   "question": "حلوى بنية تُصنع من الكاكاو؟",
+   "answer": "شوكولاتة"
+  },
+  {
+   "id": 499,
+   "type": "option dropped",
+   "option": "شيبس",
+   "question": "حلوى بنية تُصنع من الكاكاو؟",
+   "answer": "شوكولاتة"
+  },
+  {
+   "id": 499,
+   "type": "now direct mode only",
+   "question": "حلوى بنية تُصنع من الكاكاو؟"
+  },
+  {
+   "id": 518,
+   "type": "option dropped",
+   "option": "شعيرية",
+   "question": "حبوب تؤكل في الفطور مع الحليب وتسمى Oats؟",
+   "answer": "شوفان"
+  },
+  {
+   "id": 518,
+   "type": "now direct mode only",
+   "question": "حبوب تؤكل في الفطور مع الحليب وتسمى Oats؟"
+  },
+  {
+   "id": 519,
+   "type": "question reworded",
+   "before": "حبوب تشبه القمح وتُستعمل علفاً للمواشي؟",
+   "after": "حبوب تشبه القمح تُصنع منها التلبينة ويُستخلص منها المالت؟",
+   "reason": "الصياغة الأصلية تقبل «شوفان»؛ التلبينة والمالت خاصّان بالشعير"
+  },
+  {
+   "id": 549,
+   "type": "question reworded",
+   "before": "مهنة من يبيع الأدوية في الصيدلية؟",
+   "after": "صاحب المهنة الذي يصرف الأدوية والوصفات الطبية؟",
+   "reason": "نص السؤال كان يحتوي الإجابة نفسها"
+  },
+  {
+   "id": 559,
+   "type": "accepted alternatives added",
+   "answer": "صلصة",
+   "alternatives": [
+    "صوص"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 578,
+   "type": "option dropped",
+   "option": "ضباب",
+   "question": "ما ينبعث من الشمس والمصباح فنرى به الأشياء؟",
+   "answer": "ضوء"
+  },
+  {
+   "id": 578,
+   "type": "option dropped",
+   "option": "ضغط",
+   "question": "ما ينبعث من الشمس والمصباح فنرى به الأشياء؟",
+   "answer": "ضوء"
+  },
+  {
+   "id": 578,
+   "type": "now direct mode only",
+   "question": "ما ينبعث من الشمس والمصباح فنرى به الأشياء؟"
+  },
+  {
+   "id": 605,
+   "type": "option dropped",
+   "option": "ضرع",
+   "question": "عظم منحنٍ من عظام القفص الصدري؟",
+   "answer": "ضلع"
+  },
+  {
+   "id": 605,
+   "type": "now direct mode only",
+   "question": "عظم منحنٍ من عظام القفص الصدري؟"
+  },
+  {
+   "id": 619,
+   "type": "option dropped",
+   "option": "طرشي",
+   "question": "خضار أحمر يُصنع منه الكاتشب؟",
+   "answer": "طماطم"
+  },
+  {
+   "id": 619,
+   "type": "now direct mode only",
+   "question": "خضار أحمر يُصنع منه الكاتشب؟"
+  },
+  {
+   "id": 624,
+   "type": "accepted alternatives added",
+   "answer": "طاولة",
+   "alternatives": [
+    "طربيزة"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 627,
+   "type": "question reworded",
+   "before": "آلة إيقاع يُضرب عليها باليد أو العصا؟",
+   "after": "آلة إيقاع كبيرة تُقرع بالعصا في الفرق الموسيقية العسكرية؟",
+   "reason": "الصياغة الأصلية تقبل «طار» و«طبلة»؛ الطار والطبلة يُضربان باليد"
+  },
+  {
+   "id": 633,
+   "type": "option dropped",
+   "option": "طرابلس",
+   "question": "مدينة مغربية تطل على مضيق جبل طارق؟",
+   "answer": "طنجة"
+  },
+  {
+   "id": 633,
+   "type": "now direct mode only",
+   "question": "مدينة مغربية تطل على مضيق جبل طارق؟"
+  },
+  {
+   "id": 636,
+   "type": "accepted alternatives added",
+   "answer": "طيبة",
+   "alternatives": [
+    "طابة"
+   ],
+   "reason": "طابة اسم ثابت للمدينة بالحرف نفسه فيجب قبوله"
+  },
+  {
+   "id": 639,
+   "type": "option dropped",
+   "option": "طرشي",
+   "question": "أكلة مصرية من الفول المطحون المقلي؟",
+   "answer": "طعمية"
+  },
+  {
+   "id": 639,
+   "type": "option dropped",
+   "option": "طحينة",
+   "question": "أكلة مصرية من الفول المطحون المقلي؟",
+   "answer": "طعمية"
+  },
+  {
+   "id": 639,
+   "type": "now direct mode only",
+   "question": "أكلة مصرية من الفول المطحون المقلي؟"
+  },
+  {
+   "id": 640,
+   "type": "option dropped",
+   "option": "طرشي",
+   "question": "طبق مغربي يُطهى في إناء فخاري بغطاء مخروطي؟",
+   "answer": "طاجين"
+  },
+  {
+   "id": 640,
+   "type": "option dropped",
+   "option": "طحينة",
+   "question": "طبق مغربي يُطهى في إناء فخاري بغطاء مخروطي؟",
+   "answer": "طاجين"
+  },
+  {
+   "id": 640,
+   "type": "now direct mode only",
+   "question": "طبق مغربي يُطهى في إناء فخاري بغطاء مخروطي؟"
+  },
+  {
+   "id": 641,
+   "type": "option dropped",
+   "option": "طعمية",
+   "question": "خضار مخللة بالخل والملح؟",
+   "answer": "طرشي"
+  },
+  {
+   "id": 641,
+   "type": "option dropped",
+   "option": "طاجين",
+   "question": "خضار مخللة بالخل والملح؟",
+   "answer": "طرشي"
+  },
+  {
+   "id": 641,
+   "type": "now direct mode only",
+   "question": "خضار مخللة بالخل والملح؟"
+  },
+  {
+   "id": 667,
+   "type": "answer changed",
+   "before": "ظهيرة",
+   "after": "الظهيرة",
+   "reason": "«الظهر» إجابة صحيحة شائعة بالحرف نفسه فتقبل الصيغتان"
+  },
+  {
+   "id": 667,
+   "type": "accepted alternatives added",
+   "answer": "الظهيرة",
+   "alternatives": [
+    "الظهر"
+   ],
+   "reason": "«الظهر» إجابة صحيحة شائعة بالحرف نفسه فتقبل الصيغتان"
+  },
+  {
+   "id": 692,
+   "type": "option dropped",
+   "option": "عدس",
+   "question": "غذاء حلو تصنعه النحل؟",
+   "answer": "عسل"
+  },
+  {
+   "id": 717,
+   "type": "question reworded",
+   "before": "نوع تمر مشهور من المدينة المنورة؟",
+   "after": "نوع تمر من المدينة المنورة ورد في الحديث أن من تصبّح بسبع منه لم يضره سمّ؟",
+   "reason": "الصياغة الأصلية تقبل «عنبرة»؛ حديث السبع تمرات خاص بالعجوة"
+  },
+  {
+   "id": 736,
+   "type": "accepted alternatives added",
+   "answer": "غيمة",
+   "alternatives": [
+    "غمامة"
+   ],
+   "reason": "الغمامة مرادف صحيح بالغين؛ قبول الاثنين بدل تخطئة فريق محق"
+  },
+  {
+   "id": 765,
+   "type": "option dropped",
+   "option": "غيانا",
+   "question": "دولة في أمريكا الوسطى تحمل عاصمتها اسمها؟",
+   "answer": "غواتيمالا"
+  },
+  {
+   "id": 765,
+   "type": "option dropped",
+   "option": "غرينادا",
+   "question": "دولة في أمريكا الوسطى تحمل عاصمتها اسمها؟",
+   "answer": "غواتيمالا"
+  },
+  {
+   "id": 765,
+   "type": "now direct mode only",
+   "question": "دولة في أمريكا الوسطى تحمل عاصمتها اسمها؟"
+  },
+  {
+   "id": 777,
+   "type": "option dropped",
+   "option": "فجل",
+   "question": "فاكهة حمراء بذورها على سطحها الخارجي؟",
+   "answer": "فراولة"
+  },
+  {
+   "id": 777,
+   "type": "option dropped",
+   "option": "فلفل",
+   "question": "فاكهة حمراء بذورها على سطحها الخارجي؟",
+   "answer": "فراولة"
+  },
+  {
+   "id": 777,
+   "type": "now direct mode only",
+   "question": "فاكهة حمراء بذورها على سطحها الخارجي؟"
+  },
+  {
+   "id": 779,
+   "type": "option dropped",
+   "option": "فنزويلا",
+   "question": "دولة أوروبية عاصمتها باريس؟",
+   "answer": "فرنسا"
+  },
+  {
+   "id": 780,
+   "type": "option dropped",
+   "option": "فرنسا",
+   "question": "دولة عربية يقع فيها المسجد الأقصى؟",
+   "answer": "فلسطين"
+  },
+  {
+   "id": 780,
+   "type": "option dropped",
+   "option": "الفلبين",
+   "question": "دولة عربية يقع فيها المسجد الأقصى؟",
+   "answer": "فلسطين"
+  },
+  {
+   "id": 780,
+   "type": "option dropped",
+   "option": "فنلندا",
+   "question": "دولة عربية يقع فيها المسجد الأقصى؟",
+   "answer": "فلسطين"
+  },
+  {
+   "id": 780,
+   "type": "now direct mode only",
+   "question": "دولة عربية يقع فيها المسجد الأقصى؟"
+  },
+  {
+   "id": 790,
+   "type": "option dropped",
+   "option": "فنلندا",
+   "question": "دولة آسيوية عاصمتها هانوي؟",
+   "answer": "فيتنام"
+  },
+  {
+   "id": 790,
+   "type": "option dropped",
+   "option": "فنزويلا",
+   "question": "دولة آسيوية عاصمتها هانوي؟",
+   "answer": "فيتنام"
+  },
+  {
+   "id": 790,
+   "type": "now direct mode only",
+   "question": "دولة آسيوية عاصمتها هانوي؟"
+  },
+  {
+   "id": 791,
+   "type": "option dropped",
+   "option": "فيتنام",
+   "question": "دولة في أمريكا الجنوبية عاصمتها كاراكاس؟",
+   "answer": "فنزويلا"
+  },
+  {
+   "id": 791,
+   "type": "option dropped",
+   "option": "الفلبين",
+   "question": "دولة في أمريكا الجنوبية عاصمتها كاراكاس؟",
+   "answer": "فنزويلا"
+  },
+  {
+   "id": 791,
+   "type": "option dropped",
+   "option": "فنلندا",
+   "question": "دولة في أمريكا الجنوبية عاصمتها كاراكاس؟",
+   "answer": "فنزويلا"
+  },
+  {
+   "id": 791,
+   "type": "now direct mode only",
+   "question": "دولة في أمريكا الجنوبية عاصمتها كاراكاس؟"
+  },
+  {
+   "id": 798,
+   "type": "option dropped",
+   "option": "فيفاء",
+   "question": "جزر سعودية في البحر الأحمر تتبع منطقة جازان؟",
+   "answer": "فرسان"
+  },
+  {
+   "id": 798,
+   "type": "now direct mode only",
+   "question": "جزر سعودية في البحر الأحمر تتبع منطقة جازان؟"
+  },
+  {
+   "id": 805,
+   "type": "option dropped",
+   "option": "الفيوم",
+   "question": "مدينة مغربية بها جامعة القرويين؟",
+   "answer": "فاس"
+  },
+  {
+   "id": 805,
+   "type": "now direct mode only",
+   "question": "مدينة مغربية بها جامعة القرويين؟"
+  },
+  {
+   "id": 809,
+   "type": "option dropped",
+   "option": "فسفور",
+   "question": "سبيكة من الحديد والكربون؟",
+   "answer": "فولاذ"
+  },
+  {
+   "id": 809,
+   "type": "now direct mode only",
+   "question": "سبيكة من الحديد والكربون؟"
+  },
+  {
+   "id": 822,
+   "type": "option dropped",
+   "option": "قبرص",
+   "question": "دولة خليجية عاصمتها الدوحة؟",
+   "answer": "قطر"
+  },
+  {
+   "id": 822,
+   "type": "option dropped",
+   "option": "قيرغيزستان",
+   "question": "دولة خليجية عاصمتها الدوحة؟",
+   "answer": "قطر"
+  },
+  {
+   "id": 822,
+   "type": "now direct mode only",
+   "question": "دولة خليجية عاصمتها الدوحة؟"
+  },
+  {
+   "id": 823,
+   "type": "option dropped",
+   "option": "قرفة",
+   "question": "مشروب من البن يُقدَّم مع التمر في الضيافة؟",
+   "answer": "قهوة"
+  },
+  {
+   "id": 823,
+   "type": "now direct mode only",
+   "question": "مشروب من البن يُقدَّم مع التمر في الضيافة؟"
+  },
+  {
+   "id": 830,
+   "type": "option dropped",
+   "option": "قلادة",
+   "question": "لباس لليد يرتديه حارس المرمى؟",
+   "answer": "قفاز"
+  },
+  {
+   "id": 838,
+   "type": "option dropped",
+   "option": "قطر",
+   "question": "دولة جزيرة في البحر المتوسط عاصمتها نيقوسيا؟",
+   "answer": "قبرص"
+  },
+  {
+   "id": 838,
+   "type": "option dropped",
+   "option": "قيرغيزستان",
+   "question": "دولة جزيرة في البحر المتوسط عاصمتها نيقوسيا؟",
+   "answer": "قبرص"
+  },
+  {
+   "id": 838,
+   "type": "now direct mode only",
+   "question": "دولة جزيرة في البحر المتوسط عاصمتها نيقوسيا؟"
+  },
+  {
+   "id": 852,
+   "type": "option dropped",
+   "option": "القوقعة",
+   "question": "الطبقة الشفافة في مقدمة العين؟",
+   "answer": "القرنية"
+  },
+  {
+   "id": 852,
+   "type": "option dropped",
+   "option": "القصبة الهوائية",
+   "question": "الطبقة الشفافة في مقدمة العين؟",
+   "answer": "القرنية"
+  },
+  {
+   "id": 852,
+   "type": "now direct mode only",
+   "question": "الطبقة الشفافة في مقدمة العين؟"
+  },
+  {
+   "id": 854,
+   "type": "option dropped",
+   "option": "قرص صلب",
+   "question": "مجموعة بيانات منظمة يُستعلم عنها بلغة SQL؟",
+   "answer": "قاعدة بيانات"
+  },
+  {
+   "id": 854,
+   "type": "now direct mode only",
+   "question": "مجموعة بيانات منظمة يُستعلم عنها بلغة SQL؟"
+  },
+  {
+   "id": 857,
+   "type": "option dropped",
+   "option": "كندا",
+   "question": "دولة خليجية أشهر معالمها الأبراج الثلاثة على شاطئ الخليج؟",
+   "answer": "الكويت"
+  },
+  {
+   "id": 857,
+   "type": "option dropped",
+   "option": "كوبا",
+   "question": "دولة خليجية أشهر معالمها الأبراج الثلاثة على شاطئ الخليج؟",
+   "answer": "الكويت"
+  },
+  {
+   "id": 857,
+   "type": "option dropped",
+   "option": "كينيا",
+   "question": "دولة خليجية أشهر معالمها الأبراج الثلاثة على شاطئ الخليج؟",
+   "answer": "الكويت"
+  },
+  {
+   "id": 857,
+   "type": "now direct mode only",
+   "question": "دولة خليجية أشهر معالمها الأبراج الثلاثة على شاطئ الخليج؟"
+  },
+  {
+   "id": 860,
+   "type": "question reworded",
+   "before": "قطعة أثاث نجلس عليها لها أرجل وظهر؟",
+   "after": "قطعة أثاث يجلس عليها شخص واحد لها أرجل وظهر؟",
+   "reason": "الصياغة الأصلية تقبل «كنبة»؛ الكنبة تتسع لأكثر من شخص"
+  },
+  {
+   "id": 860,
+   "type": "option dropped",
+   "option": "كوب",
+   "question": "قطعة أثاث يجلس عليها شخص واحد لها أرجل وظهر؟",
+   "answer": "كرسي"
+  },
+  {
+   "id": 860,
+   "type": "option dropped",
+   "option": "كتاب",
+   "question": "قطعة أثاث يجلس عليها شخص واحد لها أرجل وظهر؟",
+   "answer": "كرسي"
+  },
+  {
+   "id": 860,
+   "type": "now direct mode only",
+   "question": "قطعة أثاث يجلس عليها شخص واحد لها أرجل وظهر؟"
+  },
+  {
+   "id": 867,
+   "type": "question reworded",
+   "before": "حيوان أسترالي يحمل صغيره في جراب على بطنه؟",
+   "after": "حيوان أسترالي يقفز على قائمتيه الخلفيتين ويحمل صغيره في جراب على بطنه؟",
+   "reason": "إضافة القفز تستبعد الكوالا"
+  },
+  {
+   "id": 868,
+   "type": "question reworded",
+   "before": "صاحب المهنة الذي يصلح الأسلاك والأجهزة الكهربائية؟",
+   "after": "صاحب المهنة الذي يمدّ أسلاك الإنارة ويصلح أعطالها؟",
+   "reason": "نص السؤال كان يحتوي الإجابة نفسها"
+  },
+  {
+   "id": 885,
+   "type": "option dropped",
+   "option": "كلارينيت",
+   "question": "آلة وترية توضع على الكتف وتُعزف بالقوس؟",
+   "answer": "كمان"
+  },
+  {
+   "id": 885,
+   "type": "now direct mode only",
+   "question": "آلة وترية توضع على الكتف وتُعزف بالقوس؟"
+  },
+  {
+   "id": 898,
+   "type": "option dropped",
+   "option": "لاتفيا",
+   "question": "دولة عربية عاصمتها بيروت؟",
+   "answer": "لبنان"
+  },
+  {
+   "id": 898,
+   "type": "option dropped",
+   "option": "لوكسمبورغ",
+   "question": "دولة عربية عاصمتها بيروت؟",
+   "answer": "لبنان"
+  },
+  {
+   "id": 898,
+   "type": "now direct mode only",
+   "question": "دولة عربية عاصمتها بيروت؟"
+  },
+  {
+   "id": 899,
+   "type": "option dropped",
+   "option": "لبنان",
+   "question": "دولة عربية في شمال أفريقيا تقع بين مصر وتونس؟",
+   "answer": "ليبيا"
+  },
+  {
+   "id": 899,
+   "type": "option dropped",
+   "option": "ليبيريا",
+   "question": "دولة عربية في شمال أفريقيا تقع بين مصر وتونس؟",
+   "answer": "ليبيا"
+  },
+  {
+   "id": 899,
+   "type": "option dropped",
+   "option": "ليسوتو",
+   "question": "دولة عربية في شمال أفريقيا تقع بين مصر وتونس؟",
+   "answer": "ليبيا"
+  },
+  {
+   "id": 899,
+   "type": "now direct mode only",
+   "question": "دولة عربية في شمال أفريقيا تقع بين مصر وتونس؟"
+  },
+  {
+   "id": 900,
+   "type": "option dropped",
+   "option": "لوز",
+   "question": "فاكهة صفراء حامضة يُصنع منها عصير منعش؟",
+   "answer": "ليمون"
+  },
+  {
+   "id": 900,
+   "type": "now direct mode only",
+   "question": "فاكهة صفراء حامضة يُصنع منها عصير منعش؟"
+  },
+  {
+   "id": 908,
+   "type": "question reworded",
+   "before": "وسيلة التواصل بين الناس مثل العربية والإنجليزية؟",
+   "after": "وسيلة التواصل بين الناس مثل العربية والإنجليزية، وجمعها «لغات»؟",
+   "reason": "ذكر الجمع «لغات» يستبعد «لسان» (جمعه ألسنة)"
+  },
+  {
+   "id": 916,
+   "type": "option dropped",
+   "option": "لوكسمبورغ",
+   "question": "دولة بلطيقية عاصمتها ريغا؟",
+   "answer": "لاتفيا"
+  },
+  {
+   "id": 916,
+   "type": "option dropped",
+   "option": "ليختنشتاين",
+   "question": "دولة بلطيقية عاصمتها ريغا؟",
+   "answer": "لاتفيا"
+  },
+  {
+   "id": 916,
+   "type": "now direct mode only",
+   "question": "دولة بلطيقية عاصمتها ريغا؟"
+  },
+  {
+   "id": 922,
+   "type": "accepted alternatives added",
+   "answer": "لقيمات",
+   "alternatives": [
+    "لقمة القاضي"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 933,
+   "type": "option dropped",
+   "option": "لوزان",
+   "question": "المدينة الهولندية التي تضم مقر محكمة العدل الدولية؟",
+   "answer": "لاهاي"
+  },
+  {
+   "id": 933,
+   "type": "option dropped",
+   "option": "لندن",
+   "question": "المدينة الهولندية التي تضم مقر محكمة العدل الدولية؟",
+   "answer": "لاهاي"
+  },
+  {
+   "id": 933,
+   "type": "now direct mode only",
+   "question": "المدينة الهولندية التي تضم مقر محكمة العدل الدولية؟"
+  },
+  {
+   "id": 939,
+   "type": "option dropped",
+   "option": "المكسيك",
+   "question": "دولة عربية تقع فيها أهرامات الجيزة؟",
+   "answer": "مصر"
+  },
+  {
+   "id": 940,
+   "type": "option dropped",
+   "option": "مالطا",
+   "question": "دولة عربية عاصمتها الرباط؟",
+   "answer": "المغرب"
+  },
+  {
+   "id": 947,
+   "type": "accepted alternatives added",
+   "answer": "معلم",
+   "alternatives": [
+    "مدرّس"
+   ],
+   "reason": ""
+  },
+  {
+   "id": 949,
+   "type": "question reworded",
+   "before": "جهاز يبرّد هواء الغرفة في الصيف؟",
+   "after": "جهاز تبريد للغرف من أنواعه السبليت والشبّاك؟",
+   "reason": "الصياغة الأصلية تحتمل مبرد الهواء والمروحة"
+  },
+  {
+   "id": 972,
+   "type": "accepted alternatives added",
+   "answer": "ميتوكوندريا",
+   "alternatives": [
+    "المتقدرة"
+   ],
+   "reason": "المتقدرة الاسم العربي للعضية نفسها ويبدأ بالميم؛ يجب قبوله"
+  },
+  {
+   "id": 996,
+   "type": "option dropped",
+   "option": "النرويج",
+   "question": "دولة آسيوية تشترك مع الصين في قمة إيفرست؟",
+   "answer": "نيبال"
+  },
+  {
+   "id": 996,
+   "type": "option dropped",
+   "option": "نيوزيلندا",
+   "question": "دولة آسيوية تشترك مع الصين في قمة إيفرست؟",
+   "answer": "نيبال"
+  },
+  {
+   "id": 996,
+   "type": "option dropped",
+   "option": "نيكاراغوا",
+   "question": "دولة آسيوية تشترك مع الصين في قمة إيفرست؟",
+   "answer": "نيبال"
+  },
+  {
+   "id": 996,
+   "type": "now direct mode only",
+   "question": "دولة آسيوية تشترك مع الصين في قمة إيفرست؟"
+  },
+  {
+   "id": 1021,
+   "type": "option dropped",
+   "option": "هولندا",
+   "question": "دولة آسيوية عاصمتها نيودلهي؟",
+   "answer": "الهند"
+  },
+  {
+   "id": 1021,
+   "type": "option dropped",
+   "option": "هنغاريا",
+   "question": "دولة آسيوية عاصمتها نيودلهي؟",
+   "answer": "الهند"
+  },
+  {
+   "id": 1021,
+   "type": "option dropped",
+   "option": "هايتي",
+   "question": "دولة آسيوية عاصمتها نيودلهي؟",
+   "answer": "الهند"
+  },
+  {
+   "id": 1021,
+   "type": "now direct mode only",
+   "question": "دولة آسيوية عاصمتها نيودلهي؟"
+  },
+  {
+   "id": 1022,
+   "type": "option dropped",
+   "option": "الهند",
+   "question": "دولة أوروبية تشتهر بطواحين الهواء وزهور التوليب؟",
+   "answer": "هولندا"
+  },
+  {
+   "id": 1022,
+   "type": "option dropped",
+   "option": "هندوراس",
+   "question": "دولة أوروبية تشتهر بطواحين الهواء وزهور التوليب؟",
+   "answer": "هولندا"
+  },
+  {
+   "id": 1022,
+   "type": "now direct mode only",
+   "question": "دولة أوروبية تشتهر بطواحين الهواء وزهور التوليب؟"
+  },
+  {
+   "id": 1053,
+   "type": "option dropped",
+   "option": "هايتي",
+   "question": "دولة في أمريكا الوسطى عاصمتها تيغوسيغالبا؟",
+   "answer": "هندوراس"
+  },
+  {
+   "id": 1053,
+   "type": "option dropped",
+   "option": "هولندا",
+   "question": "دولة في أمريكا الوسطى عاصمتها تيغوسيغالبا؟",
+   "answer": "هندوراس"
+  },
+  {
+   "id": 1053,
+   "type": "option dropped",
+   "option": "هنغاريا",
+   "question": "دولة في أمريكا الوسطى عاصمتها تيغوسيغالبا؟",
+   "answer": "هندوراس"
+  },
+  {
+   "id": 1053,
+   "type": "now direct mode only",
+   "question": "دولة في أمريكا الوسطى عاصمتها تيغوسيغالبا؟"
+  },
+  {
+   "id": 1057,
+   "type": "option dropped",
+   "option": "هيرودوت",
+   "question": "الشاعر الإغريقي المنسوب إليه الإلياذة والأوديسة؟",
+   "answer": "هوميروس"
+  },
+  {
+   "id": 1057,
+   "type": "now direct mode only",
+   "question": "الشاعر الإغريقي المنسوب إليه الإلياذة والأوديسة؟"
+  },
+  {
+   "id": 1073,
+   "type": "question reworded",
+   "before": "مسابقة في ألعاب القوى يقفز فيها اللاعب لأبعد مسافة بعد الركض؟",
+   "after": "مسابقة في ألعاب القوى يقفز فيها اللاعب قفزة واحدة لأبعد مسافة بعد الركض؟",
+   "reason": "الوثب الثلاثي يطابق الصياغة الأصلية أيضاً"
+  },
+  {
+   "id": 1076,
+   "type": "question reworded",
+   "before": "صفحة واحدة من الكتاب أو الدفتر؟",
+   "after": "ما يُقلَّب في الكتاب أو الدفتر وله وجهان؟",
+   "reason": "الورقة ليست صفحة واحدة بل لها صفحتان، والصياغة تجعل «صفحة» نفسها جوابًا منطقيًا"
+  },
+  {
+   "id": 1083,
+   "type": "option dropped",
+   "option": "وجدة",
+   "question": "مدينة جزائرية ساحلية تُلقب بالباهية؟",
+   "answer": "وهران"
+  },
+  {
+   "id": 1083,
+   "type": "now direct mode only",
+   "question": "مدينة جزائرية ساحلية تُلقب بالباهية؟"
+  },
+  {
+   "id": 1115,
+   "type": "option dropped",
+   "option": "يوم عرفة",
+   "question": "المناسبة السعودية التي يُحتفل بها في 23 سبتمبر؟",
+   "answer": "اليوم الوطني"
+  },
+  {
+   "id": 1124,
+   "type": "accepted alternatives added",
+   "answer": "يرقة",
+   "alternatives": [
+    "يسروع"
+   ],
+   "reason": "اليسروع اسم يرقة الفراشة تحديدا ويبدأ بالياء؛ يجب قبوله"
+  }
+ ]
+}
