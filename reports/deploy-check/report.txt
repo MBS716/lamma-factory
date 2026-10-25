@@ -1,3 +1,5 @@
-checked (UTC): 2026-10-25 17:42
+checked (UTC): 2026-10-25 19:08
 old token: no longer used by any workflow
-deploy key LAMMA_DEPLOY_KEY: not set
+deploy key LAMMA_DEPLOY_KEY: set; git read over SSH: exit 0  (0 = the key is accepted for MBS716/lamma)
+  write access (dry run, nothing is sent): exit 0  (0 = the key can upload; a read-only key fails here)
+  the key belongs to MBS716/lamma only (deploy key): yes
