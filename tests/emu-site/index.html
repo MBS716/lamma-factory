@@ -592,6 +592,28 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .btn.warnbtn{border-color:var(--bad);color:var(--bad)}
 .updbar{margin:8px 0 0;padding:8px 14px;border-radius:12px;background:color-mix(in srgb,var(--gold) 16%,var(--bg2));border:1px solid var(--gold);color:var(--ink);font-size:.92rem}
 .previewbar{margin:8px 0 0;padding:6px 12px;border-radius:12px;border:1px dashed var(--orange);color:var(--orange);font-size:.9rem;text-align:center}
+/* letters v2: reading phase, answer options, phase-first host buttons */
+.beginbtn{width:100%}
+.prep{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:8px;align-items:center;padding:8px 12px;border-radius:12px;border:1px dashed var(--gold);font-weight:700}
+.prep .prep-n{font-family:var(--display);font-size:1.8rem;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+.chip.qt{border-color:var(--blue);color:var(--blue)}
+.lopts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lopts.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lopts li{display:flex;align-items:center;gap:8px;min-width:0;padding:10px 12px;border-radius:14px;background:var(--bg2);border:1px solid color-mix(in srgb,var(--muted) 35%,transparent);font-weight:700;font-size:1.12rem;line-height:1.35}
+.lopts .ol{flex:none;width:1.7em;height:1.7em;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--gold);font-size:.95rem}
+.lopts .ot{min-width:0;overflow-wrap:anywhere}
+.lopts .ock{margin-inline-start:auto;color:var(--green);font-size:1.2rem}
+.lopts li.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 22%,var(--bg2))}
+.lopts li.off{opacity:.55}
+.answer.big{font-size:1.5rem;margin:0}
+.judgebtns .btn{flex:1 1 140px;min-height:52px;font-size:1.15rem}
+@media (max-width:560px){
+  .lopts,.lopts.n3{grid-template-columns:minmax(0,1fr)}
+  .lopts li{font-size:1.05rem;padding:9px 11px}
+  .prep{grid-template-columns:auto auto auto;row-gap:6px}
+  .prep .tbar{grid-column:1/-1}
+  .answer.big{font-size:1.3rem}
+}
 </style>
 </head>
 <body>
@@ -660,7 +682,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.2-secure · emulator test</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.3-letters · 2026-10-25 · emulator test</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1650,7 +1672,7 @@ const FIREBASE_CONFIG = {"apiKey": "demo-key", "authDomain": "demo-lamma.firebas
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "484d8109b8", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "640a8708ba", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -1780,7 +1802,9 @@ const GAMES = {
     how:"كل فريق يحصل على نفس عدد الأسئلة بالتناوب. الإجابة الصحيحة الأسرع تأخذ نقاطًا أكثر، والخاطئة صفر.",
     opts:[{key:"m", label:"نوع المباراة", def:"q20", choices:() => [["q20","20 سؤالًا"],["q30","30 سؤالًا"],["q40","40 سؤالًا"],["t10","10 دقائق"],["t15","15 دقيقة"],["t20","20 دقيقة"]]},
           {key:"lv", label:"مستوى الأسئلة", def:3, choices:() => [...LV3, [3,"منوّع"]]},
-          {key:"t", label:"وقت السؤال", def:30, choices:() => [[20,"20 ث"],[30,"30 ث"],[45,"45 ث"]]}],
+          {key:"t", label:"وقت الإجابة", def:30, choices:() => [[20,"20 ث"],[30,"30 ث"],[45,"45 ث"]]},
+          {key:"qt", label:"نمط الأسئلة", def:"d", choices:() => [["d","إجابة مباشرة"],["3","3 خيارات"],["4","4 خيارات"],["mx","مختلط"]]},
+          {key:"go", label:"بدء وقت الإجابة", def:"man", choices:() => [["man","يدوي بعد القراءة"],[10,"تلقائي بعد 10 ث"],[15,"تلقائي بعد 15 ث"],[20,"تلقائي بعد 20 ث"]]}],
     art:`<div class="art-hex"><span style="background:var(--green)">م</span><span style="background:var(--gold)">ل</span><span style="background:var(--orange)">ع</span></div>`},
   wheel:{name:"عجلة التحديات", group:"team", teams:true, tag:"20 كرتًا · صندوق الحظ · تحدي السرعة",
     desc:"لفّ العجلة: أسئلة وتحديات سرعة وصندوق الحظ والكنز والحصانة والرهان وغيرها، حتى هدف 1,500 أو 3,000 أو 5,000.",
@@ -1835,11 +1859,11 @@ document.addEventListener("click", e => { const h = e.target.closest("[data-help
 const sec = (t, body) => `<section class="hsec"><h4>${t}</h4>${body}</section>`;
 const HELP = {
   letters:() => sec("الفكرة", `<p>فريقان (الأخضر والبرتقالي) يتنافسان على أسئلة الحروف. لكل سؤال حرف، والإجابة تبدأ بهذا الحرف. <b>الفائز صاحب أعلى مجموع نقاط</b>، ولا يوجد فوز بالوصول بين أطراف اللوحة.</p>`)
-    + sec("الدخول والبدء", `<p>المقدّم يفتح اللعبة على الشاشة الكبيرة فيظهر كود من 4 أرقام. يدخل اللاعبون الكود من جوالاتهم، ويكتب كل لاعب اسمه ويختار فريقه. يختار المقدّم نوع المباراة ومستوى الأسئلة ووقت السؤال ثم يضغط «ابدأ المباراة».</p>`)
-    + sec("طريقة اللعب", `<ol><li>الفريقان يتناوبان: سؤال للأخضر ثم سؤال للبرتقالي، فيحصل الفريقان دائمًا على نفس عدد الأسئلة.</li><li>الفريق صاحب الدور يختار حرفًا من اللوحة (أو حرفًا عشوائيًا)، فيظهر السؤال ويبدأ الوقت فورًا.</li><li>يعلن الفريق إجابته بصوت مسموع، فيضغط المقدّم «⏱ تثبيت وقت الإجابة» لحظة سماعها، فيتوقف الوقت. المقدّم وحده يثبّت الوقت ويحكم.</li><li>زر «✋ نريد الإجابة» في جوال الفريق ينبّه المقدّم فقط، ولا يوقف الوقت ولا يؤثر على النقاط.</li><li>يحكم المقدّم: صحيحة أو خاطئة. وقت الحكم لا يُحسب على الفريق.</li><li>الخلية تتلون بلون الفريق إذا أجاب صح، وتصبح رمادية إذا أخطأ أو انتهى الوقت. اللوحة للعرض فقط ولا تؤثر على الفوز.</li></ol>`)
+    + sec("الدخول والبدء", `<p>المقدّم يفتح اللعبة على الشاشة الكبيرة فيظهر كود من 4 أرقام. يدخل اللاعبون الكود من جوالاتهم، ويكتب كل لاعب اسمه ويختار فريقه. يختار المقدّم نوع المباراة ومستوى الأسئلة ووقت الإجابة ونمط الأسئلة وطريقة بدء الوقت، ثم يضغط «ابدأ المباراة».</p>`)
+    + sec("طريقة اللعب", `<ol><li>الفريقان يتناوبان: سؤال للأخضر ثم سؤال للبرتقالي، فيحصل الفريقان دائمًا على نفس عدد الأسئلة.</li><li>الفريق صاحب الدور يختار حرفًا من اللوحة (أو حرفًا عشوائيًا)، فيظهر السؤال <b>دون وقت</b> ليقرأه المقدّم.</li><li>بعد القراءة يضغط المقدّم «▶ ابدأ وقت الإجابة» (أو يبدأ تلقائيًا بعد 10 أو 15 أو 20 ثانية حسب الإعداد)، ومن هذه اللحظة تُحسب السرعة والنقاط.</li><li>في نمط الخيارات (3 أو 4، أو المختلط) تظهر الخيارات للجميع عند بدء الوقت، وتبقى الإجابة شفهية. لا تُكشف الإجابة الصحيحة إلا بعد حكم المقدّم.</li><li>يمكن للمقدّم استبدال السؤال قبل بدء الوقت فقط، مرتين لكل فريق في المباراة، دون احتساب محاولة أو نقاط ودون تغيير الدور أو الحرف.</li><li>يعلن الفريق إجابته بصوت مسموع، فيضغط المقدّم «⏱ تثبيت وقت الإجابة» لحظة سماعها، فيتوقف الوقت. المقدّم وحده يثبّت الوقت ويحكم.</li><li>زر «✋ نريد الإجابة» في جوال الفريق ينبّه المقدّم فقط، ولا يوقف الوقت ولا يؤثر على النقاط.</li><li>يحكم المقدّم: صحيحة أو خاطئة. وقت الحكم لا يُحسب على الفريق.</li><li>الخلية تتلون بلون الفريق إذا أجاب صح، وتصبح رمادية إذا أخطأ أو انتهى الوقت. اللوحة للعرض فقط ولا تؤثر على الفوز.</li></ol><p class="muted">في النمط المختلط يحصل الفريقان في كل جولة على النمط والمستوى نفسيهما، فلا يستفيد أحدهما من سهولة الخيارات.</p>`)
     + sec("النقاط (سؤال مدته 30 ثانية)", `<table class="htable"><tr><th>زمن الإجابة الصحيحة</th><th>النقاط</th></tr><tr><td>5 ثوانٍ أو أقل</td><td>100</td></tr><tr><td>6 إلى 10 ثوانٍ</td><td>90</td></tr><tr><td>11 إلى 15</td><td>75</td></tr><tr><td>16 إلى 20</td><td>60</td></tr><tr><td>21 إلى 25</td><td>45</td></tr><tr><td>26 إلى 30</td><td>30</td></tr><tr><td>إجابة خاطئة أو انتهاء الوقت</td><td>0</td></tr></table><p class="muted">إذا اختار المقدّم 20 أو 45 ثانية تتناسب الفترات مع الوقت المختار. اختيار الحرف وحده لا يعطي نقاطًا.</p>`)
     + sec("نهاية المباراة", `<p><b>بعدد الأسئلة:</b> 20 أو 30 أو 40 سؤالًا تُقسم بالتساوي بين الفريقين.<br><b>بالوقت:</b> 10 أو 15 أو 20 دقيقة، وعند انتهاء الوقت يُكمل الفريق الآخر سؤاله إن لزم حتى تتساوى الفرص.</p><p><b>التعادل:</b> تُلعب جولة فاصلة: سؤال لكل فريق، وتتكرر حتى يتقدم أحدهما.</p><p>تظهر شاشة الفوز بالإحصاءات (النقاط، الصحيحة، الدقة، متوسط الزمن، أسرع إجابة، الفارق) وتبقى حتى يبدأ المقدّم مباراة جديدة.</p>`)
-    + sec("مثال", `<p>دور الأخضر، اختاروا «ب»: «عاصمة العراق؟». أعلنوا «بغداد» بعد 7 ثوانٍ فثبّت المقدّم الوقت، ثم حكم بأنها صحيحة: +90 للأخضر. ثم يأتي دور البرتقالي.</p>`),
+    + sec("مثال", `<p>دور الأخضر، اختاروا «ب»: «عاصمة العراق؟». قرأ المقدّم السؤال ثم بدأ الوقت، فأعلنوا «بغداد» بعد 7 ثوانٍ من البدء فثبّت المقدّم الوقت، ثم حكم بأنها صحيحة: +90 للأخضر. ثم يأتي دور البرتقالي.</p>`),
   quiz:() => sec("الفكرة", `<p>مسابقة اختيار من متعدد: يظهر السؤال على شاشة المقدّم وعلى الجوالات، وكل لاعب يجيب من جواله.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يختار التصنيف والمستوى وعدد الأسئلة ووقت كل سؤال، ثم يعرض الكود. يدخل اللاعبون الكود ويكتبون أسماءهم، ثم يضغط المقدّم «ابدأ المسابقة».</p>`)
     + sec("طريقة اللعب", `<p>اختر الإجابة من جوالك بالشكل واللون المطابقين. تُكشف الإجابة عند انتهاء الوقت أو عند إجابة الجميع، ثم ينتقل المقدّم للسؤال التالي.</p>`)
@@ -2276,7 +2300,7 @@ function finHTML(fin, unit){ return fin.length ? `<div class="lb">${fin.map((f, 
    data/letters.json [letter, level 0-2, category, question, answer]
    The small built-in sets in data.js (QB, LETTERS) are only a fallback if the files can't be loaded. */
 const BANKS = {}, BANK_WAIT = {};
-const BANK_V = "c66301988a";
+const BANK_V = "983cdbca08";
 function fallbackBank(name){
   if (name === "quiz") return QB;
   return LETTERS.flatMap(([L, ...qs]) => qs.map(([q, a], lv) => [L, lv, "gen", q, a]));
@@ -2475,10 +2499,15 @@ const Quiz = {
 
 /* ================= LETTERS: points race =================
    The winner is decided by points only. Teams take turns, one question each, so both always get the same
-   number of questions. Points depend on how fast the team answers correctly; the clock runs on the host
-   only (one clock for everybody) from the moment the question appears until the host (or a player of the
-   team on turn) records the moment of answering. Judging time does not count. The hex board is only a
-   picture of the match: each cell shows a letter and takes the colour of the team that answered it. */
+   number of questions. Every question has a READING phase (no clock: the host reads it aloud) and then the
+   ANSWER phase, started by the host («ابدأ وقت الإجابة») or automatically after 10/15/20 s. Speed points count
+   from that start until the host locks the moment the team answered; judging time does not count.
+   Question types: direct answer, 3 options, 4 options, or mixed. Options reach the players only when the answer
+   time starts, and which one is right stays on the host (H.priv) until the host approves the result.
+   In the mixed mode (and with mixed difficulty) both turns of a pair (green then orange) get the same type and
+   level, and the three types rotate in shuffled blocks, so neither team gets an easier share.
+   The host may replace a question during the reading phase only, at most twice per team per match.
+   The hex board is only a picture of the match: each cell takes the colour of the team that answered it. */
 const HEX_N = 5;
 const ALPHA = "ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي".split(" ");
 const LT_STEPS = [[5,100],[10,90],[15,75],[20,60],[25,45],[30,30]];      // seconds (on a 30-second question) -> points
@@ -2493,6 +2522,13 @@ const ltPlayed = t => t.c + t.w;
 const fmtS = ms => (ms / 1000).toLocaleString("ar", {minimumFractionDigits:1, maximumFractionDigits:1});
 const other = t => t === "g" ? "o" : "g";
 function ltMode(o){ const m = String(o.m || "q20"); return {time:m[0] === "t", v:+m.slice(1) || 20}; }
+const LT_REPL = 2;                                                   // question replacements per team per match
+const LT_TYPES = {0:"إجابة مباشرة", 3:"3 خيارات", 4:"4 خيارات"};
+const OPT_LBL = ["أ", "ب", "ج", "د"];
+// options a question can be shown with: 0 (direct) always; 3/4 only with enough REVIEWED wrong options in the bank
+const ltCan = (q, n) => !n || (Array.isArray(q[5]) ? q[5].length : 0) >= n - 1;
+const ltStrict = o => ({d:0, "3":3, "4":4, mx:4})[String(o.qt || "d")] || 0;
+function ltEligible(B, n){ return B ? B.filter(q => ltCan(q, n)).length : 0; }
 function hexBoard(s, clickable, small){
   let html = `<div class="hexwrap"><div class="hexboard ${small ? "small" : ""}" aria-label="لوحة الحروف">`;
   for (let r = 0; r < HEX_N; r++){
@@ -2506,32 +2542,39 @@ function hexBoard(s, clickable, small){
   return html + `</div></div>`;
 }
 const Letters = {
-  init: () => ({L:[], b:"", cur:-1, tn:"g", st:"pick", k:0, q:"", a:"", lt:"", ql:1, t:0, T:30, am:-1, by:"", last:null, sc:{g:ltZero(), o:ltZero()}, mt:-1, over:false, tb:0, fin:null}),
+  init: () => ({L:[], b:"", cur:-1, tn:"g", st:"pick", k:0, q:"", a:"", lt:"", ql:1, t:0, T:30, am:-1, by:"", last:null, sc:{g:ltZero(), o:ltZero()}, mt:-1, over:false, tb:0, fin:null,
+    pt:0, op:null, ci:-1, r0:0, rp:{g:LT_REPL, o:LT_REPL}, plan:[]}),
   board(){
     const s = H.s, B = H.priv.idx || {};
     // letters that still have unused questions come first
-    const avail = ALPHA.filter(L => (B[L] || []).some(i => !H.priv.used.has(i)));
+    const n = ltStrict(s.o), avail = ALPHA.filter(L => (B[L] || []).some(i => !H.priv.used.has(i) && ltCan(H.priv.B[i], n)));
     s.L = shuffle(avail.length >= 25 ? avail : ALPHA, rnd()).slice(0, 25); s.b = ".".repeat(25); s.cur = -1;
   },
   async start(){
     if (H.priv.starting) return; H.priv.starting = true;
     const B = await loadBank("letters"); H.priv.starting = false;
     if (!H || H.g !== "letters") return;
+    BANKS.letters = B; if (!Letters.canStart(H.s.o)){ renderHost(); return; }
     clearInterval(H.priv.tick); clearInterval(H.priv.mtick);
     H.priv.B = B; H.priv.idx = {}; B.forEach((q, i) => (H.priv.idx[q[0]] = H.priv.idx[q[0]] || []).push(i));
-    H.priv.used = new Set(); H.priv.devSeen = seenGet("lm-lseen");
+    H.priv.used = new Set(); H.priv.devSeen = seenGet("lm-lseen"); H.priv.pend = null; H.priv.pos = {3:[0,0,0], 4:[0,0,0,0]}; H.priv.lastPos = {};
     const o = H.s.o, m = ltMode(o);
     H.s = {...Letters.init(), o, ph:"play", T:o.t, k:rnd() * 64};    // question keys never repeat across matches (stale phone presses are ignored)
     Letters.board();
     if (m.time){ H.s.m0 = srvNow(); H.s.mt = m.v * 60; H.priv.mtick = setInterval(Letters.matchTick, 500); }
     pushHost();
   },
-  savePriv(){ return {used:[...(H.priv.used || [])], ans:H.priv.ans, flash:H.priv.flash || ""}; },
+  // a mode with options needs enough reviewed questions (at least 30) before a match can start
+  canStart(o){ const n = ltStrict(o), B = bankNow("letters"); return !n || !B || ltEligible(B, n) >= 30; },
+  savePriv(){ return {used:[...(H.priv.used || [])], ans:H.priv.ans, flash:H.priv.flash || "", pend:H.priv.pend || null, pos:H.priv.pos || null, lastPos:H.priv.lastPos || {}}; },
   async restore(pv){
     if (H.s.ph !== "play") return;
     const B = await loadBank("letters"); if (!H) return;
     H.priv.B = B; H.priv.idx = {}; B.forEach((q, i) => (H.priv.idx[q[0]] = H.priv.idx[q[0]] || []).push(i));
     H.priv.used = new Set(pv.used || []); H.priv.ans = pv.ans || ""; H.priv.flash = pv.flash; H.priv.devSeen = seenGet("lm-lseen");
+    H.priv.pend = pv.pend || null; H.priv.pos = pv.pos || {3:[0,0,0], 4:[0,0,0,0]}; H.priv.lastPos = pv.lastPos || {};
+    if (!H.s.rp) H.s.rp = {g:LT_REPL, o:LT_REPL}; if (!H.s.plan) H.s.plan = [];
+    if (H.s.st === "read"){ clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.readTick, 250); }
     const m = ltMode(H.s.o);
     if (m.time && H.s.mt > 0){ if (!H.s.m0) H.s.m0 = srvNow() - (m.v * 60 - H.s.mt) * 1000; H.priv.mtick = setInterval(Letters.matchTick, 500); }
     if (H.s.st === "ask"){ if (!H.s.q0) H.s.q0 = srvNow() - (H.s.T - H.s.t) * 1000; H.priv.tick = setInterval(Letters.tick, 200); }
@@ -2543,26 +2586,89 @@ const Letters = {
   },
   /* question for a letter: requested level first, then the nearest levels; never one already used in this match;
      questions this device has not asked before come first */
-  pickQ(L){
-    const s = H.s, B = H.priv.B, list = (H.priv.idx[L] || []).filter(i => !H.priv.used.has(i));
+  /* the pair plan: question k of each team (green then orange) shares type and level */
+  planFor(k){
+    const s = H.s; if (!s.plan) s.plan = [];
+    if (!s.plan[k]){
+      const qt = String(s.o.qt || "d");
+      let t = qt === "3" ? 3 : qt === "4" ? 4 : 0;
+      if (qt === "mx"){
+        const b0 = k - k % 3;                                          // blocks of three pairs, one of each type, shuffled
+        if (!s.plan[b0] || s.plan[b0].blk === undefined){ const order = shuffle([0, 3, 4], rnd()); for (let j = 0; j < 3; j++) s.plan[b0 + j] = {...(s.plan[b0 + j] || {}), t:order[j], blk:b0}; }
+        t = s.plan[k].t;
+      }
+      const lv = s.o.lv === 3 ? [0, 1, 1, 2][Math.floor(Math.random() * 4)] : s.o.lv;
+      s.plan[k] = {...(s.plan[k] || {}), t, l:lv};
+    } else if (s.plan[k].l === undefined) s.plan[k].l = s.o.lv === 3 ? [0, 1, 1, 2][Math.floor(Math.random() * 4)] : s.o.lv;
+    return s.plan[k];
+  },
+  pickQ(L, n, lv, exact){
+    const s = H.s, B = H.priv.B, list = (H.priv.idx[L] || []).filter(i => !H.priv.used.has(i) && ltCan(B[i], n));
     if (!list.length) return -1;
-    let lv = s.o.lv; if (lv === 3) lv = [0, 1, 1, 2][Math.floor(Math.random() * 4)];
-    for (const l of [lv, lv + 1, lv - 1, lv + 2, lv - 2]){
+    for (const l of exact ? [lv] : [lv, lv + 1, lv - 1, lv + 2, lv - 2]){
       const pool = list.filter(i => B[i][1] === l); if (!pool.length) continue;
       const fresh = pool.filter(i => !H.priv.devSeen.has(hashStr(B[i][3])));
       const from = fresh.length ? fresh : pool; return from[Math.floor(Math.random() * from.length)];
     }
     return -1;
   },
+  /* the right option's place: the least used places so far in this match, never the same place twice in a row */
+  placeFor(n){
+    const P = H.priv.pos = H.priv.pos || {3:[0,0,0], 4:[0,0,0,0]}, cnt = P[n] || (P[n] = Array(n).fill(0));
+    const min = Math.min(...cnt); let c = range(n).filter(i => cnt[i] === min);
+    const last = (H.priv.lastPos || {})[n]; if (c.length > 1 && c.includes(last)) c = c.filter(i => i !== last);
+    const ci = c[Math.floor(Math.random() * c.length)]; cnt[ci]++; (H.priv.lastPos = H.priv.lastPos || {})[n] = ci; return ci;
+  },
+  /* letters that can still give a question of this pair's type (and locked level, once the pair has one) */
+  // the level is locked by the OTHER team's question of this pair (the first team may still replace freely)
+  lockedLv(pl){ return pl.lk !== undefined && pl.lkBy !== H.s.tn ? pl.lk : undefined; },
+  canAsk(cell){
+    const s = H.s, pl = Letters.planFor(ltPlayed(s.sc[s.tn])), lk = Letters.lockedLv(pl);
+    return Letters.pickQ(s.L[cell], pl.t, lk !== undefined ? lk : pl.l, lk !== undefined) >= 0;
+  },
   ask(cell, swap){
-    const s = H.s, L = s.L[cell], qi = Letters.pickQ(L);
-    if (qi < 0){ if (!swap){ const arr = s.b.split(""); arr[cell] = "x"; s.b = arr.join(""); s.cur = -1; s.st = "pick"; H.priv.flash = `لا توجد أسئلة متبقية لحرف ${L}، اختر حرفًا آخر.`; pushHost(); } return; }
+    const s = H.s, L = s.L[cell], pl = Letters.planFor(ltPlayed(s.sc[s.tn])), lk = Letters.lockedLv(pl);
+    // the first question of a pair fixes its level; the other team's question must have the same level
+    let qi = Letters.pickQ(L, pl.t, lk !== undefined ? lk : pl.l, lk !== undefined);
+    if (qi < 0 && lk !== undefined){
+      const anyFree = range(25).some(i => s.b[i] === "." && i !== cell && Letters.canAsk(i));
+      if (anyFree || swap){ H.priv.flash = `لا يوجد سؤال لحرف ${L} بنفس مستوى سؤال الفريق الآخر في هذه الجولة${swap ? "" : "، اختر حرفًا آخر"}.`; renderHost(); return false; }
+      qi = Letters.pickQ(L, pl.t, lk, false);                     // no letter left with that level: the nearest level
+    }
+    if (qi < 0){ if (!swap){ const arr = s.b.split(""); arr[cell] = "x"; s.b = arr.join(""); s.cur = -1; s.st = "pick"; H.priv.flash = `لا توجد أسئلة متبقية لحرف ${L} بهذا النمط، اختر حرفًا آخر.`; pushHost(); }
+      else { H.priv.flash = `لا يوجد سؤال بديل لحرف ${L} بهذا النمط.`; renderHost(); }
+      return false; }
     const q = H.priv.B[qi];
+    if (lk === undefined){ pl.lk = q[1]; pl.lkBy = s.tn; }
     H.priv.used.add(qi); seenAdd("lm-lseen", [hashStr(q[3])], 3000); H.priv.ans = q[4]; H.priv.flash = "";
-    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.a = ""; s.am = -1; s.by = ""; s.rq = ""; s.k++; s.st = "ask"; s.t = s.T; s.away = 0;
-    s.q0 = srvNow(); H.priv.showAns = false;
-    clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.tick, 200);
+    // options are prepared now but stay on the host until the answer time starts
+    if (pl.t){ const wrong = shuffle(q[5].slice(), rnd()).slice(0, pl.t - 1), ci = Letters.placeFor(pl.t), o = []; for (let i = 0, w = 0; i < pl.t; i++) o.push(i === ci ? q[4] : wrong[w++]); H.priv.pend = {o, ci}; }
+    else H.priv.pend = null;
+    s.cur = cell; s.lt = L; s.q = q[3]; s.ql = q[1]; s.pt = pl.t; s.op = null; s.ci = -1; s.a = ""; s.am = -1; s.by = ""; s.rq = ""; s.k++; s.st = "read"; s.t = s.T; s.away = 0;
+    s.q0 = 0; s.r0 = srvNow(); s.go = s.o.go === "man" ? 0 : +s.o.go || 0; H.priv.showAns = false;
+    clearInterval(H.priv.tick); H.priv.tick = setInterval(Letters.readTick, 250);
+    pushHost(); return true;
+  },
+  /* reading phase: nothing counts yet; with an automatic start, the answer time begins after the chosen delay */
+  readTick(){
+    if (!H || H.g !== "letters" || H.s.st !== "read"){ clearInterval(H && H.priv.tick); return; }
+    const s = H.s; if (!s.go){ return; }
+    const left = Math.max(0, Math.ceil((s.go * 1000 - (srvNow() - s.r0)) / 1000));
+    if (!left){ Letters.begin(); return; }
+    if (H.priv.readLeft !== left){ H.priv.readLeft = left; renderHost(); }
+  },
+  /* the answer time starts: the clock and the speed points start now, and the options reach every screen at once */
+  begin(){
+    const s = H.s; if (s.st !== "read") return;
+    clearInterval(H.priv.tick);
+    s.st = "ask"; s.q0 = srvNow(); s.t = s.T; s.op = s.pt && H.priv.pend ? H.priv.pend.o.slice() : null;
+    H.priv.tick = setInterval(Letters.tick, 200);
     pushHost();
+  },
+  /* replacing a question: reading phase only, the same team, the same letter and type; no attempt, no points */
+  replace(){
+    const s = H.s; if (s.st !== "read" || !s.rp || !(s.rp[s.tn] > 0)) return;
+    if (Letters.ask(s.cur, true)){ s.rp[s.tn]--; pushHost(); }
   },
   tick(){
     if (!H || H.g !== "letters" || H.s.st !== "ask"){ clearInterval(H && H.priv.tick); return; }
@@ -2593,7 +2699,7 @@ const Letters = {
     if (pts > 0){ team.p += pts; team.c++; team.ms += ms; team.best = team.best ? Math.min(team.best, ms) : ms; }
     else team.w++;
     const arr = s.b.split(""); arr[s.cur] = pts > 0 ? s.tn : "x"; s.b = arr.join("");
-    s.last = {tm:s.tn, ok:pts > 0, to:!!timeout, pts, ms}; s.a = H.priv.ans; s.st = "done"; s.t = timeout ? 0 : s.t;
+    s.last = {tm:s.tn, ok:pts > 0, to:!!timeout, pts, ms}; s.a = H.priv.ans; s.ci = s.pt && H.priv.pend ? H.priv.pend.ci : -1; s.st = "done"; s.t = timeout ? 0 : s.t;
     pushHost();
   },
   next(){
@@ -2606,7 +2712,7 @@ const Letters = {
     }
     if (end){ Letters.end(); return; }
     s.tn = g > o ? "o" : "g";       // the team with fewer questions plays next; green opens every pair
-    s.st = "pick"; s.cur = -1; s.q = ""; s.a = ""; s.lt = ""; s.am = -1; s.by = ""; s.rq = ""; s.last = null; s.t = s.T;
+    s.st = "pick"; s.cur = -1; s.q = ""; s.a = ""; s.lt = ""; s.am = -1; s.by = ""; s.rq = ""; s.last = null; s.t = s.T; s.op = null; s.ci = -1; s.pt = 0; H.priv.pend = null;
     if (!s.b.includes(".")) Letters.board();
     pushHost();
   },
@@ -2622,12 +2728,14 @@ const Letters = {
     const s = H.s;
     if (a === "start" || a === "match") Letters.start();
     else if (a === "cell"){ if (s.ph === "play" && s.st === "pick" && s.b[+el.dataset.cell] === ".") Letters.ask(+el.dataset.cell); }
-    else if (a === "rand"){ if (s.st !== "pick") return; const free = range(25).filter(i => s.b[i] === "."); if (free.length) Letters.ask(free[Math.floor(Math.random() * free.length)]); }
+    else if (a === "rand"){ if (s.st !== "pick") return; const all = range(25).filter(i => s.b[i] === "."), good = all.filter(i => Letters.canAsk(i)), free = good.length ? good : all; if (free.length) Letters.ask(free[Math.floor(Math.random() * free.length)]); }
+    else if (a === "begin") Letters.begin();
+    else if (a === "repl") Letters.replace();
     else if (a === "stop") Letters.stop();
     else if (a === "ok") Letters.finishQ(true);
     else if (a === "no") Letters.finishQ(false);
     else if (a === "next") Letters.next();
-    else if (a === "swap"){ if (s.st === "ask"){ s.away = 0; Letters.ask(s.cur, true); } }
+    else if (a === "swap"){ if (s.st === "ask" && s.away){ s.away = 0; Letters.ask(s.cur, true); } }   // only when the time ran out while the host was away
     else if (a === "tout"){ if (s.st === "ask" && s.away) Letters.finishQ(false, true); }
     else if (a === "ans"){ H.priv.showAns = !H.priv.showAns; renderHost(); }
   },
@@ -2649,26 +2757,46 @@ const Letters = {
     if (m.time) return s.over ? `<span class="chip warn">انتهى الوقت · تُستكمل الأسئلة لتتساوى الفرص</span>` : `<span class="clock ${mt <= 30 ? "warn" : ""}">${fmtT(mt)}</span>`;
     return `<span class="chip">السؤال ${Math.min(n + (s.st === "pick" ? 1 : s.st === "done" ? 0 : 1), m.v)} من ${m.v}</span>`;
   },
+  /* the options as everyone sees them: shown from the start of the answer time; the right one marked only after the result */
+  optsHTML(s){
+    if (!s.op || !s.op.length) return "";
+    const done = s.st === "done" && s.ci >= 0;
+    return `<ol class="lopts n${s.op.length}">${s.op.map((o, i) => `<li class="${done ? (i === s.ci ? "ok" : "off") : ""}"><span class="ol">${OPT_LBL[i]}</span><span class="ot">${esc(o)}</span>${done && i === s.ci ? `<span class="ock">✓</span>` : ""}</li>`).join("")}</ol>`;
+  },
   stage(s, host){
     const team = `<b class="t${s.tn}">الفريق ${TEAM[s.tn]}</b>`, T = s.T;
     if (s.st === "pick") return `<div class="stage"><p class="stage-h">دور ${team}</p><p class="muted">${host ? "يختار الفريق حرفًا من اللوحة، أو اضغط «حرف عشوائي»." : "يختار الفريق حرفًا، والمقدّم يفتحه."}</p>
       ${host && H.priv.flash ? `<p class="note">${esc(H.priv.flash)}</p>` : ""}${host ? `<div class="row"><button class="btn" data-h="rand">حرف عشوائي</button></div>` : ""}</div>`;
-    const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">حرف ${esc(s.lt)} · دور ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span></div><p class="qtext">${esc(s.q)}</p></div></div>`;
+    const kind = `<span class="chip qt">${LT_TYPES[s.pt || 0]}</span>`;
+    const head = `<div class="lettercard"><span class="L">${esc(s.lt)}</span><div class="stack" style="gap:6px"><div class="row"><span class="muted">حرف ${esc(s.lt)} · دور ${team}</span><span class="chip lv l${s.ql}">${LV_NAMES[s.ql]}</span>${kind}</div><p class="qtext">${esc(s.q)}</p></div></div>`;
+    const ansBtn = host ? `<button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(H.priv.ans)}` : "إظهار الإجابة لي"}</button>` : "";
+    if (s.st === "read"){
+      // reading: the host needs the start button first; nothing is timed yet
+      const left = s.go ? Math.max(0, Math.ceil((s.go * 1000 - (srvNow() - s.r0)) / 1000)) : 0;
+      const auto = s.go ? `<div class="prep"><span>${host ? "يبدأ وقت الإجابة تلقائيًا بعد" : "يبدأ وقت الإجابة بعد"}</span><b class="prep-n">${left}</b><span>ث</span><div class="tbar"><i style="width:${left / s.go * 100}%"></i></div></div>` : "";
+      const rp = s.rp ? s.rp[s.tn] : 0;
+      return `<div class="stage">${host ? `<button class="btn big beginbtn" data-h="begin">▶ ابدأ وقت الإجابة</button>${auto}` : ""}${head}
+        ${!host ? auto + `<p class="muted center">${s.pt ? "تظهر الخيارات عند بدء وقت الإجابة." : "استمعوا إلى السؤال؛ يبدأ الوقت عندما يبدؤه المقدّم."}</p>` : ""}
+        ${host ? `<p class="muted" style="margin:0">اقرأ السؤال${s.pt ? "، والخيارات تظهر للجميع عند البدء" : ""}. الوقت والنقاط لا يبدآن قبل الضغط.</p>
+        ${H.priv.flash ? `<p class="note">${esc(H.priv.flash)}</p>` : ""}
+        <div class="row"><button class="btn ghost sm" data-h="repl" ${rp > 0 ? "" : "disabled"}>استبدال السؤال (متبقٍ ${rp} من ${LT_REPL})</button>${ansBtn}</div>` : ""}</div>`;
+    }
     if (s.st === "ask"){
       const el = s.q0 ? srvNow() - s.q0 : (T - s.t) * 1000, now = speedPoints(Math.max(0, Math.min(el, T * 1000)), T);
       s = {...s, t:s.away ? 0 : Math.max(0, Math.ceil((T * 1000 - el) / 1000))};
-      return `<div class="stage">${head}<div class="qclock"><span class="timer ${s.t <= 5 ? "warn" : ""}">${s.t}</span><div class="tbar"><i style="width:${s.t / T * 100}%"></i></div>${host ? `<span class="chip">الإجابة الآن = ${now} نقطة</span>` : ""}</div>
-        ${s.rq ? `<div class="rqnote">✋ الفريق ${TEAM[s.tn]} يطلب الإجابة${host ? ` (${esc(s.rq)})` : ""}. الوقت لا يتوقف حتى ${host ? "تثبّته عند سماع الإجابة" : "يثبّته المقدّم عند سماع الإجابة"}.</div>` : ""}
-        ${s.away ? `<p class="note warn">انتهى وقت السؤال أثناء غياب المقدّم. ${host ? "اختر كيف يُحتسب:" : "بانتظار قرار المقدّم…"}</p>${host ? `<div class="row"><button class="btn bad" data-h="tout">احتسابه وقتًا منتهيًا (0 نقطة)</button><button class="btn ghost" data-h="swap">سؤال بديل لنفس الفريق</button></div>` : ""}`
-        : host ? `<button class="btn big stopbtn" data-h="stop">⏱ تثبيت وقت الإجابة</button><p class="muted" style="margin-top:-6px">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p>
-        <div class="row"><button class="btn ghost sm" data-h="ans">${H.priv.showAns ? `الإجابة: ${esc(H.priv.ans)}` : "إظهار الإجابة لي"}</button><button class="btn ghost sm" data-h="swap">تبديل السؤال</button></div>` : ""}</div>`;
+      const clock = `<div class="qclock"><span class="timer ${s.t <= 5 ? "warn" : ""}">${s.t}</span><div class="tbar"><i style="width:${s.t / T * 100}%"></i></div>${host ? `<span class="chip">الإجابة الآن = ${now} نقطة</span>` : ""}</div>`;
+      const rq = s.rq ? `<div class="rqnote">✋ الفريق ${TEAM[s.tn]} يطلب الإجابة${host ? ` (${esc(s.rq)})` : ""}. الوقت لا يتوقف حتى ${host ? "تثبّته عند سماع الإجابة" : "يثبّته المقدّم عند سماع الإجابة"}.</div>` : "";
+      if (s.away) return `<div class="stage">${clock}${head}${Letters.optsHTML(s)}<p class="note warn">انتهى وقت السؤال أثناء غياب المقدّم. ${host ? "اختر كيف يُحتسب:" : "بانتظار قرار المقدّم…"}</p>${host ? `<div class="row"><button class="btn bad" data-h="tout">احتسابه وقتًا منتهيًا (0 نقطة)</button><button class="btn ghost" data-h="swap">سؤال بديل لنفس الفريق (بسبب الغياب)</button></div>` : ""}</div>`;
+      // answering: the host needs the clock and the lock button first
+      return `<div class="stage">${clock}${host ? `<button class="btn big stopbtn" data-h="stop">⏱ تثبيت وقت الإجابة</button>` : ""}${rq}${head}${Letters.optsHTML(s)}
+        ${host ? `<p class="muted" style="margin:0">اضغط لحظة سماع الإجابة من الفريق، ثم احكم عليها.</p><div class="row">${ansBtn}</div>` : ""}</div>`;
     }
-    if (s.st === "judge") return `<div class="stage">${head}<div class="judge"><p>وقت الإجابة المثبّت <b>${fmtS(s.am)} ث</b></p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة</p></div>
-      ${host ? `<p class="answer">الإجابة: ${esc(H.priv.ans)}</p><div class="row"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}</div>`;
+    if (s.st === "judge") return `<div class="stage"><div class="judge"><p>وقت الإجابة المثبّت <b>${fmtS(s.am)} ث</b></p><p class="muted">إن كانت صحيحة: <b class="pts-sm">${speedPoints(s.am, T)}</b> نقطة · مدة التحكيم لا تُحتسب</p></div>
+      ${host ? `<div class="row judgebtns"><button class="btn g" data-h="ok">✓ صحيحة</button><button class="btn bad" data-h="no">✗ خاطئة</button></div><p class="answer">الإجابة: ${esc(H.priv.ans)}${s.pt && H.priv.pend ? ` (الخيار ${OPT_LBL[H.priv.pend.ci]})` : ""}</p>` : `<p class="muted center">بانتظار حكم المقدّم…</p>`}${head}${Letters.optsHTML(s)}</div>`;
     if (s.st === "done"){
       const l = s.last || {}, msg = l.ok ? `إجابة صحيحة! <b>+${l.pts}</b> للفريق ${TEAM[l.tm]}` : l.to ? `انتهى الوقت · 0 نقطة` : `إجابة خاطئة · 0 نقطة`;
-      return `<div class="stage">${head}<div class="verdict ${l.ok ? "ok " + l.tm : "no"}"><span>${msg}</span>${l.ok ? `<small>في ${fmtS(l.ms)} ث</small>` : ""}</div><p class="answer">الإجابة: ${esc(s.a)}</p>
-        ${host ? `<button class="btn big" data-h="next">التالي ←</button>` : ""}</div>`;
+      return `<div class="stage"><div class="verdict ${l.ok ? "ok " + l.tm : "no"}"><span>${msg}</span>${l.ok ? `<small>في ${fmtS(l.ms)} ث</small>` : ""}</div><p class="answer big">الإجابة الصحيحة: ${esc(s.a)}</p>
+        ${host ? `<button class="btn big" data-h="next">التالي ←</button>` : ""}${head}${Letters.optsHTML(s)}</div>`;
     }
     return "";
   },
@@ -2689,7 +2817,9 @@ const Letters = {
     if (s.ph === "lobby"){
       if (!bankNow("letters") && !H.priv.bankAsked){ H.priv.bankAsked = true; loadBank("letters").then(() => { if (H && H.g === "letters") renderHost(); }); }
       const B = bankNow("letters");
-      setMain(lobbyHTML(players, `<p class="muted">${B ? `${B.length.toLocaleString("ar")} سؤال على ${ALPHA.length} حرفًا. ` : ""}الفوز بالنقاط فقط: كل فريق يحصل على نفس عدد الأسئلة، والإجابة الصحيحة الأسرع تأخذ نقاطًا أكثر (من 100 إلى 30).</p>`, "ابدأ المباراة"));
+      const cnt = B ? `${B.length.toLocaleString("ar")} سؤال على ${ALPHA.length} حرفًا (${ltEligible(B, 3).toLocaleString("ar")} مؤهلة لثلاثة خيارات، و${ltEligible(B, 4).toLocaleString("ar")} لأربعة). ` : "";
+      const few = B && !Letters.canStart(s.o) ? `<p class="note warn">لا توجد أسئلة كافية مراجَعة لهذا النمط بعد. اختر «إجابة مباشرة».</p>` : "";
+      setMain(lobbyHTML(players, `${few}<p class="muted">${cnt}الفوز بالنقاط فقط: كل فريق يحصل على نفس عدد الأسئلة. يقرأ المقدّم السؤال أولًا، ثم يبدأ وقت الإجابة، والإجابة الصحيحة الأسرع تأخذ نقاطًا أكثر (من 100 إلى 30).</p>`, "ابدأ المباراة"));
       return;
     }
     if (s.ph === "end"){ setMain(Letters.endHTML(s, true)); return; }

@@ -1,0 +1,273 @@
+{
+ "total": 1147,
+ "direct": 1147,
+ "three": 607,
+ "four": 392,
+ "not_in_option_modes": 540,
+ "reasons": {
+  "no reliable options found by the writer": 336,
+  "options dropped in review / checks (fewer than 2 left)": 204,
+  "only 2 options passed (3-option mode only)": 215
+ },
+ "proposed_options": 1833,
+ "kept_after_review": 1812,
+ "dropped_by_checks": 7,
+ "auto_drops": [
+  [
+   146,
+   "ثلثان",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   152,
+   "ثلاثمئة",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   181,
+   "جدة",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   299,
+   "دمع",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   576,
+   "ضب",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   577,
+   "ضبع",
+   "contains the answer (or is part of it)"
+  ],
+  [
+   862,
+   "كوكبة",
+   "contains the answer (or is part of it)"
+  ]
+ ],
+ "review_drop_reasons": [
+  [
+   "not the same kind",
+   3
+  ],
+  [
+   "different kind",
+   3
+  ],
+  [
+   "arguably also valid",
+   2
+  ],
+  [
+   "repeats the day named in the question; obvious joke",
+   1
+  ],
+  [
+   "also a domestic animal that gives us milk; partly fits the c",
+   1
+  ],
+  [
+   "not the same kind (an educator, not a student); near-synonym",
+   1
+  ],
+  [
+   "not an established Arabic name (Muay Thai / kickboxing), and",
+   1
+  ],
+  [
+   "partly fits the clue",
+   1
+  ],
+  [
+   "named in the question itself; obvious joke",
+   1
+  ],
+  [
+   "forbidden in Islam; an obvious/inappropriate joke for a sacr",
+   1
+  ],
+  [
+   "mallow has pinkish-purple flowers; partly fits 'بنفسجي الزهر",
+   1
+  ],
+  [
+   "a joint, not an organ; not the same kind, reads as an obviou",
+   1
+  ],
+  [
+   "head band worn around the head; the عقال is sometimes descri",
+   1
+  ],
+  [
+   "ambiguous name",
+   1
+  ],
+  [
+   "part of the correct answer (computer keyboard)",
+   1
+  ]
+ ],
+ "per_letter": {
+  "ا": [
+   42,
+   36,
+   33
+  ],
+  "ب": [
+   41,
+   40,
+   36
+  ],
+  "ت": [
+   41,
+   29,
+   16
+  ],
+  "ث": [
+   42,
+   11,
+   5
+  ],
+  "ج": [
+   42,
+   22,
+   14
+  ],
+  "ح": [
+   42,
+   22,
+   9
+  ],
+  "خ": [
+   42,
+   23,
+   11
+  ],
+  "د": [
+   42,
+   19,
+   11
+  ],
+  "ذ": [
+   41,
+   10,
+   3
+  ],
+  "ر": [
+   41,
+   30,
+   24
+  ],
+  "ز": [
+   41,
+   21,
+   13
+  ],
+  "س": [
+   39,
+   30,
+   25
+  ],
+  "ش": [
+   41,
+   17,
+   8
+  ],
+  "ص": [
+   38,
+   8,
+   3
+  ],
+  "ض": [
+   42,
+   21,
+   10
+  ],
+  "ط": [
+   41,
+   28,
+   14
+  ],
+  "ظ": [
+   33,
+   7,
+   0
+  ],
+  "ع": [
+   42,
+   20,
+   13
+  ],
+  "غ": [
+   40,
+   7,
+   5
+  ],
+  "ف": [
+   42,
+   30,
+   20
+  ],
+  "ق": [
+   42,
+   32,
+   23
+  ],
+  "ك": [
+   41,
+   34,
+   30
+  ],
+  "ل": [
+   41,
+   19,
+   12
+  ],
+  "م": [
+   41,
+   29,
+   23
+  ],
+  "ن": [
+   41,
+   19,
+   12
+  ],
+  "ه": [
+   42,
+   14,
+   5
+  ],
+  "و": [
+   42,
+   16,
+   9
+  ],
+  "ي": [
+   42,
+   13,
+   5
+  ]
+ },
+ "per_level": {
+  "0": [
+   433,
+   232,
+   155
+  ],
+  "1": [
+   443,
+   231,
+   158
+  ],
+  "2": [
+   271,
+   144,
+   79
+  ]
+ }
+}

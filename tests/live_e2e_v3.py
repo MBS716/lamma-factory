@@ -115,6 +115,42 @@ async def wheel_v3(host, ios, android):
     await host2.click('#endBtn'); await host2.wait_for_timeout(1500)
     return host2
 
+async def ask_letter(host):
+    """open a letter question; from v3.3 a question opens in a reading phase and the host starts the answer time"""
+    await host.click('[data-h=rand]'); await host.wait_for_function('["read", "ask"].includes(H.s.st)', timeout=20000)
+    if await host.evaluate('H.s.st') == 'read': await host.click('[data-h=begin]')
+    await host.wait_for_function('H.s.st === "ask"', timeout=20000)
+
+async def letters_v33(host, ios, android):
+    """v3.3 letters on real Firebase: reading phase, automatic start, 4 options reaching both phones at the start,
+    the right option hidden from what phones can read until the result, replacing a question"""
+    code = await start(host, 'letters', {'m': 'q20', 't': 30, 'qt': '4', 'go': 10})
+    await join_typed(ios, code, 'آيفون', 'g'); await join_typed(android, code, 'أندرويد', 'o'); await players(host, 2)
+    await host.click('[data-h=start]'); await host.wait_for_function('H.s.st === "pick"', timeout=20000)
+    await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "read"', timeout=20000)
+    s = await host.evaluate('H.s')
+    check(s['q0'] == 0 and s['op'] is None and s['pt'] == 4, 'letters v3.3: reading phase, no clock, options kept on the host')
+    raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(x => JSON.stringify(x.val()))')
+    pend = await host.evaluate('H.priv.pend'); ans = await host.evaluate('H.priv.ans')
+    check(all(o not in raw for o in pend['o'] if o != ans), 'letters v3.3: while reading, the options are not in the database rooms')
+    q0 = s['q']; await host.click('[data-h=repl]'); await host.wait_for_timeout(1500); s = await host.evaluate('H.s')
+    check(s['q'] != q0 and s['st'] == 'read' and s['rp'][s['tn']] == 1, 'letters v3.3: question replaced while reading (1 replacement left)')
+    ok = True
+    try: await host.wait_for_function('H.s.st === "ask"', timeout=16000)
+    except Exception: ok = False
+    s = await host.evaluate('H.s'); check(ok and 9000 <= s['q0'] - s['r0'] <= 14000, f'letters v3.3: the answer time started by itself after 10 s ({s["q0"] - s["r0"]} ms)')
+    for ph in (ios, android): await ph.wait_for_selector('.lopts li', timeout=15000)
+    check(await ios.locator('.lopts li').count() == 4 and await android.locator('.lopts li').count() == 4, 'letters v3.3: the 4 options appear on iPhone and Android at the start')
+    raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(x => JSON.stringify(x.val()))')
+    ci = (await host.evaluate('H.priv.pend'))['ci']
+    check(('\\"ci\\":%d' % ci) not in raw and await ios.locator('.lopts li.ok').count() == 0, 'letters v3.3: which option is right is not in the database before the result')
+    await ios.screenshot(path=f'{OUT}/letters33_iphone_options.png', full_page=True)
+    await host.click('[data-h=stop]'); await host.wait_for_function('H.s.st === "judge"', timeout=15000); await host.click('[data-h=ok]')
+    for ph in (ios, android): await ph.wait_for_selector('.lopts li.ok', timeout=15000)
+    check(True, 'letters v3.3: after the result the right option is marked on both phones')
+    await android.screenshot(path=f'{OUT}/letters33_android_result.png', full_page=True)
+    await host.click('#endBtn'); await host.wait_for_timeout(1500)
+
 async def sessions_real(host, ios, android, newctx):
     """Seats on real Firebase: a phone reloads / closes its browser and comes back to the same seat; another device cannot
     take a used name; the host closes its tab and comes back to the same room."""
@@ -155,7 +191,7 @@ async def sessions_real(host, ios, android, newctx):
     err = await other.inner_text('#pErr') if await other.locator('#pErr').count() else ''; n = await names()
     check('مستخدم' in err and n == sorted(['آيفون', 'أندرويد']), f'sessions: another device cannot take a name already in the game ({err[:40]})')
     await other.close()
-    await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "ask"', timeout=20000)
+    await ask_letter(host)
     # a new version appears during the round: nothing reloads, the round and its data stay, a notice is shown
     before = await host.evaluate('JSON.stringify([H.code, H.s.q, H.s.sc])')
     for pg in (host, ios): await pg.route('**/version.json*', lambda r: r.fulfill(body='{"b":"zz-newer","v":"next"}', content_type='application/json'))
@@ -279,7 +315,7 @@ async def run(pw):
 
         # ---------------- letters: fairness, scoring, equal turns, end screen
         await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play" && H.s.st === "pick"', timeout=30000)
-        await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "ask"', timeout=15000)
+        await ask_letter(host)
         await ios.wait_for_selector('[data-am]:not([disabled])', timeout=15000); await ios.click('[data-am]')
         await host.wait_for_function('!!H.s.rq', timeout=15000)
         check(await host.evaluate('H.s.st') == 'ask', 'letters: the team pressing on its phone does NOT stop the clock')
@@ -292,7 +328,7 @@ async def run(pw):
         for i in range(40):
             if await host.locator('.victory').count(): break
             tn = await host.evaluate('H.s.tn'); ph = ios if tn == 'g' else android
-            await host.click('[data-h=rand]'); await host.wait_for_function('H.s.st === "ask"', timeout=15000)
+            await ask_letter(host)
             q = await host.evaluate('H.s.q'); q_seen.add(q)
             if i == 0:
                 await ph.wait_for_timeout(800); check(await visible(ph, q), 'letters: the question is on the phone screen of the team on turn')
@@ -308,6 +344,9 @@ async def run(pw):
         check(True, 'letters: winner screen on host, iPhone and Android')
         await ios.screenshot(path=f'{OUT}/letters_iphone_victory.png', full_page=True)
 
+        if await host.evaluate('typeof Letters !== "undefined" && typeof Letters.begin === "function"'):
+            await letters_v33(host, ios, android)
+            for pg in (ios, android): await pg.goto(URL, wait_until='load')
         # ---------------- player and host seats (when the site has them)
         if await host.evaluate('typeof seatGet === "function"'):
             async def newctx():
