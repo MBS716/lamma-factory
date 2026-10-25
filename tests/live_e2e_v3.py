@@ -178,12 +178,14 @@ async def sessions_real(host, ios, android, newctx):
     except Exception: ok = False
     check(ok, 'sessions: phones carry on without re-joining')
     if os.environ.get('RULES_ON'):      # with the final rules on (emulator, or the live site after publishing): attacks from a real phone page
+        R['_attack'] = True
         res = await android.evaluate('''(async () => { const r = firebase.database().ref("rooms/" + ROOM_PREFIX + P.code), TS = firebase.database.ServerValue.TIMESTAMP, out = [];
           try { await r.child("fakehostxx01").set({j: JSON.stringify({r:"h", v:APP_V, g:"letters", c:0, s:{ph:"play", sc:[999, 0]}}), t:TS, u:AUTH_UID, c:TS, h:true}); out.push("fake host accepted"); } catch(e){ out.push("fake host refused"); }
           const hid = findHost().peer;
           try { await r.child(hid).update({j:"{}"}); out.push("host seat changed"); } catch(e){ out.push("host seat protected"); }
           try { await firebase.database().ref("games/" + ROOM_PREFIX + P.code).set({g:"letters", v:3, s:"{}", at:TS}); out.push("saved match changed"); } catch(e){ out.push("saved match protected"); }
           return out; })()''')
+        await android.wait_for_timeout(1500); R['_attack'] = False
         check(res == ['fake host refused', 'host seat protected', 'saved match protected'], f'rules: from a player phone, faking the host, changing the host seat (scores) and the saved match are all refused {res}')
     if os.environ.get('EMU'):           # emulator only: the room lock over time (the emulator lets the test age a lock)
         import urllib.request
@@ -215,6 +217,14 @@ SIZES = '''setInterval(() => { try { if (typeof H !== "undefined" && H && H.code
             Math.max(o[2], MOD[H.g].savePriv ? JSON.stringify(MOD[H.g].savePriv()).length : 0)];
   localStorage.setItem("__sz", JSON.stringify(m)); } } catch(e){} }, 700);'''
 
+def watch_denied(ctx, name):
+    if not hasattr(ctx, 'on'): return
+    def h(m):
+        t = m.text
+        if 'permission_denied' in t.lower() or 'permission denied' in t.lower():
+            (R.setdefault('denied_attack', []) if R.get('_attack') else R.setdefault('denied', [])).append(f'{name}: {t[:200]}')
+    ctx.on('console', h)
+
 async def run(pw):
     if os.environ.get('FAKEFB'):     # local dry run: one Chromium context shared by all pages so the in-browser Firebase stand-in can relay
         cb = wb = await pw.chromium.launch(); shared = await cb.new_context(has_touch=True); fake = open(os.environ['FAKEFB']).read()
@@ -240,10 +250,11 @@ async def run(pw):
         cb, wb = await pw.chromium.launch(), await pw.webkit.launch()
     hc = await cb.new_context(viewport={'width': 1366, 'height': 900})
     if hasattr(hc, 'add_init_script'): await hc.add_init_script(SIZES); R['sizes'] = {}
-    host = await hc.new_page()
+    host = await hc.new_page(); watch_denied(hc, 'host')
     ios = await (await wb.new_context(**pw.devices['iPhone 13'])).new_page()
     android = await (await cb.new_context(**pw.devices['Pixel 7'])).new_page()
     for pg, n in ((host, 'host'), (ios, 'iPhone/WebKit'), (android, 'Android/Chromium')): pg.on('pageerror', lambda e, n=n: R['errors'].append(f'{n}: {e}'))
+    watch_denied(ios.context, 'iPhone'); watch_denied(android.context, 'Android')
     try:
         # ---------------- joining: typed code (iPhone), invite link (Android), QR content, wrong code, public-site phone
         code = await start(host, 'letters', {'m': 'q20', 't': 30})
@@ -299,7 +310,9 @@ async def run(pw):
 
         # ---------------- player and host seats (when the site has them)
         if await host.evaluate('typeof seatGet === "function"'):
-            async def newctx(): return await cb.new_context(viewport=pw.devices['Pixel 7']['viewport']) if os.environ.get('FAKEFB') else await cb.new_context(**pw.devices['Pixel 7'])
+            async def newctx():
+                c = await cb.new_context(viewport=pw.devices['Pixel 7']['viewport']) if os.environ.get('FAKEFB') else await cb.new_context(**pw.devices['Pixel 7'])
+                watch_denied(c, 'third device'); return c
             host, android = await sessions_real(host, ios, android, newctx)
             for pg in (ios, android): await pg.goto(URL, wait_until='load')
         # ---------------- wheel (v3 with cards when the site has it, otherwise the older wheel)
@@ -407,6 +420,8 @@ async def run(pw):
             check(len(sz) >= 5 and big[0] <= 12000 and big[1] <= 20000 and big[2] <= 120000,
                   f'sizes: the largest host seat {big[0]} (limit 12000), saved match {big[1]} (limit 20000), hidden data {big[2]} (limit 120000), over {len(sz)} games')
           except Exception as e: check(False, f'sizes could not be read: {e}')
+        if os.environ.get('AUTH_ON') or os.environ.get('RULES_ON'):
+            check(not R.get('denied'), f'no "permission denied" from the database during normal play ({len(R.get("denied", []))}: {R.get("denied", [])[:3]})')
         R['not_tested'] += ['real phones on mobile networks (only browser engines on GitHub servers)', 'in-app browsers (WhatsApp/Instagram/camera QR)', 'scanning the QR with a camera (the QR content is checked instead)']
     except Exception:
         R['exception'] = traceback.format_exc()[-2000:]
