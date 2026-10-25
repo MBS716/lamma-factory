@@ -1,0 +1,6 @@
+checked (UTC): 2026-10-25 16:14
+token LAMMA_DEPLOY_TOKEN: set
+  GitHub API for MBS716/lamma: HTTP 401  (200 = valid and can see the repository, 401 = invalid / expired / revoked, 403 or 404 = no access to this repository)
+  expiry date reported by GitHub: not reported (classic token, or the token is not valid)
+  git read with the token: exit 128  (0 = works)
+deploy key LAMMA_DEPLOY_KEY: not set
