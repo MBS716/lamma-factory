@@ -245,7 +245,7 @@ async def sessions_real(host, ios, android, newctx):
     room = await host.evaluate('ROOM_PREFIX + H.code')
     if AUTH:      # end the match while its state is being written to the database (the save starts 1.5 s after a change)
         await host.evaluate('(() => { H.s.k = (H.s.k || 0) + 1; pushHost(); })()'); await host.wait_for_timeout(1600)
-    await host.click('#endBtn'); await host.click('#endBtn') if await host.is_visible('#endBtn') else None; await host.wait_for_timeout(1500)
+    await host.evaluate('(() => { const b = document.querySelector("#endBtn"); b.click(); b.click(); })()'); await host.wait_for_timeout(1500)   # a double tap on «إنهاء»
     ok = True
     try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("انتهت")', timeout=30000)
     except Exception: ok = False
