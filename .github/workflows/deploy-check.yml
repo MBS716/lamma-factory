@@ -1,5 +1,4 @@
-# Checks whether the deploy credentials still work, WITHOUT printing them. Only HTTP status codes, exit codes and the
-# expiry date GitHub reports are recorded. Run it by changing .github/deploy-check-request (or from the Actions tab).
+# Checks whether the deploy key still works, WITHOUT printing them. Only exit codes are recorded. Run it by changing .github/deploy-check-request (or from the Actions tab).
 name: deploy-check
 on:
   push:
@@ -14,28 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: check (no secret is ever printed)
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", K: "${{ secrets.LAMMA_DEPLOY_KEY }}"}
+        env: {K: "${{ secrets.LAMMA_DEPLOY_KEY }}"}
         run: |
           set +e
-          # masking first, OUTSIDE the report: the report file only ever gets status codes and dates
-          if [ -n "$T" ]; then echo "::add-mask::$T"; AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"; echo "::add-mask::$AUTH"; fi
           mkdir -p reports/deploy-check; R=reports/deploy-check/report.txt
           {
           echo "checked (UTC): $(date -u '+%Y-%m-%d %H:%M')"
-          if [ -n "$T" ]; then
-            code=$(curl -s -o /dev/null -D "$RUNNER_TEMP/h" -w "%{http_code}" -H "Authorization: Bearer $T" https://api.github.com/repos/MBS716/lamma)
-            exp=$(grep -i '^github-authentication-token-expiration:' "$RUNNER_TEMP/h" | cut -d' ' -f2- | tr -d '\r')
-            echo "token LAMMA_DEPLOY_TOKEN: set"
-            echo "  GitHub API for MBS716/lamma: HTTP $code  (200 = valid and can see the repository, 401 = invalid / expired / revoked, 403 or 404 = no access to this repository)"
-            echo "  expiry date reported by GitHub: ${exp:-not reported (classic token, or the token is not valid)}"
-            git -c "http.https://github.com/.extraheader=$AUTH" ls-remote https://github.com/MBS716/lamma.git HEAD > /dev/null 2>&1; echo "  git read with the token: exit $?  (0 = works)"
-            rm -f "$RUNNER_TEMP/h"
-          else echo "token LAMMA_DEPLOY_TOKEN: not set"; fi
+          echo "old token: no longer used by any workflow"
           if [ -n "$K" ]; then
             umask 077; KF="$RUNNER_TEMP/k"; printf '%s\n' "$K" > "$KF"; KH="$RUNNER_TEMP/kh"
             echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$KH"
             GIT_SSH_COMMAND="ssh -i $KF -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$KH" git ls-remote git@github.com:MBS716/lamma.git HEAD > /dev/null 2>&1; r=$?
             echo "deploy key LAMMA_DEPLOY_KEY: set; git read over SSH: exit $r  (0 = the key is accepted for MBS716/lamma)"
+            GIT_SSH_COMMAND="ssh -i $KF -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$KH" git push --dry-run git@github.com:MBS716/lamma.git "HEAD:refs/heads/deploy-key-check" > /dev/null 2>&1; w=$?
+            echo "  write access (dry run, nothing is sent): exit $w  (0 = the key can upload; a read-only key fails here)"
+            ssh -i "$KF" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$KH" -T git@github.com > "$RUNNER_TEMP/who" 2>&1; grep -q "MBS716/lamma" "$RUNNER_TEMP/who" && echo "  the key belongs to MBS716/lamma only (deploy key): yes" || echo "  the key belongs to MBS716/lamma only (deploy key): NO"; rm -f "$RUNNER_TEMP/who"
             rm -f "$KF"
           else echo "deploy key LAMMA_DEPLOY_KEY: not set"; fi
           } > "$R" 2>/dev/null

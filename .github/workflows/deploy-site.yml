@@ -8,7 +8,10 @@
 #   anything else  nothing is done
 #
 # Security rules for this file:
-#   * the token is only ever passed as an HTTP header via git -c; it is never part of a URL, a file or a command echo
+#   * the only credential is the deploy key LAMMA_DEPLOY_KEY (SSH, write access to MBS716/lamma only); the old token is not used
+#   * the key goes to a private temporary file (never echoed, never in a URL or a command line) and is deleted in every case
+#   * a branch upload only happens when site/ is exactly the build that passed the tests (.github/tested-build)
+#   * no force push and no history rewriting anywhere: an existing branch gets a new commit on top
 #   * no shell tracing (set -x), no printing of git output that could contain credentials
 #   * the cloned lamma/ folder is deleted before anything is committed back to this repository
 #   * every commit back to this repository is scanned for credential-looking text first
@@ -35,6 +38,11 @@ jobs:
           if [ "$m" = branch ] && [ "$b" = main ]; then m=none; fi
           [ "$m" = main-approved ] && b=main
           echo "mode=$m" >> "$GITHUB_OUTPUT"; echo "branch=$b" >> "$GITHUB_OUTPUT"; echo "mode: $m, branch: $b"
+      - name: the build to upload is the tested one
+        if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
+        run: |
+          want=$(tr -d ' \r\n' < .github/tested-build); got=$(python3 -c "import json;print(json.load(open('site/version.json'))['b'])")
+          echo "tested build: $want, build in site/: $got"; [ -n "$want" ] && [ "$want" = "$got" ] || { echo "site/ is not the tested build: not uploading"; exit 1; }
       - name: check the site files
         run: |
           test -f site/index.html || { echo "site/index.html missing"; exit 1; }
@@ -73,10 +81,9 @@ jobs:
           rm -rf work check
       - name: upload to MBS716/lamma
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
-        env: {T: "${{ secrets.LAMMA_DEPLOY_TOKEN }}", K: "${{ secrets.LAMMA_DEPLOY_KEY }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
+        env: {K: "${{ secrets.LAMMA_DEPLOY_KEY }}", MODE: "${{ steps.mode.outputs.mode }}", B: "${{ steps.mode.outputs.branch }}"}
         run: |
-          # Credentials: a deploy key (SSH, write access to MBS716/lamma only) is preferred; the older token is the fallback.
-          # Neither is ever printed: no shell tracing, git output discarded, plain progress messages only (kept in reports/).
+          # Credential: the deploy key only (SSH, write access to MBS716/lamma only). It is never printed: no shell tracing, git output discarded, plain progress messages only (kept in reports/).
           mkdir -p reports/site-test; ST="$PWD/reports/site-test/upload-steps-$B.txt"; : > "$ST"
           say(){ echo "$1"; echo "$(date -u +%H:%M:%S) $1" >> "$ST"; }
           if [ -n "$K" ]; then
@@ -85,11 +92,7 @@ jobs:
             echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$KH"
             export GIT_SSH_COMMAND="ssh -i $KF -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$KH"
             URL="git@github.com:MBS716/lamma.git"; g() { git "$@" > /dev/null 2>&1; }; say "using the deploy key"
-          elif [ -n "$T" ]; then
-            AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$T" | base64 -w0)"
-            echo "::add-mask::$AUTH"
-            URL="https://github.com/MBS716/lamma.git"; g() { git -c "http.https://github.com/.extraheader=$AUTH" "$@" > /dev/null 2>&1; }; say "using the token"
-          else say "no deploy key and no token configured"; exit 1; fi
+          else say "the deploy key LAMMA_DEPLOY_KEY is not configured: nothing uploaded"; exit 1; fi
           g clone -q "$URL" lamma || { say "clone failed (credential invalid, expired or without access to MBS716/lamma)"; rm -f "${KF:-/nonexistent}"; exit 1; }
           say "cloned MBS716/lamma"; cd lamma
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
@@ -112,10 +115,14 @@ jobs:
           # read the branch back (public repo, no token) and compare it with site/
           b="$B"
           git clone -q --depth 1 -b "$b" https://github.com/MBS716/lamma.git readback
+          (cd site && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/want.sha"; (cd readback && find . -path ./.git -prune -o -type f -print0 | sort -z | xargs -0 sha256sum) > "$RUNNER_TEMP/got.sha"
           mkdir -p reports/site-test
           { echo "branch: $b"; echo "commit: $(git -C readback rev-parse HEAD)"; echo "date (UTC): $(date -u '+%Y-%m-%d %H:%M')"; cat backup.txt 2>/dev/null || true; echo "index.html: $(md5sum readback/index.html | cut -c1-32) (expected $(md5sum site/index.html | cut -c1-32))";
-            echo "spot files: $(find readback/spot -type f | wc -l) (expected $(find site/spot -type f | wc -l))"; diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
-          diff -rq --exclude=.git site readback > /dev/null
+            echo "spot files: $(find readback/spot -type f | wc -l) (expected $(find site/spot -type f | wc -l))"; echo "build: $(python3 -c "import json;print(json.load(open('readback/version.json'))['b'])") (tested $(tr -d ' \r\n' < .github/tested-build))";
+            echo "files: $(wc -l < "$RUNNER_TEMP/got.sha"), sha256 of every file identical to the tested build: $(cmp -s "$RUNNER_TEMP/want.sha" "$RUNNER_TEMP/got.sha" && echo yes || echo NO)";
+            echo "main untouched: $(git ls-remote https://github.com/MBS716/lamma.git refs/heads/main | cut -c1-12)";
+            diff -rq --exclude=.git site readback && echo "files identical to site/: yes" || echo "files identical to site/: NO"; } | tee reports/site-test/upload-$b.txt
+          diff -rq --exclude=.git site readback > /dev/null && cmp -s "$RUNNER_TEMP/want.sha" "$RUNNER_TEMP/got.sha"
       - uses: actions/setup-python@v5
         if: steps.mode.outputs.mode == 'branch' || steps.mode.outputs.mode == 'main-approved'
         with: {python-version: "3.11"}
@@ -124,7 +131,7 @@ jobs:
         run: |
           pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
-          python tests/live_e2e_v3.py http://localhost:8799/ reports/site-test/branch3-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v3.py http://localhost:8799/ reports/site-test/branch3-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
           python tests/seo_check.py http://localhost:8799/ reports/site-test/branch-seo https://mbs716.github.io/lamma/
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
@@ -157,6 +164,6 @@ jobs:
           rm -rf lamma readback
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
           git add reports/site-test 2>/dev/null || exit 0
-          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit: credential-like text found"; exit 1; fi
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION|BEGIN OPENSSH|PRIVATE KEY'; then echo "refusing to commit: credential-like text found"; exit 1; fi
           git commit -q -m "live site test results" || exit 0
           for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && break; sleep 10; done
