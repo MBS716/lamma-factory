@@ -242,11 +242,22 @@ async def sessions_real(host, ios, android, newctx):
         await host.evaluate('refreshLock(true)'); await host.wait_for_timeout(2000)
         check(not await host.is_visible('#lockBar'), 'rules: lock back with this host: the notice goes away')
         await host.wait_for_timeout(1500); R['_attack'] = False
-    await host.click('#endBtn'); await host.wait_for_timeout(1500)
+    room = await host.evaluate('ROOM_PREFIX + H.code')
+    if AUTH:      # end the match while its state is being written to the database (the save starts 1.5 s after a change)
+        await host.evaluate('(() => { H.s.k = (H.s.k || 0) + 1; pushHost(); })()'); await host.wait_for_timeout(1600)
+    await host.click('#endBtn'); await host.click('#endBtn') if await host.is_visible('#endBtn') else None; await host.wait_for_timeout(1500)
     ok = True
     try: await ios.wait_for_function('document.querySelector("#playerMain").innerText.includes("انتهت")', timeout=30000)
     except Exception: ok = False
     check(ok, 'sessions: host ends the game, phones are told')
+    if AUTH:      # nothing of the finished match stays in the database (the saved copies are only readable with the room lock: take it, read, give it back)
+        await host.wait_for_timeout(4000)
+        left = await host.evaluate('''(async room => { const db = firebase.database(), TS = firebase.database.ServerValue.TIMESTAMP;
+          if ((await db.ref("hosts/" + room).once("value")).val()) return ["room lock left"];
+          await db.ref("hosts/" + room).set({u:AUTH_UID, g:"letters", t:TS});
+          const g = (await db.ref("games/" + room).once("value")).val(), p = (await db.ref("gpriv/" + room).once("value")).val();
+          await db.ref("hosts/" + room).remove(); return [g ? "saved match left" : "no saved match", p ? "hidden data left" : "no hidden data"]; })''', room)
+        check(left == ['no saved match', 'no hidden data'], f'database: the match ended while it was being saved (and «إنهاء» tapped twice) leaves no lock, saved match or hidden data {left}')
     return host, android
 
 SIZES = '''setInterval(() => { try { if (typeof H !== "undefined" && H && H.code && typeof hostPresence === "function"){
