@@ -1,0 +1,9 @@
+branch: letters-v2
+commit: a526839aaa1a165e589697ddc45813be9e0cd424
+date (UTC): 2026-10-25 19:18
+index.html: 47294919737d04a583491dd2946e5fa3 (expected 47294919737d04a583491dd2946e5fa3)
+spot files: 96 (expected 96)
+build: d847f22bb5 (tested d847f22bb5)
+files: 110, sha256 of every file identical to the tested build: yes
+main untouched: b23f7594c57f
+files identical to site/: yes
