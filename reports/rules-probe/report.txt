@@ -1,12 +1,19 @@
-time (UTC): 2026-10-20 11:30:29
-read whole database (shallow): 401 keys=1
-read rooms list (shallow): 200 rooms=3
-read spotseen (shallow): 401 keys=1
+time (UTC): 2026-10-25 12:00:51
+No sign-in at all (a script or a browser without the site). Expected after the new rules: 401 for every line.
+read whole database: 401
+read rooms list: 401
+read one room by its code: 401
+read host locks: 401
+read one host lock: 401
+read saved matches: 401
+read hidden answers: 401
+read spot history list: 401
+read spot reports: 401
 write a new top-level path: 401
-delete it: 401
-write own presence in a room: 200
-another visitor overwrites that presence (e.g. pretends to be the host): 200
-write a value with an unexpected shape: 200
-wipe a whole room in one request: 200
-room gone afterwards: 200 value=null
-probe path gone afterwards: 401 value=1
+write a seat in a room: 401
+write a fake host seat: 401
+take a host lock: 401
+change a saved match (scores): 401
+delete a room (test code 0001, never used by games): 401
+write spot history: 401
+write a spot report: 401
