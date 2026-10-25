@@ -679,7 +679,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
       <div class="tinfo">
         <b class="tname">TIGER</b>
         <span class="muted">للتواصل والدعم عبر تطبيق توب توب (TopTop)</span>
-        <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
+        <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
     <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.3-letters · 2026-10-25</span></p>
@@ -1672,7 +1672,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "2c727cf157", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "9d434aa9d2", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -3681,7 +3681,7 @@ const Diff = {
 const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
 
 /* ================= FOOTER ================= */
-{ const b = $("#copyId"); if (b) b.onclick = () => copyText("10000003", b); }
+{ const b = $("#copyId"); if (b) b.onclick = () => copyText((($("#tidNum") || {}).textContent || "").trim(), b); }     // the copied ID is the one shown in the footer
 
 /* phones redraw the clocks every half second from the shared deadlines (no dependence on the host's page being awake) */
 setInterval(() => { if (P && P.joined && document.visibilityState === "visible"){ const h = findHost(), st = h && h.presence.s; if (st && (st.dl || st.qs || st.q0 || st.m0 || (st.t0 && st.ph === "play"))) playerRender(); } }, 500);

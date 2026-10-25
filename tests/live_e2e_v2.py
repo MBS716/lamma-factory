@@ -35,7 +35,7 @@ async def run(b):
     for pg, n in ((host, 'host'), (p1, 'phone1'), (p2, 'phone2')): pg.on('pageerror', lambda e, n=n: R['errors'].append(f'{n}: {e}'))
     try:
         await host.goto(URL + f'?t={int(time.time())}', wait_until='load')
-        check(await host.locator('text=TIGER').count() > 0 and await host.locator('text=10000003').count() > 0, 'footer: TIGER and TopTop ID')
+        check(await host.locator('text=TIGER').count() > 0 and await host.locator('text=10000008').count() > 0, 'footer: TIGER and TopTop ID')
         n = 0
         for g in ('letters', 'wheel', 'quiz', 'diff', 'puzzle'):
             await host.click(f'.gact [data-help={g}]'); await host.wait_for_selector('#modal[open]', timeout=5000)

@@ -42,7 +42,7 @@ async def body(rep, b, host, phones):
             pg.on('pageerror', lambda e, n=n: rep['errors'].append(f'{n}: {e}'))
         await host.goto(URL + f'?t={int(time.time())}', wait_until='load')
         rep['footer_tiger'] = await host.locator('text=TIGER').count() > 0
-        rep['footer_id'] = await host.locator('text=10000003').count() > 0
+        rep['footer_id'] = await host.locator('text=10000008').count() > 0
         await host.click('[data-game=diff]'); await host.wait_for_selector('.code', timeout=20000)
         code = (await host.inner_text('.code')).strip().replace(' ', ''); rep['code'] = code
         for pg, nm in zip(phones, ['جوال 1', 'جوال 2']):

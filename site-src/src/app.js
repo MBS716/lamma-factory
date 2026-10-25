@@ -1668,7 +1668,7 @@ const Diff = {
 const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
 
 /* ================= FOOTER ================= */
-{ const b = $("#copyId"); if (b) b.onclick = () => copyText("10000003", b); }
+{ const b = $("#copyId"); if (b) b.onclick = () => copyText((($("#tidNum") || {}).textContent || "").trim(), b); }     // the copied ID is the one shown in the footer
 
 /* ================= JOIN ================= */
 window.addEventListener("lm-conn", () => { if (P){ $("#playerMain").dataset.k = ""; playerRender(); } if (H) renderHost(); });
