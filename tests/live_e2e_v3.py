@@ -291,20 +291,21 @@ async def run(pw):
     host = await hc.new_page(); watch_denied(hc, 'host')
     ios = await (await wb.new_context(**pw.devices['iPhone 13'])).new_page()
     android = await (await cb.new_context(**pw.devices['Pixel 7'])).new_page()
-    for pg, n in ((host, 'host'), (ios, 'iPhone/WebKit'), (android, 'Android/Chromium')): pg.on('pageerror', lambda e, n=n: R['errors'].append(f'{n}: {e}'))
+    for pg, n in ((host, 'host'), (ios, 'iPhone/WebKit'), (android, 'Android/Chromium')): pg.on('pageerror', lambda e, n=n: R['errors'].append(f'{n}: {e} @ {(getattr(e, "stack", "") or "").replace(chr(10), " | ")[:500]}'))
     watch_denied(ios.context, 'iPhone'); watch_denied(android.context, 'Android')
     try:
         # ---------------- footer: TIGER, the TopTop ID 10000008 and its copy button (computer, iPhone, Android)
         # (not in the emulator run: that build is only for the database rules and is rebuilt with the next release)
         for pg, n in (() if os.environ.get('EMU') else ((host, 'computer'), (ios, 'iPhone'), (android, 'Android'))):
             await pg.goto(URL, wait_until='load'); await pg.wait_for_selector('#copyId', timeout=30000)
+            await pg.locator('#copyId').scroll_into_view_if_needed(); await pg.wait_for_timeout(1500)      # the logo loads lazily: bring the footer into view
             shown = (await pg.inner_text('#tidNum')).strip(); html = await pg.content()
             logo = await pg.evaluate('(() => { const i = [...document.images].find(x => (x.alt || "").includes("TIGER")); return i ? i.naturalWidth : 0; })()')
             await pg.evaluate('(() => { try { navigator.clipboard.writeText = t => { window.__copied = t; return Promise.resolve(); }; } catch(e){} })()')
             await pg.click('#copyId'); await pg.wait_for_timeout(400)
             copied = await pg.evaluate('window.__copied || ((document.querySelector(".tid input") || {}).value) || ""')
             check(shown == '10000008' and copied == '10000008' and '10000003' not in html and logo > 0 and 'جميع حقوق النشر محفوظة لـ TIGER' in html,
-                  f'footer on {n}: TIGER logo shown, ID {shown}, the copy button copies {copied}, the old ID is nowhere on the page')
+                  f'footer on {n}: TIGER logo shown ({logo}px), ID {shown}, the copy button copies {copied}, the old ID is nowhere on the page ({"10000003" not in html})')
         # ---------------- joining: typed code (iPhone), invite link (Android), QR content, wrong code, public-site phone
         code = await start(host, 'letters', {'m': 'q20', 't': 30})
         link = await host.evaluate('joinLink(H.code)'); check(link.startswith(URL) and link.endswith('#' + code), f'invite link points to this site ({link})')
