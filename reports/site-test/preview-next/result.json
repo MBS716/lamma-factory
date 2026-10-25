@@ -1,11 +1,11 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview-next/",
  "checks": [
-  "OK footer on computer: TIGER logo shown, ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page",
-  "FAIL footer on iPhone: TIGER logo shown, ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page",
-  "OK footer on Android: TIGER logo shown, ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page",
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=9d434aa9d2#3667)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=9d434aa9d2#3667)",
+  "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-next/?v=9d434aa9d2#5972)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-next/?v=9d434aa9d2#5972)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
@@ -19,7 +19,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10002 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10003 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -28,7 +28,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: preview rooms are separate (lmp3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (review-next/?v=9d434aa9d2#3285)",
+  "OK sessions: invite link carries the version (review-next/?v=9d434aa9d2#5276)",
   "OK sessions: version.json matches the page (9d434aa9d2 = 9d434aa9d2)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -50,7 +50,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (p 150)",
+  "OK wheel v3: phones receive the same box result as the host (m 50)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -70,17 +70,15 @@
   "OK spot: end-of-level message only after the level is used up",
   "OK spot: changing the level gives a pair of the new level",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3480], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1245 (limit 12000), saved match 1135 (limit 20000), hidden data 425 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1207 (limit 12000), saved match 1097 (limit 20000), hidden data 427 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
- "errors": [
-  "host: Cannot read properties of null (reading 'g')"
- ],
+ "errors": [],
  "not_tested": [
   "real phones on mobile networks (only browser engines on GitHub servers)",
   "in-app browsers (WhatsApp/Instagram/camera QR)",
@@ -88,24 +86,24 @@
  ],
  "sizes": {
   "letters": [
-   1245,
-   1135,
-   229
+   1207,
+   1097,
+   224
   ],
   "wheel": [
-   762,
-   654,
-   39
+   726,
+   618,
+   37
   ],
   "diff": [
-   829,
-   722,
-   425
+   831,
+   724,
+   427
   ],
   "quiz": [
-   462,
-   355,
-   334
+   470,
+   363,
+   336
   ],
   "puzzle": [
    272,
@@ -115,9 +113,9 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-10-25T20:15:14.124Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-3285/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-10-25T20:15:14.273Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-3285/aee47d4ab9fabfc873790cb0 failed: permission_denied ",
-  "Android: [2026-10-25T20:15:14.426Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-3285 failed: permission_denied "
+  "Android: [2026-10-25T20:26:18.393Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-5276/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-10-25T20:26:18.512Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-5276/d2337209b415ae3cf3024d7c failed: permission_denied ",
+  "Android: [2026-10-25T20:26:18.632Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-5276 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
@@ -141,5 +139,5 @@
   ]
  },
  "ignored": [],
- "PASS": false
+ "PASS": true
 }
