@@ -25,7 +25,8 @@ jobs:
       # .github/live-check-request containing "rules-on" (only after the new database rules are published) adds the attack checks
       - run: |
           RON=""; grep -q "rules-on" .github/live-check-request 2>/dev/null && RON=1
-          AUTH_ON=1 RULES_ON=$RON python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live-check
+          T=tests/live_e2e_v3.py; grep -q "v32" .github/live-check-request 2>/dev/null && T=tests/live_e2e_v32.py    # the test that matches the published version
+          echo "test used: $T"; AUTH_ON=1 RULES_ON=$RON python $T https://mbs716.github.io/lamma/ reports/site-test/live-check
         if: always()
       - if: always()
         run: |
