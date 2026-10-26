@@ -1,8 +1,11 @@
 {
  "url": "https://mbs716.github.io/lamma/",
  "checks": [
-  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=575f0dda70#4190)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=575f0dda70#4190)",
+  "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=591339789d#1483)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=591339789d#1483)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
@@ -12,13 +15,20 @@
   "OK letters: totals equal the points awarded (860/900)",
   "OK letters: no question repeated",
   "OK letters: winner screen on host, iPhone and Android",
+  "OK letters v3.3: reading phase, no clock, options kept on the host",
+  "OK letters v3.3: while reading, the options are not in the database rooms",
+  "OK letters v3.3: question replaced while reading (1 replacement left)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
+  "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
+  "OK letters v3.3: which option is right is not in the database before the result",
+  "OK letters v3.3: after the result the right option is marked on both phones",
   "OK identity: host, iPhone and Android each signed in anonymously, no form (3 different identities)",
   "OK identity: each seat in the database carries its own device identity (host, iPhone, Android)",
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (ub.io/lamma/?v=575f0dda70#1466)",
-  "OK sessions: version.json matches the page (575f0dda70 = 575f0dda70)",
+  "OK sessions: invite link carries the version (ub.io/lamma/?v=591339789d#5264)",
+  "OK sessions: version.json matches the page (591339789d = 591339789d)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
@@ -32,6 +42,7 @@
   "OK sessions: phones carry on without re-joining",
   "OK rules: from a player phone, faking the host, changing the host seat (scores) and the saved match are all refused ['fake host refused', 'host seat protected', 'saved match protected']",
   "OK sessions: host ends the game, phones are told",
+  "OK database: the match ended while it was being saved (and «إنهاء» tapped twice) leaves no lock, saved match or hidden data ['no saved match', 'no hidden data']",
   "OK wheel v3: both phones show the scoreboard and the 1,500 goal",
   "OK wheel v3: the question reaches iPhone and Android",
   "OK wheel v3: 4 options on the phone, the right answer is not sent before judging",
@@ -39,7 +50,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (imm 0)",
+  "OK wheel v3: phones receive the same box result as the host (p 150)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -64,7 +75,7 @@
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 863 (limit 12000), saved match 756 (limit 20000), hidden data 421 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1203 (limit 12000), saved match 1093 (limit 20000), hidden data 427 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -76,24 +87,24 @@
  ],
  "sizes": {
   "letters": [
-   807,
-   697,
-   114
+   1203,
+   1093,
+   238
   ],
   "wheel": [
-   753,
-   645,
-   36
+   749,
+   641,
+   37
   ],
   "diff": [
-   863,
-   756,
-   421
+   834,
+   727,
+   427
   ],
   "quiz": [
-   506,
-   399,
-   335
+   454,
+   347,
+   336
   ],
   "puzzle": [
    272,
@@ -103,9 +114,9 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-10-26T02:01:35.117Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-1466/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-10-26T02:01:35.280Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1466/fd994adccf93d120dd3bd32f failed: permission_denied ",
-  "Android: [2026-10-26T02:01:35.446Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-1466 failed: permission_denied "
+  "Android: [2026-10-26T02:40:21.809Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-5264/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-10-26T02:40:21.964Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-5264/ff6c85a59505b1708c3941b4 failed: permission_denied ",
+  "Android: [2026-10-26T02:40:22.124Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-5264 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
