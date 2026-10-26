@@ -143,7 +143,7 @@ jobs:
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
-          python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live    # sign-in, rules and permission checks on the live site
           GSV=o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-seo
           python - <<'PY'
           import asyncio
