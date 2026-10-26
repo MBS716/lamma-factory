@@ -679,7 +679,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
       <div class="tinfo">
         <b class="tname">TIGER</b>
         <span class="muted">للتواصل والدعم عبر تطبيق توب توب (TopTop)</span>
-        <span class="tid"><span dir="ltr">ID: <b>10000003</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
+        <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
     <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v3.3-letters · 2026-10-25</span></p>
@@ -1672,7 +1672,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "d847f22bb5", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "591339789d", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -1926,13 +1926,15 @@ async function claimCode(prefer){
     if (!H) return;                                                   // the host left (ended the game) while we were waiting
     // the host lock comes first: where the database rules are on, only the lock holder may mark a seat as the host's
     const lockMine = cloudGame(H.g) && AUTH_UID ? await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP}) : false;
-    if (!H) return;
+    // the host ended the game while the code was being reserved: the lock just taken is given back (no lock left for a finished game)
+    const giveBack = () => { if (lockMine) FS.del("hosts/" + ROOM_PREFIX + code); };
+    if (!H){ giveBack(); return; }
     if (!lockMine && AUTH_UID && cloudGame(H.g) && !(await codeFree(code, prefer))){ if (!H) return; continue; }   // another host took this code a moment ago
-    if (!H) return;
+    if (!H){ giveBack(); return; }
     H.priv.lockAt = lockMine ? Date.now() : 0; H.priv.lockLost = false;
     let nr;
     try { nr = await ROOM.join(ROOM_PREFIX + code, {id:H.hid, keep:true, host:true}); } catch(e){ console.error(e); if (lockMine && !(prefer && k === 0)) FS.del("hosts/" + ROOM_PREFIX + code); if (H) H.failed = true; return; }
-    if (!H){ try { await nr.leave(); } catch(e){} return; }
+    if (!H){ try { await nr.leave(); } catch(e){} giveBack(); return; }
     H.hid = nr.id;
     if (!H.c) H.c = srvNow();
     try { await nr.presence(hostPresence()); } catch(e){}
@@ -1944,9 +1946,13 @@ async function claimCode(prefer){
     if (!other()) nr.peers().filter(p => !p.sameTab && p.away && srvNow() - (+p.ts || 0) > SEAT_H).forEach(p => nr.drop(p.peer));   // tidy seats left from old games
     if (other() && k === 0 && prefer) for (let w = 0; w < 8 && other(); w++) await sleep(500);   // our old tab may take a moment to leave
     if (other()){ try { await nr.leave(); } catch(e){} if (lockMine && !(prefer && k === 0)) FS.del("hosts/" + ROOM_PREFIX + code); continue; }
-    if (!H){ try { await nr.leave(); } catch(e){} return; }
+    if (!H){ try { await nr.leave(); } catch(e){} giveBack(); return; }
     NR = nr; H.code = code; claimTab("h:" + code + ":" + H.hid);
-    if (cloudGame(H.g)) H.cloud = lockMine || await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:H.g, t:firebase.database.ServerValue.TIMESTAMP});
+    if (cloudGame(H.g)){
+      const h = H, got = lockMine || await FS.set("hosts/" + ROOM_PREFIX + code, {u:AUTH_UID, g:h.g, t:firebase.database.ServerValue.TIMESTAMP});
+      if (h.ended){ if (got) FS.del("hosts/" + ROOM_PREFIX + code); return; }       // ended while the lock was being written
+      h.cloud = got;
+    }
     NR.onPeers(() => { if (!H) return; if (updateDup()) pushHost(); if (MOD[H.g].hostPeers) MOD[H.g].hostPeers(hostPlayers()); renderHost(); });
     saveHost();                // the room can be found again even if the tab is closed right away
     return;
@@ -1978,9 +1984,17 @@ function saveCloud(){
   if (H.priv.cloudT && !moved) return;
   clearTimeout(H.priv.cloudT);
   H.priv.cloudT = setTimeout(async () => {
-    if (!H || !H.cloud) return; H.priv.cloudT = null; H.priv.cloudOrd = stateOrder(H.s); const room = ROOM_PREFIX + H.code, TS = firebase.database.ServerValue.TIMESTAMP;
-    await FS.set("games/" + room, {g:H.g, v:APP_V, s:JSON.stringify(H.s), at:TS});
-    await FS.set("gpriv/" + room, {pv:JSON.stringify(MOD[H.g].savePriv ? MOD[H.g].savePriv() : {}), at:TS});
+    // one save belongs to one match: the match (h) and both copies are taken now, before any wait. If the host ends the match
+    // (or another match starts) while the first copy is on its way, the second one is not written: nothing of a finished
+    // match is written after its deletion was asked (writes already sent reach the database before that deletion).
+    const h = H; if (!h || !h.cloud || h.ended) return;
+    h.priv.cloudT = null; h.priv.cloudOrd = stateOrder(h.s);
+    const room = ROOM_PREFIX + h.code, TS = firebase.database.ServerValue.TIMESTAMP;
+    const game = {g:h.g, v:APP_V, s:JSON.stringify(h.s), at:TS}, priv = {pv:JSON.stringify(MOD[h.g].savePriv ? MOD[h.g].savePriv() : {}), at:TS};
+    await FS.set("games/" + room, game);
+    if (H !== h || h.ended) return;
+    await FS.set("gpriv/" + room, priv);
+    if (H !== h || h.ended) return;
     refreshLock();
   }, moved ? 0 : 1500);
 }
@@ -2032,10 +2046,14 @@ function resumeBanner(){
   $("#resumeNo").onclick = async () => { const c = x.code, g = x.g; dropSaved(); el.hidden = true; if (cloudGame(g)){ await roomReady; await Promise.race([authReady, sleep(6000)]); dropCloud(c); } };
 }
 async function hostEnd(){
-  dropSaved(); if (H && H.cloud) dropCloud(H.code); tabKey = "";
-  if (H){ clearInterval(H.priv.tick); clearInterval(H.priv.mtick); }
+  // the match is closed first (a second tap finds nothing to end): no timer, save or lock renewal of this match runs after
+  // this point, so the deletion below is the last thing this match sends to the database
+  const h = H; if (!h || h.ended) return;
+  h.ended = true; H = null;
+  clearInterval(h.priv.tick); clearInterval(h.priv.mtick); clearTimeout(h.priv.cloudT);
+  dropSaved(); if (h.cloud) dropCloud(h.code); tabKey = "";
   if (NR){ try { await NR.leave(); } catch(e){} NR = null; }
-  H = null; show("home");
+  show("home");
 }
 function renderHost(){
   if (!H) return;
@@ -3681,7 +3699,7 @@ const Diff = {
 const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};
 
 /* ================= FOOTER ================= */
-{ const b = $("#copyId"); if (b) b.onclick = () => copyText("10000003", b); }
+{ const b = $("#copyId"); if (b) b.onclick = () => copyText((($("#tidNum") || {}).textContent || "").trim(), b); }     // the copied ID is the one shown in the footer
 
 /* phones redraw the clocks every half second from the shared deadlines (no dependence on the host's page being awake) */
 setInterval(() => { if (P && P.joined && document.visibilityState === "visible"){ const h = findHost(), st = h && h.presence.s; if (st && (st.dl || st.qs || st.q0 || st.m0 || (st.t0 && st.ph === "play"))) playerRender(); } }, 500);
