@@ -1,0 +1,37 @@
+# Spot-the-difference redesign: candidate pictures for the 15-pair sample (Wikimedia Commons, free licences).
+# .github/spot-sources-request: "sheets" -> contact sheets; "fetch:id,id,..." -> full pictures of the chosen ones.
+# Results go to branch spot-sources (never main of the site). No secret is used.
+name: spot-sources
+on:
+  push:
+    branches: [main]
+    paths: [".github/spot-sources-request"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q pillow
+      - name: work on branch spot-sources (new commits only)
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git fetch -q origin spot-sources && git worktree add -q ../src origin/spot-sources -b spot-sources || git worktree add -q ../src -b spot-sources
+      - name: run
+        run: |
+          r=$(tr -d ' \r\n' < .github/spot-sources-request)
+          case "$r" in
+            sheets) python scripts/spot_candidates.py sheets ../src/cand ;;
+            fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
+            *) echo "nothing to do" ;;
+          esac
+      - name: save on branch spot-sources
+        run: |
+          cd ../src && git add -A
+          git commit -q -m "spot candidates ($(tr -d ' \r\n' < ../lamma-factory/.github/spot-sources-request | cut -c1-60))" || exit 0
+          git push -q origin spot-sources
