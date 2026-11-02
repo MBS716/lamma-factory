@@ -335,8 +335,10 @@ async def spot_v34(host, ios, android, cb, pw):
     w0, p0 = pl(s, kI)['w'], pl(s, kI)['p']; await ios.click('[data-act=dfhint]'); await settle(); s = await S(); await ios.click('[data-z=reset]')
     check(pl(s, kI)['h'] == 1 and pl(s, kI)['w'] == w0 and pl(s, kI)['p'] == max(0, p0 - 15), 'spot v3.4: hint on the iPhone: −15, not a mistake')
     # the host reloads in the middle of the round
+    for pg in (ios, android, third): await pg.evaluate('window.__ended = 0; new MutationObserver(() => { if (document.querySelector("#playerMain").innerText.includes("انتهت هذه اللعبة")) window.__ended = 1; }).observe(document.querySelector("#playerMain"), {childList:true, subtree:true, characterData:true})')
     before = await S(); await host.reload(); await host.wait_for_function('typeof H !== "undefined" && H && H.code && H.s.ph === "play" && !window.__resuming', timeout=60000); await host.wait_for_timeout(3000)
     s = await S(); check(s['pl'] == before['pl'] and s['fd'] == before['fd'], 'spot v3.4: the host reloads: same round, same counters')
+    check([await pg.evaluate('window.__ended') for pg in (ios, android, third)] == [0, 0, 0], 'spot v3.4: while the host page reloads, no phone shows «the game ended»')
     D = await host.evaluate('H.priv.dfs')
     left = [i for i in range(8) if i not in {f[0] for f in s['fd']}]
     for n, i in enumerate(left): await tap(ios if n % 2 == 0 else third, *on_change(D[i])); await host.wait_for_timeout(1200)
