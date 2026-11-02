@@ -90,6 +90,12 @@ async def main():
         check(len(got) == 1 and pl(s, loser)['w'] == 0 and pl(s, winner)['p'] in (30, 10), f'B and C tap the same difference at once: found once, +10 to one ({"B" if winner == kB else "C"}), no mistake for the other')
         lr = pl(s, loser).get('lr') or []
         check(lr[1:2] == ['taken'], f'the slower one is told who was first ({lr[1:2]})')
+        # a phone that claims an earlier tap time than it really had gains at most 0.4 s
+        g = await host.evaluate("""() => { clearTimeout(H.priv.dfT); H.priv.dfT = null; H.priv.dfq = [];
+          const ts = srvNow(), fake = {presence:{n:"خالد", df:{rd:H.s.rd, q:[["forge1", 5, 5, 10, ts - 5000]]}}, ts};
+          Diff.hostPeers([fake]); const q = H.priv.dfq.find(t => t.id === "forge1"); clearTimeout(H.priv.dfT); H.priv.dfT = null; H.priv.dfq = [];
+          return q ? ts - q.at : null; }""")
+        check(g is not None and g <= 400, f'a phone claiming its tap was 5 s earlier is counted at most 0.4 s earlier ({g} ms)')
         # precision: inside the box drawn around a difference but away from what really changed -> a mistake;
         # within the finger tolerance of two differences at once -> neither found nor a mistake (zoom in)
         import math
@@ -128,10 +134,12 @@ async def main():
         await C.click('[data-z=reset]')
         check(await C.locator('[data-act=dfhint]').is_disabled() and await B.locator('#pDf .dfhz').count() == 0, 'the hint area shows on C only, and C cannot ask again')
         # host reload in the middle: same round, same counters, old taps not judged again
+        for pg in (A, B, C): await pg.evaluate('window.__ended = 0; new MutationObserver(() => { if (document.querySelector("#playerMain").innerText.includes("انتهت هذه اللعبة")) window.__ended = 1; }).observe(document.querySelector("#playerMain"), {childList:true, subtree:true, characterData:true})')
         before = await S(host)
         await host.reload(); await host.wait_for_function('!window.__resuming && H && H.code && H.s.ph === "play"', timeout=20000); await host.wait_for_timeout(1500)
         s = await S(host)
         check(s['pl'] == before['pl'] and s['fd'] == before['fd'], 'host reloads: same round, same counters, no tap judged twice')
+        check([await pg.evaluate('window.__ended') for pg in (A, B, C)] == [0, 0, 0], 'while the host page reloads, no phone ever shows «the game ended»')
         # everything else found: by B and C alternately; the last one gets +50; nobody else's counters move
         left = [i for i in range(8) if i not in {f[0] for f in s['fd']}]
         for n, i in enumerate(left):
