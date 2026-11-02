@@ -1,0 +1,81 @@
+# v3.4 shared spot-the-difference (test copy, not the official site):
+#  1. emulator: the current database rules file on the official Firebase emulators (Database + Auth), the rule checks,
+#     then the whole site (tests/emu-site-spot) played end to end. Nothing reaches the real database.
+#  2. preview: preview-spot/ served by GitHub Pages of this repo, played on the real database with today's published rules
+#     (anonymous sign-in, separate preview rooms lmp3-). The rules themselves are not changed by this workflow.
+name: spot-v34-test
+on:
+  push:
+    branches: [main]
+    paths: ["preview-spot/**", "tests/emu-site-spot/**", "tests/live_e2e_v34.py", ".github/workflows/spot-v34-test.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: {group: spot-v34-test, cancel-in-progress: false}
+jobs:
+  emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: current rules + the v3.4 site on the emulators
+        run: |
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
+          cat > /tmp/run.sh <<'EOF'
+          set -u
+          mkdir -p reports/spot-v34/emulator
+          timeout 300 node tests/rules/rules.test.mjs > reports/spot-v34/emulator/rules.log 2>&1; r1=$?
+          (cd tests/emu-site-spot && python -m http.server 8799 > /dev/null 2>&1 &)
+          sleep 2
+          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ reports/spot-v34/emulator/site > reports/spot-v34/emulator/site.log 2>&1; r2=$?
+          echo "rules: $r1  site on the emulator: $r2" | tee reports/spot-v34/emulator/result.txt
+          exit $(( r1 || r2 ))
+          EOF
+          timeout 3300 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -15 /tmp/emulators.log
+          grep -E '^(OK|FAIL)' reports/spot-v34/emulator/site.log | grep -E 'FAIL|spot v3.4' || true
+          python -c "import json,sys; d=json.load(open('reports/spot-v34/emulator/site/result.json')); sys.exit(0 if d['PASS'] else 1)"
+      - name: save
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log firebase-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/spot-v34 || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "spot v3.4 emulator test results" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: wait until GitHub Pages serves this commit
+        run: |
+          want=$(md5sum preview-spot/index.html | cut -c1-32)
+          for i in $(seq 1 60); do
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-spot/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
+          done; echo "pages did not update"; exit 1
+      - name: the preview on the real database (current rules)
+        run: |
+          mkdir -p reports/spot-v34/preview
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-spot/ reports/spot-v34/preview https://mbs716.github.io/lamma/ > reports/spot-v34/preview.log 2>&1; r=$?
+          grep -E '^(OK|FAIL)' reports/spot-v34/preview.log | grep -E 'FAIL|spot v3.4|denied' || true; exit $r
+      - name: save
+        if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/spot-v34 || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "spot v3.4 preview test results" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
