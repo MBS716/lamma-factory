@@ -1,1 +1,1 @@
-rules: 0  site on the emulator: 1
+rules: 0  site on the emulator: 0
