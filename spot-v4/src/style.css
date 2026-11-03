@@ -598,3 +598,11 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfnote{font-size:.82rem}
 .tbl{overflow-x:auto}
 @media (prefers-reduced-motion:reduce){.dfhz,.dfpend{animation:none}}
+
+/* spot v4: the bar above the pictures holds zoom and a small ⓘ; a player's finds are plain green circles */
+.dfbar-end{margin-inline-start:auto;display:flex;gap:6px}
+.dfbar .btn.icon{min-width:44px;font-size:1.05rem}
+.dfsel{gap:6px;flex-wrap:wrap;align-items:center}
+.dfsel .btn.on{border-color:var(--gold);color:var(--gold)}
+.note.ok{border-color:var(--green)}
+.chip.ok{color:var(--green)}

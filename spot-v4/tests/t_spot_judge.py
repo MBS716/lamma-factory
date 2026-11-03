@@ -20,7 +20,7 @@ async def main():
             const D = e.d.map(d => d.slice()), W = e.w, Hh = e.h;
             for (const [phone, zoom] of [[360, 1], [360, 2], [360, 4]]){
               const tol = 12 / (phone / W * zoom), T = Math.min(0.025 * W, Math.max(0.008 * W, tol));
-              const run = (x, y) => { H.s.ph = "play"; H.s.pair = {id:e.id, w:W, h:Hh}; H.s.nd = 99; H.s.fd = []; H.priv.dfs = D; H.s.pl.zz = dfZero("t"); Diff.judge("zz", x, y, tol, "j" + Math.random()); const L = H.s.pl.zz.lr; if (!L) throw new Error("nolr " + JSON.stringify([e.id, x, y, W, Hh, H.s.ph, Object.keys(H.s.pl)])); return {r:L[1], f:H.s.fd.map(f => f[0])}; };
+              const run = (x, y) => { H.s.ph = "play"; H.s.pair = {id:e.id, w:W, h:Hh}; H.s.nd = 99; H.priv.dfs = D; H.s.pl.zz = dfZero("t"); H.priv.pf = H.priv.pf || {}; H.priv.pf.zz = {fi:[], lr:[], hz:null}; Diff.judge("zz", x, y, tol, "j" + Math.random()); const L = H.priv.pf.zz.lr[H.priv.pf.zz.lr.length - 1]; if (!L) throw new Error("nolr " + JSON.stringify([e.id, x, y, W, Hh, H.s.ph, Object.keys(H.s.pl)])); return {r:L[1], f:H.priv.pf.zz.fi.slice()}; };
               let ok = 0, wrong = [], offs = 0, offBad = [], ambs = 0, ambBad = [];
               D.forEach((d, i) => {
                 const c = cells(d); const p = c.reduce((a, q) => Math.hypot(q[0] - d[0], q[1] - d[1]) < Math.hypot(a[0] - d[0], a[1] - d[1]) ? q : a, c[0]);
@@ -37,7 +37,7 @@ async def main():
               out.push({id:e.id, n:D.length, phone, zoom, T:Math.round(T), ok, wrong, offs, offBad:offBad.length, ambs, ambBad:ambBad.length});
             }
           }
-          H.s.pl.zz = undefined; delete H.s.pl.zz; return out; }''')
+          delete H.s.pl.zz; delete H.priv.pf.zz; return out; }''')
         bad = 0; tot = 0
         for r in res:
             if r['zoom'] == 1: tot += r['n']

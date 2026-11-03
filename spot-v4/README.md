@@ -6,7 +6,7 @@
   `LAMMA_SPOTLIB=spotlib-v4 python3 build.py`. يقرأ build.py المجلدات `assets/` و`data/` الموجودة هنا.
 - `spotlib-v4/`: الأزواج الخمسة عشر (5 سهلة، 5 متوسطة، 5 صعبة)، وفيها 125 فرقًا. لكل فرق منطقته الدقيقة (`m`)، وهي خلايا بحجم 16 بكسل من صورة عرضها 1600، استخرجها `tools/spotmask.py` من الصورتين.
 - `tests/`:
-  - `t_spot2.py`: مقدّم وثلاثة لاعبين.
+  - `t_spot3.py`: مقدّم وثلاثة لاعبين، وكل لاعب يكتشف الفروق بنفسه.
   - `t_spot_judge.py`: الحَكَم على الفروق الـ125 بثلاث درجات تكبير.
-- النسخة التجريبية: `preview-spot/` على main في lamma-factory.
+- النسخة التجريبية: `preview-spot4/` على main في lamma-factory.
 - اختبار المحاكي والقاعدة الحقيقية: `.github/workflows/spot-v34-test.yml`.
