@@ -618,8 +618,6 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 /* spot the difference: shared board */
 .dfm.mine{border-color:var(--gold)}
 .dfm i{position:absolute;top:100%;left:50%;transform:translate(-50%,2px);font-style:normal;font-size:clamp(9px,1.6vw,12px);line-height:1.4;white-space:nowrap;background:color-mix(in srgb,var(--bg) 82%,transparent);color:var(--ink);padding:0 5px;border-radius:6px;pointer-events:none}
-.dfhz{position:absolute;border:3px dashed var(--gold);border-radius:50%;background:color-mix(in srgb,var(--gold) 14%,transparent);pointer-events:none;animation:dfhz 1.6s ease-in-out infinite}
-@keyframes dfhz{50%{opacity:.55}}
 .dfpend{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border:3px solid var(--ink);border-radius:50%;opacity:.7;pointer-events:none;animation:dfp .8s linear infinite}
 @keyframes dfp{50%{transform:scale(1.35);opacity:.35}}
 .dfx.ok{color:var(--green);font-size:1.4rem}
@@ -638,7 +636,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfres tr.me td{background:color-mix(in srgb,var(--gold) 16%,transparent)}
 .dfnote{font-size:.82rem}
 .tbl{overflow-x:auto}
-@media (prefers-reduced-motion:reduce){.dfhz,.dfpend{animation:none}}
+@media (prefers-reduced-motion:reduce){.dfpend{animation:none}}
 
 /* spot v4: the bar above the pictures holds zoom and a small ⓘ; a player's finds are plain green circles */
 .dfbar-end{margin-inline-start:auto;display:flex;gap:6px}
@@ -649,6 +647,45 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .chip.ok{color:var(--green)}
 /* the dark edge around a circle: a filter that follows the circle (Safari drew the old box-shadow as a dark square) */
 .dfm{box-shadow:none;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.85)) drop-shadow(0 0 1px rgba(0,0,0,.6))}
+
+/* spot v4 results: the winner first, then the round table, then the overall board (navy and gold) */
+.dfcredit{font-size:.78rem;color:var(--muted);margin:2px 0 0;line-height:1.5}
+.dfhero{position:relative;text-align:center;padding:22px 16px 18px;border-radius:20px;margin:6px 0 14px;
+  background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--gold) 22%,var(--card2)) 0%,var(--card) 55%,var(--bg2) 100%);
+  border:2px solid color-mix(in srgb,var(--gold) 55%,var(--line));box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 color-mix(in srgb,var(--gold) 30%,transparent)}
+.dfhero:not(.won){border-color:var(--line);background:linear-gradient(180deg,var(--card2),var(--card))}
+.dfhero-cup{font-size:clamp(2.6rem,9vw,3.6rem);line-height:1;filter:drop-shadow(0 4px 10px color-mix(in srgb,var(--gold) 45%,transparent))}
+.dfhero:not(.won) .dfhero-cup{filter:grayscale(.2);opacity:.8;font-size:clamp(2rem,7vw,2.6rem)}
+.dfhero-t{margin:8px 0 2px;color:var(--gold);font-family:var(--display);font-size:clamp(1.1rem,4vw,1.4rem);letter-spacing:.02em}
+.dfhero-n{margin:0;font-family:var(--display);font-size:clamp(2rem,9vw,3.2rem);line-height:1.25;color:var(--ink);overflow-wrap:anywhere}
+.dfhero-n b{color:var(--gold);font-weight:400}
+.dfhero-k{font-size:.55em;color:var(--muted);font-family:var(--body)}
+.dfhero-s{margin:6px 0 0;color:var(--ink);font-size:clamp(1rem,3.6vw,1.15rem)}
+.dfhero-s bdi{font-variant-numeric:tabular-nums;font-weight:700;color:var(--gold)}
+.dfhero-me{margin:12px auto 0;display:inline-block;padding:6px 14px;border-radius:999px;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line);font-size:.95rem}
+.dfhero-me b{color:var(--gold)}
+.dfround h3,.dfoverall h3{margin:0}
+.dfres tr.win td{background:color-mix(in srgb,var(--gold) 20%,transparent);color:var(--ink)}
+.dfres tr.win td.dfname{color:var(--gold);font-weight:700}
+.dfres td.dfrank{font-weight:700;font-size:1.05em;width:2.2em}
+.dfres td.dfpts b{font-size:1.2em;color:var(--gold)}
+.dfres td small{display:inline;font-size:.8em;color:var(--muted)}
+.dfres .dfst{font-size:.82em;color:var(--muted);line-height:1.35;display:inline-block}
+.dfres .dfst.out{color:var(--bad)}
+.dfres .dftime{font-variant-numeric:tabular-nums;font-weight:700}
+.dftot td.dfpts b{color:var(--ink)}
+.dfcap{font-size:.8rem}
+.dfbig{font-size:1.15em;color:var(--ink)}
+.dfcredit-box summary{cursor:pointer;font-weight:700}
+.dfcredit-box[open] summary{margin-bottom:8px}
+.dfactions{position:sticky;bottom:0;z-index:5;gap:8px;padding:10px 12px;margin-top:4px;border-radius:16px;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--line)}
+.dfactions .btn.big{flex:1 1 auto}
+.dfwait{margin:6px 0 0}
+@media (max-width:440px){.dfres td,.dfres th{padding:7px 3px;font-size:.84em}.dfres th{font-size:.74em}}
+.dfhost #dfSide{grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+.dfhost #dfSide>.dfround,.dfhost #dfSide>.dfoverall,.dfhost #dfSide>.dfcredit-box{grid-column:1/-1}
+.dfres th{white-space:normal;line-height:1.3}
 </style>
 </head>
 <body>
@@ -1707,7 +1744,7 @@ const FIREBASE_CONFIG = {"apiKey": "demo-key", "authDomain": "demo-lamma.firebas
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "99afa06661", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "579406760d", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -1868,8 +1905,8 @@ const GAMES = {
           {key:"t", label:"وقت كل سؤال", def:20, choices:() => [[10,"10 ث"],[20,"20 ث"],[30,"30 ث"]]}],
     art:`<div class="art-quiz">${SHAPES.map((s, i) => `<span class="c${i}">${s}</span>`).join("")}</div>`},
   diff:{name:"اكتشف الفرق", group:"race", teams:false, tag:"صور ورسوم · 5 و8 و12 فرقًا",
-    desc:"الصورة نفسها للجميع، وكل لاعب يكتشف كل الفروق بنفسه.",
-    how:"كل جولة زوج صور واحد للجميع: أشياء اختفت أو أضيفت أو تغيّر لونها. كل لاعب يبحث عن كل الفروق بنفسه، ولا يرى اكتشافات غيره حتى نهاية الجولة. لكل لاعب 5 أخطاء وتلميح واحد.",
+    desc:"أول من يكتشف كل الاختلافات يفوز.",
+    how:"الصورة نفسها للجميع، وكل لاعب يبحث عن الاختلافات بنفسه دون أن يرى اكتشافات غيره. أول من يكتشفها كلها يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.",
     opts:[{key:"lv", label:"الصعوبة", def:3, choices:() => [...LV3, [3,"الكل"]]},
           {key:"lim", label:"وقت الجولة", def:180, choices:() => [[60,"دقيقة"],[120,"دقيقتان"],[180,"3 دقائق"],[300,"5 دقائق"],[0,"بلا وقت"]]}],
     art:`<div class="art-df art-ph"><img src="spot/thumb_a.webp" alt=""><img src="spot/thumb_b.webp" alt=""></div>`},
@@ -1922,12 +1959,11 @@ const HELP = {
     + sec("صندوق الحظ", w3bidi(`<p>${W3.BOX.map(([r, v, p]) => `${r === "p" ? "+" + v : r === "m" ? "−" + v : r === "imm" ? "حصانة" : r === "respin" ? "لفّة إضافية" : "خسارة الدور"} (${p}٪)`).join("، ")}. تُسحب النتيجة لحظة الفتح ولا يمكن إعادة فتحه.</p>`))
     + sec("العدالة", `<ul><li>النقاط لا تنزل تحت الصفر.</li><li>حصانة واحدة وفرصة ثانية واحدة لكل فريق كحد أقصى، والزائدة تتحول إلى +100.</li><li>الحصانة تمنع أول خصم أو سرقة، ولا تحمي من رهان الفريق نفسه.</li><li>لفّتان إضافيتان كحد أقصى في الدور الواحد، ثم تُقفل كروت اللف الإضافي.</li><li>الكروت النادرة (الذهبي، حظك مرتين، الكنز، تبديل المزايا) تُقفل 4 لفّات بعد ظهورها.</li></ul>`)
     + sec("نهاية المباراة", `<p>بلوغ الهدف لا ينهي المباراة فورًا: تكتمل الجولة حتى يتساوى عدد الأدوار، ثم جولة ختامية بدور أخير لكل فريق (المتأخر أولًا، بلا لفّات إضافية). الأعلى نقاطًا يفوز، وعند التعادل مواجهة فاصلة بتحديات السرعة حتى 5 محاولات، ثم تعادل رسمي.</p>`),
-  diff:() => sec("الفكرة", `<p>صورتان متطابقتان تقريبًا، وفي الثانية فروق طبيعية: شيء اختفى أو أضيف أو تغيّر لونه. <b>الصورة نفسها لكل اللاعبين، وكل لاعب يبحث عن كل الفروق بنفسه</b>. ما تكتشفه يُحسب لك ويظهر على شاشتك وحدك، ويستطيع كل لاعب آخر اكتشاف الفرق نفسه والحصول على نقاطه.</p>`)
-    + sec("المستويات", `<p>سهل: 5 فروق واضحة. متوسط: 8 فروق تحتاج تركيزًا. صعب: 12 فرقًا دقيقًا.</p>`)
-    + sec("طريقة اللعب", `<ul><li>اضغط على مكان الفرق في أي من الصورتين. جهاز المقدّم يتحقق من الضغطة.</li><li>كبّر بإصبعين أو بأزرار ＋ و－، واسحب للتحرك. التكبير والسحب لا يُحسبان أخطاء، ولا الضغط على فرق اكتشفته من قبل، ولا الضغط خارج الصورة.</li><li>إذا وقعت ضغطتك بين فرقين قريبين جدًا لا تُحسب لك ولا عليك، فكبّر الصورة واضغط مرة أخرى.</li><li>لكل لاعب <b>5 أخطاء</b> في الجولة. عند الخطأ الخامس يتوقف هو وحده عن الاكتشاف ويتابع تقدّم الآخرين، ويعود في الجولة التالية.</li><li>لكل لاعب <b>تلميح واحد</b> يُظهر على شاشته وحده منطقة تقريبية فيها فرق لم يكتشفه (يخصم 15 نقطة، ولا يُحسب خطأ).</li><li>أثناء الجولة يرى الجميع عدد ما اكتشفه كل لاعب فقط، لا أماكنه.</li></ul>`)
-    + sec("النقاط", `<table class="htable"><tr><td>كل فرق تكتشفه</td><td>+10</td></tr><tr><td>إكمال كل الفروق</td><td>+50</td></tr><tr><td>إنهاء الجولة دون أي خطأ (مع اكتشاف فرق واحد على الأقل)</td><td>+30</td></tr><tr><td>كل خطأ</td><td>−5</td></tr><tr><td>التلميح</td><td>−15</td></tr></table><p class="muted">نتيجة الجولة لا تنزل تحت الصفر. عند التساوي يتقدم الأكثر اكتشافًا، ثم الأقل أخطاءً، ثم الأسبق في آخر اكتشاف.</p>`)
-    + sec("نهاية الجولة", `<p>تنتهي مشاركتك عندما تكتشف كل الفروق أو تستنفد أخطاءك الخمسة، وتُحفظ نتيجتك ووقتك ويكمل الآخرون. تنتهي الجولة بانتهاء الوقت، أو عندما ينهي كل اللاعبين مشاركتهم. اللاعب المنفرد تنتهي جولته بإكمال الفروق أو بانتهاء الوقت أو بخطئه الخامس. بعد النهاية تظهر كل الفروق، ويمكن عرض اكتشافات كل لاعب، مع ترتيب الجولة والترتيب العام.</p>`)
-    + sec("ميزات", `<p>لا يتكرر زوج صور داخل الغرفة حتى تُلعب كل صور المستوى. زر ⓘ يعرض المصوّر أو الفنان والترخيص، ويظهر رابط الصورة الأصلية بعد انتهاء الجولة.</p>`),
+  diff:() => sec("الفكرة", `<p>صورتان متطابقتان تقريبًا، وفي الثانية اختلافات: شيء اختفى أو أضيف أو تغيّر لونه. الصورة نفسها لكل اللاعبين، وكل لاعب يبحث بنفسه، وما يكتشفه يظهر على شاشته وحده. <b>أول من يكتشف كل الاختلافات يفوز، وتتوقف الجولة على الجميع.</b></p>`)
+    + sec("المستويات", `<p>سهل: 5 اختلافات. متوسط: 8. صعب: 12.</p>`)
+    + sec("طريقة اللعب", `<ul><li>اضغط على مكان الاختلاف في أي من الصورتين، وجهاز المقدّم يحكم.</li><li>كبّر بإصبعين أو بأزرار ＋ و－، واسحب للتحرك. التكبير والسحب لا يُحسبان أخطاء، ولا الضغط على اختلاف اكتشفته، ولا الضغط خارج الصورة.</li><li>لكل لاعب <b>5 أخطاء</b>. عند الخامس يتوقف هو وحده ويكمل الباقون.</li><li>إذا أكمل لاعبان أو أكثر في اللحظة نفسها تقريبًا (خلال 0.3 ثانية) فالفوز مشترك.</li></ul>`)
+    + sec("النقاط", `<table class="htable"><tr><td>كل اختلاف</td><td>+10</td></tr><tr><td>إكمال كل الاختلافات</td><td>+50</td></tr><tr><td>دون أي خطأ (مع اختلاف واحد على الأقل)</td><td>+30</td></tr><tr><td>كل خطأ</td><td>−5</td></tr></table><p class="muted">نقاط الجولة لا تنزل تحت الصفر. الفائز بالإكمال يتصدر دائمًا. إذا انتهت الجولة دون فائز: الأكثر اكتشافًا، ثم الأقل أخطاءً، ثم الأعلى نقاطًا، ثم الأسبق في آخر اكتشاف.</p>`)
+    + sec("نهاية الجولة", `<p>تنتهي الجولة بفوز أول من يُكمل، أو بانتهاء الوقت، أو باستبعاد جميع اللاعبين. بعدها تظهر كل الاختلافات، ويمكن عرض ما اكتشفه كل لاعب، مع الترتيب العام لكل الجولات وحقوق الصورة.</p>`),
   puzzle:() => sec("الفكرة", `<p>سباق لترتيب صورة مقسّمة إلى قطع مبعثرة. كل اللاعبين يحصلون على نفس الصورة بنفس الخلط.</p>`)
     + sec("الدخول والبدء", `<p>المقدّم يختار نوع الصور والصعوبة (من 3×3 إلى 6×6) ووقت الجولة والصورة، ثم يبدأ السباق.</p>`)
     + sec("طريقة اللعب", `<ul><li>اسحب القطعة إلى مكانها الصحيح فتتبادل مع القطعة الموجودة هناك.</li><li>أو اضغط قطعتين متتاليتين لتبديلهما.</li><li>زر «تكبير» يوسّع مساحة اللعب على الجوال.</li></ul>`)
@@ -3536,12 +3572,12 @@ const preloadSpot = p => Promise.all([loadSpotImg(p.a), loadSpotImg(p.b)]);
    The board only reports taps (picture coordinates + the tap tolerance at the current zoom); what was found, missed or
    hinted is drawn from the host's state, never decided here. A tap counts only when the finger did not move, no second
    finger touched, and it is not a repeat of the same touch (browsers sometimes fire one touch twice). */
-function mountBoard(el, pair, onTap, extra){
+function mountBoard(el, pair, onTap){
   const W = pair.w, Hh = pair.h;
-  el.innerHTML = `<div class="dfbar"><button class="btn ghost sm" data-z="in" aria-label="تكبير">＋</button><button class="btn ghost sm" data-z="out" aria-label="تصغير">－</button><button class="btn ghost sm" data-z="reset">حجم كامل</button><span class="dfbar-end">${extra || ""}</span></div>
+  el.innerHTML = `<div class="dfbar"><button class="btn ghost sm" data-z="in" aria-label="تكبير">＋</button><button class="btn ghost sm" data-z="out" aria-label="تصغير">－</button><button class="btn ghost sm" data-z="reset">حجم كامل</button></div>
     <div class="dfpair">${[pair.a, pair.b].map((f, i) => `<div class="dfimg" style="aspect-ratio:${W}/${Hh}"><div class="dfzoom"><img src="${esc(f)}" alt="${i ? "الصورة الثانية" : "الصورة الأولى"}" draggable="false"><div class="dfmarks"></div></div></div>`).join("")}</div>`;
   const panes = [...el.querySelectorAll(".dfimg")], zooms = [...el.querySelectorAll(".dfzoom")], marks = [...el.querySelectorAll(".dfmarks")];
-  let sc = 1, tx = 0, ty = 0, locked = false, last = null, view = {found:[], hz:null, rev:null, pend:[]};
+  let sc = 1, tx = 0, ty = 0, locked = false, last = null, view = {found:[], rev:null, pend:[]};
   const clamp = () => { const w = panes[0].clientWidth, h = panes[0].clientHeight; sc = Math.min(6, Math.max(1, sc)); tx = Math.min(0, Math.max(w - w * sc, tx)); ty = Math.min(0, Math.max(h - h * sc, ty)); };
   const apply = () => { clamp(); zooms.forEach(z => z.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`); el.classList.toggle("zoomed", sc > 1.01); };
   const zoomAt = (f, px, py) => { const ns = Math.min(6, Math.max(1, sc * f)), k = ns / sc; tx = px - (px - tx) * k; ty = py - (py - ty) * k; sc = ns; apply(); };
@@ -3549,7 +3585,6 @@ function mountBoard(el, pair, onTap, extra){
   const draw = () => {
     let h = (view.found || []).map(f => box(f[0], f[1], f[2], f[3], "")).join("");
     if (view.rev) h += view.rev.map(r => box(r[0], r[1], r[2], r[3], "rev")).join("");
-    if (view.hz && !view.rev) h += `<span class="dfhz" style="left:${(view.hz[0] - view.hz[2]) / W * 100}%;top:${(view.hz[1] - view.hz[2]) / Hh * 100}%;width:${view.hz[2] * 2 / W * 100}%;height:${view.hz[2] * 2 / Hh * 100}%"></span>`;
     h += view.pend.map(p => `<span class="dfpend" style="left:${p.x / W * 100}%;top:${p.y / Hh * 100}%"></span>`).join("");
     marks.forEach(m => m.innerHTML = h);
   };
@@ -3613,37 +3648,26 @@ function mountBoard(el, pair, onTap, extra){
 function spotFail(holder, attr){
   if (holder) holder.innerHTML = `<div class="center stack"><p class="note">تعذّر تحميل صور هذه الجولة. تأكد من الإنترنت ثم أعد المحاولة.</p><div><button class="btn sm" ${attr}>إعادة المحاولة</button></div></div>`;
 }
-/* attribution: a small button that opens the photo's author, source, licence and the changes made (CC BY / CC BY-SA) */
-function imageInfo(p, running){
-  const safe = u => /^https:\/\//.test(u || "") ? esc(u) : "";
-  const link = (u, t) => safe(u) ? `<a href="${safe(u)}" target="_blank" rel="noopener">${t}</a>` : t;
-  let rows;
-  if (!p.credit) rows = `<tr><th>العمل</th><td>رسم أصلي من إعداد لمّة</td></tr><tr><th>التعديلات</th><td>نسخة ثانية من الرسم نفسه بفروق مقصودة.</td></tr>`;
-  else if (p.credit.length >= 4){
-    const [who, page, lic, licUrl] = p.credit, sa = /SA/i.test(lic || "");
-    rows = `<tr><th>${p.kind === "art" ? "الفنان" : "المصوّر"}</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${running ? `Wikimedia Commons<br><span class="muted">رابط صفحة الصورة الأصلية يظهر هنا بعد انتهاء الجولة، حتى لا تُكشف الفروق أثناء اللعب.</span>` : link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
-      <tr><th>الترخيص</th><td>${/^(public domain|cc0)$/i.test(lic || "") ? `<bdi dir="ltr">${esc(lic)}</bdi> (ملكية عامة)` : link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
-      <tr><th>التعديلات</th><td>صُغّرت الصورة، وعُدّلت النسخة الثانية بإخفاء عناصر أو إضافتها أو تغيير ألوانها لصنع الفروق.${sa ? " النسختان المعدّلتان متاحتان بالترخيص نفسه." : ""}</td></tr>`;
-  } else rows = `<tr><th>المصدر</th><td>${esc(String(p.credit[0] || ""))}</td></tr>`;
-  openModal("معلومات الصورة", `<p class="muted">${esc(p.title || "")}</p><table class="htable info">${rows}</table>`);
-}
 const reportBtn = attr => `<button class="btn ghost sm dfreport" ${attr}>إبلاغ عن مشكلة في الصورة</button>`;
 
 /* ================= SPOT THE DIFFERENCE: the same picture for everybody, each player finds the differences alone =================
-   Every player looks for ALL the differences of the round on their own: a difference found by one player counts for that
-   player only, and stays hidden from the others until the round is over.
+   Every player looks for ALL the differences on their own: a difference found by one player counts for that player only,
+   and stays hidden from the others until the round is over. The first player to find them all wins and the round stops
+   for everybody; players who complete within DF_WIN of the first are joint winners.
    The host's device is the referee: the exact places of the differences stay in its private data (H.priv.dfs), it judges
-   every tap and keeps every player's record (mistakes, points, hint, status) under the player's name, so a reload, a new
-   tab or leaving and joining again finds the same record.
+   every tap and keeps every player's record (mistakes, points, status) under the player's name, so a reload, a new tab or
+   leaving and joining again finds the same record. WHO WAS FIRST is decided by the moment each tap reached the host's
+   device (its own clock, the referee's), never by a time a phone sends: a phone cannot claim to be earlier.
    The room in the database is readable by every phone, so what belongs to one player travels sealed: each device has a
    key pair (ECDH P-256), the host and each phone derive a shared key, and with it (AES-GCM) the phone seals its taps and
-   the host seals that player's finds, hint and answers into a "mailbox" seat of the host's. Other phones can read the
-   room but see only each player's counts. No change of the database rules is needed. */
-const DF_RACE = 400;      // ms: taps that reach the host this close together are judged together, in tap order
-const DF_MAX_W = 5, DF_PTS = {find:10, all:50, clean:30, miss:5, hint:15};
-const dfZero = n => ({n, f:0, w:0, p:0, h:0, out:0, done:0, ft:0, b:0});
+   the host seals that player's finds and answers into a "mailbox" seat of the host's. Other phones can read the room but
+   see only each player's counts. No change of the database rules is needed. */
+const DF_DRAIN = 120;     // ms: taps are judged in the order they reached the host, a moment after they arrive
+const DF_WIN = 300;       // ms: players who complete within this time of the first completion share the win
+const DF_MAX_W = 5, DF_PTS = {find:10, all:50, clean:30, miss:5};
+const dfZero = n => ({n, f:0, w:0, p:0, out:0, done:0, ft:0, dt:0, da:0, b:0});
 // a player's round record is kept under their name (one seat per name in a game), so leaving and joining again,
-// a reload or a new tab finds the same mistakes, finds, points and hint
+// a reload or a new tab finds the same mistakes, finds and points
 const dfKey = n => "n_" + hashStr(normName(n || ""));
 const dfBoxId = k => "mbox_" + k.replace(/[^A-Za-z0-9_-]/g, "");
 // [gx0, gy0, cols, "hexrow.hexrow…"] -> centres of the changed 16 px cells (decoded once per difference)
@@ -3690,27 +3714,32 @@ const DFC = {
     return DFC._mine;
   },
 };
+const fmtMS = ms => fmtT(Math.max(0, Math.round((ms || 0) / 1000)));
 const Diff = {
-  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}}; },
+  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0}; },
   async restore(pv){
     H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; H.priv.dfs = pv.dfs || null; H.priv.seen = pv.seen || {};
-    H.priv.pf = pv.pf || {}; H.priv.hkp = pv.hkp || null; H.priv.mb = pv.mb || []; H.priv.own = pv.own || {}; H.priv.pk = {}; H.priv.le = {}; H.priv.box = {};
-    if (H.s.ph === "play" && H.s.pair && H.priv.dfs){ H.priv.dfRd = null; H.priv.dfq = []; Diff.hostKey(); startRaceClock(true); }      // the round goes on
+    H.priv.pf = pv.pf || {}; H.priv.hkp = pv.hkp || null; H.priv.mb = pv.mb || []; H.priv.own = pv.own || {}; H.priv.winAt = +pv.winAt || 0;
+    H.priv.pk = {}; H.priv.le = {}; H.priv.box = {}; H.priv.qd = new Set(); H.priv.unsealing = 0;
+    // records saved by an earlier version (with a hint) are read as they are: the hint parts are simply not used any more
+    for (const k of Object.keys(H.s.pl || {})){ const p = H.s.pl[k]; if (p && typeof p === "object"){ delete p.h; for (const f of ["dt", "da"]) if (!Number.isFinite(p[f])) p[f] = 0; } }
+    if (H.s.ph === "play" && H.s.pair && H.priv.dfs){ H.priv.dfRd = null; H.priv.dfq = []; Diff.hostKey(); startRaceClock(true); if (H.priv.winAt) Diff.armClose(); }      // the round goes on
     else if (H.s.ph === "play" || H.s.ph === "prep") H.s.ph = "lobby";
   },
-  init: () => ({rd:0, pair:null, nd:0, lv:1, fresh:true, pl:{}, rev:null, pf:null, rk:null, tot:{}, end:"", hk:""}),
+  init: () => ({rd:0, pair:null, nd:0, lv:1, fresh:true, pl:{}, rev:null, pf:null, rk:null, win:null, rn:null, tot:{}, end:"", hk:""}),
   // the host's key pair: kept in its private saved data, so after a reload the phones' sealed messages still open
   hostKey(){
     if (!DFC.ok()) return Promise.reject(new Error("no crypto"));
     if (!H.priv.hkP){ H.priv.hkP = DFC.pair(H.priv.hkp).then(k => { if (!H) return k; H.priv.hkp = k.saved; if (H.s.hk !== k.pub){ H.s.hk = k.pub; pushHost(); } return k; }); H.priv.hkP.catch(() => { if (H) H.priv.hkP = null; }); }
     return H.priv.hkP;
   },
-  pf(k){ const a = H.priv.pf || (H.priv.pf = {}); return a[k] || (a[k] = {fi:[], lr:[], hz:null}); },
+  pf(k){ const a = H.priv.pf || (H.priv.pf = {}); return a[k] || (a[k] = {fi:[], lr:[]}); },
   async start(replay){
     if (H.priv.picking) return;
     const s = H.s, rd = s.rd + 1;
-    Diff.clearBoxes();
-    s.rd = rd; s.ph = "prep"; s.pl = {}; s.rev = null; s.pf = null; s.rk = null; s.end = ""; s.pair = null; H.priv.dfs = null; H.priv.seen = {}; H.priv.dfq = []; H.priv.pf = {}; H.priv.le = {}; H.priv.box = {};
+    Diff.clearBoxes(); clearTimeout(H.priv.closeT); H.priv.closeT = null;
+    s.rd = rd; s.ph = "prep"; s.pl = {}; s.rev = null; s.pf = null; s.rk = null; s.win = null; s.rn = null; s.end = ""; s.pair = null;
+    H.priv.dfs = null; H.priv.seen = {}; H.priv.dfq = []; H.priv.pf = {}; H.priv.le = {}; H.priv.box = {}; H.priv.qd = new Set(); H.priv.winAt = 0;
     pushHost();
     const devs = [devId, ...hostPlayers().map(p => p.presence.dv).filter(d => typeof d === "string" && /^[a-z0-9]{10,24}$/.test(d))].slice(0, 40);
     let r; H.priv.picking = true;
@@ -3739,16 +3768,15 @@ const Diff = {
     else if (a === "end") Diff.finish("host");
     else if (a === "lobby"){ clearInterval(H.priv.tick); s.ph = "lobby"; pushHost(); }
     else if (a === "dfhretry"){ H.priv.dfRd = null; renderHost(); }
-    else if (a === "dfinfo" && s.pair) imageInfo(s.pair, s.ph !== "over");
     else if (a === "replay") Diff.start(true);
-    else if (a === "dfhint"){ Diff.hint("host", "dfh" + Date.now()); pushHost(); }
     else if (a === "dfsel" && b){ H.priv.dfSel = b.dataset.k || ""; renderHost(); }
-    else if (a === "dfreport" && s.pair){ Spot.report(s.pair.id).then(() => { const x = $("#hostMain .dfreport"); if (x){ x.textContent = "شكرًا، وصل البلاغ للمراجعة"; x.disabled = true; } }).catch(() => {}); }
+    else if (a === "dfreport" && s.pair && s.ph === "over"){ Spot.report(s.pair.id).then(() => { const x = $("#hostMain .dfreport"); if (x){ x.textContent = "وصل البلاغ للمراجعة (لا تُخفى الصورة تلقائيًا)"; x.disabled = true; } }).catch(() => {}); }
   },
-  // the referee: one tap of one player, against that player's own finds only
-  judge(k, x, y, tol, id){
+  // the referee: one tap of one player (at = when it reached this device), against that player's own finds only
+  judge(k, x, y, tol, id, at){
     const s = H.s, D = H.priv.dfs, pr = s.pl[k];
     if (s.ph !== "play" || !D || !pr) return;
+    if (H.priv.winAt && at > H.priv.winAt + DF_WIN) return;              // reached the host after the round was won: not counted
     const pf = Diff.pf(k);
     const res = code => { pf.lr = [...(pf.lr || []), [id, code, x, y]].slice(-6); };
     if (pr.out || pr.done){ res(pr.out ? "out" : "done"); return; }
@@ -3768,59 +3796,76 @@ const Diff = {
     else if (near.length > 1){ res("amb"); return; }                      // two differences under one fingertip: zoom in, no mistake
     if (hit < 0 && again){ res("dup"); return; }
     if (hit >= 0){
-      pf.fi.push(hit); pr.f = pf.fi.length; pr.p += DF_PTS.find; pr.ft = Math.max(0, srvNow() - s.t0); res("ok");
-      if (pr.f >= s.nd){ pr.done = 1; pr.p += DF_PTS.all; pr.b += DF_PTS.all; pf.hz = null; Diff.checkEnd(); }      // this player found them all
+      pf.fi.push(hit); pr.f = pf.fi.length; pr.p += DF_PTS.find; pr.ft = Math.max(0, at - s.t0); res("ok");
+      if (pr.f >= s.nd){                                                  // this player found them all
+        pr.done = 1; pr.dt = pr.ft; pr.da = at; pr.p += DF_PTS.all; pr.b += DF_PTS.all;
+        if (!H.priv.winAt){ H.priv.winAt = at; saveHost(); Diff.armClose(); }   // the first to complete: the round closes DF_WIN later
+      }
       return;
     }
     pr.w++; pr.p = Math.max(0, pr.p - DF_PTS.miss); res("no");
-    if (pr.w >= DF_MAX_W){ pr.out = 1; pf.hz = null; }
+    if (pr.w >= DF_MAX_W) pr.out = 1;
     Diff.checkEnd();
   },
-  hint(k, id){
-    const s = H.s, D = H.priv.dfs, pr = s.pl[k];
-    if (s.ph !== "play" || !D || !pr || pr.h || pr.out || pr.done) return;
-    const pf = Diff.pf(k), mine = new Set(pf.fi), open = D.map((d, i) => i).filter(i => !mine.has(i));
-    if (!open.length) return;
-    const d = D[open[Math.floor(Math.random() * open.length)]], W = s.pair.w, Hh = s.pair.h;
-    // an approximate area: a circle several times the size of the difference, its centre moved at random
-    const R = Math.round(Math.max(d[2], d[3]) * 2.2 + 0.05 * W), a = Math.random() * Math.PI * 2, o = R * (0.25 + Math.random() * 0.4);
-    const cx = Math.round(Math.min(W - R * 0.5, Math.max(R * 0.5, d[0] + Math.cos(a) * o))), cy = Math.round(Math.min(Hh - R * 0.5, Math.max(R * 0.5, d[1] + Math.sin(a) * o)));
-    pr.h = 1; pr.p = Math.max(0, pr.p - DF_PTS.hint); pf.hz = [cx, cy, R]; pf.lr = [...(pf.lr || []), [id, "hint", cx, cy]].slice(-6);
+  // the closing: DF_WIN after the first completion reached the host, every tap that reached it before then is judged
+  // (a sealed tap still being opened is waited for, up to 3 s), then the round ends for everybody
+  armClose(){
+    if (!H || H.priv.closeT || !H.priv.winAt) return;
+    const t0 = Date.now(), go = () => {
+      if (!H || H.g !== "diff" || H.s.ph !== "play"){ if (H) H.priv.closeT = null; return; }
+      if ((H.priv.unsealing || 0) > 0 && Date.now() - t0 < 3000){ H.priv.closeT = setTimeout(go, 40); return; }
+      H.priv.closeT = null; Diff.drain(true); Diff.finish("win");
+    };
+    H.priv.closeT = setTimeout(go, Math.max(0, H.priv.winAt + DF_WIN - srvNow()) + 20);
   },
-  // a player's part ends when they found everything or used their 5 attempts; the round ends when the time is up or when
-  // nobody can play any more (everybody finished or is out)
+  // nobody can play any more (everybody used their 5 attempts): the round ends
   checkEnd(){
-    const s = H.s; if (s.ph !== "play") return;
+    const s = H.s; if (s.ph !== "play" || H.priv.winAt) return;
     const keys = Object.keys(s.pl); if (!keys.length) return;
-    if (!keys.every(k => s.pl[k].out || s.pl[k].done)) return;
-    Diff.finish(keys.every(k => s.pl[k].done) ? "all" : keys.every(k => s.pl[k].out) ? (keys.length === 1 ? "solo" : "out") : "done");
+    if (keys.every(k => s.pl[k].out)) Diff.finish(keys.length === 1 ? "solo" : "out");
   },
   // players who can still play but all stepped away: wait a minute, then end (no round left hanging)
   watchAway(players){
-    const s = H.s; if (s.ph !== "play" || !Object.keys(s.pl).length || s.pl.host) return;
+    const s = H.s; if (s.ph !== "play" || !Object.keys(s.pl).length || s.pl.host || H.priv.winAt) return;
     const here = new Set(activePlayers(players).map(p => dfKey(pname(p))));
     const able = Object.keys(s.pl).filter(k => !s.pl[k].out && !s.pl[k].done && here.has(k));
     if (able.length){ H.priv.awayAt = 0; return; }
     if (!H.priv.awayAt) H.priv.awayAt = Date.now();
     else if (Date.now() - H.priv.awayAt > 60000) Diff.finish("away");
   },
+  /* the order of the round: the winners first (all rank 1), then the others by more differences, fewer mistakes,
+     more points, and who reached their last find first (times measured on the host's device) */
+  rank(s){
+    const keys = Object.keys(s.pl), win = new Set(s.win || []);
+    const ord = (a, b) => { const x = s.pl[a], y = s.pl[b];
+      return (win.has(b) - win.has(a)) || (win.has(a) && win.has(b) ? (x.da - y.da) || (y.p - x.p) : 0)
+        || (y.f - x.f) || (x.w - y.w) || (y.p - x.p) || ((x.ft || 9e12) - (y.ft || 9e12)); };
+    const rk = keys.sort(ord), rn = {}; let n = 0;
+    rk.forEach((k, i) => { if (win.has(k)) rn[k] = 1; else { n = i + 1; rn[k] = n; } });
+    return {rk, rn};
+  },
   finish(why){
-    const s = H.s; if (s.ph !== "play") return;
-    clearInterval(H.priv.tick); clearTimeout(H.priv.dfT); s.ph = "over"; s.end = why || "";
+    const s = H.s; if (s.ph !== "play") return;                          // a round ends once: no bonus or result is counted twice
+    clearInterval(H.priv.tick); clearTimeout(H.priv.dfT); H.priv.dfT = null; clearTimeout(H.priv.closeT); H.priv.closeT = null;
+    s.ph = "over";
+    const close = H.priv.winAt ? H.priv.winAt + DF_WIN : 0;
+    s.win = close ? Object.keys(s.pl).filter(k => s.pl[k].done && s.pl[k].da && s.pl[k].da <= close) : [];
+    s.end = s.win.length ? "win" : (why || "");
     // only now every difference, and who found which, becomes public
     s.rev = (H.priv.dfs || []).map(d => d.slice(0, 4));
     s.pf = {}; for (const k of Object.keys(s.pl)) s.pf[k] = Diff.pf(k).fi.slice();
-    for (const k of Object.keys(s.pl)){ const p = s.pl[k]; if (p.f > 0 && !p.w && !p.out){ p.p += DF_PTS.clean; p.b += DF_PTS.clean; } Diff.pf(k).hz = null; }
-    s.rk = Object.keys(s.pl).sort((a, b) => { const x = s.pl[a], y = s.pl[b]; return y.p - x.p || y.f - x.f || x.w - y.w || (x.ft || 9e9) - (y.ft || 9e9); });
+    for (const k of Object.keys(s.pl)){ const p = s.pl[k]; if (p.f > 0 && !p.w && !p.out){ p.p += DF_PTS.clean; p.b += DF_PTS.clean; } }
+    const r = Diff.rank(s); s.rk = r.rk; s.rn = r.rn;
     const tot = s.tot || (s.tot = {});
-    for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; }
-    H.priv.dfSel = "";
+    for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
+    H.priv.dfSel = ""; H.priv.dfq = [];
     Diff.clearBoxes();
     pushHost();
   },
-  // sealed taps from the phones: opened, collected for 0.4 s, then judged oldest first
+  // sealed taps from the phones: the moment each reaches this device is noted at once, then they are opened and judged
   hostPeers(players){
     const s = H.s; if (s.ph !== "play") return;
+    const now = srvNow();
     let ch = Diff.enroll(players);
     const pk = H.priv.pk || (H.priv.pk = {}), le = H.priv.le || (H.priv.le = {});
     for (const p of players){
@@ -3832,33 +3877,37 @@ const Diff = {
       if (p.uid){ if (own[k] && own[k] !== p.uid) continue; if (!own[k]){ own[k] = p.uid; } }
       if (!s.pl[k]){ s.pl[k] = dfZero(pname(p)); ch = true; }
       if (pk[k] !== z.pk){ pk[k] = z.pk; (H.priv.box || (H.priv.box = {}))[k] = ""; Diff.flush(); }        // a new key (new device): seal its record again
-      if (typeof z.e === "string" && z.e.length < 6000 && le[k] !== z.e){ le[k] = z.e; Diff.unseal(k, z.pk, z.e, Number.isFinite(+p.ts) && +p.ts > 0 ? Math.min(srvNow(), +p.ts) : srvNow(), s.rd); }
+      if (typeof z.e === "string" && z.e.length < 6000 && le[k] !== z.e){ le[k] = z.e; Diff.unseal(k, z.pk, z.e, now, s.rd); }
     }
     Diff.watchAway(players);
     if (ch) pushHost();
   },
   async unseal(k, pub, e, arr, rd){
-    let m;
-    try { const hk = await Diff.hostKey(); m = await DFC.open(await DFC.shared(hk, pub), e, DFC.ad("up", H.code, rd, k)); } catch(err){ return; }   // not sealed for this player: ignored
+    let m; H.priv.unsealing = (H.priv.unsealing || 0) + 1;
+    try { const hk = await Diff.hostKey(); m = await DFC.open(await DFC.shared(hk, pub), e, DFC.ad("up", H.code, rd, k)); } catch(err){ m = null; }   // not sealed for this player: ignored
+    finally { if (H) H.priv.unsealing = Math.max(0, (H.priv.unsealing || 1) - 1); }
     if (!H || H.g !== "diff" || H.s.rd !== rd || H.s.ph !== "play" || !m) return;
-    const s = H.s, seen = H.priv.seen || (H.priv.seen = {}), sn = seen[k] || (seen[k] = []), q = H.priv.dfq || (H.priv.dfq = []);
+    const seen = H.priv.seen || (H.priv.seen = {}), sn = seen[k] || (seen[k] = []), q = H.priv.dfq || (H.priv.dfq = []), qd = H.priv.qd || (H.priv.qd = new Set());
     for (const t of Array.isArray(m.q) ? m.q.slice(-8) : []){
-      if (!Array.isArray(t) || typeof t[0] !== "string" || t[0].length > 16 || sn.includes(t[0])) continue;
-      sn.push(t[0]); if (sn.length > 60) sn.shift();
-      // tap order: the phone's own tap time counts only within 0.4 s of when the database received it
-      q.push({k, id:t[0], x:+t[1], y:+t[2], tol:+t[3], at:Math.min(arr, Math.max(s.t0 || 0, arr - DF_RACE, +t[4] || 0))});
+      if (!Array.isArray(t) || typeof t[0] !== "string" || t[0].length > 16 || sn.includes(t[0]) || qd.has(k + "|" + t[0])) continue;
+      qd.add(k + "|" + t[0]);
+      q.push({k, id:t[0], x:+t[1], y:+t[2], tol:+t[3], at:arr});             // the phone's own time is not used for the order
     }
-    if (typeof m.hq === "string" && m.hq.length <= 16 && !sn.includes(m.hq)){ sn.push(m.hq); q.push({k, id:m.hq, hint:true, at:arr}); }
-    if (q.length && !H.priv.dfT) H.priv.dfT = setTimeout(Diff.drain, DF_RACE);
+    if (q.length && !H.priv.dfT) H.priv.dfT = setTimeout(() => Diff.drain(), DF_DRAIN);
   },
-  drain(){
+  drain(closing){
     if (!H || H.g !== "diff") return;
-    H.priv.dfT = null;
+    clearTimeout(H.priv.dfT); H.priv.dfT = null;
     const q = (H.priv.dfq || []).sort((a, b) => a.at - b.at); H.priv.dfq = [];
-    for (const t of q){ if (t.hint) Diff.hint(t.k, t.id); else Diff.judge(t.k, t.x, t.y, t.tol, t.id); }
-    pushHost(); Diff.flush();
+    const seen = H.priv.seen || (H.priv.seen = {});
+    for (const t of q){
+      const sn = seen[t.k] || (seen[t.k] = []); if (sn.includes(t.id)) continue;
+      sn.push(t.id); if (sn.length > 60) sn.shift(); if (H.priv.qd) H.priv.qd.delete(t.k + "|" + t.id);
+      Diff.judge(t.k, t.x, t.y, t.tol, t.id, t.at);
+    }
+    if (!closing){ pushHost(); Diff.flush(); }
   },
-  /* each player's own finds, hint and answers, sealed for that player alone, in a mailbox seat of the host's
+  /* each player's own finds and answers, sealed for that player alone, in a mailbox seat of the host's
      (written only when it changed; the seats are removed when the round ends) */
   async flush(){
     if (!H || H.g !== "diff" || !NR || !NR.box || H.priv.flushing){ if (H && H.priv) H.priv.flushAgain = true; return; }
@@ -3867,7 +3916,7 @@ const Diff = {
       const s = H.s, D = H.priv.dfs, rd = s.rd, hk = await Diff.hostKey();
       if (s.ph === "play" && D) for (const k of Object.keys(s.pl)){
         const pub = (H.priv.pk || {})[k]; if (!pub) continue;
-        const pf = Diff.pf(k), body = {f:pf.fi.map(i => [i, D[i][0], D[i][1], D[i][2], D[i][3]]), lr:pf.lr || [], hz:pf.hz || null};
+        const pf = Diff.pf(k), body = {f:pf.fi.map(i => [i, D[i][0], D[i][1], D[i][2], D[i][3]]), lr:pf.lr || []};
         const sig = pub + JSON.stringify(body), box = H.priv.box || (H.priv.box = {});
         if (box[k] === sig) continue;
         const e = await DFC.seal(await DFC.shared(hk, pub), body, DFC.ad("down", H.code, rd, k));
@@ -3884,22 +3933,69 @@ const Diff = {
     for (const p of NR.peers()) if (!p.sameTab && p.presence && p.presence.r === "m") ids.add(p.peer);     // also any left from an earlier visit
     for (const id of ids) NR.unbox(id); H.priv.mb = []; H.priv.box = {};
   },
-  // results: points, found, mistakes, time; ties go to more found, then fewer mistakes, then the earlier last find
+  /* ---------- the results ---------- */
+  // the large announcement: the winner (or joint winners), or why the round ended and who leads
+  heroHTML(s, me){
+    const pl = s.pl || {}, win = (s.win || []).filter(k => pl[k]), lead = (s.rk || [])[0], L = lead && pl[lead];
+    const names = ks => ks.map(k => `<b>${esc(pl[k].n)}</b>`).join(" و");
+    let title, big, sub;
+    if (win.length){
+      const t = Math.max(...win.map(k => pl[k].dt || 0));
+      title = win.length > 1 ? "فوز مشترك" : "الفائز بالجولة"; big = names(win);
+      sub = `${win.length > 1 ? "أكملوا" : "أكمل"} ${s.nd} من ${s.nd} اختلافات خلال <bdi>${fmtMS(t)}</bdi>`;
+    } else {
+      title = {time:"انتهى الوقت", out:"استُبعد جميع اللاعبين", solo:"انتهت محاولاتك الخمس", host:"أنهى المقدّم الجولة", away:"لم يبقَ لاعب متصل"}[s.end] || "انتهت الجولة";
+      big = L ? `<span class="dfhero-k">متصدر الجولة:</span> <b>${esc(L.n)}</b>` : "";
+      sub = L ? `اكتشف ${L.f} من ${s.nd} اختلافات` : "";
+    }
+    const mine = me && pl[me] && s.rn ? `<p class="dfhero-me">أنت: المركز <b>${s.rn[me]}</b> · ${pl[me].f} من ${s.nd} · <b>${pl[me].p}</b> نقطة</p>` : "";
+    return `<div class="dfhero ${win.length ? "won" : ""}" id="dfHeroCard"><div class="dfhero-cup" aria-hidden="true">🏆</div><p class="dfhero-t">${title}</p>${big ? `<p class="dfhero-n">${big}</p>` : ""}${sub ? `<p class="dfhero-s">${sub}</p>` : ""}${mine}</div>`;
+  },
+  // what happened to each player, for the table
+  status(s, k){
+    const p = s.pl[k];
+    if ((s.win || []).includes(k)) return `<span class="dftime">${fmtMS(p.dt)}</span>`;
+    if (p.out) return `<span class="dfst out">استُبعد — 5 أخطاء</span>`;
+    if (p.done) return `<span class="dftime">${fmtMS(p.dt)}</span>`;
+    return `<span class="dfst">${{win:"توقفت الجولة بفوز المنافس", time:"انتهى الوقت", host:"أنهى المقدّم الجولة", away:"انتهت الجولة", out:"انتهت الجولة", solo:"انتهت الجولة"}[s.end] || "انتهت الجولة"}</span>`;
+  },
   resultsHTML(s, me, sel, attr){
-    const rows = (s.rk || []).map((k, i) => { const p = s.pl[k]; return `<tr class="${k === me ? "me" : ""}"><td>${i + 1}</td><td>${esc(p.n)}${p.out ? ` <span class="chip warn">استُبعد</span>` : p.done ? ` <span class="chip ok">أكمل</span>` : ""}</td><td>${p.f}</td><td>${p.w}</td><td>${p.ft ? fmtT(Math.round(p.ft / 1000)) : "—"}</td><td><b>${p.p}</b>${p.b ? `<small class="muted">(+${p.b})</small>` : ""}</td></tr>`; }).join("");
-    const T = s.tot || {}, tk = Object.keys(T).sort((a, b) => T[b].p - T[a].p || T[b].f - T[a].f);
-    const tot = tk.length && (s.rd > 1 || tk.some(k => T[k].r > 1)) ? `<h3>الترتيب العام</h3><div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الجولات</th><th>الفروق</th><th>النقاط</th></tr>${tk.map((k, i) => `<tr class="${k === me ? "me" : ""}"><td>${i + 1}</td><td>${esc(T[k].n)}</td><td>${T[k].r}</td><td>${T[k].f}</td><td><b>${T[k].p}</b></td></tr>`).join("")}</table></div>` : "";
-    const why = {all:"أكمل كل اللاعبين الفروق.", done:"أنهى كل اللاعبين مشاركتهم.", time:"انتهى الوقت.", out:"استنفد كل اللاعبين محاولاتهم.", solo:"استنفد اللاعب محاولاته الخمس.", away:"لم يبقَ لاعب متصل يستطيع اللعب.", host:"أنهى المقدّم الجولة."}[s.end] || "";
-    const who = (s.rk || []).length ? `<div class="row dfsel"><span class="muted">اكتشافات:</span>${s.rk.map(k => `<button class="btn ghost sm ${k === sel ? "on" : ""}" ${attr}="dfsel" data-k="${esc(k)}">${esc(s.pl[k].n)} (${s.pl[k].f})</button>`).join("")}</div>
-      <p class="muted dfnote">على الصورتين: الدوائر الخضراء ما اكتشفه ${sel && s.pl[sel] ? esc(s.pl[sel].n) : "اللاعب المختار"}، والبرتقالية ما لم يكتشفه.</p>` : "";
-    return `<p class="muted">${why} عدد فروق الصورة ${s.nd}.</p>${who}
-      ${rows ? `<div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الفروق</th><th>الأخطاء</th><th>الوقت</th><th>النقاط</th></tr>${rows}</table></div><p class="muted dfnote">+10 لكل فرق، +50 لمن يكمل كل الفروق، +30 لمن أنهى الجولة دون أخطاء، −5 لكل خطأ، −15 للتلميح. ما بين القوسين مكافآت، و«الوقت» هو وقت آخر اكتشاف للاعب.</p>` : ""}${tot}`;
+    const win = new Set(s.win || []), rn = s.rn || {};
+    const rows = (s.rk || []).map(k => { const p = s.pl[k]; return `<tr class="${win.has(k) ? "win" : ""} ${k === me ? "me" : ""}"><td class="dfrank">${win.has(k) ? "🏆" : rn[k] || ""}</td><td class="dfname">${esc(p.n)}</td><td><b>${p.f}</b><small>/${s.nd}</small></td><td>${p.w}</td><td>${Diff.status(s, k)}</td><td class="dfpts"><b>${p.p}</b></td></tr>`; }).join("");
+    const T = s.tot || {}, tk = Object.keys(T).sort((a, b) => T[b].p - T[a].p || (T[b].w || 0) - (T[a].w || 0) || T[b].f - T[a].f);
+    const tot = tk.length ? `<div class="panel stack dfoverall"><div class="row" style="justify-content:space-between"><h3>الترتيب العام</h3><span class="muted dfcap">مجموع كل الجولات في هذه الغرفة</span></div>
+      <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th><th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map((k, i) => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${i + 1}</td><td class="dfname">${esc(T[k].n)}</td><td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b></td></tr>`).join("")}</table></div></div>` : "";
+    const who = (s.rk || []).length > 1 ? `<div class="row dfsel"><span class="muted">على الصورتين:</span>${s.rk.map(k => `<button class="btn ghost sm ${k === sel ? "on" : ""}" ${attr}="dfsel" data-k="${esc(k)}">${esc(s.pl[k].n)}</button>`).join("")}</div>` : "";
+    return `<div class="panel stack dfround"><h3>نتيجة الجولة</h3>
+      <div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الاختلافات</th><th>الأخطاء</th><th>زمن الإكمال أو الحالة</th><th>نقاط الجولة</th></tr>${rows}</table></div>
+      <p class="muted dfnote">نقاط الجولة: +10 لكل اختلاف، +50 لإكمالها كلها، +30 دون أي خطأ، −5 لكل خطأ.</p>
+      ${who}<p class="muted dfnote">الدوائر الخضراء ما اكتشفه ${sel && s.pl[sel] ? `<b>${esc(s.pl[sel].n)}</b>` : "اللاعب"}، والبرتقالية ما فاته.</p></div>${tot}`;
+  },
+  // the picture's author, source and licence: shown in full after the round (the source would reveal the answer before)
+  creditLine(p){
+    const c = p && p.credit;
+    if (!c) return `رسم أصلي من إعداد لمّة`;
+    if (c.length >= 4) return `${p.kind === "art" ? "رسم" : "تصوير"}: ${esc(c[0])} · <bdi dir="ltr">${esc(c[2])}</bdi> · Wikimedia Commons`;
+    return esc(String(c[0] || ""));
+  },
+  creditHTML(p, host){
+    const safe = u => /^https:\/\//.test(u || "") ? esc(u) : "";
+    const link = (u, t) => safe(u) ? `<a href="${safe(u)}" target="_blank" rel="noopener">${t}</a>` : t;
+    const c = p && p.credit; let rows;
+    if (!c) rows = `<tr><th>العمل</th><td>رسم أصلي من إعداد لمّة</td></tr>`;
+    else if (c.length >= 4){
+      const [who, page, lic, licUrl] = c, sa = /SA/i.test(lic || "");
+      rows = `<tr><th>${p.kind === "art" ? "الفنان" : "المصوّر"}</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
+        <tr><th>الترخيص</th><td>${/^(public domain|cc0)$/i.test(lic || "") ? `<bdi dir="ltr">${esc(lic)}</bdi> (ملكية عامة)` : link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
+        <tr><th>التعديلات</th><td>صُغّرت الصورة، وعُدّلت النسخة الثانية لصنع الاختلافات.${sa ? " النسختان المعدّلتان بالترخيص نفسه." : ""}</td></tr>`;
+    } else rows = `<tr><th>المصدر</th><td>${esc(String(c[0] || ""))}</td></tr>`;
+    return `<details class="panel dfcredit-box"><summary>حقوق الصورة${host ? " وتفاصيل الجولة" : ""}</summary><table class="htable info">${rows}</table>${host ? `<div class="row">${reportBtn('data-h="dfreport"')}</div><p class="muted dfnote">البلاغ يصل للمراجعة فقط، ولا يُخفي الصورة تلقائيًا.</p>` : ""}</details>`;
   },
   // during the round everybody sees only how many each player found, never where
   liveHTML(s, me){
-    const ks = Object.keys(s.pl).sort((a, b) => s.pl[b].f - s.pl[a].f || s.pl[b].p - s.pl[a].p);
+    const ks = Object.keys(s.pl).sort((a, b) => s.pl[b].f - s.pl[a].f || s.pl[a].w - s.pl[b].w);
     if (!ks.length) return `<p class="muted">بانتظار اللاعبين…</p>`;
-    return `<div class="lb dflive">${ks.map(k => { const p = s.pl[k]; return `<div class="${k === me ? "me" : ""} ${p.out ? "out" : ""}"><span>${esc(p.n)}${p.done ? ` <span class="chip ok">أكمل ✓</span>` : p.out ? ` <span class="chip warn">استُبعد</span>` : ""}</span><span class="muted"><b>${p.f}</b> من ${s.nd} · أخطاء ${p.w}/${DF_MAX_W} · ${p.p} نقطة</span></div>`; }).join("")}</div>`;
+    return `<div class="lb dflive">${ks.map(k => { const p = s.pl[k]; return `<div class="${k === me ? "me" : ""} ${p.out ? "out" : ""}"><span>${esc(p.n)}${p.done ? ` <span class="chip ok">أكمل ✓</span>` : p.out ? ` <span class="chip warn">استُبعد</span>` : ""}</span><span class="muted"><b class="dfbig">${p.f}</b> من ${s.nd} · أخطاء ${p.w}/${DF_MAX_W}</span></div>`; }).join("")}</div>`;
   },
   // the picture after the round: the chosen player's finds in green, the rest in orange
   review(s, sel){ const got = new Set((s.pf && s.pf[sel]) || []), all = s.rev || []; return {found:all.filter((d, i) => got.has(i)), rev:all.filter((d, i) => !got.has(i))}; },
@@ -3910,7 +4006,7 @@ const Diff = {
       if (!H.priv.idxAsked){ H.priv.idxAsked = true; Spot.loadIndex().then(() => { if (H && H.g === "diff" && H.s.ph === "lobby"){ $("#hostMain").dataset.k = ""; renderHost(); } }); }
       const ix = Spot.index, cnt = ix ? ix.levels : null;
       setMain(lobbyHTML(players, `${cnt ? `<p class="muted">عدد الصور: سهل ${cnt[0]} · متوسط ${cnt[1]} · صعب ${cnt[2]}. لا يتكرر زوج داخل الغرفة حتى تُلعب كل صور المستوى.</p>` : ""}
-        <p class="muted">${["سهل: 5 فروق واضحة.","متوسط: 8 فروق تحتاج تركيزًا.","صعب: 12 فرقًا دقيقًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث عن كل الفروق بنفسه دون أن يرى اكتشافات غيره. لكل لاعب 5 أخطاء وتلميح واحد في الجولة.</p>`, "ابدأ الجولة"));
+        <p class="muted">${["سهل: 5 اختلافات.","متوسط: 8 اختلافات.","صعب: 12 اختلافًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث بنفسه. أول من يكتشف كل الاختلافات يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.</p>`, "ابدأ الجولة"));
       return;
     }
     if (s.ph === "done" || s.ph === "fail"){ H.priv.dfRd = null; clearInterval(H.priv.tick);
@@ -3920,8 +4016,8 @@ const Diff = {
     if (s.ph === "prep" || !pair){ H.priv.dfRd = null; setMain(`<div class="panel center stack" style="margin-top:18px"><div class="spinner"></div><p class="bigmsg">جارٍ تجهيز الصورتين…</p></div>`); return; }
     const solo = !H.code || !players.length || !!s.pl.host;       // nobody joined: the host plays on this screen
     if (H.priv.dfRd !== s.rd){
-      H.priv.dfRd = s.rd; H.priv.dfm = null;
-      m.innerHTML = `<div class="dfhost"><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div id="dfMe"></div><div class="df-holder"></div><div id="dfRep"></div></div><div class="stack" id="dfSide"></div></div>`;
+      H.priv.dfRd = s.rd; H.priv.dfm = null; H.priv.dfHeroRd = null;
+      m.innerHTML = `<div class="dfhost"><div id="dfHero"></div><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div id="dfMe"></div><div class="df-holder"></div><p class="dfcredit">${Diff.creditLine(pair)}</p></div><div class="stack" id="dfSide"></div><div id="dfAct"></div></div>`;
       m.dataset.k = "";
       const rd = s.rd, holder = m.querySelector(".df-holder");
       preloadSpot(pair).then(() => {
@@ -3931,32 +4027,33 @@ const Diff = {
           const live = H.code && hostPlayers().length && !H.s.pl.host;
           if (live) return;                                           // players are on: the host screen only shows the pictures
           if (!H.s.pl.host) H.s.pl.host = dfZero("المقدّم");
-          const id = "h" + Date.now().toString(36); Diff.judge("host", x, y, tol, id); pushHost();
-        }, `<button class="btn ghost sm icon" data-h="dfinfo" aria-label="معلومات الصورة" title="معلومات الصورة">ⓘ</button>`);
+          const id = "h" + Date.now().toString(36); Diff.judge("host", x, y, tol, id, srvNow()); pushHost();
+        });
         renderHost();
       }).catch(() => spotFail(holder, 'data-h="dfhretry"'));
     }
     const over = s.ph === "over", hp = s.pl.host, mine = solo && hp ? Diff.pf("host") : null;
-    const sel = over ? (H.priv.dfSel && s.pl[H.priv.dfSel] ? H.priv.dfSel : (s.rk || [])[0] || "") : "";
+    const sel = over ? (H.priv.dfSel && s.pl[H.priv.dfSel] ? H.priv.dfSel : (s.win || [])[0] || (s.rk || [])[0] || "") : "";
     if (H.priv.dfm){
       // during the round the host screen (often seen by everybody) shows no place of any difference
       const v = over ? Diff.review(s, sel) : {found:mine ? mine.fi.map(i => H.priv.dfs[i]) : [], rev:null};
-      H.priv.dfm.set({found:v.found, rev:v.rev, hz:mine && !over ? mine.hz : null, pend:[]});
+      H.priv.dfm.set({found:v.found, rev:v.rev, pend:[]});
       H.priv.dfm.lock(over || (!solo && !!H.code));
       const lr = mine && mine.lr && mine.lr[mine.lr.length - 1];
       if (lr && H.priv.dfLr !== lr[0]){ H.priv.dfLr = lr[0]; Diff.feedback(H.priv.dfm, lr); }
     }
-    setEl($("#dfHostCount"), solo && hp ? `${hp.f} من ${s.nd}` : `${s.nd} فروق`);
-    setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s, true) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
-    setEl($("#dfRep"), over ? `<div class="row dfmeta">${reportBtn('data-h="dfreport"')}</div>` : "");
-    setEl($("#dfSide"), `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${over ? "نتيجة الجولة" : "تقدّم اللاعبين"}</h3>${clockChip(s)}</div>${over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h") : Diff.liveHTML(s, solo ? "host" : "")}</div>
-      <div class="row">${over ? "" : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button>`}<button class="btn" data-h="go">${over ? "الجولة التالية" : "صورة جديدة"}</button><button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    setEl($("#dfHero"), over ? Diff.heroHTML(s, solo ? "host" : "") : "");
+    if (over && H.priv.dfHeroRd !== s.rd){ H.priv.dfHeroRd = s.rd; const h = $("#dfHeroCard"); if (h) h.scrollIntoView({block:"start", behavior:"smooth"}); }
+    setEl($("#dfHostCount"), solo && hp ? `${hp.f} من ${s.nd}` : `${s.nd} اختلافات`);
+    setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
+    setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h") + Diff.creditHTML(pair, true)
+      : `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>تقدّم اللاعبين</h3>${clockChip(s)}</div>${Diff.liveHTML(s, solo ? "host" : "")}</div>`);
+    setEl($("#dfAct"), `<div class="row dfactions">${over ? `<button class="btn big" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
   },
-  meHTML(p, s, host){
+  meHTML(p, s){
     const left = DF_MAX_W - p.w;
-    return `<div class="row dfmine ${p.out ? "out" : ""}"><span class="chip gold">اكتشفت ${p.f} من ${s.nd}</span><span class="chip ${left <= 1 ? "warn" : ""}">الأخطاء المتبقية: ${Math.max(0, left)}</span><span class="chip">${p.p} نقطة</span>
-      ${p.done || p.out ? "" : `<button class="btn ghost sm" ${host ? 'data-h="dfhint"' : 'data-act="dfhint"'} ${p.h ? "disabled" : ""}>💡 ${p.h ? "استُخدم التلميح" : "تلميح (−15)"}</button>`}</div>
-      ${p.done ? `<p class="note ok">أحسنت! اكتشفت كل الفروق. نتيجتك ووقتك محفوظان، والجولة مستمرة لبقية اللاعبين.</p>` : p.out ? `<p class="note">انتهت محاولاتك الخمس في هذه الجولة. تابع تقدّم الآخرين حتى نهايتها، وتعود للمشاركة في الجولة التالية.</p>` : ""}`;
+    return `<div class="row dfmine ${p.out ? "out" : ""}"><span class="chip gold">اكتشفت <b>${p.f}</b> من ${s.nd}</span><span class="chip ${left <= 1 ? "warn" : ""}">الأخطاء المتبقية: <b>${Math.max(0, left)}</b></span><span class="chip">${p.p} نقطة</span></div>
+      ${p.done ? `<p class="note ok">أكملت كل الاختلافات! لحظة ونعلن النتيجة…</p>` : p.out ? `<p class="note">استُبعدت بعد 5 أخطاء. تابع تقدّم الآخرين حتى نهاية الجولة، وتعود في الجولة التالية.</p>` : ""}`;
   },
   // what happened to a tap, shown at the place of the tap
   feedback(board, lr){
@@ -3965,15 +4062,14 @@ const Diff = {
     else if (code === "no") board.flash(x, y, "✕");
     else if (code === "dup") board.flash(x, y, "اكتشفته من قبل", "info");
     else if (code === "amb") board.flash(x, y, "كبّر الصورة", "info");
-    else if (code === "hint") board.zoomTo(x, y, 1.8);
   },
-  // the phone's own sealed messages: its taps (with the hint request) up, its mailbox down
+  // the phone's own sealed messages: its taps up, its mailbox down
   psend(rd){ P.view.dfSendP = (P.view.dfSendP || Promise.resolve()).then(() => Diff.psend1(rd)); return P.view.dfSendP; },   // one at a time, always the latest taps
   async psend1(rd){
     try {
       const me = await DFC.mine(), h = findHost(), hs = h && h.presence.s;
       if (!P || !hs || !hs.hk || hs.rd !== rd) return;
-      const k = dfKey(P.name), body = {q:P.view.dfq || [], hq:P.view.dfHq || null};
+      const k = dfKey(P.name), body = {q:P.view.dfq || []};
       const e = await DFC.seal(await DFC.shared(me, hs.hk), body, DFC.ad("up", P.code, rd, k));
       if (!P || P.view.dfRd !== rd) return;
       await NR.presence({df:{rd, pk:me.pub, e}});
@@ -3995,8 +4091,8 @@ const Diff = {
     if (s.ph === "done" || s.ph === "fail"){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><p class="bigmsg">بانتظار المقدّم…</p><p class="muted">${s.ph === "done" ? "لُعبت كل صور هذا المستوى." : ""}</p></div>`); bindPlayer(); return; }
     if (s.ph === "prep" || !pair){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><div class="spinner"></div><p class="bigmsg">جولة جديدة…</p></div>`); bindPlayer(); return; }
     if (P.view.dfRd !== s.rd){
-      P.view.dfRd = s.rd; P.view.dfm = null; P.view.dfq = []; P.view.dfLr = {}; P.view.dfPend = []; P.view.dfHq = null; P.view.dfBox = null; P.view.dfBoxE = null; P.view.dfSel = "";
-      pSet(phead(`<span id="pClock"></span>`) + `<div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)}</h3><b id="dfCount" class="count"></b></div><div id="dfMe"></div><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div></div><div id="pDfStatus"></div>`);
+      P.view.dfRd = s.rd; P.view.dfm = null; P.view.dfq = []; P.view.dfLr = {}; P.view.dfPend = []; P.view.dfBox = null; P.view.dfBoxE = null; P.view.dfSel = ""; P.view.dfHeroRd = null;
+      pSet(phead(`<span id="pClock"></span>`) + `<div id="dfHero"></div><div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)}</h3><b id="dfCount" class="count"></b></div><div id="dfMe"></div><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><p class="dfcredit">${Diff.creditLine(pair)}</p></div><div id="pDfStatus"></div>`);
       rememberLocal(pair.id);
       bindPlayer();
       const rd = s.rd;
@@ -4006,11 +4102,11 @@ const Diff = {
           const h = findHost(), hs = h && h.presence.s, mine = hs && hs.pl && hs.pl[dfKey(P.name)];
           if (!hs || hs.ph !== "play" || hs.rd !== rd || (mine && (mine.out || mine.done))) return;
           const id = Math.random().toString(36).slice(2, 9);
-          P.view.dfq = [...P.view.dfq, [id, x, y, tol, srvNow()]].slice(-8);
+          P.view.dfq = [...P.view.dfq, [id, x, y, tol]].slice(-8);
           P.view.dfPend = [...P.view.dfPend, {id, x, y, t:Date.now()}];
           P.view.dfm.set({pend:P.view.dfPend});
           Diff.psend(rd);
-        }, `<button class="btn ghost sm icon" data-act="dfinfo" aria-label="معلومات الصورة" title="معلومات الصورة">ⓘ</button>`);
+        });
         playerRender();
       }).catch(() => { if (P && P.view.dfRd === rd) spotFail($("#pDf"), 'data-act="dfretry"'); });
     }
@@ -4024,35 +4120,30 @@ const Diff = {
       if (s.ph === "play" && s.hk && P.view.dfKeyRd !== s.rd + "|" + s.hk){ P.view.dfKeyRd = s.rd + "|" + s.hk; Diff.psend(s.rd); }
     }
     const bx = P.view.dfBox || {};
+    const sel = over ? (P.view.dfSel && s.pl[P.view.dfSel] ? P.view.dfSel : s.pl[me] ? me : (s.win || [])[0] || (s.rk || [])[0] || "") : "";
     if (P.view.dfm){
       // answers to my taps: each shown once; a tap not answered in 6 s is dropped from the screen
       for (const lr of bx.lr || []){
         if (P.view.dfLr[lr[0]]) continue; P.view.dfLr[lr[0]] = 1;
-        Diff.feedback(P.view.dfm, lr);
+        if (!over) Diff.feedback(P.view.dfm, lr);
         const at = (P.view.dfPend || []).findIndex(p => p.id === lr[0]); if (at >= 0) P.view.dfPend = P.view.dfPend.slice(at + 1);   // taps are answered in order
       }
       P.view.dfPend = (P.view.dfPend || []).filter(p => Date.now() - p.t < 6000 && !over);
-      const sel = over ? (P.view.dfSel && s.pl[P.view.dfSel] ? P.view.dfSel : s.pl[me] ? me : (s.rk || [])[0] || "") : "";
       const v = over ? Diff.review(s, sel) : {found:(bx.f || []).map(f => f.slice(1)), rev:null};
-      P.view.dfm.set({found:v.found, rev:v.rev, hz:!over ? bx.hz || null : null, pend:P.view.dfPend});
+      P.view.dfm.set({found:v.found, rev:v.rev, pend:P.view.dfPend});
       P.view.dfm.lock(over || !!(mine && (mine.out || mine.done)));
     }
     setEl($("#pClock"), clockChip(s));
-    setEl($("#dfCount"), mine ? `${mine.f} من ${s.nd}` : `${s.nd} فروق`);
-    setEl($("#dfMe"), mine && !over ? Diff.meHTML(mine, s, false) : "");
-    const sel = over ? (P.view.dfSel && s.pl[P.view.dfSel] ? P.view.dfSel : s.pl[me] ? me : (s.rk || [])[0] || "") : "";
-    setEl($("#pDfStatus"), over ? `<div class="panel stack"><p class="bigmsg center" style="color:var(--gold)">${(s.rk || []).indexOf(me) >= 0 ? `ترتيبك ${(s.rk || []).indexOf(me) + 1}` : "انتهت الجولة"}</p>${Diff.resultsHTML(s, me, sel, "data-act")}</div>`
+    setEl($("#dfCount"), mine ? `${mine.f} من ${s.nd}` : `${s.nd} اختلافات`);
+    setEl($("#dfMe"), mine && !over ? Diff.meHTML(mine, s) : "");
+    setEl($("#dfHero"), over ? Diff.heroHTML(s, s.pl[me] ? me : "") : "");
+    if (over && P.view.dfHeroRd !== s.rd){ P.view.dfHeroRd = s.rd; const h = $("#dfHeroCard"); if (h) h.scrollIntoView({block:"start", behavior:"smooth"}); }
+    setEl($("#pDfStatus"), over ? Diff.resultsHTML(s, me, sel, "data-act") + Diff.creditHTML(pair, false) + `<p class="muted center dfwait">بانتظار المقدّم لبدء الجولة التالية…</p>`
       : `<div class="panel stack"><h3>تقدّم اللاعبين</h3>${Diff.liveHTML(s, me)}</div>`);
   },
   pclick(t){
     if (t.dataset.act === "dfretry"){ P.view.dfRd = null; playerRender(); }
-    else if (t.dataset.act === "dfinfo"){ const h = findHost(); if (h && h.presence.s.pair) imageInfo(h.presence.s.pair, h.presence.s.ph !== "over"); }
     else if (t.dataset.act === "dfsel"){ P.view.dfSel = t.dataset.k || ""; playerRender(); }
-    else if (t.dataset.act === "dfhint"){
-      const h = findHost(), hs = h && h.presence.s; if (!hs || hs.ph !== "play") return;
-      P.view.dfHq = "q" + Math.random().toString(36).slice(2, 9); t.disabled = true;
-      Diff.psend(hs.rd);
-    }
   },
 };
 const MOD = {quiz:Quiz, letters:Letters, wheel:Wheel, puzzle:Puzzle, diff:Diff};

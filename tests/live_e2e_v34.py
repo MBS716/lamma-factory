@@ -282,7 +282,8 @@ def on_change(d):
     return min(cells, key=lambda q: (q[0] - d[0]) ** 2 + (q[1] - d[1]) ** 2)
 
 async def spot_v34(host, ios, android, cb, pw):
-    """Spot the difference v4 on the real database with the current rules: every player finds all the differences alone.
+    """Spot the difference v4 (final rules) on the real database with the current rules: every player finds the differences
+    alone, the first to find them all wins and the round stops for everybody; completions within 0.3 s are a joint win.
     A computer host, an iPhone (WebKit), an Android phone (Chromium) and a third phone (Chromium, 360 px)."""
     third = await (await cb.new_context(viewport={'width': 360, 'height': 740}, has_touch=True, is_mobile=True, device_scale_factor=3)).new_page()
     third.on('pageerror', lambda e: R['errors'].append(f'third phone: {e}'))
@@ -292,104 +293,103 @@ async def spot_v34(host, ios, android, cb, pw):
     K = lambda n: host.evaluate(f'dfKey({json.dumps(n)})')
     CIRC = 'document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm:not(.rev)").length'
     imgs = '(() => { const i = [...document.querySelectorAll("#pDf img")]; return i.length === 2 && i.every(x => x.complete && x.naturalWidth > 500); })()'
-    code = await start(host, 'diff', {'lv': 1})
-    await join_typed(ios, code, 'صالح'); await join_typed(android, code, 'تافير'); await join_typed(third, code, 'نورة'); await players(host, 3)
-    await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"', timeout=60000)
-    for pg in (ios, android, third): await pg.wait_for_function(imgs, timeout=60000)
-    await host.wait_for_timeout(2500)
-    s = await S(); D = await host.evaluate('H.priv.dfs'); W, Hh = s['pair']['w'], s['pair']['h']
-    kI, kA, kT = await K('صالح'), await K('تافير'), await K('نورة')
-    check(s['nd'] == 8 and len(D) == 8 and set(s['pl']) == {kI, kA, kT} and s.get('hk'), f'spot v4: medium round, 8 differences, 3 players each with their own record ({s["pair"]["id"]})')
+    G = {}
+    async def new_round(lv=None, first=False):
+        if lv is not None: await host.click('[data-h=lobby]'); await host.click(f'[data-opt=lv][data-val="{lv}"]'); await host.click('[data-h=start]')
+        else: await host.click('[data-h=start]' if first else '[data-h=go]')
+        await host.wait_for_function('H.s.ph === "play"', timeout=60000)
+        for pg in (ios, android, third): await pg.wait_for_function(imgs, timeout=60000)
+        await host.wait_for_timeout(2500)
+        s = await S(); G['D'] = await host.evaluate('H.priv.dfs'); G['W'], G['H'] = s['pair']['w'], s['pair']['h']; return s
     async def tap(pg, x, y):
         B = pg.locator('#pDf .dfimg >> nth=1'); await B.scroll_into_view_if_needed(); bb = await B.bounding_box()
-        await pg.touchscreen.tap(bb['x'] + x / W * bb['width'], bb['y'] + y / Hh * bb['height'])
+        await pg.touchscreen.tap(bb['x'] + x / G['W'] * bb['width'], bb['y'] + y / G['H'] * bb['height'])
     def wrong(k):
+        D, W, Hh = G['D'], G['W'], G['H']
         pts = [(gx / 20 * W, gy / 12 * Hh) for gx in range(1, 20) for gy in range(1, 12)]
         pts = [p for p in pts if all(abs(p[0] - d[0]) > d[2] + 0.06 * W or abs(p[1] - d[1]) > d[3] + 0.06 * W for d in D)]
         return pts[(k * 7) % len(pts)]
+    async def taps(pg, idx):
+        for i in idx: await tap(pg, *on_change(G['D'][i])); await pg.wait_for_timeout(900)
     async def settle(t=3000): await host.wait_for_timeout(t)
     async def circles(pg, n, t=20000):
         try: await pg.wait_for_function(CIRC + f' === {n}', timeout=t); return True
         except Exception: return False
     pl = lambda s, k: s['pl'][k]
-    # zoom and drag
-    await ios.click('[data-z=in]'); await ios.click('[data-z=in]'); B = await ios.locator('#pDf .dfimg >> nth=1').bounding_box()
-    await ios.mouse.move(B['x'] + 120, B['y'] + 90); await ios.mouse.down(); await ios.mouse.move(B['x'] + 40, B['y'] + 40, steps=8); await ios.mouse.up(); await ios.click('[data-z=reset]')
-    await settle(); s = await S(); check(pl(s, kI)['w'] == 0 and pl(s, kI)['f'] == 0, 'spot v4: zooming and dragging on the iPhone is not a mistake')
-    # the same difference found by all three
-    await asyncio.gather(tap(ios, *on_change(D[0])), tap(android, *on_change(D[0])), tap(third, *on_change(D[0]))); await settle(4000); s = await S()
-    check(all(pl(s, k)['f'] == 1 and pl(s, k)['p'] == 10 for k in (kI, kA, kT)), f'spot v4: three players find the same difference at the same time: each gets +10 ({[pl(s, k)["p"] for k in (kI, kA, kT)]})')
-    c = [await circles(pg, 1) for pg in (ios, android, third)]
-    check(c == [True, True, True], f'spot v4: each phone shows its own circle (sealed mailbox opened on iPhone, Android, third phone) {c}')
-    await tap(android, *on_change(D[1])); await settle(); s = await S()
-    ok = await circles(android, 2); i_c, t_c = await ios.evaluate(CIRC), await third.evaluate(CIRC)
-    check(ok and pl(s, kA)['f'] == 2 and i_c == 1 and t_c == 1, f'spot v4: a find of Android shows on Android only (iPhone {i_c}, third phone {t_c})')
+    code = await start(host, 'diff', {'lv': 0})
+    await join_typed(ios, code, 'صالح'); await join_typed(android, code, 'تافير'); await join_typed(third, code, 'نورة'); await players(host, 3)
+    kI, kA, kT = await K('صالح'), await K('تافير'), await K('نورة')
+    # ---- round 1 (easy)
+    s = await new_round(first=True)
+    check(s['nd'] == 5 and set(s['pl']) == {kI, kA, kT} and s.get('hk'), f'spot v4: easy round, 5 differences, 3 players ({s["pair"]["id"]})')
+    nb = [await pg.evaluate('[...document.querySelectorAll("#playerMain button")].map(b => b.textContent.trim()).join("|")') for pg in (ios, android, third)]
+    check(all('تلميح' not in x and 'ⓘ' not in x and 'إبلاغ' not in x for x in nb) and 'commons.wikimedia.org/wiki' not in await ios.inner_html('#playerMain'), 'spot v4: no hint, image-info or report button on the phones while playing, no link to the original')
+    await asyncio.gather(tap(ios, *on_change(G['D'][0])), tap(android, *on_change(G['D'][0])), tap(third, *on_change(G['D'][0]))); await settle(4000); s = await S()
+    check(all(pl(s, k)['f'] == 1 and pl(s, k)['p'] == 10 for k in (kI, kA, kT)), 'spot v4: three players find the same difference: each +10')
+    c = [await circles(pg, 1) for pg in (ios, android, third)]; check(c == [True] * 3, f'spot v4: each phone shows only its own circle (sealed mailboxes) {c}')
     raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(x => JSON.stringify(x.val()))')
-    check(not any(f'{d[0]},{d[1]},{d[2]},{d[3]}' in raw for d in D) and '"q":[' not in raw and '"diffs"' not in raw and 'mbox_' in raw, 'spot v4: the whole room as a phone reads it from the database: no place of a difference, no plain tap (the mailboxes are sealed)')
-    check(await host.evaluate('document.querySelectorAll("#hostMain .dfimg:nth-child(2) .dfm").length') == 0, 'spot v4: the host screen shows no place of a difference during the round')
-    await tap(ios, *on_change(D[0])); await settle(); s = await S()
-    check(pl(s, kI)['f'] == 1 and pl(s, kI)['p'] == 10 and pl(s, kI)['w'] == 0, 'spot v4: the iPhone taps its own find again: no points, no mistake')
-    # Android: mistakes, reload, out
-    for i in range(3): await tap(android, *wrong(i)); await android.wait_for_timeout(700)
-    await settle(); s = await S(); check(pl(s, kA)['w'] == 3 and pl(s, kI)['w'] == 0 and pl(s, kT)['w'] == 0, f'spot v4: 3 mistakes for Android only ({pl(s, kA)["w"]})')
-    await android.reload(); await android.wait_for_function(imgs, timeout=60000)
-    ok = await circles(android, 2)
-    check(ok and 'الأخطاء المتبقية: 2' in await android.inner_text('#dfMe'), 'spot v4: Android reloads: its 2 finds and circles come back, 2 attempts left')
-    await tap(android, *wrong(4)); await android.wait_for_timeout(700); await tap(android, *wrong(5)); await settle(); s = await S()
-    check(pl(s, kA)['out'] == 1 and s['ph'] == 'play', 'spot v4: 5th mistake: Android stops, the round goes on')
-    await android.click('[data-act=leave]'); await android.wait_for_timeout(500); await android.click('[data-act=leave]'); await android.wait_for_timeout(1500)
-    await join_typed(android, code, 'تافير'); await android.wait_for_function(imgs, timeout=60000); ok = await circles(android, 2); s = await S()
-    check(ok and pl(s, kA)['out'] == 1 and pl(s, kA)['w'] == 5 and pl(s, kA)['f'] == 2 and 'انتهت محاولاتك' in await android.inner_text('#dfMe'), 'spot v4: Android leaves and joins again: same finds, mistakes and points, still out')
-    # hint
-    w0, p0 = pl(s, kT)['w'], pl(s, kT)['p']; await third.click('[data-act=dfhint]'); await settle(); s = await S()
-    try: await third.wait_for_selector('#pDf .dfhz', timeout=20000); hz = True
-    except Exception: hz = False
-    await third.click('[data-z=reset]')
-    check(hz and pl(s, kT)['h'] == 1 and pl(s, kT)['w'] == w0 and pl(s, kT)['p'] == max(0, p0 - 15) and await ios.locator('#pDf .dfhz').count() == 0, 'spot v4: hint on the third phone: −15, not a mistake, the area shows on that phone only')
+    check(not any(f'{d[0]},{d[1]},{d[2]},{d[3]}' in raw for d in G['D']) and '"q":[' not in raw and 'mbox_' in raw, 'spot v4: the room as a phone reads it from the database: no place of a difference, no plain tap')
+    check(await host.evaluate('document.querySelectorAll("#hostMain .dfm").length') == 0, 'spot v4: the host screen shows no circle during the round')
+    # the iPhone: 5 mistakes with a reload after 3, then leave and join again
+    for i in range(3): await tap(ios, *wrong(i)); await ios.wait_for_timeout(800)
+    await settle(); await ios.reload(); await ios.wait_for_function(imgs, timeout=60000); ok = await circles(ios, 1)
+    check(ok and 'الأخطاء المتبقية: 2' in await ios.inner_text('#dfMe'), 'spot v4: the iPhone reloads after 3 mistakes: its find and 2 attempts left come back')
+    await tap(ios, *wrong(4)); await ios.wait_for_timeout(800); await tap(ios, *wrong(5)); await settle(); s = await S()
+    check(pl(s, kI)['out'] == 1 and s['ph'] == 'play', 'spot v4: 5th mistake: the iPhone stops, the round goes on')
+    await ios.click('[data-act=leave]'); await ios.wait_for_timeout(500); await ios.click('[data-act=leave]'); await ios.wait_for_timeout(1500)
+    await join_typed(ios, code, 'صالح'); await ios.wait_for_function(imgs, timeout=60000); await settle(); s = await S()
+    check(pl(s, kI)['out'] == 1 and pl(s, kI)['w'] == 5 and 'استُبعدت' in await ios.inner_text('#dfMe'), 'spot v4: the iPhone leaves and joins again: still out, mistakes not reset')
     # host reload
     for pg in (ios, android, third): await pg.evaluate('window.__ended = 0; new MutationObserver(() => { if (document.querySelector("#playerMain").innerText.includes("انتهت هذه اللعبة")) window.__ended = 1; }).observe(document.querySelector("#playerMain"), {childList:true, subtree:true, characterData:true})')
     before = await S(); await host.reload(); await host.wait_for_function('typeof H !== "undefined" && H && H.code && H.s.ph === "play" && !window.__resuming', timeout=60000); await host.wait_for_timeout(3000)
-    s = await S(); check(s['pl'] == before['pl'] and s['hk'] == before['hk'], 'spot v4: the host reloads: same round, same records, same key')
-    check([await pg.evaluate('window.__ended') for pg in (ios, android, third)] == [0, 0, 0], 'spot v4: while the host page reloads, no phone shows «the game ended»')
-    D = await host.evaluate('H.priv.dfs')
-    # the iPhone finds them all, the round goes on; then the third phone finishes too
-    for i in range(1, 8): await tap(ios, *on_change(D[i])); await ios.wait_for_timeout(900)
-    await settle(4000); s = await S()
-    check(pl(s, kI)['done'] == 1 and pl(s, kI)['f'] == 8 and pl(s, kI)['b'] == 50 and s['ph'] == 'play', f'spot v4: the iPhone found all 8: +50, its part is over, the round goes on ({pl(s, kI)["p"]})')
-    check(await circles(ios, 8) and await third.evaluate(CIRC) == 1, 'spot v4: the iPhone shows its 8 circles, the third phone still only its own')
-    for i in range(1, 8): await tap(third, *on_change(D[i])); await third.wait_for_timeout(900)
-    await host.wait_for_function('H.s.ph === "over"', timeout=40000); s = await S(); f = s['pl']
-    check(s['end'] in ('done', 'all') and f[kI]['p'] == 160 and f[kT]['f'] == 8 and f[kA]['b'] == 0 and s['rk'][0] == kI, f'spot v4: everybody finished: the round ends; iPhone 8×10 +50 +30 = {f[kI]["p"]}, ranking {[f[k]["n"] for k in s["rk"]]}')
-    for pg in (ios, android, third): await pg.wait_for_selector('.dfres', timeout=30000)
-    g = await android.evaluate('[document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm:not(.rev)").length, document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm.rev").length]')
-    check(g == [2, 6], f'spot v4: after the round Android sees its 2 finds and the 6 others ({g})')
-    check(await host.locator('.dfreport').count() == 1 and await ios.locator('.dfreport').count() == 0, 'spot v4: the report button is on the host only, after the round')
-    await host.wait_for_timeout(3000)
-    raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(x => JSON.stringify(x.val()))')
-    check('mbox_' not in raw, 'spot v4: the sealed mailboxes are removed from the database when the round ends')
-    await third.screenshot(path=f'{OUT}/spot4_third_results.png', full_page=True); await ios.screenshot(path=f'{OUT}/spot4_iphone_results.png', full_page=True)
-    # round 2: time is up with different progress
-    await host.click('[data-h=lobby]'); await host.click('[data-opt=lv][data-val="0"]'); await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"', timeout=60000)
-    for pg in (ios, android, third): await pg.wait_for_function(imgs, timeout=60000)
-    await host.wait_for_timeout(2500); s = await S(); D = await host.evaluate('H.priv.dfs'); W, Hh = s['pair']['w'], s['pair']['h']
-    await tap(ios, *on_change(D[0])); await ios.wait_for_timeout(900); await tap(ios, *on_change(D[1])); await tap(android, *on_change(D[1])); await settle(4000)
-    await ios.screenshot(path=f'{OUT}/spot4_iphone_playing.png', full_page=True)
+    s = await S(); G['D'] = await host.evaluate('H.priv.dfs')
+    check(s['pl'] == before['pl'] and [await pg.evaluate('window.__ended') for pg in (ios, android, third)] == [0] * 3, 'spot v4: the host reloads: same records, no phone shows «the game ended»')
+    # Android and the third phone at 4 of 5, then both tap the last one together
+    await taps(android, [1, 2, 3]); await taps(third, [1, 2, 3]); await settle(); s = await S()
+    check(pl(s, kA)['f'] == 4 and pl(s, kT)['f'] == 4 and s['ph'] == 'play', 'spot v4: Android and the third phone at 4 of 5')
+    await android.screenshot(path=f'{OUT}/spot4_android_playing.png', full_page=True)
+    await asyncio.gather(tap(android, *on_change(G['D'][4])), tap(third, *on_change(G['D'][4])))
+    await host.wait_for_function('H.s.ph === "over"', timeout=30000); await settle(); s = await S(); f = s['pl']
+    das = sorted(f[k]['da'] for k in (kA, kT) if f[k]['done']); gap = das[-1] - das[0] if len(das) == 2 else None
+    expect = sorted(k for k in (kA, kT) if f[k]['done'] and f[k]['da'] <= das[0] + 300)
+    check(s['end'] == 'win' and sorted(s['win']) == expect and len(s['win']) >= 1, f'spot v4: both complete at the same moment: {"joint win" if len(s["win"]) == 2 else "one winner"} ({gap} ms apart when they reached the host; the window is 300 ms)')
+    check(all(f[k]['p'] == 130 for k in s['win']) and f[kI]['b'] == 0, f'spot v4: each winner 5×10 +50 +30 = 130; no bonus for the player who was out')
+    for pg in (ios, android, third): await pg.wait_for_selector('#dfHeroCard', timeout=30000)
+    hero = await ios.inner_text('#dfHeroCard'); check(('فوز مشترك' if len(s['win']) == 2 else 'الفائز بالجولة') in hero, 'spot v4: the results announce the winner(s) first')
+    txt = await ios.inner_text('#pDfStatus'); check('استُبعد — 5 أخطاء' in txt and 'الترتيب العام' in txt, 'spot v4: results table with «استُبعد — 5 أخطاء» and the overall board')
+    await ios.click('.dfcredit-box summary'); check('commons.wikimedia.org' in await ios.inner_html('.dfcredit-box') or 'رسم أصلي' in await ios.inner_html('.dfcredit-box'), 'spot v4: after the round: author, source link and licence of the picture')
+    check(await host.locator('.dfreport').count() == 1 and await ios.locator('.dfreport').count() == 0, 'spot v4: report button for the host only, after the round')
+    await settle(); raw = await ios.evaluate('firebase.database().ref("rooms/" + ROOM_PREFIX + P.code).once("value").then(x => JSON.stringify(x.val()))')
+    check('mbox_' not in raw, 'spot v4: the sealed mailboxes are removed when the round ends')
+    await ios.screenshot(path=f'{OUT}/spot4_iphone_results.png', full_page=True); await host.screenshot(path=f'{OUT}/spot4_host_results.png', full_page=True)
+    tot1 = (await S())['tot']
+    await host.reload(); await host.wait_for_function('typeof H !== "undefined" && H && H.code && !window.__resuming', timeout=60000); await host.wait_for_timeout(3000)
+    check((await S())['tot'] == tot1, 'spot v4: the host reloads after the round: nothing is counted again')
+    # ---- round 2: Android completes first, the third phone 1 s later -> Android alone
+    s = await new_round()
+    await taps(android, [0, 1, 2, 3]); await taps(third, [0, 1, 2, 3]); await settle()
+    await tap(android, *on_change(G['D'][4])); await third.wait_for_timeout(1200); await tap(third, *on_change(G['D'][4]))
+    await host.wait_for_function('H.s.ph === "over"', timeout=30000); await settle(); s = await S(); f = s['pl']
+    check(s['win'] == [kA] and f[kT]['f'] == 4 and not f[kT]['done'], f'spot v4: the third phone completes 1.2 s after Android: Android wins alone, the late tap is not counted (third phone {f[kT]["f"]} of 5)')
+    txt = await third.inner_text('#pDfStatus'); check('توقفت الجولة بفوز المنافس' in txt, 'spot v4: «توقفت الجولة بفوز المنافس» for the others')
+    await third.screenshot(path=f'{OUT}/spot4_third_results.png', full_page=True)
+    # ---- round 3 (medium): time is up
+    s = await new_round(1)
+    await taps(ios, [0, 1]); await taps(android, [0]); await settle()
     await host.evaluate('H.s.t0 -= ((H.s.o.lim || 180) + 2) * 1000')
     await host.wait_for_function('H.s.ph === "over"', timeout=30000); s = await S()
-    check(s['end'] == 'time' and s['pl'][kI]['f'] == 2 and s['pl'][kA]['f'] == 1 and s['pl'][kT]['f'] == 0, 'spot v4: time is up with different progress (2, 1, 0): the round ends')
-    # round 3: everybody uses their 5 attempts
-    await host.click('[data-h=lobby]'); await host.click('[data-opt=lv][data-val="2"]'); await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"', timeout=60000)
-    for pg in (ios, android, third): await pg.wait_for_function(imgs, timeout=60000)
-    await host.wait_for_timeout(2500); s = await S(); D = await host.evaluate('H.priv.dfs'); W, Hh = s['pair']['w'], s['pair']['h']
+    check(s['end'] == 'time' and not s['win'] and s['rk'][0] == kI and 'انتهى الوقت' in await android.inner_text('#dfHeroCard'), 'spot v4: time is up before anybody completed: «انتهى الوقت — متصدر الجولة: صالح»')
+    # ---- round 4 (hard): everybody out
+    s = await new_round(2)
     for k in range(5):
         await asyncio.gather(tap(ios, *wrong(k)), tap(android, *wrong(k + 1)), tap(third, *wrong(k + 2))); await host.wait_for_timeout(1500)
     await host.wait_for_function('H.s.ph === "over"', timeout=40000); s = await S()
-    check(s['end'] == 'out' and all(v['out'] for v in s['pl'].values()), 'spot v4: all three used their 5 attempts: the round ends')
-    check(s['tot'][kI]['r'] == 3 and s['tot'][kT]['r'] == 3, 'spot v4: the overall table counts the 3 rounds for every player')
+    check(s['end'] == 'out' and all(v['out'] for v in s['pl'].values()), 'spot v4: everybody used their 5 attempts: the round ends')
+    T = s['tot']; W = {k: T[k]['w'] for k in T}
+    check(all(T[k]['r'] == 4 for k in (kI, kA, kT)) and W[kA] == 2 and W[kI] == 0, f'spot v4: overall board over 4 rounds: rounds, wins, finds, points {[(T[k]["n"], T[k]["r"], T[k]["w"], T[k]["f"], T[k]["p"]) for k in (kI, kA, kT)]}')
     await host.wait_for_timeout(4000)
     gm = await host.evaluate('firebase.database().ref("games/" + ROOM_PREFIX + H.code).once("value").then(x => x.val())')
-    gp = await host.evaluate('firebase.database().ref("gpriv/" + ROOM_PREFIX + H.code).once("value").then(x => x.val())')
-    check(gm and gm.get('g') == 'diff' and json.loads(gm['s'])['tot'] == s['tot'] and gp and '"pf"' in gp.get('pv', ''), f'spot v4: every player\'s results are saved in the database ({len((gp or {}).get("pv", ""))} characters of hidden data)')
+    check(gm and json.loads(gm['s'])['tot'] == T, 'spot v4: every player\'s results are saved in the database')
     if os.environ.get('RULES_ON'):
         try: r = await ios.evaluate('firebase.database().ref("gpriv/" + ROOM_PREFIX + P.code).once("value").then(() => "read", e => "denied")')
         except Exception: r = 'denied'
