@@ -606,3 +606,5 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfsel .btn.on{border-color:var(--gold);color:var(--gold)}
 .note.ok{border-color:var(--green)}
 .chip.ok{color:var(--green)}
+/* the dark edge around a circle: a filter that follows the circle (Safari drew the old box-shadow as a dark square) */
+.dfm{box-shadow:none;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.85)) drop-shadow(0 0 1px rgba(0,0,0,.6))}
