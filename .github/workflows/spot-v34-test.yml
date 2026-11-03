@@ -1,13 +1,13 @@
 # v3.4 shared spot-the-difference (test copy, not the official site):
 #  1. emulator: the current database rules file on the official Firebase emulators (Database + Auth), the rule checks,
 #     then the whole site (tests/emu-site-spot) played end to end. Nothing reaches the real database.
-#  2. preview: preview-spot/ served by GitHub Pages of this repo, played on the real database with today's published rules
+#  2. preview: preview-spot4/ served by GitHub Pages of this repo, played on the real database with today's published rules
 #     (anonymous sign-in, separate preview rooms lmp3-). The rules themselves are not changed by this workflow.
 name: spot-v34-test
 on:
   push:
     branches: [main]
-    paths: ["preview-spot/**", "tests/emu-site-spot/**", "tests/live_e2e_v34.py", ".github/workflows/spot-v34-test.yml"]
+    paths: ["preview-spot4/**", "tests/emu-site-spot/**", "tests/live_e2e_v34.py", ".github/workflows/spot-v34-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -61,15 +61,15 @@ jobs:
       - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
       - name: wait until GitHub Pages serves this commit
         run: |
-          want=$(md5sum preview-spot/index.html | cut -c1-32)
+          want=$(md5sum preview-spot4/index.html | cut -c1-32)
           for i in $(seq 1 60); do
-            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-spot/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-spot4/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
       - name: the preview on the real database (current rules)
         run: |
           mkdir -p reports/spot-v34/preview
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-spot/ reports/spot-v34/preview https://mbs716.github.io/lamma/ > reports/spot-v34/preview.log 2>&1; r=$?
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-spot4/ reports/spot-v34/preview https://mbs716.github.io/lamma/ > reports/spot-v34/preview.log 2>&1; r=$?
           grep -E '^(OK|FAIL)' reports/spot-v34/preview.log | grep -E 'FAIL|spot v3.4|denied' || true; exit $r
       - name: save
         if: always()
