@@ -18,7 +18,7 @@ run secrets python3 t_secrets.py &
 run resume python3 t_resume.py &
 wait
 run others python3 t_others.py &
-run spot3 python3 t_spot3.py &
+run spot4 python3 t_spot4.py &
 run spotjudge python3 t_spot_judge.py &
 run touch python3 t_touch_puzzle.py &
 wait
