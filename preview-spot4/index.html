@@ -647,6 +647,8 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfsel .btn.on{border-color:var(--gold);color:var(--gold)}
 .note.ok{border-color:var(--green)}
 .chip.ok{color:var(--green)}
+/* the dark edge around a circle: a filter that follows the circle (Safari drew the old box-shadow as a dark square) */
+.dfm{box-shadow:none;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.85)) drop-shadow(0 0 1px rgba(0,0,0,.6))}
 </style>
 </head>
 <body>
@@ -1705,7 +1707,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "3a60c75026", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-spot4/";
+const BUILD = "9b303d61c5", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-spot4/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
