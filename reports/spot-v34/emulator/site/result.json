@@ -1,12 +1,12 @@
 {
  "url": "http://localhost:8799/",
  "checks": [
-  "OK invite link points to this site (http://localhost:8799/?v=d68ddffc04#8811)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=d68ddffc04#8811)",
+  "OK invite link points to this site (http://localhost:8799/?v=99afa06661#2554)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=99afa06661#2554)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
-  "OK letters fairness: pressed at 0 s, answered at 18.9 s -> 60 points (not 100)",
+  "OK letters fairness: pressed at 0 s, answered at 18.8 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
   "OK letters: both teams had the same number of questions (10/10)",
   "OK letters: totals equal the points awarded (860/900)",
@@ -15,7 +15,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10002 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -24,8 +24,8 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (alhost:8799/?v=d68ddffc04#4843)",
-  "OK sessions: version.json matches the page (d68ddffc04 = d68ddffc04)",
+  "OK sessions: invite link carries the version (alhost:8799/?v=99afa06661#1154)",
+  "OK sessions: version.json matches the page (99afa06661 = 99afa06661)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
@@ -50,7 +50,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (p 50)",
+  "OK wheel v3: phones receive the same box result as the host (p 250)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -62,7 +62,7 @@
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
   "OK wheel v3: state sent to phones stays small (486 characters)",
-  "OK spot v4: medium round, 8 differences, 3 players each with their own record (s4-m4)",
+  "OK spot v4: medium round, 8 differences, 3 players each with their own record (s4-m3)",
   "OK spot v4: zooming and dragging on the iPhone is not a mistake",
   "OK spot v4: three players find the same difference at the same time: each gets +10 ([10, 10, 10])",
   "OK spot v4: each phone shows its own circle (sealed mailbox opened on iPhone, Android, third phone) [True, True, True]",
@@ -86,18 +86,18 @@
   "OK spot v4: time is up with different progress (2, 1, 0): the round ends",
   "OK spot v4: all three used their 5 attempts: the round ends",
   "OK spot v4: the overall table counts the 3 rounds for every player",
-  "OK spot v4: every player's results are saved in the database (1753 characters of hidden data)",
+  "OK spot v4: every player's results are saved in the database (1840 characters of hidden data)",
   "OK spot v4: a phone cannot read the host's hidden data from the database",
   "OK spot v4: iPhone: no sideways scrolling (390 <= 390)",
   "OK spot v4: Android: no sideways scrolling (412 <= 412)",
   "OK spot v4: 360 px phone: no sideways scrolling (360 <= 360)",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3493], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3494], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1319 (limit 12000), saved match 1212 (limit 20000), hidden data 1839 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1321 (limit 12000), saved match 1214 (limit 20000), hidden data 2204 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -109,24 +109,24 @@
  ],
  "sizes": {
   "letters": [
-   1251,
-   1141,
-   232
+   1227,
+   1117,
+   212
   ],
   "wheel": [
-   732,
-   624,
-   39
+   736,
+   628,
+   38
   ],
   "diff": [
-   1319,
-   1212,
-   1839
+   1321,
+   1214,
+   2204
   ],
   "quiz": [
-   366,
-   259,
-   219
+   404,
+   297,
+   275
   ],
   "puzzle": [
    272,
@@ -136,14 +136,15 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-03T00:41:56.366Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-4843/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-03T00:41:56.372Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-4843/af68904d046750567251c68b failed: permission_denied ",
-  "Android: [2026-11-03T00:41:56.385Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-4843 failed: permission_denied ",
-  "host: [2026-11-03T00:42:00.005Z]  @firebase/database: FIREBASE WARNING: set at /hosts/lm3-4843 failed: permission_denied ",
-  "host: [2026-11-03T00:42:00.761Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-4843/af68904d046750567251c68b failed: permission_denied ",
-  "host: [2026-11-03T00:42:01.256Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-4843 failed: permission_denied ",
-  "host: [2026-11-03T00:42:01.258Z]  @firebase/database: FIREBASE WARNING: set at /gpriv/lm3-4843 failed: permission_denied ",
-  "host: [2026-11-03T00:42:01.756Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-4843/af68904d046750567251c68b failed: permission_denied "
+  "Android: [2026-11-03T00:51:31.508Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-1154/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-03T00:51:31.517Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1154/cbabfb9940a9101dd864835e failed: permission_denied ",
+  "Android: [2026-11-03T00:51:31.519Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-1154 failed: permission_denied ",
+  "host: [2026-11-03T00:51:35.155Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1154/cbabfb9940a9101dd864835e failed: permission_denied ",
+  "host: [2026-11-03T00:51:35.170Z]  @firebase/database: FIREBASE WARNING: set at /hosts/lm3-1154 failed: permission_denied ",
+  "host: [2026-11-03T00:51:35.655Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-1154 failed: permission_denied ",
+  "host: [2026-11-03T00:51:35.660Z]  @firebase/database: FIREBASE WARNING: set at /gpriv/lm3-1154 failed: permission_denied ",
+  "host: [2026-11-03T00:51:36.167Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1154/cbabfb9940a9101dd864835e failed: permission_denied ",
+  "host: [2026-11-03T00:51:37.156Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1154/cbabfb9940a9101dd864835e failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
