@@ -2,6 +2,7 @@ import asyncio, subprocess, time, json, re, os
 from playwright.async_api import async_playwright
 HERE = os.path.dirname(os.path.abspath(__file__))
 FAKE = open(os.path.join(HERE, 'fakefb.js')).read()
+if os.environ.get('FAKE_UID_PER_DEVICE'): FAKE = "localStorage.setItem('fakeuidper', '1');\n" + FAKE
 DEVICE = r"""(() => { const dev = '__DEV__', P = Storage.prototype, g = P.getItem, st = P.setItem, rm = P.removeItem;
   const k = (self, key) => self === window.localStorage && !String(key).startsWith('fake') ? 'dev:' + dev + ':' + key : key;
   P.getItem = function(key){ return g.call(this, k(this, key)); }; P.setItem = function(key, v){ return st.call(this, k(this, key), v); }; P.removeItem = function(key){ return rm.call(this, k(this, key)); };

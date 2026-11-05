@@ -1945,8 +1945,9 @@ const DF_DRAIN = 120;     // ms: taps are judged in the order they reached the h
 const DF_WIN = 300;       // ms: players who complete within this time of the first completion share the win
 /* how the moment a tap arrived is measured:
    - default: when it reached the host's device (the referee's own clock). Valid with today's database rules.
-   - DF_SRV: when the database server received it (the seat's time t). Only valid if the rules force t to the server's
-     time (proposed rule: t === now); otherwise a phone could write any t. Built only with LAMMA_SRVTIME=1. */
+   - DF_SRV: when the database SERVER received it. Each phone writes its sealed taps to taps/<room>/<its identity> with
+     t = the server's time, which the PROPOSED rule enforces (t === now); without that rule a phone could write any t.
+     Built only with LAMMA_SRVTIME=1, and only for use with the proposed rules. */
 const DF_SRV = /*@@SRVTIME@@*/false;
 const DF_MAX_W = 5, DF_PTS = {find:10, all:50, clean:30, miss:5};
 const dfZero = n => ({n, f:0, w:0, p:0, out:0, done:0, ft:0, dt:0, da:0, b:0});
@@ -2021,7 +2022,7 @@ const Diff = {
   async start(replay){
     if (H.priv.picking) return;
     const s = H.s, rd = s.rd + 1;
-    Diff.clearBoxes(); clearTimeout(H.priv.closeT); H.priv.closeT = null;
+    Diff.clearBoxes(); Diff.tapsClear(); clearTimeout(H.priv.closeT); H.priv.closeT = null;
     s.rd = rd; s.ph = "prep"; s.pl = {}; s.rev = null; s.pf = null; s.rk = null; s.win = null; s.rn = null; s.end = ""; s.pair = null;
     H.priv.dfs = null; H.priv.seen = {}; H.priv.dfq = []; H.priv.pf = {}; H.priv.le = {}; H.priv.box = {}; H.priv.qd = new Set(); H.priv.winAt = 0; H.priv.frozen = null;
     pushHost();
@@ -2149,12 +2150,25 @@ const Diff = {
     const tot = s.tot || (s.tot = {});
     for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
     H.priv.dfSel = ""; H.priv.dfq = []; H.priv.frozen = null;
-    Diff.clearBoxes();
+    Diff.clearBoxes(); Diff.tapsClear();
     pushHost();
   },
   // sealed taps from the phones: the moment each reaches this device is noted at once, then they are opened and judged
+  // DF_SRV only: the host follows taps/<room> (the server-stamped taps)
+  tapsWatch(){
+    const db = DF_SRV ? fbdb() : null; if (!db || !H || !H.code) return;
+    const room = ROOM_PREFIX + H.code; if (H.priv.tapsRoom === room) return;
+    H.priv.tapsRoom = room;
+    db.ref("taps/" + room).on("value", sn => { if (!H || H.g !== "diff") return; H.priv.taps = sn.val() || {}; if (H.s.ph === "play") Diff.hostPeers(hostPlayers()); }, () => {});
+  },
+  tapsClear(){
+    const db = DF_SRV ? fbdb() : null; if (!db || !H || !H.code) return;
+    const r = db.ref("taps/" + ROOM_PREFIX + H.code); for (const id of Object.keys(H.priv.taps || {})) try { r.child(id).remove().catch(() => {}); } catch(e){}
+    H.priv.taps = {};
+  },
   hostPeers(players){
     const s = H.s; if (s.ph !== "play") return;
+    if (DF_SRV) Diff.tapsWatch();
     const now = srvNow();
     let ch = Diff.enroll(players);
     const pk = H.priv.pk || (H.priv.pk = {}), le = H.priv.le || (H.priv.le = {});
@@ -2167,7 +2181,9 @@ const Diff = {
       if (p.uid){ if (own[k] && own[k] !== p.uid) continue; if (!own[k]){ own[k] = p.uid; } }
       if (!s.pl[k]){ s.pl[k] = dfZero(pname(p)); ch = true; }
       if (pk[k] !== z.pk){ pk[k] = z.pk; (H.priv.box || (H.priv.box = {}))[k] = ""; Diff.flush(); }        // a new key (new device): seal its record again
-      if (typeof z.e === "string" && z.e.length < 6000 && le[k] !== z.e){ le[k] = z.e; Diff.unseal(k, z.pk, z.e, DF_SRV && Number.isFinite(+p.ts) && +p.ts > 0 ? +p.ts : now, s.rd); }
+      const tp = DF_SRV && p.uid ? (H.priv.taps || {})[p.uid] : null;          // server-stamped taps (proposed rules only)
+      if (tp && typeof tp.e === "string" && tp.e.length < 6000 && Number.isFinite(+tp.t) && le[k] !== tp.e){ le[k] = tp.e; Diff.unseal(k, z.pk, tp.e, +tp.t, s.rd); }
+      else if (!DF_SRV && typeof z.e === "string" && z.e.length < 6000 && le[k] !== z.e){ le[k] = z.e; Diff.unseal(k, z.pk, z.e, now, s.rd); }
     }
     Diff.watchAway(players);
     if (ch) Diff.publish();
@@ -2366,7 +2382,12 @@ const Diff = {
       const k = dfKey(P.name), body = {q:P.view.dfq || []};
       const e = await DFC.seal(await DFC.shared(me, hs.hk), body, DFC.ad("up", P.code, rd, k));
       if (!P || P.view.dfRd !== rd) return;
-      await NR.presence({df:{rd, pk:me.pub, e}});
+      const db = DF_SRV ? fbdb() : null;
+      if (db && AUTH_UID){
+        if (P.view.dfPkRd !== rd){ P.view.dfPkRd = rd; await NR.presence({df:{rd, pk:me.pub}}); }
+        await db.ref("taps/" + ROOM_PREFIX + P.code).child(AUTH_UID).set({e, t:firebase.database.ServerValue.TIMESTAMP});   // stamped by the server
+      }
+      else await NR.presence({df:{rd, pk:me.pub, e}});
     } catch(e){ console.warn(e); }
   },
   async pread(rd, e){

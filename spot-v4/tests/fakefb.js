@@ -42,7 +42,8 @@ window.firebase = (() => {
        off: (e, cb) => { listeners[path] = (listeners[path] || []).filter(x => x !== cb); },
        once: async () => snap(path)};
   const db = {ref};
-  let uid = localStorage.getItem('fakeuid'); if (!uid){ uid = 'u' + Math.random().toString(36).slice(2, 10); localStorage.setItem('fakeuid', uid); }
+  const ukey = localStorage.getItem('fakeuidper') === '1' ? 'devuid' : 'fakeuid';   // tests may give every page (device) its own identity
+  let uid = localStorage.getItem(ukey); if (!uid){ uid = 'u' + Math.random().toString(36).slice(2, 10); localStorage.setItem(ukey, uid); }
   const auth = {currentUser:null, signInAnonymously: async () => { if (localStorage.getItem('fakenoauth') === '1') throw new Error('auth/operation-not-allowed'); auth.currentUser = {uid}; return {user:auth.currentUser}; }};
   const fb = {apps:[], initializeApp(){ fb.apps.push(1); }, database: Object.assign(() => db, {ServerValue:{TIMESTAMP:0}}), auth: () => auth};
   return fb;
