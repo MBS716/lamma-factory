@@ -80,6 +80,8 @@ def js(firebase, base, spot_cdn='spot/', embed=False):
     code = code.replace('/*@@SPOTCDN@@*/"spot/"', json.dumps(os.environ.get('SPOT_CDN', spot_cdn)))
     code = code.replace('/*@@BANKV@@*/""', json.dumps(BANKV))
     code = code.replace('/*@@SITE@@*/""', json.dumps(SITE_URL))
+    # LAMMA_SRVTIME=1: spot-the-difference times taps by the database server's clock (only valid with the proposed rule t === now)
+    code = code.replace('/*@@SRVTIME@@*/false', 'true' if os.environ.get('LAMMA_SRVTIME') else 'false')
     code = code.replace('/*@@PREVIEW@@*/false', 'true' if os.environ.get('LAMMA_PREVIEW') else 'false')
     code = code.replace('/*@@PREVIEWURL@@*/""', json.dumps(os.environ.get('LAMMA_PREVIEW_URL', 'https://mbs716.github.io/lamma-factory/preview-next/')))
     # "use strict" must lead the script

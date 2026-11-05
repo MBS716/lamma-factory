@@ -119,8 +119,23 @@ async def main():
         check(all(v['w'] == 0 and v['f'] == 0 and not v['out'] for v in s['pl'].values()), 'new round: everybody has 5 new attempts (A too)')
         for pg in (A, B, C): check(await pg.evaluate(CIRCLES) == 0, 'no circle of the last round left on the phone')
         await taps(B, [0, 1, 2, 3]); await taps(C, [0, 1, 2, 3], False); await taps(A, [0]); await settle(1200)
-        await tap(B, *on(4)); await C.wait_for_timeout(800); await tap(C, *on(4), False)
+        s0 = await S(host); a0, c0 = dict(pl(s0, kA)), dict(pl(s0, kC))
+        # what phone A sees of the round, every 15 ms, from the winning tap until the result
+        await A.evaluate(f'''(() => {{ window.__seen = []; const t = setInterval(() => {{ const h = findHost(), hs = h && h.presence.s; if (!hs) return;
+            window.__seen.push([hs.ph, (hs.pl[{json.dumps(kB)}] || {{}}).f, (hs.pl[{json.dumps(kB)}] || {{}}).done || 0, performance.now()]); if (hs.ph === "over") clearInterval(t); }}, 15); }})()''')
+        tB = await A.evaluate('performance.now()')
+        # B completes; 100 ms later A finds a new difference and C makes a mistake (inside the window: neither may count);
+        # 0.8 s later C completes (after the window: not counted)
+        await tap(B, *on(4)); await A.wait_for_timeout(100)
+        await asyncio.gather(tap(A, *on(1)), tap(C, *wrong(3), False))
+        await C.wait_for_timeout(700); await tap(C, *on(4), False)
         await host.wait_for_function('H.s.ph === "over"', timeout=6000); await settle(1200); s = await S(host); f = s['pl']
+        check(f[kA]['f'] == a0['f'] and f[kA]['p'] - f[kA]['b'] == a0['p'] and f[kC]['w'] == c0['w'], f'inside the 0.3 s window only another completion can count: A\'s new find and C\'s mistake 0.1 s after B\'s completion were not counted (A {a0["f"]}→{f[kA]["f"]}, C mistakes {c0["w"]}→{f[kC]["w"]})')
+        seen = await A.evaluate('window.__seen')
+        early = [x for x in seen if x[0] == 'play' and (x[2] or x[1] == 5)]
+        first_over = next((x[3] for x in seen if x[0] == 'over'), None)
+        check(not early and first_over is not None and first_over - tB >= 300, f'phones see no completion and no result before the window closes (result seen {round(first_over - tB) if first_over else None} ms after the winning tap was made)')
+        s_again = await S(host); await settle(2500); check((await S(host))['pl'] == s_again['pl'] and (await S(host))['win'] == s_again['win'], 'the result does not change after it is announced')
         check(s['win'] == [kB] and f[kC]['f'] == 4 and not f[kC]['done'], f'C completes 0.8 s after B (outside the window): B wins alone, C\'s late tap is not counted (C {f[kC]["f"]} of 5)')
         check(f[kB]['p'] == 130 and f[kC]['p'] == 40 + 30 and f[kA]['p'] == 10 + 30, f'points: B 130, C 4×10 +30 = {f[kC]["p"]}, A 1×10 +30 = {f[kA]["p"]}')
         txt = await C.inner_text('#pDfStatus'); hero = await C.inner_text('#dfHeroCard')
@@ -148,6 +163,8 @@ async def main():
         for pg, w in ((A, 390), (B, 360), (C, 1280)):
             sw = await pg.evaluate('document.documentElement.scrollWidth'); check(sw <= w, f'no horizontal scroll at {w} px ({sw})')
         sz = await host.evaluate('NR.peers().find(p => p.isMe).raw.length'); check(sz < 12000, f'host seat under the database limit ({sz})')
+        rk = await host.evaluate("""() => Diff.rank({win:["w"], pl:{w:{n:"W", f:5, w:4, p:80, ft:90000, da:5}, l:{n:"L", f:4, w:0, p:200, ft:10000, da:0}, m:{n:"M", f:4, w:1, p:35, ft:5000, da:0}}}).rk""")
+        check(rk == ['w', 'l', 'm'], f'the first to complete ranks first even with fewer points than a player who did not complete ({rk})')
         # old saved data (with hint fields) still restores without errors
         ok = await host.evaluate('(async () => { try { const pv = Diff.savePriv(); pv.pf = {x:{fi:[0], lr:[["a","hint",1,2]], hz:[1,2,3]}}; await Diff.restore(pv); return true; } catch(e){ return String(e); } })()')
         check(ok is True, 'data saved by the earlier version (with a hint) restores without errors')
