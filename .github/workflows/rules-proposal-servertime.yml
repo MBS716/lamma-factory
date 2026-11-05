@@ -1,4 +1,4 @@
-# PROPOSAL ONLY: firebase/proposals/servertime/database.rules.json (a seat's time t must be the database server's time).
+# PROPOSAL ONLY: firebase/proposals/servertime/database.rules.json (version 2: a separate taps/ place stamped with the server's time; seats unchanged).
 # Everything runs on the official Firebase emulators; the published rules and the real database are NOT touched.
 #  job "today": the existing rule tests + the server-time tests, then the official-site build (v3.3, tests/emu-site) and the
 #               current spot preview build (tests/emu-site-spot) played end to end under the proposed rules
@@ -32,7 +32,7 @@ jobs:
           cat > /tmp/run.sh <<'EOF'
           set -u
           D=reports/rules-proposal-servertime/today; mkdir -p $D
-          RULES_FILE=firebase/proposals/servertime/database.rules.json REPORT_DIR=$D timeout 300 node tests/rules/rules.test.mjs > $D/rules.log 2>&1; r1=$?
+          RULES_FILE=firebase/proposals/servertime/database.rules.json REPORT_DIR=$D/rules timeout 300 node tests/rules/rules.test.mjs > $D/rules.log 2>&1; r1=$?
           RULES_FILE=firebase/proposals/servertime/database.rules.json REPORT_DIR=$D timeout 300 node tests/rules/servertime.test.mjs > $D/servertime.log 2>&1; r2=$?
           (cd tests/emu-site && python -m http.server 8799 > /dev/null 2>&1 &)
           (cd tests/emu-site-spot && python -m http.server 8798 > /dev/null 2>&1 &)
@@ -44,9 +44,9 @@ jobs:
           EOF
           timeout 5700 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -12 /tmp/emulators.log
           cat reports/rules-proposal-servertime/today/result.txt
-          grep -h '^FAIL' reports/rules-proposal-servertime/today/*.txt reports/rules-proposal-servertime/today/*.log | head -20 || true
+          grep -h '^FAIL' reports/rules-proposal-servertime/today/*.txt reports/rules-proposal-servertime/today/rules/*.txt | head -20 || true
           python -c "import json,sys; a=json.load(open('reports/rules-proposal-servertime/today/official-v33/result.json')); b=json.load(open('reports/rules-proposal-servertime/today/spot-preview/result.json')); sys.exit(0 if a['PASS'] and b['PASS'] else 1)"
-          ! grep -q '^FAIL' reports/rules-proposal-servertime/today/result.txt reports/rules-proposal-servertime/today/servertime.txt
+          ! grep -q '^FAIL' reports/rules-proposal-servertime/today/rules/result.txt reports/rules-proposal-servertime/today/servertime.txt
       - name: save
         if: always()
         run: |

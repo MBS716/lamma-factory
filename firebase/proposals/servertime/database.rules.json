@@ -7,12 +7,12 @@
         ".read": "auth != null && $room.matches(/^lm(p?3|2)-[0-9]{4}$/)",
         "$peer": {
           ".write": "auth != null && (!data.exists() || data.child('u').val() === auth.uid || (!newData.exists() && root.child('hosts').child($room).child('u').val() === auth.uid))",
-          ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && $peer.matches(/^[A-Za-z0-9_-]{8,40}$/) && newData.hasChildren(['j', 't', 'u', 'c']) && newData.child('t').val() === now",
+          ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && $peer.matches(/^[A-Za-z0-9_-]{8,40}$/) && newData.hasChildren(['j', 't', 'u', 'c'])",
           "j": {
             ".validate": "newData.isString() && newData.val().length <= 12000"
           },
           "t": {
-            ".validate": "newData.isNumber() && newData.val() === now"
+            ".validate": "newData.isNumber()"
           },
           "u": {
             ".validate": "newData.val() === auth.uid"
@@ -22,6 +22,24 @@
           },
           "h": {
             ".validate": "newData.val() === true && root.child('hosts').child($room).child('u').val() === auth.uid"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "taps": {
+      "$room": {
+        ".read": "auth != null && $room.matches(/^lmp?3-[0-9]{4}$/)",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || (!newData.exists() && root.child('hosts').child($room).child('u').val() === auth.uid))",
+          ".validate": "$room.matches(/^lmp?3-[0-9]{4}$/) && newData.hasChildren(['e', 't']) && newData.child('t').val() === now",
+          "e": {
+            ".validate": "newData.isString() && newData.val().length <= 6000"
+          },
+          "t": {
+            ".validate": "newData.val() === now"
           },
           "$other": {
             ".validate": false
