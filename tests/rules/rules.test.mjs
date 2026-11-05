@@ -3,7 +3,7 @@
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { ref, set, get, update, remove, serverTimestamp, onDisconnect, goOffline, goOnline } from "firebase/database";
-const env = await initializeTestEnvironment({ projectId: "demo-lamma", database: { rules: readFileSync("firebase/database.rules.json", "utf8"), host: "127.0.0.1", port: 9000 } });
+const env = await initializeTestEnvironment({ projectId: "demo-lamma", database: { rules: readFileSync(process.env.RULES_FILE || "firebase/database.rules.json", "utf8"), host: "127.0.0.1", port: 9000 } });
 const out = []; let fails = 0;
 const limit = p => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error("no answer in 15 s")), 15000))]);
 async function t(name, p){ try { await limit(p); out.push("OK   " + name); } catch(e){ fails++; out.push("FAIL " + name + " :: " + (e.message || e)); } }
@@ -137,5 +137,5 @@ await t("a page that is not signed in (old version) can no longer write: the sit
 
 await env.cleanup();
 out.push(`${out.filter(x => x.startsWith("OK")).length}/${out.filter(x => /^(OK|FAIL)/.test(x)).length} passed`);
-mkdirSync("reports/rules-test", { recursive: true }); writeFileSync("reports/rules-test/result.txt", out.join("\n") + "\n");
+const RD = process.env.REPORT_DIR || "reports/rules-test"; mkdirSync(RD, { recursive: true }); writeFileSync(RD + "/result.txt", out.join("\n") + "\n");
 console.log(out.join("\n")); process.exit(fails ? 1 : 0);

@@ -1,0 +1,94 @@
+# PROPOSAL ONLY: firebase/proposals/servertime/database.rules.json (a seat's time t must be the database server's time).
+# Everything runs on the official Firebase emulators; the published rules and the real database are NOT touched.
+#  job "today": the existing rule tests + the server-time tests, then the official-site build (v3.3, tests/emu-site) and the
+#               current spot preview build (tests/emu-site-spot) played end to end under the proposed rules
+#  job "srv":   the spot build that times taps by the server (tests/emu-site-spot-srv, LAMMA_SRVTIME=1) under the proposed rules
+name: rules-proposal-servertime
+on:
+  push:
+    branches: [main]
+    paths: ["firebase/proposals/servertime/**", "tests/rules/servertime.test.mjs", "tests/emu-site-spot-srv/**", ".github/workflows/rules-proposal-servertime.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: {group: rules-proposal-servertime, cancel-in-progress: false}
+jobs:
+  today:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: proposed rules on the emulators
+        run: |
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/proposals/servertime/database.rules.json"}}' > firebase.json
+          cat > /tmp/run.sh <<'EOF'
+          set -u
+          D=reports/rules-proposal-servertime/today; mkdir -p $D
+          RULES_FILE=firebase/proposals/servertime/database.rules.json REPORT_DIR=$D timeout 300 node tests/rules/rules.test.mjs > $D/rules.log 2>&1; r1=$?
+          RULES_FILE=firebase/proposals/servertime/database.rules.json REPORT_DIR=$D timeout 300 node tests/rules/servertime.test.mjs > $D/servertime.log 2>&1; r2=$?
+          (cd tests/emu-site && python -m http.server 8799 > /dev/null 2>&1 &)
+          (cd tests/emu-site-spot && python -m http.server 8798 > /dev/null 2>&1 &)
+          sleep 2
+          EMU=1 RULES_ON=1 timeout 2400 python tests/live_e2e_v3.py http://localhost:8799/ $D/official-v33 > $D/official-v33.log 2>&1; r3=$?
+          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8798/ $D/spot-preview > $D/spot-preview.log 2>&1; r4=$?
+          echo "rule tests: $r1  server-time tests: $r2  official site v3.3: $r3  spot preview: $r4" | tee $D/result.txt
+          exit $(( r1 || r2 || r3 || r4 ))
+          EOF
+          timeout 5700 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -12 /tmp/emulators.log
+          cat reports/rules-proposal-servertime/today/result.txt
+          grep -h '^FAIL' reports/rules-proposal-servertime/today/*.txt reports/rules-proposal-servertime/today/*.log | head -20 || true
+          python -c "import json,sys; a=json.load(open('reports/rules-proposal-servertime/today/official-v33/result.json')); b=json.load(open('reports/rules-proposal-servertime/today/spot-preview/result.json')); sys.exit(0 if a['PASS'] and b['PASS'] else 1)"
+          ! grep -q '^FAIL' reports/rules-proposal-servertime/today/result.txt reports/rules-proposal-servertime/today/servertime.txt
+      - name: save
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log firebase-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/rules-proposal-servertime || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi
+          git commit -q -m "server-time rules proposal: emulator results (today's builds)" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
+  srv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: spot timed by the server, proposed rules, emulators
+        run: |
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/proposals/servertime/database.rules.json"}}' > firebase.json
+          cat > /tmp/run.sh <<'EOF'
+          set -u
+          D=reports/rules-proposal-servertime/srv; mkdir -p $D
+          (cd tests/emu-site-spot-srv && python -m http.server 8797 > /dev/null 2>&1 &)
+          sleep 2
+          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8797/ $D/spot-srv > $D/spot-srv.log 2>&1; r=$?
+          echo "spot timed by the server: $r" | tee $D/result.txt; exit $r
+          EOF
+          timeout 4500 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -12 /tmp/emulators.log
+          grep -h '^FAIL\|same moment\|1.2 s' reports/rules-proposal-servertime/srv/spot-srv.log | head -20 || true
+          python -c "import json,sys; a=json.load(open('reports/rules-proposal-servertime/srv/spot-srv/result.json')); sys.exit(0 if a['PASS'] else 1)"
+      - name: save
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log firebase-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/rules-proposal-servertime || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then exit 1; fi
+          git commit -q -m "server-time rules proposal: emulator results (spot timed by the server)" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
