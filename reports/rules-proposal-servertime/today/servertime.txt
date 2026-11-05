@@ -1,0 +1,22 @@
+-- rules file: firebase/proposals/servertime/database.rules.json
+-- what the site does today keeps working
+OK   host lock
+OK   host seat with the server time
+OK   host updates its seat with the server time
+OK   a phone joins with the server time
+OK   a phone updates its seat with the server time (a tap)
+OK   the host writes a mailbox seat (spot game)
+OK   the host updates the mailbox
+OK   the host removes the mailbox
+OK   a phone leaves (removes its own seat)
+-- what the change forbids
+OK   a phone cannot write its own clock as t (now)
+OK   a phone cannot write an earlier t (to look first)
+OK   a phone cannot write a later t (to look fresh)
+OK   a phone cannot change its seat without renewing t (keeping an old time)
+OK   a new seat with a chosen t is refused
+-- closing the browser (the seat stays with away:1, as session restore needs)
+FAIL a disconnect update with the server time can be registered :: PERMISSION_DENIED: Permission denied
+FAIL after the disconnect the seat is kept, marked away, with the server's time :: {"c":1793909668874,"j":"{\"r\":\"p\",\"n\":\"لاعب\",\"df\":{\"e\":\"sealed\"}}","t":1793909668880,"u":"phoneB"}
+OK   the seat's t is the server's time (within 5 s of this machine's clock)
+15/17 passed
