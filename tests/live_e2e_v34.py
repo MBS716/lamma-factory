@@ -368,8 +368,13 @@ async def spot_v34(host, ios, android, cb, pw):
     # ---- round 2: Android completes first, the third phone 1 s later -> Android alone
     s = await new_round()
     await taps(android, [0, 1, 2, 3]); await taps(third, [0, 1, 2, 3]); await settle()
+    await ios.evaluate(f'''(() => {{ window.__seen = []; const t = setInterval(() => {{ const h = findHost(), hs = h && h.presence.s; if (!hs) return;
+        window.__seen.push([hs.ph, (hs.pl[{json.dumps(kA)}] || {{}}).f, (hs.pl[{json.dumps(kA)}] || {{}}).done || 0]); if (hs.ph === "over") clearInterval(t); }}, 15); }})()''')
     await tap(android, *on_change(G['D'][4])); await third.wait_for_timeout(1200); await tap(third, *on_change(G['D'][4]))
     await host.wait_for_function('H.s.ph === "over"', timeout=30000); await settle(); s = await S(); f = s['pl']
+    seen = await ios.evaluate('window.__seen')
+    check(seen and not [x for x in seen if x[0] == 'play' and (x[2] or x[1] == 5)], f'spot v4: the other phones see no completion before the closing window ends, only the final result ({len(seen)} readings)')
+    s2 = await S(); await settle(3000); check((await S())['pl'] == s2['pl'] and (await S())['win'] == s2['win'], 'spot v4: the announced result does not change afterwards')
     check(s['win'] == [kA] and f[kT]['f'] == 4 and not f[kT]['done'], f'spot v4: the third phone completes 1.2 s after Android: Android wins alone, the late tap is not counted (third phone {f[kT]["f"]} of 5)')
     txt = await third.inner_text('#pDfStatus'); check('توقفت الجولة بفوز المنافس' in txt, 'spot v4: «توقفت الجولة بفوز المنافس» for the others')
     await third.screenshot(path=f'{OUT}/spot4_third_results.png', full_page=True)
