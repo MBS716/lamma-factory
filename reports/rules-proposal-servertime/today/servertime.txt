@@ -1,0 +1,26 @@
+-- rules file: firebase/proposals/servertime/database.rules.json
+-- seats are unchanged: closing the browser still keeps the seat (session restore)
+OK   host lock and host seat
+OK   a phone joins
+OK   a disconnect update (away:1) can be registered, as today
+-- the server-stamped taps
+OK   a phone writes its sealed taps with the server's time
+OK   …and again (a new tap)
+OK   the host reads the taps of its room
+OK   another phone can read them too (they are sealed: unreadable without the key)
+OK   not signed in: cannot read
+OK   a phone cannot write its own clock as t
+OK   a phone cannot write an earlier t (to look first)
+OK   a phone cannot change its taps without a new server time (keeping an old time)
+OK   a phone cannot write taps without t
+OK   a phone cannot write in another device's place
+OK   a phone cannot delete another device's taps
+OK   unknown fields are refused
+OK   oversized taps are refused
+OK   only game rooms (lm3-/lmp3- + 4 digits)
+OK   a phone that is not the host cannot clear another device's taps
+OK   the host clears a device's taps after the round
+OK   the stored t is the server's time (within 5 s of this machine's clock)
+-- closing the browser, after all this
+OK   the phone's seat is kept, marked away (session restore works as today)
+21/21 passed
