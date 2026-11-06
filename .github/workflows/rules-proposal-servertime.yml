@@ -14,7 +14,7 @@ permissions:
 concurrency: {group: rules-proposal-servertime, cancel-in-progress: false}
 jobs:
   today:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
     timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
           git commit -q -m "server-time rules proposal: emulator results (today's builds)" || exit 0
           for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
   srv:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
