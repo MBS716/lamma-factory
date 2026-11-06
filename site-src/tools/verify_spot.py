@@ -23,7 +23,8 @@ for sh in idx["shards"]:
         if A.shape[:2] != (e["h"], e["w"]) or B.shape != A.shape: r["problems"].append(f"size {A.shape[:2]} / {B.shape[:2]} != {e['h']}x{e['w']}")
         d = np.abs(A - B).sum(2) > 60
         inside = np.zeros(d.shape, bool); weak = []
-        for i, (x, y, rx, ry) in enumerate(e["d"]):
+        for i, dd in enumerate(e["d"]):
+            x, y, rx, ry = dd[:4]          # v4 adds the exact changed area as a 5th item
             x0, x1, y0, y1 = max(0, x - rx), min(e["w"], x + rx), max(0, y - ry), min(e["h"], y + ry)
             inside[y0:y1, x0:x1] = True
             box = d[y0:y1, x0:x1]

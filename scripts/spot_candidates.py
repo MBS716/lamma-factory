@@ -94,6 +94,25 @@ def fetch(out, ids, width=2400):
         im = Image.open(io.BytesIO(get(u, True))).convert("RGB"); im.save(f"{out}/full/{i}.jpg", quality=94)
         print(i, im.size)
 
+def fetch_list(out, listfile, width=2400):
+    """the pictures of the 46 pairs of the current site, again from Commons at full size (with their licence data)"""
+    os.makedirs(f"{out}/full", exist_ok=True); meta = []
+    for c in json.load(open(listfile)):
+        p = {"action": "query", "format": "json", "formatversion": 2, "titles": c["title"], "prop": "imageinfo", "iiprop": "url|size|extmetadata",
+             "iiurlwidth": width, "iiextmetadatafilter": "LicenseShortName|LicenseUrl|Artist|Restrictions"}
+        try:
+            pg = get(API + "?" + urllib.parse.urlencode(p))["query"]["pages"][0]; ii = pg["imageinfo"][0]; m = ii.get("extmetadata", {})
+            u = ii.get("thumburl") if ii.get("width", 0) > width else ii["url"]
+            im = Image.open(io.BytesIO(get(u, True))).convert("RGB")
+            if im.size[0] > width: im = im.resize((width, round(im.size[1] * width / im.size[0])), Image.LANCZOS)
+            im.save(f"{out}/full/{c['id']}.jpg", quality=94)
+            meta.append({**c, "w": im.size[0], "h": im.size[1], "orig_w": ii.get("width"), "licence_now": plain(m.get("LicenseShortName", {}).get("value")),
+                         "artist_now": plain(m.get("Artist", {}).get("value"))[:80], "restrictions": plain(m.get("Restrictions", {}).get("value"))})
+            print(c["id"], im.size)
+        except Exception as e: meta.append({**c, "error": str(e)}); print("failed", c["id"], e)
+    json.dump(meta, open(f"{out}/old46.json", "w"), ensure_ascii=False, indent=1)
+
 if __name__ == "__main__":
     if sys.argv[1] == "sheets": sheets(sys.argv[2])
+    elif sys.argv[1] == "list": fetch_list(sys.argv[2], sys.argv[3])
     else: fetch(sys.argv[2], [x for x in sys.argv[3].split(",") if x])

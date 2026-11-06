@@ -28,6 +28,7 @@ jobs:
           case "$r" in
             sheets) python scripts/spot_candidates.py sheets ../src/cand ;;
             fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
+            old46) python scripts/spot_candidates.py list ../src/old46 scripts/spot_old46.json ;;
             *) echo "nothing to do" ;;
           esac
       - name: save on branch spot-sources
