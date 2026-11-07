@@ -25,7 +25,7 @@ permissions:
   contents: write
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages (ubuntu-latest moved)
     steps:
       - uses: actions/checkout@v4
       - name: what to do
@@ -131,7 +131,9 @@ jobs:
         run: |
           pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v3.py http://localhost:8799/ reports/site-test/branch3-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
+          D=reports/site-test/branch4-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py http://localhost:8799/ $D https://mbs716.github.io/lamma/
+          python tests/live_spot_library.py http://localhost:8799/ site $D/spot-library.txt
           python tests/seo_check.py http://localhost:8799/ reports/site-test/branch-seo https://mbs716.github.io/lamma/
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
@@ -143,7 +145,8 @@ jobs:
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v3.py https://mbs716.github.io/lamma/ reports/site-test/live    # sign-in, rules and permission checks on the live site
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma/ reports/site-test/live    # all games, spot v4, sign-in, rules and permission checks on the live site
+          python tests/live_spot_library.py https://mbs716.github.io/lamma/ site reports/site-test/live/spot-library.txt   # the 60 pairs as the live site serves them
           GSV=o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-seo
           python - <<'PY'
           import asyncio
