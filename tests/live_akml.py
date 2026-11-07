@@ -75,6 +75,7 @@ async def main():
         gA, gB, gC = s['res'][kA], s['res'][kB], s['res'].get(kC)
         check(gA[1] == 1 and 100 < gA[0] <= 150 and gB[:2] == [0, 0] and gC and gC[1] == -1 and gC[0] == 0, f'scores: right {gA[0]} (100 + speed), wrong 0, no answer 0')
         check(s['rev']['a'] == it['a'] and s['rev']['ci'] == ci and s['rev']['why'] == it['why'], 'after the time: the right option, the full phrase and its meaning')
+        await A.wait_for_function('document.querySelector("#playerMain").innerText.includes("المعنى")', timeout=10000)
         tA = await A.inner_text('#playerMain'); tB = await B.inner_text('#playerMain')
         check('إجابة صحيحة' in tA and 'إجابة خاطئة' in tB and 'المعنى' in tA, 'phones: verdict, points and the meaning')
         await A.screenshot(path=SHOTS + '/ak_c_reveal_390.png'); await host.screenshot(path=SHOTS + '/ak_c_reveal_host.png')
@@ -103,7 +104,9 @@ async def main():
         await nxt(); await live(); ids.append((await ITEM(host))['id'])
         await host.wait_for_function('H.s.ph === "r"', timeout=16000); s = await S(host)
         check(all(s['res'][k][:2] == [0, -1] for k in (kA, kB, kC)), 'time out with no answer: 0 for everybody')
-        tC = await C.inner_text('#playerMain'); check('لم تُجب' in tC, 'computer: «لم تُجب»')
+        try: await C.wait_for_function('document.querySelector("#playerMain").innerText.includes("لم تُجب")', timeout=10000); okc = True
+        except Exception: okc = False
+        check(okc, 'computer: «لم تُجب»')
         # end the match: ranking and the winner's bonus apart
         before = {k: s['res'][k][2] for k in (kA, kB, kC)}
         await host.click('[data-h=final]'); await host.wait_for_function('H.s.ph === "end"', timeout=8000); s = await S(host)
