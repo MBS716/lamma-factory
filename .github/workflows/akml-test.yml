@@ -1,0 +1,88 @@
+# أكملها (the sixth game), test copy only (not the official site, nothing in main of MBS716/lamma changes):
+#  1. emulator: the current database rules on the official Firebase emulators (Database + Auth), the rule checks, then
+#     tests/emu-site-akml played end to end: أكملها in its 3 modes and all the other games. Nothing reaches the real database.
+#  2. preview: preview-akml/ on GitHub Pages of this repo, played on the real database with today's published rules
+#     (anonymous sign-in, separate preview rooms lmp3-): أكملها, then every other game. The rules are not changed here.
+name: akml-test
+on:
+  push:
+    branches: [main]
+    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", ".github/workflows/akml-test.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: {group: akml-test, cancel-in-progress: false}
+jobs:
+  emulator:
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: npm i --no-save firebase-tools@13 @firebase/rules-unit-testing@3 firebase@10
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: current rules + the site with أكملها on the emulators
+        run: |
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
+          cat > /tmp/run.sh <<'EOF'
+          set -u
+          D=reports/akml/emulator; mkdir -p $D
+          timeout 300 node tests/rules/rules.test.mjs > $D/rules.log 2>&1; r1=$?
+          (cd tests/emu-site-akml && python -m http.server 8799 > /dev/null 2>&1 &)
+          sleep 2
+          timeout 1500 python tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.log 2>&1; r2=$?
+          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.log 2>&1; r3=$?
+          echo "rules: $r1  akml: $r2  other games on the emulator: $r3" | tee $D/result.txt
+          exit $(( r1 || r2 || r3 ))
+          EOF
+          timeout 4500 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -15 /tmp/emulators.log
+          grep -E '^(FAIL)|passed' reports/akml/emulator/akml.log || true
+          python -c "import json,sys; a=json.load(open('reports/akml/emulator/akml/result.json')); s=json.load(open('reports/akml/emulator/site/result.json')); sys.exit(0 if a['PASS'] and s['PASS'] else 1)"
+      - name: save
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log firebase-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/akml || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "akml emulator test results" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
+  preview:
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+      - name: wait until GitHub Pages serves this commit
+        run: |
+          want=$(md5sum preview-akml/index.html | cut -c1-32)
+          for i in $(seq 1 60); do
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-akml/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
+          done; echo "pages did not update"; exit 1
+      - name: أكملها on the real database (current rules)
+        run: |
+          D=reports/akml/preview; mkdir -p $D
+          timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1; r=$?
+          grep -E '^(FAIL)|passed' $D/akml.log || true; exit $r
+      - name: every other game on the real database (current rules)
+        if: always()
+        run: |
+          D=reports/akml/preview; mkdir -p $D
+          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/site https://mbs716.github.io/lamma/ > $D/site.log 2>&1; r=$?
+          grep -E '^(OK|FAIL)' $D/site.log | grep -E 'FAIL' || true; exit $r
+      - name: save
+        if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/akml || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "akml preview test results" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1
