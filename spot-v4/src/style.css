@@ -648,3 +648,55 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 
 .dfhero-why{margin:8px 0 0;font-size:.85rem;color:var(--muted)}
 .dfres .dflast{display:block;font-size:.72em;color:var(--muted);font-variant-numeric:tabular-nums}
+/* ===== أكملها ===== */
+@media (min-width:901px){.games.three:has(>.gcard:nth-child(4)){grid-template-columns:repeat(4,1fr)}}
+.art-ak{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--display);font-size:1.25rem}
+.art-ak span{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:4px 14px}
+.art-ak b{font-weight:400;min-width:84px;text-align:center;color:var(--gold);border-bottom:3px dashed var(--gold);font-size:1.5rem;line-height:1.2}
+.akcard{border-color:color-mix(in srgb,var(--gold) 45%,var(--line));background:linear-gradient(180deg,var(--card) 0%,color-mix(in srgb,var(--card) 70%,var(--bg)) 100%)}
+.akx{font-family:var(--display);font-size:clamp(1.45rem,5.6vw,2rem);line-height:1.6;text-wrap:balance;margin:6px 0}
+.akx.big{font-size:clamp(1.7rem,3.6vw,2.8rem)}
+.akgap{display:inline-block;min-width:3.2em;margin-inline:.25em;border-bottom:4px dashed var(--gold);text-align:center;line-height:1.1;vertical-align:baseline}
+.akgap i{font-style:normal;color:var(--gold);opacity:.9}
+.akfill{display:inline-block;margin-inline:.2em;padding:0 .35em;border-radius:10px;background:color-mix(in srgb,var(--gold) 26%,transparent);color:var(--gold);box-shadow:inset 0 -3px 0 var(--gold)}
+.akmode{border-color:var(--gold);color:var(--gold)}
+.akrev{display:flex;flex-direction:column;gap:8px}
+.akrev p:not(.akx){font-size:1.08rem;line-height:1.7}
+.aksrc{font-size:.92rem!important}
+.akget .timer{font-size:4.5rem}
+.akform{display:flex;gap:10px;margin-top:6px}
+.akform .field{flex:1;font-size:1.35rem}
+.aknote{font-size:.92rem;text-align:center}
+.aksent{font-family:var(--display);font-size:1.6rem;color:var(--gold);text-align:center}
+.akbz{font-family:var(--display);font-size:1.7rem;border:0;border-radius:50%;width:min(62vw,230px);aspect-ratio:1;margin:8px auto;background:radial-gradient(circle at 40% 35%,#ffd36b,var(--gold) 55%,#c98a12);color:var(--on-gold);box-shadow:0 8px 0 #9b6a0c,0 14px 30px #0008}
+.akbz:active{transform:translateY(5px);box-shadow:0 3px 0 #9b6a0c}
+.akq{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;counter-reset:q}
+.akq li{counter-increment:q;display:flex;justify-content:space-between;gap:10px;background:var(--bg2);border-radius:10px;padding:7px 12px;border:2px solid transparent}
+.akq li span:first-child::before{content:counter(q) ". ";color:var(--muted)}
+.akq li.on{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 18%,var(--bg2));font-weight:700}
+.akq li.out{opacity:.55;text-decoration:line-through}
+.akq li.me{box-shadow:inset 4px 0 0 var(--blue)}
+.akturn{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;background:var(--bg2);border-radius:16px;padding:14px}
+.akturn h3{font-size:2rem;color:var(--gold)}
+.akturn.me .bigmsg{color:var(--gold)}
+.akjd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--bg2);border-radius:12px;padding:10px 12px}
+.akjd.ok{box-shadow:inset 4px 0 0 var(--green)} .akjd.no{box-shadow:inset 4px 0 0 var(--bad)}
+.akgain{font-style:normal;color:var(--green);font-size:.95rem}
+.akhero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0 10px}
+.akhero h2{font-size:clamp(2rem,6vw,3rem);color:var(--gold)}
+.akcrown{font-size:3rem;line-height:1}
+.akmine{font-size:1.2rem}
+.aktable-w{overflow-x:auto}
+.aktable{width:100%;border-collapse:separate;border-spacing:0 6px;font-variant-numeric:tabular-nums}
+.aktable th{font-weight:400;color:var(--muted);font-size:.9rem;padding:0 8px;text-align:start;white-space:nowrap}
+.aktable td{background:var(--bg2);padding:8px;white-space:nowrap}
+.aktable td:first-child{border-radius:0 10px 10px 0;text-align:center;font-family:var(--display)}
+.aktable td:last-child{border-radius:10px 0 0 10px;font-family:var(--display);font-size:1.15rem}
+.aktable tr.win td{background:color-mix(in srgb,var(--gold) 22%,var(--bg2))}
+.aktable tr.me td{box-shadow:inset 0 -2px 0 var(--blue)}
+.akok{animation:akpop .5s ease-out}
+.akno{animation:akshake .45s ease-in-out}
+@keyframes akpop{0%{transform:scale(.94);box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 70%,transparent)}60%{transform:scale(1.02)}100%{transform:none;box-shadow:0 0 0 18px transparent}}
+@keyframes akshake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+@media (max-width:560px){.akform{flex-direction:column}.aktable th:nth-child(3),.aktable td:nth-child(3){display:none}}
+@media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}

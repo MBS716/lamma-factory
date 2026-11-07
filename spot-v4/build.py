@@ -56,7 +56,7 @@ def banks():
     """Question banks (validated by tools/banks.py) -> dist/data/*.json, loaded only when a game starts."""
     out = os.path.join(DIST, 'data'); shutil.rmtree(out, ignore_errors=True); os.makedirs(out)
     emb, h = {}, hashlib.md5()
-    for name in ('quiz', 'letters'):
+    for name in ('quiz', 'letters', 'akml'):
         f = os.path.join(ROOT, 'data', name + '.json')
         if not os.path.exists(f): continue
         raw = open(f, 'rb').read(); h.update(raw); shutil.copy(f, os.path.join(out, name + '.json'))
@@ -65,7 +65,7 @@ def banks():
 EMB, BANKV = banks()
 
 def js(firebase, base, spot_cdn='spot/', embed=False):
-    code = '\n'.join([S('data.js'), S('photo.js'), S('draw.js'), S('wheel3.js'), S('app.js')])
+    code = '\n'.join([S('data.js'), S('photo.js'), S('draw.js'), S('wheel3.js'), S('akml.js'), S('app.js')])
     if embed: code = 'window.EMBED_BANKS = ' + json.dumps(EMB, ensure_ascii=False, separators=(',', ':')) + ';\n' + code
     # LAMMA_EMULATOR=127.0.0.1 makes a TEST build that talks only to the local Firebase emulators (never the real database)
     emu = os.environ.get('LAMMA_EMULATOR')
