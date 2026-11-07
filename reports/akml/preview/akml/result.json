@@ -1,10 +1,8 @@
 {
  "url": "https://mbs716.github.io/lamma-factory/preview-akml/",
  "checks": 55,
- "passed": 54,
- "failed": [
-  "computer: «لم تُجب»"
- ],
+ "passed": 55,
+ "failed": [],
  "all": [
   "OK the public bank file has no readable phrase or answer (scrambled, not protected)",
   "OK the clock starts only after a short countdown (question already on every phone)",
@@ -23,7 +21,7 @@
   "OK phone reloads before answering: back on the question and answers",
   "OK host ends the time early: answers so far count, the rest get 0",
   "OK time out with no answer: 0 for everybody",
-  "FAIL computer: «لم تُجب»",
+  "OK computer: «لم تُجب»",
   "OK end: the winner gets +100 shown apart (صالح: 441 + 100 = 541)",
   "OK final ranking in order of totals",
   "OK question points in the table match the points of the questions",
@@ -33,11 +31,11 @@
   "OK typing mode: no options, one text field",
   "OK phone: one try, the field is gone after sending",
   "OK typed answers are sealed: the answer text is nowhere in the room",
-  "OK «ذهبوب» (one letter off «ذهبوا») goes to the host, not accepted by itself",
+  "OK «الحاجت» (one letter off «الحاجب») goes to the host, not accepted by itself",
   "OK phones: «the host is reviewing some answers»",
   "OK the host accepts it: points for it",
-  "OK diacritics, tatweel and spaces ignored: «ذًهبوا» accepted for «ذهبوا»",
-  "OK another option of the question («رحلوا») is wrong",
+  "OK diacritics, tatweel and spaces ignored: «اًلحاجب» accepted for «الحاجب»",
+  "OK another option of the question («الرمش») is wrong",
   "OK accepted: missing hamza, approved alternative (البعير), Arabic-Indic digits, «مئة», answer without «ال», ه for ة",
   "OK refused: another option, a different planet, «حسين» for «حنين» (an option), 365 for 366",
   "OK a two-letter slip in a long word goes to the host",
@@ -62,5 +60,5 @@
   "OK diff: opens with a room code as before",
   "OK no page errors"
  ],
- "PASS": false
+ "PASS": true
 }
