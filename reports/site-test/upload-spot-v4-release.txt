@@ -1,0 +1,9 @@
+branch: spot-v4-release
+commit: 1e9b7a70fda87368ac0c6853a1c41e95a6d3248f
+date (UTC): 2026-11-07 01:34
+index.html: db97612cc2736cf10aaebe5893adb5e4 (expected db97612cc2736cf10aaebe5893adb5e4)
+spot files: 124 (expected 124)
+build: 8f8bba6a4c (tested 8f8bba6a4c)
+files: 138, sha256 of every file identical to the tested build: yes
+main untouched: 0e893f3b2242
+files identical to site/: yes
