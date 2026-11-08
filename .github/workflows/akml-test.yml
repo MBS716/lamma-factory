@@ -1,6 +1,6 @@
 # أكملها (the sixth game), test copy only (not the official site, nothing in main of MBS716/lamma changes):
 #  1. emulator: the current database rules on the official Firebase emulators (Database + Auth), the rule checks, then
-#     tests/emu-site-akml played end to end: أكملها in its 3 modes and all the other games. Nothing reaches the real database.
+#     tests/emu-site-akml played end to end: أكملها v2 (solo, two teams, the 7 answer methods) and all the other games. Nothing reaches the real database.
 #  2. preview: preview-akml/ on GitHub Pages of this repo, played on the real database with today's published rules
 #     (anonymous sign-in, separate preview rooms lmp3-): أكملها, then every other game. The rules are not changed here.
 name: akml-test
