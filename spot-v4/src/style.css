@@ -698,5 +698,28 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akno{animation:akshake .45s ease-in-out}
 @keyframes akpop{0%{transform:scale(.94);box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 70%,transparent)}60%{transform:scale(1.02)}100%{transform:none;box-shadow:0 0 0 18px transparent}}
 @keyframes akshake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
-@media (max-width:560px){.akform{flex-direction:column}.aktable th:nth-child(3),.aktable td:nth-child(3){display:none}}
+@media (max-width:560px){.akform{flex-direction:column}.aktable th{white-space:normal;font-size:.8rem;padding:0 4px}.aktable td{padding:7px 5px}.aktable td:last-child{font-size:1rem}}
+.aksetsec{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.aksetsec h4{margin:0;font-size:1rem;color:var(--gold)}
+.akteams{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.akteam{display:flex;justify-content:space-between;align-items:center;gap:6px;border-radius:12px;padding:8px 12px;background:var(--bg2);border:2px solid var(--line)}
+.akteam.g{border-color:var(--green)} .akteam.o{border-color:var(--orange)}
+.akteam b{font-family:var(--display);font-size:1.5rem}
+.akdot{display:inline-block;width:.6em;height:.6em;border-radius:50%;margin-inline-end:.35em;vertical-align:middle}
+.akdot.g{background:var(--green)} .akdot.o{background:var(--orange)}
+.aktag{margin:0;padding:6px 10px;border-radius:10px;text-align:center;font-weight:700;background:color-mix(in srgb,var(--gold) 20%,var(--bg2));color:var(--gold)}
+.aktag.fast{background:color-mix(in srgb,var(--blue) 22%,var(--bg2));color:var(--ink,inherit)}
+.akwin{color:var(--green)}
+.akpq{display:flex;flex-wrap:wrap;gap:6px}
+.akpq .chip.ok{border-color:var(--green)} .akpq .chip.no{border-color:var(--bad);opacity:.8}
+.aktf{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0}
+.aktfc{border:2px solid var(--line);border-radius:16px;padding:10px;text-align:center}
+.aktfc.g{border-color:var(--green)} .aktfc.o{border-color:var(--orange)}
+.aktfc h3{margin:0} .aktfc.g h3{color:var(--green)} .aktfc.o h3{color:var(--orange)}
+.aktot{font-family:var(--display);font-size:2.2rem;margin:2px 0}
+.aktable.sm td{font-size:.95rem;padding:5px}
+.aktfc .aktable td:first-child{text-align:start;font-family:inherit} .aktable.sm td:last-child{font-size:.95rem}
+.akhero h2.tg{color:var(--green)} .akhero h2.to{color:var(--orange)}
+.akmove{border-top:1px solid var(--line);padding-top:8px}
+@media (max-width:560px){.aktf{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}
