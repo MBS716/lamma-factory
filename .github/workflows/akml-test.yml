@@ -7,7 +7,7 @@ name: akml-test
 on:
   push:
     branches: [main]
-    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", ".github/workflows/akml-test.yml"]
+    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", ".github/workflows/akml-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -36,13 +36,14 @@ jobs:
           (cd tests/emu-site-akml && python -m http.server 8799 > /dev/null 2>&1 &)
           sleep 2
           timeout 1500 python tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.log 2>&1; r2=$?
+          timeout 900 python tests/live_akml_key.py http://localhost:8799/ $D/key > $D/key.log 2>&1; r4=$?
           EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.log 2>&1; r3=$?
-          echo "rules: $r1  akml: $r2  other games on the emulator: $r3" | tee $D/result.txt
-          exit $(( r1 || r2 || r3 ))
+          echo "rules: $r1  akml: $r2  answer card: $r4  other games on the emulator: $r3" | tee $D/result.txt
+          exit $(( r1 || r2 || r3 || r4 ))
           EOF
           timeout 4500 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -15 /tmp/emulators.log
-          grep -E '^(FAIL)|passed' reports/akml/emulator/akml.log || true
-          python -c "import json,sys; a=json.load(open('reports/akml/emulator/akml/result.json')); s=json.load(open('reports/akml/emulator/site/result.json')); sys.exit(0 if a['PASS'] and s['PASS'] else 1)"
+          grep -E '^(FAIL)|passed' reports/akml/emulator/akml.log reports/akml/emulator/key.log || true
+          python -c "import json,sys; a=json.load(open('reports/akml/emulator/akml/result.json')); k=json.load(open('reports/akml/emulator/key/result.json')); s=json.load(open('reports/akml/emulator/site/result.json')); sys.exit(0 if a['PASS'] and k['PASS'] and s['PASS'] else 1)"
       - name: save
         if: always()
         run: |
@@ -72,6 +73,12 @@ jobs:
           D=reports/akml/preview; mkdir -p $D
           timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1; r=$?
           grep -E '^(FAIL)|passed' $D/akml.log || true; exit $r
+      - name: the host's answer card on the real database (current rules)
+        if: always()
+        run: |
+          D=reports/akml/preview; mkdir -p $D
+          timeout 900 python tests/live_akml_key.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/key > $D/key.log 2>&1; r=$?
+          grep -E '^(FAIL)|passed' $D/key.log || true; exit $r
       - name: every other game on the real database (current rules)
         if: always()
         run: |

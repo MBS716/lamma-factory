@@ -763,6 +763,19 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akhero h2.tg{color:var(--green)} .akhero h2.to{color:var(--orange)}
 .akmove{border-top:1px solid var(--line);padding-top:8px}
 @media (max-width:560px){.aktf{grid-template-columns:1fr}}
+.akkey{border:2px solid var(--gold);border-radius:16px;padding:10px 14px;background:color-mix(in srgb,var(--gold) 10%,var(--bg2));display:flex;flex-direction:column;gap:4px;text-align:start}
+.akkey p{margin:0;line-height:1.7}
+.akkey.off{border-style:dashed}
+.akkey-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.85rem;color:var(--gold);font-weight:700}
+.akkey-a{font-size:1.25rem} .akkey-a b{font-family:var(--display);font-size:1.7rem;color:var(--gold)}
+.akkey u{text-decoration-color:var(--gold);text-decoration-thickness:2px;text-underline-offset:5px;font-weight:700}
+.akkey-w{color:var(--muted)}
+.opt.akkeyopt{outline:4px solid var(--green);outline-offset:-4px}
+.akkeyb{margin-inline-start:auto;font-size:.8rem;background:var(--green);color:#06210f;border-radius:8px;padding:2px 8px;font-weight:700}
+.akans h3{margin:0 0 4px} .akans ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.akans li{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:6px 10px}
+.akst{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.akans .chip.ok{border-color:var(--green);color:var(--green)} .akans .chip.no{border-color:var(--bad);color:var(--bad)} .akans .chip.ask{border-color:var(--gold);color:var(--gold)}
 @media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}
 </style>
 </head>
@@ -832,7 +845,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.2-akml2 · emulator</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.3-akml2 · emulator</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1870,6 +1883,9 @@ function akCheck(it, raw){
   }
   return "no";
 }
+const akIsOpt = (it, raw) => it.o.slice(1).map(akNorm).includes(akNorm(raw));
+// the value of an answer: the host's decision (final once given), else the device's check ("?" while nobody decided)
+const akVal = (a, und) => a.x != null && H.priv.dec[akNorm(a.x)] ? H.priv.dec[akNorm(a.x)] : a.v === "?" ? und : a.v;
 /* the bank: {"v":1,"d":"<base64>"}, the items scrambled with a fixed key (not a protection: the key is in the site's code) */
 let AK_BANK = null, AK_WAIT = null;
 function akDecode(j){
@@ -1972,6 +1988,7 @@ const Akml = {
     try { H.priv.B = await akLoad(); } catch(e){ if (H) H.s.ph = "lobby"; return; }
     if (!H || H.g !== "akml") return;
     if (["q", "judge", "r"].includes(H.s.ph)){ Akml.hostKey(); H.priv.tickAt = 0; clearInterval(H.priv.tick); H.priv.tick = setInterval(Akml.tick, 250); }
+    renderHost();            // the answer card comes back with the host's own copy of the bank
   },
   hostKey(){
     if (!DFC.ok()) return Promise.reject(new Error("no crypto"));
@@ -2019,6 +2036,8 @@ const Akml = {
     if (a === "skip") return Akml.skip();
     if (a === "final") return Akml.finish();
     if (a === "jok" || a === "jno") return Akml.decide(d.x, a === "jok");
+    if (a === "jover") return Akml.accept(d.x);
+    if (a === "akhide"){ H.priv.akHide = !H.priv.akHide; try { localStorage.setItem("lm-akhide", H.priv.akHide ? "1" : ""); } catch(e){} return renderHost(); }
     if (s.ph === "q" && b && +d.tid === (s.bz ? s.bz.tid : s.tt ? s.tt.tid : -1)){       // a click from an older turn does nothing
       if (a === "bok") Akml.oral(true);
       else if (a === "bno") Akml.oral(false);
@@ -2174,7 +2193,10 @@ const Akml = {
     const it = H.priv.B.by[H.priv.qid];
     let v;
     if (q.inp === "c"){ if (!Number.isInteger(m.c) || m.c < 0 || m.c > 3) return; v = m.c === H.priv.ci ? "ok" : "no"; A[key] = {k, n:name, c:m.c, ms, v, at:arr}; }
-    else { const x = String(m.x || "").slice(0, 60); if (!akNorm(x)) return; v = akCheck(it, x); A[key] = {k, n:name, x, ms, v, at:arr}; if (v === "?") H.priv.pend.includes(akNorm(x)) || H.priv.pend.push(akNorm(x)); }
+    else { const x = String(m.x || "").slice(0, 60); if (!akNorm(x)) return; v = akCheck(it, x);
+      // the player on turn: an answer that is neither the answer nor one of the question's wrong options is judged by the host
+      // before the turn passes (it may be right in meaning)
+      if (q.lock === "turn" && v === "no" && !akIsOpt(it, x)) v = "?"; A[key] = {k, n:name, x, ms, v, at:arr}; if (v === "?") H.priv.pend.includes(akNorm(x)) || H.priv.pend.push(akNorm(x)); }
     H.priv.arr.push(key);
     s.got = [...new Set(Object.values(A).map(a => a.k))]; s.cnt = s.got.length;
     if (q.lock === "turn") return Akml.turnAnswer(key);
@@ -2187,7 +2209,7 @@ const Akml = {
     const s = H.s, A = H.priv.ans, D = H.priv.dec;
     let waiting = false;
     for (const key of H.priv.arr){
-      const a = A[key], v = a.v === "?" ? D[akNorm(a.x)] || "?" : a.v;
+      const a = A[key], v = akVal(a, "?");
       if (v === "ok"){ if (waiting){ s.ph = "judge"; s.step = 1; clearInterval(H.priv.tick); return pushHost(); } s.wk = a.k; return Akml.reveal(); }
       if (v === "?") waiting = true;
     }
@@ -2197,7 +2219,7 @@ const Akml = {
   },
   // the answer of the player on turn (typed or chosen on his phone)
   turnAnswer(key){
-    const a = H.priv.ans[key], v = a.v === "?" ? H.priv.dec[akNorm(a.x)] || "?" : a.v;
+    const a = H.priv.ans[key], v = akVal(a, "?");
     if (v === "?"){ H.s.ph = "judge"; H.s.step = 1; clearInterval(H.priv.tick); return pushHost(); }
     return Akml.turnOver(a.k, v);
   },
@@ -2267,6 +2289,16 @@ const Akml = {
     }
     if (s.ph === "judge" && H.priv.pend.every(p => H.priv.dec[p])) Akml.reveal(); else renderHost();
   },
+  // a typed answer the device refused (not the bank's wording) that the host accepts as right in meaning; a decision is given
+  // once and cannot be changed, and only before the question's points are counted
+  accept(x){
+    const s = H.s, q = s.q; if (!q || !(s.ph === "q" || s.ph === "judge") || q.lock === "turn" || H.priv.dec[x]) return;
+    const it = H.priv.B.by[H.priv.qid], has = Object.values(H.priv.ans).some(a => a.x != null && akNorm(a.x) === x && a.v === "no");
+    if (!has || akIsOpt(it, x)) return;
+    H.priv.dec[x] = "ok";
+    if (q.lock === "first"){ Akml.firstCheck(); if (s.ph === "judge") Akml.firstAfterJudge(); return; }
+    renderHost();
+  },
   firstAfterJudge(){        // judged, nobody right yet: the question goes on for the others (or ends if all answered)
     const s = H.s; if (s.ph !== "judge") return;
     const A = H.priv.ans, act = activePlayers(hostPlayers()).map(p => dfKey(pname(p)));
@@ -2282,7 +2314,7 @@ const Akml = {
     if (s.tb){ Akml.tbReveal(it); return; }
     const T = q.T * 1000, gain = {};
     for (const a of Object.values(H.priv.ans)){
-      const v = a.v === "?" ? H.priv.dec[akNorm(a.x)] || "no" : a.v, ok = v === "ok";
+      const v = akVal(a, "no"), ok = v === "ok";
       if (q.inp === "c" && a.c != null) dist[a.c]++;
       let base = 0, bonus = 0;
       if (ok){
@@ -2387,8 +2419,42 @@ const Akml = {
   },
   /* ---------- the host's screen ---------- */
   head(s){ const q = s.qd, k = s.q; return `<div class="row qmeta"><span class="muted">${s.tb ? `جولة فاصلة · ${s.tb.n}` : `السؤال ${s.i} من ${s.n}`}</span><span class="chip">${esc(akSecName(q.s))}</span><span class="chip lv l${q.l}">${LV_NAMES[q.l]}</span><span class="chip akmode">${AK_M[k.m]}${k.m === "c" || k.m === "t" ? ` · ${AK_LOCK[k.lock]}` : ""}</span></div>${k.tag && AK_TAG[k.tag] ? `<p class="aktag ${k.tag}">${AK_TAG[k.tag]}</p>` : ""}${k.fx ? `<p class="aktag fast">⚡ تحدي السرعة · ${k.T} ثوانٍ ومكافأة سرعة حتى ${AK_PTS.fastX}</p>` : ""}`; },
-  optsHTML(s, rev, tag){
-    return `<div class="opts">${range(4).map(i => `<${tag || "div"} class="opt c${i} ${rev ? (i === s.rev.ci ? "right" : "dim") : ""}" ${tag ? `data-ak="${i}"` : ""}><span class="sh">${SHAPES[i]}</span><span>${esc(s.qd.o[i])}</span>${rev && s.dist ? `<span class="cnt">${s.dist[i]}</span>` : ""}</${tag || "div"}>`).join("")}</div>`;
+  // key: the host's screen marks the right option from the start (the index stays on the host's device, never in the room)
+  optsHTML(s, rev, tag, key){
+    return `<div class="opts">${range(4).map(i => `<${tag || "div"} class="opt c${i} ${rev ? (i === s.rev.ci ? "right" : "dim") : key === i ? "akkeyopt" : ""}" ${tag ? `data-ak="${i}"` : ""}><span class="sh">${SHAPES[i]}</span><span>${esc(s.qd.o[i])}</span>${rev && s.dist ? `<span class="cnt">${s.dist[i]}</span>` : !rev && key === i ? `<span class="akkeyb">✓ الصحيح</span>` : ""}</${tag || "div"}>`).join("")}</div>`;
+  },
+  /* the answer card: on the host's screen only, from the moment the question is shown. It is built from the host's own
+     copy of the bank (H.priv), which is never written to the room: the phones receive the phrase with its gap only. */
+  hidden(){ if (H.priv.akHide === undefined){ try { H.priv.akHide = !!localStorage.getItem("lm-akhide"); } catch(e){ H.priv.akHide = false; } } return H.priv.akHide; },
+  keyCard(s){
+    const it = H.priv.B && H.priv.B.by[H.priv.qid];
+    const top = `<div class="akkey-h"><span>🔒 للمقدّم فقط</span><button class="btn ghost sm" data-h="akhide">${Akml.hidden() ? "👁 إظهار الإجابة" : "إخفاء عن الشاشة"}</button></div>`;
+    if (!it) return `<div class="akkey">${top}<p class="muted">جارٍ تحميل الإجابة…</p></div>`;
+    if (Akml.hidden()) return `<div class="akkey off">${top}<p class="muted">الإجابة مخفية عن هذه الشاشة (مفيد إذا كانت الشاشة معروضة للاعبين).</p></div>`;
+    const ci = H.priv.ci, opt = s.qd && s.qd.o && ci >= 0 ? `<p><b>الخيار الصحيح:</b> <span class="sh">${SHAPES[ci]}</span> ${esc(s.qd.o[ci])}</p>` : "";
+    return `<div class="akkey">${top}<p class="akkey-a">✅ الإجابة الصحيحة: <b>${esc(it.a)}</b></p>${it.alt.length ? `<p><b>بدائل مقبولة:</b> ${it.alt.map(esc).join("، ")}</p>` : ""}${opt}
+      <p><b>العبارة الكاملة:</b> ${esc(it.pre)}<u>${esc(it.a)}</u>${esc(it.post)}</p>${it.why ? `<p class="akkey-w"><b>المعنى:</b> ${esc(it.why)}</p>` : ""}</div>`;
+  },
+  // typed answers as they arrive: who wrote what, the device's check, and the host's decision
+  answersHTML(s){
+    const q = s.q; if (!q || q.inp !== "t") return "";
+    const it = H.priv.B && H.priv.B.by[H.priv.qid]; if (!it) return "";
+    const rows = H.priv.arr.map(k => H.priv.ans[k]).filter(a => a && a.x != null);
+    const late = Object.values(H.priv.ans).filter(a => a.late && a.x == null);
+    if (!rows.length && !late.length) return `<p class="muted">الإجابات المكتوبة تظهر هنا فور وصولها.</p>`;
+    const btn = (x, h, l, c) => `<button class="btn ${c} sm" data-h="${h}" data-x="${esc(x)}">${l}</button>`;
+    const one = a => {
+      const x = akNorm(a.x), d = H.priv.dec[x];
+      let st;
+      if (d) st = d === "ok" ? `<span class="chip ok">✓ قبلها المقدّم</span>` : `<span class="chip no">✗ رفضها المقدّم</span>`;
+      else if (a.v === "ok") st = `<span class="chip ok">✓ مطابقة</span>`;
+      else if (a.v === "?") st = `<span class="chip ask">؟ تحتاج حكمك</span><span class="row">${btn(x, "jok", "✓ أقبلها", "g")}${btn(x, "jno", "✗ أرفضها", "o")}</span>`;
+      else if (akIsOpt(it, a.x)) st = `<span class="chip no">✗ خيار خاطئ</span>`;
+      else st = `<span class="chip no">✗ غير مطابقة</span>${q.lock !== "turn" && s.ph !== "r" ? btn(x, "jover", "✓ اعتمدها", "ghost") : ""}`;
+      return `<li><span><b>${esc(a.n)}</b> «${esc(a.x)}»</span><span class="akst">${st}</span></li>`;
+    };
+    return `<div class="akans"><h3>الإجابات المكتوبة</h3><ol>${rows.map(one).join("")}${late.map(a => `<li><span><b>${esc(a.n)}</b></span><span class="akst"><span class="chip no">✗ انتهى وقته</span></span></li>`).join("")}</ol>
+      ${q.lock !== "turn" ? `<p class="muted aknote">«اعتمدها» لإجابة صحيحة المعنى لم يطابقها الجهاز. الحكم يُثبَّت مرة واحدة ويسري على كل من كتب الصيغة نفسها، ولا يتغير بعده.</p>` : ""}</div>`;
   },
   revHTML(s){
     const r = s.rev;
@@ -2480,16 +2546,15 @@ const Akml = {
     const s = H.s; let html;
     if (s.ph === "lobby") return setMain(Akml.lobby(players));
     const q = s.q, team = s.o.sys === "team";
-    const pendHTML = () => H.priv.pend.filter(x => !H.priv.dec[x]).map(x => { const who = Object.values(H.priv.ans).filter(a => a.x && akNorm(a.x) === x);
-      return `<div class="akjd"><div><b>«${esc(who[0] ? who[0].x : x)}»</b><span class="muted"> · ${who.map(a => esc(a.n)).join("، ")}</span></div><div class="row"><button class="btn g sm" data-h="jok" data-x="${esc(x)}">✓ أقبلها</button><button class="btn o sm" data-h="jno" data-x="${esc(x)}">✗ أرفضها</button></div></div>`; }).join("");
+    const pendHTML = () => Akml.answersHTML(s), key = Akml.keyCard(s), kci = Akml.hidden() ? -1 : H.priv.ci;
     if (s.ph === "q" && srvNow() < s.qs){
-      html = `<div class="panel center stack akget">${Akml.head(s)}${s.tt ? `<p class="bigmsg">${s.tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${s.tt.t}">${akTN(s.tt.t)}</span></p><p class="muted">يجيب ${esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّوا…</p>`}<span class="timer">${akSec(s.qs - srvNow())}</span></div>`;
+      html = `<div class="panel center stack akget">${Akml.head(s)}${s.tt ? `<p class="bigmsg">${s.tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${s.tt.t}">${akTN(s.tt.t)}</span></p><p class="muted">يجيب ${esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّوا…</p>`}<span class="timer">${akSec(s.qs - srvNow())}</span>${key}</div>`;
     } else if (s.ph === "q"){
       const left = akSec(akLeft(s));
       let side;
       if (q.m === "b"){
         const z = s.bz, cur = z.cur >= 0 ? z.q[z.cur] : null, tl = akSec(akTurnLeft(s)), oral = q.inp === "o";
-        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${cur ? "⏸" : left}</span><span class="chip">${cur ? "الوقت متوقف أثناء الإجابة" : z.only ? `باب الإجابة لـ${akTN(z.only)} فقط` : "باب الإجابة مفتوح"}</span></div>
+        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${cur ? "⏸" : left}</span><span class="chip">${cur ? "الوقت متوقف أثناء الإجابة" : z.only ? `باب الإجابة لـ${akTN(z.only)} فقط` : "باب الإجابة مفتوح"}</span></div>${key}
           ${cur ? `<div class="akturn"><p class="muted">الدور الآن</p><h3>${s.tm[cur[0]] ? `<i class="akdot ${s.tm[cur[0]]}"></i>` : ""}${esc(cur[1])}</h3><span class="timer sm ${z.ta && tl <= 3 ? "warn" : ""}">${z.ta || !oral ? tl : AK_ORAL} ث</span>
             ${oral ? `<div class="row" style="justify-content:center">${z.ta ? `<button class="btn ghost sm" data-h="bstop" data-tid="${z.tid}">⏸ أوقف الوقت</button>` : `<button class="btn ghost sm" data-h="bgo" data-tid="${z.tid}">▶ ابدأ وقت الإجابة</button>`}</div>
             <div class="row" style="justify-content:center"><button class="btn g" data-h="bok" data-tid="${z.tid}">✓ إجابة صحيحة</button><button class="btn o" data-h="bno" data-tid="${z.tid}">✗ إجابة خاطئة</button></div>` : `<p class="muted">يكتب إجابته في جواله، ويحكم الجهاز عليها.</p>`}</div>` : ""}
@@ -2497,20 +2562,19 @@ const Akml = {
           <div class="row">${s.tb ? "" : `<button class="btn ghost sm" data-h="close">إنهاء السؤال</button><button class="btn ghost sm" data-h="skip">تخطّي السؤال</button>`}</div></div>`;
       } else if (q.m === "tt"){
         const t = s.tt;
-        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${left}</span><span class="chip t${t.t}">${t.steal ? "فرصة سرقة" : "الدور"}: ${akTN(t.t)}</span></div>
+        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${left}</span><span class="chip t${t.t}">${t.steal ? "فرصة سرقة" : "الدور"}: ${akTN(t.t)}</span></div>${key}
           <div class="akturn"><p class="muted">يجيب</p><h3><i class="akdot ${t.t}"></i>${esc(t.n || "لا أحد متصل")}</h3>
           ${q.inp === "o" ? `<div class="row" style="justify-content:center"><button class="btn g" data-h="bok" data-tid="${t.tid}">✓ إجابة صحيحة</button><button class="btn o" data-h="bno" data-tid="${t.tid}">✗ إجابة خاطئة</button></div>` : `<p class="muted">يجيب من جواله، ويحكم الجهاز.</p>`}</div>
           ${pendHTML()}${Akml.teamBar(s)}<div class="row"><button class="btn ghost sm" data-h="close">إنهاء السؤال</button><button class="btn ghost sm" data-h="skip">تخطّي السؤال</button></div></div>`;
       } else {
-        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${left}</span><span class="chip">أجاب ${s.cnt} من ${players.length}</span></div>
+        side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${left}</span><span class="chip">أجاب ${s.cnt} من ${players.length}</span></div>${key}
           <div class="tbar"><i style="width:${akLeft(s) / (q.T * 10)}%"></i></div>${q.lock === "first" ? `<p class="muted">أول إجابة صحيحة تُنهي السؤال على الجميع.</p>` : ""}${pendHTML()}
           ${Akml.teamBar(s)}<div class="row"><button class="btn" data-h="close">إنهاء الوقت الآن</button><button class="btn ghost sm" data-h="skip">تخطّي السؤال</button></div>${soloNote()}</div>`;
       }
-      html = `<div class="layout"><div class="panel stack akcard">${Akml.head(s)}${akGapHTML(s.qd, null, "big")}${q.inp === "c" ? Akml.optsHTML(s, false) : ""}</div>${side}</div>`;
+      html = `<div class="layout"><div class="panel stack akcard">${Akml.head(s)}${akGapHTML(s.qd, null, "big")}${q.inp === "c" ? Akml.optsHTML(s, false, null, kci) : ""}</div>${side}</div>`;
     } else if (s.ph === "judge"){
-      const it = H.priv.B.by[H.priv.qid];
-      html = `<div class="layout"><div class="panel stack akcard">${Akml.head(s)}${akGapHTML(s.qd, it.a, "big")}<p class="muted">الإجابة المعتمدة: <b>${esc([it.a, ...it.alt].join("، "))}</b></p></div>
-        <div class="panel stack"><h3>إجابات تحتاج حكمك</h3><p class="muted">لم يعتمدها الجهاز تلقائيًا: قريبة في الكتابة، أو تختلف بـ«ال». اقبلها إن كانت الإجابة نفسها.</p>${pendHTML() || `<p class="muted">لا شيء.</p>`}${s.tb ? "" : `<button class="btn ghost sm" data-h="skip">تخطّي السؤال</button>`}</div></div>`;
+      html = `<div class="layout"><div class="panel stack akcard">${Akml.head(s)}${akGapHTML(s.qd, null, "big")}${q.inp === "c" ? Akml.optsHTML(s, false, null, kci) : ""}</div>
+        <div class="panel stack"><h3>إجابة تحتاج حكمك</h3><p class="muted">لم يعتمدها الجهاز تلقائيًا. قارنها بالإجابة المعتمدة واقبلها إن كانت صحيحة. اللاعبون لا يرون الإجابة حتى ينتهي السؤال.</p>${key}${pendHTML()}${s.tb ? "" : `<button class="btn ghost sm" data-h="skip">تخطّي السؤال</button>`}</div></div>`;
     } else if (s.ph === "r"){
       const auto = s.o.go === "auto" && s.nx ? Math.max(0, akSec(s.nx - srvNow())) : null;
       const tpanel = team && H.priv.tpanel ? `<div class="stack akmove"><p class="muted">اضغط اسم لاعب لنقله إلى الفريق الآخر. نقاطه السابقة تبقى لفريقه السابق.</p>${["g", "o"].map(t => `<div><b class="t${t}">${akTN(t)}</b><div class="chips">${players.filter(p => s.tm[dfKey(pname(p))] === t).map(p => `<button class="chip ${t}" data-h="tmove" data-k="${esc(dfKey(pname(p)))}">${esc(pname(p))}</button>`).join("")}</div></div>`).join("")}</div>` : "";
@@ -2662,7 +2726,7 @@ const FIREBASE_CONFIG = {"apiKey": "demo-key", "authDomain": "demo-lamma.firebas
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "3758c3c4e5", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "50ca61f561", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
