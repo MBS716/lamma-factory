@@ -698,7 +698,8 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akno{animation:akshake .45s ease-in-out}
 @keyframes akpop{0%{transform:scale(.94);box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 70%,transparent)}60%{transform:scale(1.02)}100%{transform:none;box-shadow:0 0 0 18px transparent}}
 @keyframes akshake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
-@media (max-width:560px){.akform{flex-direction:column}.aktable th{white-space:normal;font-size:.8rem;padding:0 4px}.aktable td{padding:7px 5px}.aktable td:last-child{font-size:1rem}}
+.aktable .aks,.aklegend{display:none}
+@media (max-width:560px){.aktable .akl{display:none}.aktable .aks,.aklegend{display:inline}.aklegend{display:block}.akform{flex-direction:column}.aktable th{white-space:normal;font-size:.8rem;padding:0 4px}.aktable td{padding:7px 5px}.aktable td:last-child{font-size:1rem}}
 .aksetsec{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .aksetsec h4{margin:0;font-size:1rem;color:var(--gold)}
 .akteams{display:grid;grid-template-columns:1fr 1fr;gap:8px}

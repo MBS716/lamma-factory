@@ -668,7 +668,7 @@ const Akml = {
     let hero;
     if (team){
       const w = s.tf.filter(x => x.p === 1);
-      hero = `<div class="akhero"><span class="akcrown">👑</span><p class="muted">${w.length > 1 ? "تعادل" : "الفريق الفائز"}</p><h2 class="${w.length === 1 ? "t" + w[0].t : ""}">${w.map(x => akTN(x.t)).join(" و")}</h2><p>${w[0].tot} نقطة${w[0].w ? ` <span class="muted">(${w[0].s} من الأسئلة + ${AK_PTS.win} مكافأة الفوز)</span>` : ""}</p>${s.tbr ? `<p class="muted">${s.tbr.w ? `حُسم التعادل بجولة فاصلة` : "لم تحسم الجولة الفاصلة التعادل"}</p>` : ""}</div>`;
+      hero = s.tf.every(x => !x.tot) ? `<div class="akhero"><h2>انتهت المباراة</h2><p class="muted">لم يسجّل أي فريق نقاطًا.</p></div>` : `<div class="akhero"><span class="akcrown">👑</span><p class="muted">${w.length > 1 ? "تعادل" : "الفريق الفائز"}</p><h2 class="${w.length === 1 ? "t" + w[0].t : ""}">${w.map(x => akTN(x.t)).join(" و")}</h2><p>${w[0].tot} نقطة${w[0].w ? ` <span class="muted">(${w[0].s} من الأسئلة + ${AK_PTS.win} مكافأة الفوز)</span>` : ""}</p>${s.tbr ? `<p class="muted">${s.tbr.w ? `حُسم التعادل بجولة فاصلة` : "لم تحسم الجولة الفاصلة التعادل"}</p>` : ""}</div>`;
       hero += `<div class="aktf">${s.tf.map(x => `<div class="aktfc ${x.t}"><h3>${x.p === 1 && s.tf.filter(y => y.p === 1).length === 1 ? "🏆 " : ""}${akTN(x.t)}</h3><p class="aktot">${x.tot}</p><p class="muted">${x.s} من الأسئلة${x.w ? ` + ${x.w} مكافأة الفوز` : ""} · ${x.r} إجابة صحيحة</p><table class="aktable sm"><thead><tr><th>العضو</th><th>مساهمته في الفريق</th><th>نقاطه</th><th>✓</th><th>✗</th></tr></thead><tbody>${x.m.map(m => `<tr class="${me && m[0] === P.name ? "me" : ""}"><td>${esc(m[0])}</td><td><b>${m[4]}</b></td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join("")}</tbody></table></div>`).join("")}</div>`;
     } else {
       const win = f.filter(x => x[6]);
@@ -676,8 +676,8 @@ const Akml = {
         : `<div class="akhero"><h2>انتهت المباراة</h2><p class="muted">لم يسجّل أحد نقاطًا.</p></div>`;
     }
     const rows = f.map(x => `<tr class="${x[6] ? "win" : ""} ${me && x[0] === P.name ? "me" : ""}"><td>${x[8]}</td><td>${x[1] ? `<i class="akdot ${x[1]}"></i>` : ""}${esc(x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td><td>${x[5]}</td>${team ? "" : `<td>${x[6] ? "+" + x[6] : "—"}</td>`}<td><b>${x[7]}</b></td></tr>`).join("");
-    return hero + (f.length ? `<h3>ترتيب اللاعبين</h3><div class="aktable-w"><table class="aktable"><thead><tr><th>#</th><th>اللاعب</th><th>صحيحة</th><th>خاطئة</th><th>نقاط الإجابات</th><th>مكافآت السرعة</th>${team ? "" : "<th>مكافأة الفوز</th>"}<th>المجموع</th></tr></thead><tbody>${rows}</tbody></table></div>
-      <p class="muted aknote">الترتيب بالمجموع، ثم الأكثر إجابات صحيحة، ثم الأقل أخطاء، ثم الأقصر وقتًا في الإجابات الصحيحة.</p>` : "");
+    return hero + (f.length ? `<h3>ترتيب اللاعبين</h3><div class="aktable-w"><table class="aktable"><thead><tr><th>#</th><th>اللاعب</th><th><span class="akl">صحيحة</span><span class="aks">✓</span></th><th><span class="akl">خاطئة</span><span class="aks">✗</span></th><th><span class="akl">نقاط الإجابات</span><span class="aks">إجابات</span></th><th><span class="akl">مكافآت السرعة</span><span class="aks">سرعة</span></th>${team ? "" : `<th><span class="akl">مكافأة الفوز</span><span class="aks">فوز</span></th>`}<th><span class="akl">المجموع</span><span class="aks">المجموع</span></th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="muted aknote aklegend">✓ صحيحة · ✗ خاطئة · إجابات: نقاط الإجابات · سرعة: مكافآت السرعة · فوز: مكافأة الفوز</p><p class="muted aknote">الترتيب بالمجموع، ثم الأكثر إجابات صحيحة، ثم الأقل أخطاء، ثم الأقصر وقتًا في الإجابات الصحيحة.</p>` : "");
   },
   // the host's settings, in sections; only what fits the chosen competition and method is shown
   lobby(players){
@@ -855,7 +855,7 @@ const Akml = {
       } else if (q.m === "tt"){
         const t = s.tt, onMe = t.k === me;
         const st = onMe ? (q.inp === "o" ? "oral" : a ? "sent" : "ans") : t.t === myT ? "team" : "other";
-        const body = st === "ans" ? (q.inp === "c" ? optsBtns() : typeForm("محاولة واحدة.")) : st === "sent" ? sent() : st === "oral" ? `<div class="akturn me"><p class="bigmsg">دورك! أجب بصوتك</p></div>`
+        const body = st === "ans" ? `<div class="akturn me"><p class="bigmsg">${t.steal ? "فرصة سرقة لفريقك! أجب" : "دورك! أجب عن فريقك"}</p></div>` + (q.inp === "c" ? optsBtns() : typeForm("محاولة واحدة.")) : st === "sent" ? sent() : st === "oral" ? `<div class="akturn me"><p class="bigmsg">دورك! أجب بصوتك</p></div>`
           : `<p class="bigmsg">${st === "team" ? "دور فريقك" : "دور الفريق الآخر"}</p><p class="muted">يجيب ${esc(t.n || "—")}${t.steal ? " (فرصة سرقة)" : ""}</p>`;
         put(`tt|${s.sp}|${t.tid}|${st}`, phead(badge + `<span id="akClock"></span>`) + card(`<div class="center stack">${body}</div>`) + `</div>`, st === "ans" && q.inp === "t" ? bindForm : null);
       } else {
@@ -869,9 +869,9 @@ const Akml = {
     } else if (s.ph === "r"){
       const r = s.res[me] || null, ok = r && r[1] === 1;
       const said = q.inp === "c" && a ? `<p class="muted">اخترت: ${esc(s.qd.o[a.c])}</p>` : q.inp === "t" && a ? `<p class="muted">كتبت: «${esc(a.x)}»</p>` : "";
-      const verdict = !r || r[1] === -1 ? (q.lock === "all" ? "لم تُجب" : "انتهى السؤال") : ok ? "إجابة صحيحة!" : "إجابة خاطئة";
+      const verdict = !r || r[1] === -1 ? (q.lock === "all" ? "لم تُجب" : s.rev && s.rev.w && s.rev.w !== P.name ? `سبقك ${s.rev.w}` : "انتهى السؤال") : ok ? "إجابة صحيحة!" : "إجابة خاطئة";
       put(`r|${s.sp}|${JSON.stringify(r)}|${JSON.stringify(s.ts)}`, phead(badge) + `<div class="panel center stack ${ok ? "akok" : r && r[1] === 0 ? "akno" : ""}"><p class="bigmsg" style="color:var(--${ok ? "green" : r && r[1] === 0 ? "bad" : "muted"})">${verdict}</p>${said}
-          ${r ? `<p style="font-size:1.2rem">${r[0] ? `+${r[0]} نقطة${r[4] ? ` (منها ${r[4]} مكافأة)` : ""} · ` : ""}مجموعك <b>${r[2]}</b></p><p class="muted">ترتيبك ${r[3]}</p>` : ""}</div>
+          ${r ? `<p style="font-size:1.2rem">${r[0] ? `+${r[0]} نقطة${r[4] ? ` (منها ${r[4]} مكافأة)` : ""} · ` : ""}مجموعك <b>${r[2]}</b></p>${r[2] ? `<p class="muted">ترتيبك ${r[3]}</p>` : ""}` : ""}</div>
           <div class="panel stack akcard">${Akml.revHTML(s)}</div><div class="panel stack"><h3>الترتيب</h3>${Akml.topHTML(s, me)}</div>`);
     }
     for (const [id, html] of Object.entries(live)) setEl($("#" + id), html);
