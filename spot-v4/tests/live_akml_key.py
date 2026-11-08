@@ -57,7 +57,7 @@ async def main():
             await host.click('[data-h=final]'); await host.wait_for_function('H.s.ph === "end"', timeout=8000)
         async def card():
             return await host.inner_text('.akkey') if await host.locator('.akkey').count() else ''
-        async def hidden_from_players(it, label, choice=False):
+        async def hidden_from_players(it, label, choice=False, typed_it=()):
             """the answer is on no player's screen and nowhere in the room data"""
             room = await A.evaluate(ROOM); qd = await host.evaluate('JSON.stringify(H.s.qd)')
             rest = room.replace(qd, '')
@@ -66,7 +66,7 @@ async def main():
             for pg in P3:
                 t = await pg.inner_text('#playerMain')
                 if await pg.locator('.akkey, .akkeyopt, .akkeyb').count() or 'للمقدّم فقط' in t or 'الإجابة الصحيحة' in t or it['why'][:25] in t: on_screen.append('card')
-                if not choice and it['a'] in t: on_screen.append('answer')
+                if not choice and pg not in typed_it and it['a'] in t: on_screen.append('answer')     # a player who typed it sees his own answer
             check(not in_room and not on_screen, f'{label}: the answer is on no phone and not in the room data' + ('' if not in_room and not on_screen else f' room={in_room} screen={on_screen}'))
 
         # ================= choose from four =================
@@ -110,7 +110,7 @@ async def main():
         check('صالح' in lst and '«' + ans + '»' in lst and 'مطابقة' in lst, 'typed: each player\'s answer appears on the host\'s screen when it arrives, with the device\'s check')
         check('تافير' in lst and 'غير مطابقة' in lst and await host.locator('[data-h=jover]').count() == 1, 'typed: a non-matching answer is shown with «اعتمدها» for the host')
         if v_al == '?': check('تحتاج حكمك' in lst and await host.locator('[data-h=jok]').count() == 1, f'typed: «{alv}» (differs by «ال») waits for the host\'s judgement')
-        await hidden_from_players(it, 'typed, while the host reviews')
+        await hidden_from_players(it, 'typed, while the host reviews', typed_it=(A,))
         await host.screenshot(path=SHOTS + '/key_typed_host.png')
         await host.click('[data-h=jover]'); await host.wait_for_timeout(500)
         x = await host.evaluate(f'akNorm({json.dumps(odd)})')
