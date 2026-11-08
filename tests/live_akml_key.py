@@ -61,7 +61,9 @@ async def main():
             """the answer is on no player's screen and nowhere in the room data"""
             room = await A.evaluate(ROOM); qd = await host.evaluate('JSON.stringify(H.s.qd)')
             rest = room.replace(qd, '')
-            in_room = (it['a'] in rest) or (it['why'][:25] in room) or '"ci"' in room or '"why"' in room
+            # with options the answer is one of them by design: the secret is which one (no "ci"); a 1-2 character answer
+            # (such as «2») also occurs in times and counters, so for it only the fields are checked
+            in_room = (not choice and len(it['a']) >= 3 and it['a'] in rest) or (it['why'][:25] in room) or '"ci"' in room or '"why"' in room or '"alt"' in room
             on_screen = []
             for pg in P3:
                 t = await pg.inner_text('#playerMain')
