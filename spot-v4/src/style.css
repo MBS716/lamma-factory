@@ -736,4 +736,10 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akans li{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:6px 10px}
 .akst{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .akans .chip.ok{border-color:var(--green);color:var(--green)} .akans .chip.no{border-color:var(--bad);color:var(--bad)} .akans .chip.ask{border-color:var(--gold);color:var(--gold)}
+.aktn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.aktnl{display:flex;flex-direction:column;gap:4px;font-size:.85rem}
+.aktnl.g span{color:var(--green)} .aktnl.o span{color:var(--orange)}
+.aktnl input{min-width:0}
+.akpick{justify-content:center}
+.akpick .chip.on{outline:2px solid var(--gold)}
 @media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}
