@@ -1,8 +1,8 @@
 {
  "url": "http://localhost:8799/",
  "checks": [
-  "OK invite link points to this site (http://localhost:8799/?v=7f443209d7#1417)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=7f443209d7#1417)",
+  "OK invite link points to this site (http://localhost:8799/?v=fa5f9bce18#9047)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=fa5f9bce18#9047)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
@@ -15,7 +15,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10003 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -24,8 +24,8 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (alhost:8799/?v=7f443209d7#3126)",
-  "OK sessions: version.json matches the page (7f443209d7 = 7f443209d7)",
+  "OK sessions: invite link carries the version (alhost:8799/?v=fa5f9bce18#7453)",
+  "OK sessions: version.json matches the page (fa5f9bce18 = fa5f9bce18)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
@@ -50,7 +50,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 150)",
+  "OK wheel v3: phones receive the same box result as the host (lose 0)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -61,8 +61,8 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (486 characters)",
-  "OK spot v4: easy round, 5 differences, 3 players (s5-w34632730)",
+  "OK wheel v3: state sent to phones stays small (487 characters)",
+  "OK spot v4: easy round, 5 differences, 3 players (s5-w51063442)",
   "OK spot v4: no hint, image-info or report button on the phones while playing, no link to the original",
   "OK spot v4: three players find the same difference: each +10",
   "OK spot v4: each phone shows only its own circle (sealed mailboxes) [True, True, True]",
@@ -73,7 +73,7 @@
   "OK spot v4: the iPhone leaves and joins again: still out, mistakes not reset",
   "OK spot v4: the host reloads: same records, no phone shows «the game ended»",
   "OK spot v4: Android and the third phone at 4 of 5",
-  "OK spot v4: both complete at the same moment: joint win (1 ms apart when they reached the host; the window is 300 ms)",
+  "OK spot v4: both complete at the same moment: joint win (6 ms apart when they reached the host; the window is 300 ms)",
   "OK spot v4: each winner 5×10 +50 +30 = 130; no bonus for the player who was out",
   "OK spot v4: the results announce the winner(s) first",
   "OK spot v4: results table with «استُبعد — 5 أخطاء» and the overall board",
@@ -81,7 +81,7 @@
   "OK spot v4: report button for the host only, after the round",
   "OK spot v4: the sealed mailboxes are removed when the round ends",
   "OK spot v4: the host reloads after the round: nothing is counted again",
-  "OK spot v4: the other phones see no completion before the closing window ends, only the final result (27 readings)",
+  "OK spot v4: the other phones see no completion before the closing window ends, only the final result (26 readings)",
   "OK spot v4: the announced result does not change afterwards",
   "OK spot v4: the third phone completes 1.2 s after Android: Android wins alone, the late tap is not counted (third phone 4 of 5)",
   "OK spot v4: «توقفت الجولة بفوز المنافس» for the others",
@@ -94,12 +94,12 @@
   "OK spot v4: Android: no sideways scrolling (412 <= 412)",
   "OK spot v4: 360 px phone: no sideways scrolling (360 <= 360)",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3494], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3493], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1427 (limit 12000), saved match 1320 (limit 20000), hidden data 1896 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1440 (limit 12000), saved match 1333 (limit 20000), hidden data 1868 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -111,41 +111,41 @@
  ],
  "sizes": {
   "letters": [
-   1222,
-   1112,
-   229
-  ],
-  "wheel": [
-   704,
-   596,
-   37
-  ],
-  "diff": [
-   1427,
-   1320,
-   1896
-  ],
-  "quiz": [
-   359,
-   252,
+   1214,
+   1104,
    219
   ],
+  "wheel": [
+   756,
+   648,
+   39
+  ],
+  "diff": [
+   1440,
+   1333,
+   1868
+  ],
+  "quiz": [
+   460,
+   353,
+   334
+  ],
   "puzzle": [
-   271,
-   162,
+   272,
+   163,
    0
   ]
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-09T01:46:43.575Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-3126/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-09T01:46:43.580Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-3126/5e9fc5ba276bef8250860bbe failed: permission_denied ",
-  "Android: [2026-11-09T01:46:43.595Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-3126 failed: permission_denied ",
-  "host: [2026-11-09T01:46:47.260Z]  @firebase/database: FIREBASE WARNING: set at /hosts/lm3-3126 failed: permission_denied ",
-  "host: [2026-11-09T01:46:47.946Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-3126/5e9fc5ba276bef8250860bbe failed: permission_denied ",
-  "host: [2026-11-09T01:46:48.445Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-3126 failed: permission_denied ",
-  "host: [2026-11-09T01:46:48.447Z]  @firebase/database: FIREBASE WARNING: set at /gpriv/lm3-3126 failed: permission_denied ",
-  "host: [2026-11-09T01:46:48.944Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-3126/5e9fc5ba276bef8250860bbe failed: permission_denied "
+  "Android: [2026-11-09T21:34:48.088Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-7453/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-09T21:34:48.090Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-7453/9888d1db79711a9e10a0b5d4 failed: permission_denied ",
+  "Android: [2026-11-09T21:34:48.106Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-7453 failed: permission_denied ",
+  "host: [2026-11-09T21:34:51.745Z]  @firebase/database: FIREBASE WARNING: set at /hosts/lm3-7453 failed: permission_denied ",
+  "host: [2026-11-09T21:34:52.490Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-7453/9888d1db79711a9e10a0b5d4 failed: permission_denied ",
+  "host: [2026-11-09T21:34:52.981Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-7453 failed: permission_denied ",
+  "host: [2026-11-09T21:34:52.984Z]  @firebase/database: FIREBASE WARNING: set at /gpriv/lm3-7453 failed: permission_denied ",
+  "host: [2026-11-09T21:34:53.487Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-7453/9888d1db79711a9e10a0b5d4 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
