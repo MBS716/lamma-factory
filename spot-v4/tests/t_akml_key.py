@@ -48,8 +48,11 @@ async def main():
             for pg in P3:
                 t = await pg.inner_text('#playerMain')
                 if await pg.locator('.akkey, .akkeyopt, .akkeyb').count() or 'للمقدّم فقط' in t or 'الإجابة الصحيحة' in t or it['why'][:25] in t: on_screen.append('card')
-                if not choice and pg not in typed_it and it['a'] in t: on_screen.append('answer')     # a player who typed it sees his own answer
-            check(not in_room and not on_screen, f'{label}: the answer is on no phone and not in the room data' + ('' if not in_room and not on_screen else f' room={in_room} screen={on_screen}'))
+                # the answer as a word anywhere in the phone's content (section and level chips aside: a short answer can be part of a section name)
+                body = await pg.evaluate('''() => { const c = document.querySelector("#playerMain").cloneNode(true); c.querySelectorAll(".qmeta,.chip").forEach(e => e.remove()); return c.innerText; }''')
+                import re as _re
+                if not choice and pg not in typed_it and (_re.search(r'(^|[\s«»،.:؛!؟])' + _re.escape(it['a']) + r'($|[\s«»،.:؛!؟])', body) or await pg.locator('.akfill, .akrev').count()): on_screen.append('answer')     # a player who typed it sees his own answer
+            check(not in_room and not on_screen, f'{label}: the answer is on no phone and not in the room data' + ('' if not in_room and not on_screen else f' room={in_room} screen={on_screen} answer={it["a"]!r} ' + json.dumps([await pg.inner_text("#playerMain") for pg in P3], ensure_ascii=False)[:600]))
 
         # ================= choose from four =================
         await opt('m', 'c'); await opt('t', '30')

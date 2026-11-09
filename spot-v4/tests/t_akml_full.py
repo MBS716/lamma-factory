@@ -211,6 +211,22 @@ async def main():
         await typ(D, (await ITEM(host))['a']); await reveal(8000); s = await S(host)
         check(s['res'][kD][:2] == [100, 1] and s['tsg']['o'] == 100, 'فهد answers for his team: 100')
         await end_now()
+
+        # ================= 7. average: explained to everybody; a member offline the whole question does not count =================
+        await lobby(); await opt('m', 'c'); await opt('tsc', 'avg'); await opt('t', '30')
+        await B.close()
+        await host.wait_for_function(f'!activePlayers(hostPlayers()).some(p => dfKey(pname(p)) === {json.dumps(kB)})', timeout=40000)
+        await host.click('[data-h=start]'); await live(); s = await S(host); it = await ITEM(host); ci = s['qd']['o'].index(it['o'][0])
+        await choose(A, ci); await choose(D, ci); await host.wait_for_function('H.s.cnt >= 2', timeout=8000); await host.wait_for_timeout(600)
+        if (await host.evaluate('H.s.ph')) == 'q': await host.click('[data-h=close]')
+        await reveal(); s = await S(host)
+        check(s['tsx']['g']['n'] == 1 and s['tsx']['o']['n'] == 1, f'average: تافير and نورة were offline the whole question, so each team\'s average counts only its connected member ({s["tsx"]})')
+        check(s['tsg']['g'] == s['res'][kA][0] and s['tsg']['o'] == s['res'][kD][0] and abs(s['tsg']['g'] - s['tsg']['o']) <= 50, f'same performance, same team points (±speed bonus): {s["tsg"]}')
+        hm = await host.inner_text('#hostMain')
+        check('متوسط نقاط أعضائه' in hm and '÷' in hm, 'the host sees how the team points of the question were worked out (sum ÷ members)')
+        check(await sees(D, '÷') and 'متوسط نقاط أعضائه' in await TXT(D), 'the players see the same explanation after the question')
+        await host.screenshot(path=OUT + '/full_avg_host.png'); await D.screenshot(path=OUT + '/full_avg_390.png', full_page=True)
+        await end_now()
         check(not [e for e in E.errs if 'C:' not in e], 'no page errors' + ('' if not E.errs else ': ' + '; '.join(E.errs[:3])))
     bad = [m for ok, m in R if not ok]
     json.dump({'checks': len(R), 'passed': len(R) - len(bad), 'failed': bad, 'all': [('OK ' if ok else 'FAIL ') + m for ok, m in R], 'PASS': not bad}, open(OUT + '/full_result.json', 'w'), ensure_ascii=False, indent=1)

@@ -1,0 +1,179 @@
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <h1>مراجعة أسئلة «أكملها» · الدفعة الأولى</h1>
+    <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. راجع كل سؤال واختر «اعتماد» أو «يحتاج تعديل» أو «رفض» مع ملاحظتك. تُحفظ قراراتك على خادم claude.ai في قاعدة بيانات هذه الصفحة، لا في المتصفح، فتظهر لك على أي جهاز، وأقرؤها قبل إدخال أي سؤال إلى اللعبة.</p>
+    <p class="note" id="testBanner" hidden><b>وضع الاختبار:</b> القرارات هنا تُحفظ في سجل اختبار منفصل («test_decisions»)، ولا تمس قراراتك الفعلية. افتح الصفحة دون «#test» في آخر الرابط للمراجعة الفعلية.</p>
+    <div class="stats" id="stats"></div>
+    <p class="sync" id="sync" role="status"></p>
+    <p class="note">كيف رُوجعت: صاغ كل قسم معدٌّ مستقل مع مصدر لكل عبارة، ثم راجع كل قسم مراجع مستقل فتح المصادر بنفسه، ثم راجعتها كلها. نفد حدّ البحث على الإنترنت أثناء المراجعة، فاعتمد المراجعون على فتح المصادر المذكورة نفسها (ومنها نص «مجمع الأمثال» للميداني كاملًا). الفحص الآلي يتحقق من الشكل فقط، ولا يكفي للاعتماد.</p>
+  </header>
+  <div class="bar">
+    <div class="row"><label>الحالة</label><div class="seg" id="fStatus"></div></div>
+    <div class="row"><label>القسم</label><div class="seg" id="fSec"></div><label style="margin-inline-start:10px">قرارك</label><div class="seg" id="fMine"></div></div>
+    <div class="row"><input type="search" id="q" placeholder="ابحث في العبارات والإجابات والمعاني" aria-label="بحث"><span class="count" id="count"></span></div>
+  </div>
+  <div class="list" id="list"><p class="empty">جارٍ التحميل…</p></div>
+  <section id="skipSec" style="display:flex;flex-direction:column;gap:8px">
+    <h2 style="font-family:var(--display);margin:0">عبارات استبعدها المعدّون قبل المراجعة</h2>
+    <p class="lead">لم تُعرض على المراجعين لأن المعدّ لم يجد لها مصدرًا موثوقًا، أو لأنها غير مناسبة أو مكررة.</p>
+    <div class="skips" id="skips"></div>
+  </section>
+</div>
+<script>
+const DATA = /*DATA*/null;
+const SEC = {gulf:"أمثال سعودية وخليجية", arab:"أمثال عربية", hikam:"حكم وأقوال"};
+const ST = {accepted:"مقبول بعد المراجعة", reserve:"مؤجل", rejected:"مرفوض في المراجعة"};
+const LV = ["سهل", "متوسط", "صعب"];
+const MODES = {c:"اختيار", t:"كتابة", b:"أسرع إصبع"};
+const VERD = {accept:"قبله المراجع", fix:"قبله المراجع بعد تصحيح", reject:"رفضه المراجع"};
+const DN = {ok:"معتمد", edit:"يحتاج تعديل", no:"مرفوض"};
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+/* Where decisions are kept: in the artifact's database on claude.ai (the "decisions" collection), not in the browser, so they
+   are the same on every device and Claude reads them. "#test" at the end of the link uses a separate "test_decisions"
+   collection. A decision not yet confirmed by the database (offline, a failed write) is also kept on this device and sent
+   again automatically; it is never dropped. */
+const TEST = location.hash === "#test";
+const COL = TEST ? "test_decisions" : "decisions";
+const PKEY = "ak-rev-pending-" + COL;
+let F = {status:"accepted", sec:"all", mine:"all", q:""};
+try { const v = JSON.parse(localStorage.getItem("ak-rev-f") || "null"); if (v) F = {...F, ...v, q:""}; } catch(e){}
+const SERVER = {};        // id -> {d, note, at} as the database has it
+let PENDING = {};         // id -> {d, note, at} not yet confirmed by the database
+try { PENDING = JSON.parse(localStorage.getItem(PKEY) || "{}") || {}; } catch(e){ PENDING = {}; }
+const keepPending = () => { try { localStorage.setItem(PKEY, JSON.stringify(PENDING)); } catch(e){} };
+const mine = id => { const p = PENDING[id], s = SERVER[id]; return p && (!s || (p.at || 0) >= (s.at || 0)) ? p : s || {}; };
+let db = null, canWrite = true, dbState = "loading", noteTimers = {};
+
+function seg(el, key, opts){ el.innerHTML = opts.map(([v, l]) => `<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${F[key] === v}">${l}</button>`).join(""); }
+function syncLine(){
+  const n = Object.keys(PENDING).length, el = document.getElementById("sync");
+  el.className = "sync " + (n ? "warn" : dbState === "ready" ? "ok" : "");
+  el.textContent = !db && dbState !== "loading" ? `لا اتصال بقاعدة بيانات الصفحة في هذا العرض: ${n ? n + " قرار محفوظ على هذا الجهاز فقط، وسيُرفع حين تفتح الصفحة وأنت مسجل الدخول." : "لن تُحفظ القرارات إلا على هذا الجهاز."}`
+    : n ? `${n} قرار بانتظار التأكيد من الخادم (محفوظ على هذا الجهاز ويُعاد إرساله تلقائيًا).`
+    : dbState === "ready" ? `كل القرارات محفوظة على الخادم (${COL === "decisions" ? "سجل القرارات الفعلي" : "سجل الاختبار"}).` : "جارٍ تحميل القرارات المحفوظة…";
+}
+function stats(){
+  const n = s => DATA.items.filter(x => x.status === s).length;
+  const ids = new Set([...Object.keys(SERVER), ...Object.keys(PENDING)]);
+  const cnt = d => [...ids].filter(id => mine(id).d === d).length;
+  document.getElementById("stats").innerHTML =
+    `<div class="stat ok"><b>${n("accepted")}</b><span>مقبول بعد المراجعة</span></div>
+     <div class="stat hold"><b>${n("reserve")}</b><span>مؤجل (احتياطي)</span></div>
+     <div class="stat no"><b>${n("rejected")}</b><span>مرفوض في المراجعة</span></div>
+     <div class="stat"><b>${DATA.skipped.length}</b><span>استبعده المعدّون</span></div>
+     <div class="stat mine"><b>${cnt("ok")} · ${cnt("edit")} · ${cnt("no")}</b><span>قراراتك: معتمد · تعديل · مرفوض</span></div>`;
+  syncLine();
+}
+function phrase(x){ const m = x.text.match(/^(.*)\{(.+)\}(.*)$/); return m ? `${esc(m[1])}<mark>${esc(m[2])}</mark>${esc(m[3])}` : esc(x.text); }
+function decisionChip(id){
+  const m = mine(id), pend = !!PENDING[id];
+  return `<span class="chip dec ${m.d ? "d-" + m.d : ""}">${m.d ? "قرارك: " + DN[m.d] : "لم تقرر بعد"}</span>${pend ? `<span class="chip pend">بانتظار الحفظ على الخادم</span>` : m.d || m.note ? `<span class="chip saved-chip">محفوظ</span>` : ""}`;
+}
+function card(x){
+  const me = mine(x.id);
+  const rev = x.status === "rejected" ? `<p class="rev no"><b>سبب الرفض:</b> ${esc(x.reason)}</p>` : x.status === "reserve" ? `<p class="rev hold"><b>سبب التأجيل:</b> ${esc(x.reason)}</p>` : "";
+  const fix = x.fixed ? `<p class="rev fix"><b>ما صُحّح:</b> ${esc(x.fixed)}</p>` : "";
+  const ref = /^https?:\/\//.test(x.ref) ? `<a href="${esc(x.ref)}" target="_blank" rel="noopener">${esc(x.ref.replace(/^https?:\/\//, "").slice(0, 70))}</a>` : esc(x.ref);
+  const dis = !canWrite ? "disabled" : "";
+  return `<article class="card st-${x.status}" id="c-${esc(x.id)}">
+    <div class="top"><span class="id">${esc(x.id)}</span><span class="chip ${x.status}">${ST[x.status]}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span><span>${x.modes.map(m => MODES[m]).join(" · ")}</span><span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
+    <p class="phrase">${phrase(x)}</p>
+    <dl class="kv">
+      <dt>الإجابة الصحيحة</dt><dd><b>${esc(x.ans)}</b></dd>
+      <dt>بدائل مقبولة</dt><dd>${x.alt.length ? x.alt.map(esc).join("، ") : "لا يوجد"}</dd>
+      <dt>الخيارات الأربعة</dt><dd><div class="opts">${x.opts.map((o, i) => `<span class="${i ? "" : "right"}">${i ? "" : "✓ "}${esc(o)}</span>`).join("")}</div></dd>
+      <dt>المعنى</dt><dd>${esc(x.why)}</dd>
+      <dt>القسم والصعوبة</dt><dd>${SEC[x.sec]} · ${LV[x.lv]}</dd>
+      <dt>الأصل</dt><dd>${esc(x.src)}</dd>
+      <dt>مصدر التحقق</dt><dd>${ref}</dd>
+      <dt>المراجعة</dt><dd>${VERD[x.verdict] || ""}${x.note ? ` · ${esc(x.note)}` : ""}</dd>
+    </dl>
+    ${rev}${fix}
+    <div class="decide" data-id="${esc(x.id)}">
+      <span class="lbl">قرارك:</span>
+      <button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}" ${dis}>✓ اعتماد</button>
+      <button type="button" class="d-edit" data-d="edit" aria-pressed="${me.d === "edit"}" ${dis}>✎ يحتاج تعديل</button>
+      <button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}" ${dis}>✗ رفض</button>
+      <textarea id="nt-${esc(x.id)}" data-id="${esc(x.id)}" aria-label="ملاحظتك على ${esc(x.id)}" placeholder="ملاحظتك: التصحيح المطلوب، أو سبب الرفض، أو صيغة أخرى…" ${dis}>${esc(me.note || "")}</textarea>
+    </div>
+  </article>`;
+}
+function render(){
+  seg(document.getElementById("fStatus"), "status", [["accepted", "المقبولة"], ["reserve", "المؤجلة"], ["rejected", "المرفوضة"], ["all", "الكل"]]);
+  seg(document.getElementById("fSec"), "sec", [["all", "الكل"], ["gulf", SEC.gulf], ["arab", SEC.arab], ["hikam", SEC.hikam]]);
+  seg(document.getElementById("fMine"), "mine", [["all", "الكل"], ["none", "لم أقرر"], ["ok", "اعتمدتها"], ["edit", "تحتاج تعديل"], ["no", "رفضتها"]]);
+  const q = F.q.trim();
+  const rows = DATA.items.filter(x => (F.status === "all" || x.status === F.status) && (F.sec === "all" || x.sec === F.sec)
+    && (F.mine === "all" || (F.mine === "none" ? !mine(x.id).d : mine(x.id).d === F.mine))
+    && (!q || [x.text, x.ans, x.why, x.id, x.alt.join(" ")].join(" ").includes(q)));
+  document.getElementById("count").textContent = `${rows.length} سؤالًا معروضًا`;
+  document.getElementById("list").innerHTML = rows.length ? rows.map(card).join("") : `<p class="empty">لا أسئلة بهذه الشروط.</p>`;
+  stats();
+}
+function refreshCard(id){       // update one card without redrawing the list (keeps the focus while typing)
+  const box = document.querySelector(`.decide[data-id="${CSS.escape(id)}"]`); if (!box) return;
+  const m = mine(id);
+  box.querySelectorAll("button[data-d]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.d === m.d)));
+  const ta = box.querySelector("textarea"); if (ta && document.activeElement !== ta && ta.value !== (m.note || "")) ta.value = m.note || "";
+  const dc = document.getElementById("dc-" + id); if (dc) dc.innerHTML = decisionChip(id);
+}
+function renderSkips(){ document.getElementById("skips").innerHTML = DATA.skipped.map(s => `<div><span class="chip">${SEC[s.sec]}</span> <b>${esc(s.text)}</b><br><span style="color:var(--muted)">${esc(s.reason)}</span></div>`).join(""); }
+
+// a decision is kept on this device first, then sent; it leaves the device's list only when the database has it
+function decide(id, patch){
+  const cur = mine(id);
+  PENDING[id] = {d:cur.d || "", note:cur.note || "", ...patch, at:Date.now()};
+  keepPending(); refreshCard(id); stats(); flush();
+}
+let flushing = false;
+async function flush(){
+  if (!db || flushing) return;
+  flushing = true;
+  try {
+    for (const [id, v] of Object.entries(PENDING)){
+      try {
+        await db.collection(COL).doc(id).set({d:v.d, note:String(v.note || "").slice(0, 1000), at:v.at});
+        if (PENDING[id] && PENDING[id].at === v.at){ SERVER[id] = {...v}; delete PENDING[id]; keepPending(); }
+      } catch(err){ if (err && /not_granted|denied|forbidden|permission/i.test(String(err.code || err.message))) canWrite = false; break; }
+      refreshCard(id);
+    }
+  } finally { flushing = false; stats(); }
+  if (Object.keys(PENDING).length) setTimeout(flush, 15000);
+}
+window.addEventListener("online", flush);
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; try { localStorage.setItem("ak-rev-f", JSON.stringify({status:F.status, sec:F.sec, mine:F.mine})); } catch(e){} render(); return; }
+  if (b.dataset.d){ const id = b.closest(".decide").dataset.id; decide(id, {d:mine(id).d === b.dataset.d ? "" : b.dataset.d}); }
+});
+// notes: kept on this device at every keystroke, sent a moment after typing stops (and when leaving the field)
+document.addEventListener("input", e => {
+  const t = e.target; if (t.tagName !== "TEXTAREA" || !t.dataset.id) return;
+  const id = t.dataset.id, cur = mine(id);
+  PENDING[id] = {d:cur.d || "", note:t.value.slice(0, 1000), at:Date.now()}; keepPending();
+  clearTimeout(noteTimers[id]); noteTimers[id] = setTimeout(() => { refreshCard(id); flush(); }, 900);
+  const dc = document.getElementById("dc-" + id); if (dc) dc.innerHTML = decisionChip(id);
+  syncLine();
+});
+document.addEventListener("focusout", e => { const t = e.target; if (t.tagName === "TEXTAREA" && t.dataset.id){ clearTimeout(noteTimers[t.dataset.id]); flush(); } });
+document.getElementById("q").addEventListener("input", e => { F.q = e.target.value; render(); });
+
+if (TEST) document.getElementById("testBanner").hidden = false;
+render(); renderSkips();
+(async () => {
+  if (!window.claude || !claude.use){ dbState = "off"; syncLine(); return; }
+  db = await claude.use("db");
+  if (!db){ dbState = "off"; syncLine(); return; }
+  const user = await claude.use("user");
+  if (user && user.can && user.can("data.write") === false) canWrite = false;
+  const timer = setTimeout(() => { if (dbState === "loading"){ dbState = "slow"; syncLine(); } }, 10000);
+  db.collection(COL).onSnapshot(snap => {
+    for (const doc of snap.docs){ const v = doc.data() || {}; SERVER[doc.id] = {d:v.d || "", note:v.note || "", at:+v.at || 0}; }
+    if (!(snap.metadata && snap.metadata.fromCache)){ dbState = "ready"; clearTimeout(timer); }
+    const a = document.activeElement;
+    if (a && a.tagName === "TEXTAREA"){ for (const doc of snap.docs) refreshCard(doc.id); stats(); }
+    else render();
+    flush();
+  }, () => { dbState = "error"; clearTimeout(timer); syncLine(); });
+})();
+</script>
