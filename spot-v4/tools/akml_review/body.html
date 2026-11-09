@@ -3,6 +3,7 @@
     <h1>مراجعة أسئلة «أكملها» · الدفعة الأولى</h1>
     <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. راجع كل سؤال واختر «اعتماد» أو «يحتاج تعديل» أو «رفض» مع ملاحظتك. تُحفظ قراراتك على خادم claude.ai في قاعدة بيانات هذه الصفحة، لا في المتصفح، فتظهر لك على أي جهاز، وأقرؤها قبل إدخال أي سؤال إلى اللعبة.</p>
     <p class="note" id="testBanner" hidden><b>وضع الاختبار:</b> القرارات هنا تُحفظ في سجل اختبار منفصل («test_decisions»)، ولا تمس قراراتك الفعلية. افتح الصفحة دون «#test» في آخر الرابط للمراجعة الفعلية.</p>
+    <section id="testPanel" class="tpanel" hidden></section>
     <div class="stats" id="stats"></div>
     <p class="sync" id="sync" role="status"></p>
     <p class="note">كيف رُوجعت: صاغ كل قسم معدٌّ مستقل مع مصدر لكل عبارة، ثم راجع كل قسم مراجع مستقل فتح المصادر بنفسه، ثم راجعتها كلها. نفد حدّ البحث على الإنترنت أثناء المراجعة، فاعتمد المراجعون على فتح المصادر المذكورة نفسها (ومنها نص «مجمع الأمثال» للميداني كاملًا). الفحص الآلي يتحقق من الشكل فقط، ولا يكفي للاعتماد.</p>
@@ -42,14 +43,14 @@ let PENDING = {};         // id -> {d, note, at} not yet confirmed by the databa
 try { PENDING = JSON.parse(localStorage.getItem(PKEY) || "{}") || {}; } catch(e){ PENDING = {}; }
 const keepPending = () => { try { localStorage.setItem(PKEY, JSON.stringify(PENDING)); } catch(e){} };
 const mine = id => { const p = PENDING[id], s = SERVER[id]; return p && (!s || (p.at || 0) >= (s.at || 0)) ? p : s || {}; };
-let db = null, canWrite = true, dbState = "loading", noteTimers = {};
+let db = null, canWrite = true, dbState = "loading", noteTimers = {}, lastErr = "";
 
 function seg(el, key, opts){ el.innerHTML = opts.map(([v, l]) => `<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${F[key] === v}">${l}</button>`).join(""); }
 function syncLine(){
   const n = Object.keys(PENDING).length, el = document.getElementById("sync");
   el.className = "sync " + (n ? "warn" : dbState === "ready" ? "ok" : "");
   el.textContent = !db && dbState !== "loading" ? `لا اتصال بقاعدة بيانات الصفحة في هذا العرض: ${n ? n + " قرار محفوظ على هذا الجهاز فقط، وسيُرفع حين تفتح الصفحة وأنت مسجل الدخول." : "لن تُحفظ القرارات إلا على هذا الجهاز."}`
-    : n ? `${n} قرار بانتظار التأكيد من الخادم (محفوظ على هذا الجهاز ويُعاد إرساله تلقائيًا).`
+    : n ? `${lastErr ? "آخر محاولة حفظ رُفضت: " + lastErr + " — " : ""}${!canWrite ? "هذا العرض لا يملك صلاحية الكتابة — " : ""}${n} قرار بانتظار التأكيد من الخادم (محفوظ على هذا الجهاز ويُعاد إرساله تلقائيًا).`
     : dbState === "ready" ? `كل القرارات محفوظة على الخادم (${COL === "decisions" ? "سجل القرارات الفعلي" : "سجل الاختبار"}).` : "جارٍ تحميل القرارات المحفوظة…";
 }
 function stats(){
@@ -93,12 +94,30 @@ function card(x){
       <span class="lbl">قرارك:</span>
       <button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}" ${dis}>✓ اعتماد</button>
       <button type="button" class="d-edit" data-d="edit" aria-pressed="${me.d === "edit"}" ${dis}>✎ يحتاج تعديل</button>
-      <button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}" ${dis}>✗ رفض</button>
+      <button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}" ${dis}>✗ رفض</button><button type="button" class="d-clear" data-d="clear" ${dis}>إلغاء القرار</button>
       <textarea id="nt-${esc(x.id)}" data-id="${esc(x.id)}" aria-label="ملاحظتك على ${esc(x.id)}" placeholder="ملاحظتك: التصحيح المطلوب، أو سبب الرفض، أو صيغة أخرى…" ${dis}>${esc(me.note || "")}</textarea>
     </div>
   </article>`;
 }
+// test mode: three sample questions at the top of the page, with the same buttons, notes and saving as the cards below,
+// and what the server answered for each write
+const TP = ["B1-G004", "B1-G005", "B1-G006"], LOG = {};
+function testPanel(){
+  if (!TEST) return;
+  const el = document.getElementById("testPanel"); el.hidden = false;
+  const a = document.activeElement; if (a && a.tagName === "TEXTAREA" && el.contains(a)) return;
+  el.innerHTML = `<h2>تجربة الحفظ</h2><p class="muted">اختر قرارًا واكتب ملاحظة لأيٍّ من هذه الأسئلة الثلاثة. تُحفظ في سجل الاختبار فقط، ويظهر تحت كل سؤال رد الخادم.</p>` + TP.map(id => {
+    const x = DATA.items.find(q => q.id === id), me = mine(id);
+    return `<div class="trow"><div class="ttop"><span class="id">${esc(id)}</span> <span class="tphr">${phrase(x)}</span> <span id="tdc-${esc(id)}" class="dcs">${decisionChip(id)}</span></div>
+      <div class="decide" data-id="${esc(id)}">
+        <button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}">✓ اعتماد</button>
+        <button type="button" class="d-edit" data-d="edit" aria-pressed="${me.d === "edit"}">✎ يحتاج تعديل</button>
+        <button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}">✗ رفض</button><button type="button" class="d-clear" data-d="clear">إلغاء القرار</button>
+        <textarea id="tp-nt-${esc(id)}" data-id="${esc(id)}" aria-label="ملاحظة الاختبار على ${esc(id)}" placeholder="ملاحظة الاختبار…">${esc(me.note || "")}</textarea>
+      </div><p class="tlog" id="tlog-${esc(id)}">${esc(LOG[id] || "")}</p></div>`; }).join("");
+}
 function render(){
+  testPanel();
   seg(document.getElementById("fStatus"), "status", [["accepted", "المقبولة"], ["reserve", "المؤجلة"], ["rejected", "المرفوضة"], ["all", "الكل"]]);
   seg(document.getElementById("fSec"), "sec", [["all", "الكل"], ["gulf", SEC.gulf], ["arab", SEC.arab], ["hikam", SEC.hikam]]);
   seg(document.getElementById("fMine"), "mine", [["all", "الكل"], ["none", "لم أقرر"], ["ok", "اعتمدتها"], ["edit", "تحتاج تعديل"], ["no", "رفضتها"]]);
@@ -111,11 +130,14 @@ function render(){
   stats();
 }
 function refreshCard(id){       // update one card without redrawing the list (keeps the focus while typing)
-  const box = document.querySelector(`.decide[data-id="${CSS.escape(id)}"]`); if (!box) return;
   const m = mine(id);
-  box.querySelectorAll("button[data-d]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.d === m.d)));
-  const ta = box.querySelector("textarea"); if (ta && document.activeElement !== ta && ta.value !== (m.note || "")) ta.value = m.note || "";
+  document.querySelectorAll(`.decide[data-id="${CSS.escape(id)}"]`).forEach(box => {
+    box.querySelectorAll("button[data-d]:not([data-d=clear])").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.d === m.d)));
+    const ta = box.querySelector("textarea"); if (ta && document.activeElement !== ta && ta.value !== (m.note || "")) ta.value = m.note || "";
+  });
   const dc = document.getElementById("dc-" + id); if (dc) dc.innerHTML = decisionChip(id);
+  const tdc = document.getElementById("tdc-" + id); if (tdc) tdc.innerHTML = decisionChip(id);
+  const tl = document.getElementById("tlog-" + id); if (tl) tl.textContent = LOG[id] || "";
 }
 function renderSkips(){ document.getElementById("skips").innerHTML = DATA.skipped.map(s => `<div><span class="chip">${SEC[s.sec]}</span> <b>${esc(s.text)}</b><br><span style="color:var(--muted)">${esc(s.reason)}</span></div>`).join(""); }
 
@@ -133,8 +155,9 @@ async function flush(){
     for (const [id, v] of Object.entries(PENDING)){
       try {
         await db.collection(COL).doc(id).set({d:v.d, note:String(v.note || "").slice(0, 1000), at:v.at});
+        LOG[id] = `أكّد الخادم الحفظ ${new Date().toLocaleTimeString("ar")}: ${DN[v.d] || "بلا قرار"}${v.note ? " · «" + String(v.note).slice(0, 60) + "»" : ""}`;
         if (PENDING[id] && PENDING[id].at === v.at){ SERVER[id] = {...v}; delete PENDING[id]; keepPending(); }
-      } catch(err){ if (err && /not_granted|denied|forbidden|permission/i.test(String(err.code || err.message))) canWrite = false; break; }
+      } catch(err){ lastErr = String((err && (err.code || err.message)) || err); LOG[id] = "رفض الخادم الحفظ: " + lastErr + (err && err.message && err.code ? " — " + err.message : ""); if (err && /not_granted|denied|forbidden|permission/i.test(String(err.code || err.message))) canWrite = false; break; }
       refreshCard(id);
     }
   } finally { flushing = false; stats(); }
@@ -144,15 +167,18 @@ window.addEventListener("online", flush);
 document.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; try { localStorage.setItem("ak-rev-f", JSON.stringify({status:F.status, sec:F.sec, mine:F.mine})); } catch(e){} render(); return; }
-  if (b.dataset.d){ const id = b.closest(".decide").dataset.id; decide(id, {d:mine(id).d === b.dataset.d ? "" : b.dataset.d}); }
+  if (b.dataset.d){ const id = b.closest(".decide").dataset.id, d = b.dataset.d === "clear" ? "" : b.dataset.d; if (mine(id).d !== d) decide(id, {d}); }
 });
 // notes: kept on this device at every keystroke, sent a moment after typing stops (and when leaving the field)
 document.addEventListener("input", e => {
   const t = e.target; if (t.tagName !== "TEXTAREA" || !t.dataset.id) return;
-  const id = t.dataset.id, cur = mine(id);
-  PENDING[id] = {d:cur.d || "", note:t.value.slice(0, 1000), at:Date.now()}; keepPending();
+  const id = t.dataset.id, cur = mine(id), note = t.value.slice(0, 1000);
+  if (note === (cur.note || "")) return;          // nothing changed: no write
+  PENDING[id] = {d:cur.d || "", note, at:Date.now()}; keepPending();
   clearTimeout(noteTimers[id]); noteTimers[id] = setTimeout(() => { refreshCard(id); flush(); }, 900);
   const dc = document.getElementById("dc-" + id); if (dc) dc.innerHTML = decisionChip(id);
+  const tdc = document.getElementById("tdc-" + id); if (tdc) tdc.innerHTML = decisionChip(id);
+  const tl = document.getElementById("tlog-" + id); if (tl) tl.textContent = LOG[id] || "";
   syncLine();
 });
 document.addEventListener("focusout", e => { const t = e.target; if (t.tagName === "TEXTAREA" && t.dataset.id){ clearTimeout(noteTimers[t.dataset.id]); flush(); } });
@@ -163,16 +189,16 @@ render(); renderSkips();
 (async () => {
   if (!window.claude || !claude.use){ dbState = "off"; syncLine(); return; }
   db = await claude.use("db");
-  if (!db){ dbState = "off"; syncLine(); return; }
+  if (!db){ dbState = "off"; TP.forEach(id => { LOG[id] = "هذا العرض لا يصل إلى قاعدة بيانات الصفحة (claude.use(\"db\") أعاد null)"; }); render(); return; }
   const user = await claude.use("user");
   if (user && user.can && user.can("data.write") === false) canWrite = false;
   const timer = setTimeout(() => { if (dbState === "loading"){ dbState = "slow"; syncLine(); } }, 10000);
+  let first = true;
   db.collection(COL).onSnapshot(snap => {
     for (const doc of snap.docs){ const v = doc.data() || {}; SERVER[doc.id] = {d:v.d || "", note:v.note || "", at:+v.at || 0}; }
     if (!(snap.metadata && snap.metadata.fromCache)){ dbState = "ready"; clearTimeout(timer); }
-    const a = document.activeElement;
-    if (a && a.tagName === "TEXTAREA"){ for (const doc of snap.docs) refreshCard(doc.id); stats(); }
-    else render();
+    if (first || F.mine !== "all"){ first = false; const a = document.activeElement; if (!(a && a.tagName === "TEXTAREA")) render(); else { for (const doc of snap.docs) refreshCard(doc.id); stats(); } }
+    else { for (const doc of snap.docs) refreshCard(doc.id); stats(); }
     flush();
   }, () => { dbState = "error"; clearTimeout(timer); syncLine(); });
 })();

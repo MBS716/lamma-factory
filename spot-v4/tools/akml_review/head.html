@@ -66,6 +66,13 @@ input[type=search]{font:inherit;border:1px solid var(--line);background:var(--pa
 .decide button[aria-pressed="true"].d-no{background:var(--no);border-color:var(--no);color:#fff}
 .decide button[aria-pressed="true"].d-edit{background:var(--hold);border-color:var(--hold);color:#fff}
 .decide textarea{font:inherit;font-size:.9rem;flex:1 1 100%;min-height:2.4em;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--bg);color:var(--ink);resize:vertical}
+.tpanel{background:var(--panel);border:2px solid var(--gold);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.tpanel h2{margin:0;font-family:var(--display);font-size:1.2rem} .tpanel .muted{margin:0;color:var(--muted);font-size:.9rem}
+.trow{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
+.ttop{display:flex;flex-wrap:wrap;gap:8px;align-items:center} .tphr{font-family:var(--display);font-size:1.1rem}
+.trow .decide{border-top:0;padding-top:0} .tphr mark{background:none;color:var(--gold);border-bottom:2px solid var(--gold)}
+.decide button.d-clear{color:var(--muted);border-style:dashed;font-size:.8rem} .trow textarea{min-height:2em}
+.tlog{margin:0;font-size:.85rem;color:var(--ok)}
 .sync{margin:0;font-size:.9rem;color:var(--muted)}
 .sync.ok{color:var(--ok)} .sync.warn{color:var(--hold);font-weight:600}
 .dcs{display:inline-flex;gap:6px;flex-wrap:wrap}
