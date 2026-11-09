@@ -4,13 +4,13 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-akml/?v=7a9b1b0438#8486)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-akml/?v=7a9b1b0438#8486)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-akml/?v=7a9b1b0438#8079)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-akml/?v=7a9b1b0438#8079)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
   "OK letters: the team pressing on its phone does NOT stop the clock",
-  "OK letters fairness: pressed at 0 s, answered at 19.0 s -> 60 points (not 100)",
+  "OK letters fairness: pressed at 0 s, answered at 19.2 s -> 60 points (not 100)",
   "OK letters: the question is on the phone screen of the team on turn",
   "OK letters: both teams had the same number of questions (10/10)",
   "OK letters: totals equal the points awarded (860/900)",
@@ -28,7 +28,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: preview rooms are separate (lmp3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (review-akml/?v=7a9b1b0438#7056)",
+  "OK sessions: invite link carries the version (review-akml/?v=7a9b1b0438#4847)",
   "OK sessions: version.json matches the page (7a9b1b0438 = 7a9b1b0438)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -51,7 +51,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 50)",
+  "OK wheel v3: phones receive the same box result as the host (m 150)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -63,7 +63,7 @@
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
   "OK wheel v3: state sent to phones stays small (486 characters)",
-  "OK spot v4: easy round, 5 differences, 3 players (s5-w177120495)",
+  "OK spot v4: easy round, 5 differences, 3 players (s5-w24879808)",
   "OK spot v4: no hint, image-info or report button on the phones while playing, no link to the original",
   "OK spot v4: three players find the same difference: each +10",
   "OK spot v4: each phone shows only its own circle (sealed mailboxes) [True, True, True]",
@@ -74,7 +74,7 @@
   "OK spot v4: the iPhone leaves and joins again: still out, mistakes not reset",
   "OK spot v4: the host reloads: same records, no phone shows «the game ended»",
   "OK spot v4: Android and the third phone at 4 of 5",
-  "OK spot v4: both complete at the same moment: joint win (1 ms apart when they reached the host; the window is 300 ms)",
+  "OK spot v4: both complete at the same moment: joint win (14 ms apart when they reached the host; the window is 300 ms)",
   "OK spot v4: each winner 5×10 +50 +30 = 130; no bonus for the player who was out",
   "OK spot v4: the results announce the winner(s) first",
   "OK spot v4: results table with «استُبعد — 5 أخطاء» and the overall board",
@@ -82,7 +82,7 @@
   "OK spot v4: report button for the host only, after the round",
   "OK spot v4: the sealed mailboxes are removed when the round ends",
   "OK spot v4: the host reloads after the round: nothing is counted again",
-  "OK spot v4: the other phones see no completion before the closing window ends, only the final result (38 readings)",
+  "OK spot v4: the other phones see no completion before the closing window ends, only the final result (43 readings)",
   "OK spot v4: the announced result does not change afterwards",
   "OK spot v4: the third phone completes 1.2 s after Android: Android wins alone, the late tap is not counted (third phone 4 of 5)",
   "OK spot v4: «توقفت الجولة بفوز المنافس» for the others",
@@ -95,12 +95,12 @@
   "OK spot v4: Android: no sideways scrolling (412 <= 412)",
   "OK spot v4: 360 px phone: no sideways scrolling (360 <= 360)",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3480], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1427 (limit 12000), saved match 1320 (limit 20000), hidden data 1886 (limit 120000), over 5 games",
+  "OK sizes: the largest host seat 1431 (limit 12000), saved match 1324 (limit 20000), hidden data 1970 (limit 120000), over 5 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -111,36 +111,36 @@
  ],
  "sizes": {
   "letters": [
-   1253,
-   1143,
-   236
+   1256,
+   1146,
+   239
   ],
   "wheel": [
-   738,
-   630,
-   37
+   713,
+   605,
+   38
   ],
   "diff": [
-   1427,
-   1320,
-   1886
+   1431,
+   1324,
+   1970
   ],
   "quiz": [
-   445,
-   338,
-   337
+   393,
+   286,
+   274
   ],
   "puzzle": [
-   272,
-   163,
+   270,
+   161,
    0
   ]
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-09T01:28:33.593Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-7056/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-09T01:28:33.688Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-7056/ed58820be3238c5c6f0536eb failed: permission_denied ",
-  "Android: [2026-11-09T01:28:33.784Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-7056 failed: permission_denied "
+  "Android: [2026-11-09T01:46:53.305Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-4847/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-09T01:46:53.441Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-4847/dea0960791faedf3aa532bd6 failed: permission_denied ",
+  "Android: [2026-11-09T01:46:53.582Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-4847 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
