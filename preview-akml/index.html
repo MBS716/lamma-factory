@@ -777,6 +777,12 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akans li{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:6px 10px}
 .akst{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .akans .chip.ok{border-color:var(--green);color:var(--green)} .akans .chip.no{border-color:var(--bad);color:var(--bad)} .akans .chip.ask{border-color:var(--gold);color:var(--gold)}
+.aktn{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.aktnl{display:flex;flex-direction:column;gap:4px;font-size:.85rem}
+.aktnl.g span{color:var(--green)} .aktnl.o span{color:var(--orange)}
+.aktnl input{min-width:0}
+.akpick{justify-content:center}
+.akpick .chip.on{outline:2px solid var(--gold)}
 @media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}
 </style>
 </head>
@@ -846,7 +852,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.4-akml2 · تجريبي</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.5-akml2 · تجريبي</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1846,8 +1852,7 @@ const AK_MDESC = {
 const AK_LOCK = {all:"الجميع يجيب", first:"أول إجابة صحيحة", turn:"صاحب الدور فقط"};
 const AK_INP = {c:"اختيار من أربعة", t:"كتابة", o:"شفهيًا ويحكم المقدّم"};
 const AK_LEAD = 3000;          // ms between sending a question and the start of its clock (every phone has it on screen)
-const AK_TURN = 15;            // seconds for the player on turn (typed); aloud: 10 s started and paused by the host
-const AK_ORAL = 10;
+const AK_TURN = 15;            // default seconds for the player on turn in «أسرع إصبع» (the host can choose 10–30)
 const AK_DRAIN = 150;          // ms: answers and presses are ordered by the moment they reached the host, a moment after they arrive
 const AK_AUTO = 8;             // seconds on the answer before the next question (automatic mode)
 const AK_FAST_T = 6;           // seconds of a speed challenge question
@@ -1918,6 +1923,12 @@ function akFix(o){                  // keeps the settings consistent after any c
   o.mix = (Array.isArray(o.mix) ? o.mix : []).filter(x => akMixable(o).includes(x));
   if (o.mix.length < 2) o.mix = akMixable(o).slice(0, 4);
   o.secs = (Array.isArray(o.secs) ? o.secs : []).filter(x => AK_SECS.some(s => s[0] === x));
+  o.tn = {g:akTNameClean(o.tn && o.tn.g), o:akTNameClean(o.tn && o.tn.o)};
+  if (o.tn.g && o.tn.g === o.tn.o) o.tn.o = "";             // two teams never share a name
+  if (!["sum", "avg"].includes(o.tsc)) o.tsc = "sum";
+  if (![10, 15, 20, 30].includes(+o.bt)) o.bt = AK_TURN;
+  if (!["auto", "man"].includes(o.bst)) o.bst = "auto";
+  if (!["join", "rnd", "host"].includes(o.ord)) o.ord = "join";
   return o;
 }
 // the method, the answer form and the lock of each kind of question
@@ -1970,14 +1981,18 @@ function akAvail(B, o){       // how many questions of the bank fit these settin
 const akAd = (dir, code, sp, k) => `lamma-ak|${dir}|${code}|${sp}|${k}`;
 const akGapHTML = (q, fill, cls) => `<p class="akx ${cls || ""}">${esc(q.pre)}<span class="${fill != null ? "akfill" : "akgap"}">${fill != null ? esc(fill) : "<i>؟</i>"}</span>${esc(q.post)}</p>`;
 const akSec = ms => Math.ceil(ms / 1000);
-const akTN = t => `الفريق ${TEAM[t]}`;
+// the room's state on this device (the host's own, or the one a phone reads)
+const akS = () => typeof H !== "undefined" && H && H.g === "akml" ? H.s : ((findHost() || {}).presence || {}).s || null;
+const akTNameClean = x => String(x || "").replace(/[<>&"'`\\]/g, "").replace(/\s+/g, " ").trim().slice(0, 18);
+// a team's name: the host's name for it, or «الفريق الأخضر / البرتقالي»
+const akTN = t => { const st = akS(), n = st && st.o && st.o.tn && akTNameClean(st.o.tn[t]); return n || `الفريق ${TEAM[t]}`; };
 // ms left on the question clock (it stops while somebody holds the turn in «أسرع إصبع»)
 const akLeft = s => {
   if (!s || !s.qs) return 0;
   const q = s.q; if (q.m !== "b") return Math.max(0, (s.tt && s.tt.T ? s.tt.T : q.T) * 1000 - (srvNow() - (s.tt && s.tt.at ? s.tt.at : s.qs)));
   const z = s.bz || {}; return Math.max(0, q.T * 1000 - (z.used || 0) - (z.ra ? Math.max(0, srvNow() - z.ra) : 0));
 };
-const akTurnLeft = s => { const z = s.bz; if (!z || z.cur < 0) return 0; const T = (s.q.inp === "o" ? AK_ORAL : AK_TURN) * 1000; return Math.max(0, T - (z.tu || 0) - (z.ta ? Math.max(0, srvNow() - z.ta) : 0)); };
+const akTurnLeft = s => { const z = s.bz; if (!z || z.cur < 0) return 0; const T = (+s.o.bt || AK_TURN) * 1000; return Math.max(0, T - (z.tu || 0) - (z.ta ? Math.max(0, srvNow() - z.ta) : 0)); };
 
 const Akml = {
   init: () => ({sp:0, step:0, i:0, n:10, qs:0, qd:null, q:null, got:[], cnt:0, res:{}, top:[], rev:null, dist:null, bz:null, tt:null, hk:"", nx:0, fin:null, tm:{}, ts:null, tsg:null, wk:null, tb:null}),
@@ -2027,6 +2042,7 @@ const Akml = {
       akFix(o); return pushHost();
     }
     if (a === "tauto"){ Akml.teamsAuto(); return pushHost(); }
+    if (a === "ttpick") return Akml.ttPick(d.k);
     if (a === "tmove"){             // only the host moves a player (before the match, or between questions)
       if (s.ph !== "lobby" && s.ph !== "r") return;
       const k = d.k; if (!k) return; s.tm[k] = s.tm[k] === "g" ? "o" : "g"; H.priv.tmk = {...s.tm}; return pushHost();
@@ -2107,17 +2123,53 @@ const Akml = {
     const first = o.first === "rnd" ? (H.priv.ttStart || (H.priv.ttStart = rnd() < .5 ? "g" : "o")) : o.first;
     return n % 2 ? other(first) : first;
   },
-  ttWho(t){
-    const R = H.priv.rot, live = new Set(activePlayers(hostPlayers()).filter(p => H.s.tm[dfKey(pname(p))] === t).map(p => dfKey(pname(p))));
+  ttLive(t){ return new Set(activePlayers(hostPlayers()).filter(p => H.s.tm[dfKey(pname(p))] === t).map(p => dfKey(pname(p)))); },
+  // the member whose turn it is: members who missed their turn while offline come first when they are back (owe), then the
+  // rotation; members offline now are passed over and are owed a turn
+  ttWho(t, not){
+    const R = H.priv.rot, live = Akml.ttLive(t);
+    R.owe = R.owe || {g:[], o:[]};
     for (const p of Akml.members(t)){ const k = dfKey(pname(p)); if (!R[t].includes(k)) R[t].push(k); }      // newcomers at the end of the turn order
-    for (let j = 0; j < R[t].length; j++){ const k = R[t][(R.i[t] + j) % R[t].length]; if (live.has(k) && H.s.tm[k] === t){ R.i[t] = (R.i[t] + j + 1) % R[t].length; return k; } }
+    const ow = R.owe[t].find(k => live.has(k) && k !== not);
+    if (ow){ R.owe[t] = R.owe[t].filter(k => k !== ow); return ow; }
+    for (let j = 0; j < R[t].length; j++){ const k = R[t][(R.i[t] + j) % R[t].length]; if (live.has(k) && H.s.tm[k] === t && k !== not){
+      for (let x = 0; x < j; x++){ const m = R[t][(R.i[t] + x) % R[t].length]; if (!live.has(m) && H.s.tm[m] === t && !R.owe[t].includes(m)) R.owe[t].push(m); }
+      R.i[t] = (R.i[t] + j + 1) % R[t].length; return k; } }
     return null;
   },
   ttTurn(t, steal){
     const s = H.s, k = Akml.ttWho(t), prev = s.tt;
     const T = steal ? Math.max(5, Math.round(s.q.T / 2)) : s.q.T;
-    s.tt = {t, k, n:k ? (H.priv.sc[k] || {}).n || "" : "", steal:steal ? 1 : 0, tid:(prev ? prev.tid : 0) + 1, T, at:prev ? srvNow() + 1500 : s.qs, first:prev ? prev.first : t};
+    s.tt = {t, k, n:k ? Akml.nm(k) : "", steal:steal ? 1 : 0, tid:(prev ? prev.tid : 0) + 1, T, at:prev ? srvNow() + 1500 : s.qs, first:prev ? prev.first : t, wait:0};
     if (prev) s.qs = s.tt.at;            // the stolen chance has its own short countdown and clock
+    // «يختاره المقدّم»: the clock waits until the host picks who answers (the rotation's member is suggested)
+    if (s.o.ord === "host"){ s.tt.wait = 1; s.tt.at = s.qs = srvNow() + 864e5; }
+  },
+  nm(k){ const p = hostPlayers().find(p => dfKey(pname(p)) === k); return (H.priv.sc[k] || {}).n || (p ? pname(p) : ""); },
+  // the host picks the member who answers (before the question's clock starts); the suggested member keeps his turn for later
+  ttPick(k){
+    const s = H.s, t = s.tt; if (s.ph !== "q" || !t || !t.wait || s.tm[k] !== t.t) return;
+    const R = H.priv.rot; R.owe = R.owe || {g:[], o:[]};
+    if (t.k && t.k !== k && !R.owe[t.t].includes(t.k)) R.owe[t.t].unshift(t.k);
+    R.owe[t.t] = R.owe[t.t].filter(x => x !== k);
+    t.k = k; t.n = Akml.nm(k); t.wait = 0; t.tid++; t.at = s.qs = srvNow() + AK_LEAD;
+    pushHost();
+  },
+  // the member on turn went offline: after 3 seconds the turn passes to another member of the same team, with a fresh clock;
+  // the absent member is owed a turn when he is back. Nobody of the team online: the question waits (the host can skip it).
+  ttAway(){
+    const s = H.s, t = s.tt; if (!t || t.wait || srvNow() < s.qs) return;
+    if (t.k && Akml.ttLive(t.t).has(t.k)){ H.priv.ttOff = 0; return; }
+    if (H.priv.ans[(t.k || "") + "|" + t.tid]) return;
+    if (!H.priv.ttOff){ H.priv.ttOff = Date.now(); return; }
+    if (Date.now() - H.priv.ttOff < 3000) return;
+    H.priv.ttOff = 0;
+    const R = H.priv.rot; R.owe = R.owe || {g:[], o:[]};
+    const k = Akml.ttWho(t.t, t.k);
+    if (!k) return;
+    if (t.k && !R.owe[t.t].includes(t.k)) R.owe[t.t].push(t.k);
+    Object.assign(t, {k, n:Akml.nm(k), tid:t.tid + 1, at:srvNow() + 1500, moved:1}); s.qs = t.at;
+    pushHost();
   },
   tick(){
     if (!H || H.g !== "akml") return;
@@ -2128,6 +2180,8 @@ const Akml = {
         const z = s.bz;
         if (z.cur < 0 && akLeft(s) <= 0 && !H.priv.bzT) Akml.close();
         else if (z.cur >= 0 && q.inp === "t" && z.ta && akTurnLeft(s) <= 0) Akml.turnOver(z.q[z.cur][0], "late");
+      } else if (q.m === "tt" && (Akml.ttAway(), s.tt.wait)){
+        // waiting for the host to pick who answers
       } else if (srvNow() > s.qs + (s.tt ? s.tt.T : q.T) * 1000 + 800){
         Akml.hostPeers(hostPlayers());                 // answers still on their way count first
         if (s.ph === "q"){ if (q.m === "tt") Akml.turnOver(s.tt.k, "late"); else Akml.close(); }
@@ -2253,7 +2307,7 @@ const Akml = {
   turn(){
     const s = H.s, z = s.bz, now = srvNow();
     const idx = z.q.findIndex(x => !z.bl.includes(x[0]) && (!z.only || s.tm[x[0]] === z.only));
-    if (idx >= 0){ if (z.ra){ z.used += Math.max(0, now - z.ra); z.ra = 0; } z.cur = idx; z.tid++; z.tu = 0; z.ta = s.q.inp === "t" ? now : 0; }   // typed: the turn clock starts by itself
+    if (idx >= 0){ if (z.ra){ z.used += Math.max(0, now - z.ra); z.ra = 0; } z.cur = idx; z.tid++; z.tu = 0; z.ta = s.q.inp === "t" || s.o.bst !== "man" ? now : 0; }   // typed: the turn clock starts by itself; aloud: by itself or when the host starts it
     else { z.cur = -1; if (!z.ra) z.ra = now; }
   },
   oral(ok){
@@ -2329,17 +2383,26 @@ const Akml = {
       else if (!ok || q.lock === "all"){ if (g.v !== 1){ g.v = 0; sc[a.k] && sc[a.k].w++; } }
       else if (g.v !== 1) g.v = -1;      // right but too late: somebody else was first
     }
-    // the teams: in «الجميع يجيب» a team gets the average of its members' points of the question (fair for teams of different
-    // sizes); when only one player can score (first right answer, the turn), the team gets that player's points
+    // the teams. «مجموع النقاط» (default): the team gets the sum of its members' points of the question. «متوسط النقاط» (for
+    // teams of different sizes, only when everybody answers): the team gets the average, a whole number, and that number is
+    // shared among the members who scored (largest remainders), so the members' contributions always add up to the team's
+    // points exactly. When only one player can score (first right answer, the turn), the team gets that player's points.
     if (s.o.sys === "team"){
       const tg = {g:0, o:0};
       for (const t of ["g", "o"]){
         const ks = Akml.members(t).map(p => dfKey(pname(p)));
-        const pts = ks.map(k => (gain[k] || {g:0}).g);
-        tg[t] = q.lock === "all" ? (ks.length ? Math.round(pts.reduce((a, b) => a + b, 0) / ks.length) : 0) : pts.reduce((a, b) => a + b, 0);
+        const pts = ks.map(k => (gain[k] || {g:0}).g), sum = pts.reduce((a, b) => a + b, 0);
+        let share = pts;
+        if (q.lock === "all" && s.o.tsc === "avg" && ks.length > 1){
+          const T = Math.round(sum / ks.length), ex = pts.map(g => g / ks.length);
+          share = ex.map(Math.floor);
+          let left = T - share.reduce((a, b) => a + b, 0);
+          ex.map((e, i) => [e - Math.floor(e), i]).sort((a, b) => b[0] - a[0] || a[1] - b[1]).forEach(([f, i]) => { if (left > 0 && f > 0){ share[i]++; left--; } });
+          tg[t] = T;
+        } else tg[t] = sum;
         H.priv.ts[t].s += tg[t]; H.priv.ts[t].r += ks.filter(k => (gain[k] || {}).v === 1).length;
         // each member's contribution to his team (kept per team, so a player moved by the host leaves it with the team he played for)
-        for (const k of ks){ const g = (gain[k] || {g:0}).g, r = sc[k]; if (!r) continue; r.tc = r.tc || {}; r.tc[t] = (r.tc[t] || 0) + (q.lock === "all" ? g / ks.length : g); }
+        ks.forEach((k, i) => { const r = sc[k]; if (!r) return; r.tc = r.tc || {}; r.tc[t] = (r.tc[t] || 0) + share[i]; });
       }
       s.tsg = tg; s.ts = {g:H.priv.ts.g.s, o:H.priv.ts.o.s};
     }
@@ -2375,22 +2438,30 @@ const Akml = {
     let win = [];
     if (team){
       const g = H.priv.ts.g, o = H.priv.ts.o;
-      const wt = tbw ? [tbw] : g.s !== o.s ? [g.s > o.s ? "g" : "o"] : g.r !== o.r ? [g.r > o.r ? "g" : "o"] : ["g", "o"];
-      const bonus = t => wt.includes(t) && (g.s + o.s) > 0 ? AK_PTS.win : 0;
+      // the winner: more points, then more right answers (or the deciding round); still equal: a tie, nobody gets the win bonus;
+      // no points at all: no winner
+      const wt = (g.s + o.s) <= 0 ? [] : tbw ? [tbw] : g.s !== o.s ? [g.s > o.s ? "g" : "o"] : g.r !== o.r ? [g.r > o.r ? "g" : "o"] : [];
+      const bonus = t => wt.includes(t) ? AK_PTS.win : 0;
+      s.tres = (g.s + o.s) <= 0 ? "none" : wt.length ? "win" : "tie";
       s.tf = ["g", "o"].map(t => ({t, s:H.priv.ts[t].s, r:H.priv.ts[t].r, w:bonus(t), tot:H.priv.ts[t].s + bonus(t),
-        m:Object.entries(sc).filter(([k, r]) => s.tm[k] === t || (r.tc && r.tc[t])).map(([k, r]) => [r.n, r.s, r.r, r.w, Math.round((r.tc || {})[t] || 0)]).sort((a, b) => b[4] - a[4] || b[1] - a[1])}))
+        m:Object.entries(sc).filter(([k, r]) => s.tm[k] === t || (r.tc && r.tc[t])).map(([k, r]) => [r.n, r.s, r.r, r.w, (r.tc || {})[t] || 0]).sort((a, b) => b[4] - a[4] || b[1] - a[1])}))
         .sort((a, b) => b.tot - a.tot || b.r - a.r);
-      s.tf.forEach((x, i) => { x.p = i && (x.tot !== s.tf[0].tot || x.r !== s.tf[0].r) ? 2 : 1; });
+      s.tf.forEach((x, i) => { x.p = s.tres === "none" ? 0 : s.tres === "tie" ? 1 : i + 1; });
     } else {
       const best = rank.length ? rank[0] : null;
-      win = best && best[1].s > 0 ? (tbw ? [tbw] : Akml.tied(rank) ? rank.filter(r => r[1].s === best[1].s && r[1].r === best[1].r && r[1].w === best[1].w && r[1].ms === best[1].ms).map(r => r[0]) : [best[0]]) : [];
+      // a sole winner gets the win bonus; equal on every rule (and no deciding round): a tie, no bonus; no points: no winner
+      s.tres = !best || best[1].s <= 0 ? "none" : tbw || !Akml.tied(rank) ? "win" : "tie";
+      win = s.tres === "win" ? [tbw || best[0]] : [];
+      s.ties = s.tres === "tie" ? rank.filter(r => r[1].s === best[1].s && r[1].r === best[1].r && r[1].w === best[1].w && r[1].ms === best[1].ms).map(r => r[1].n) : [];
     }
     const rows = rank.map(([k, r]) => { const w = win.includes(k) ? AK_PTS.win : 0; return {k, n:r.n, t:s.tm[k] || "", r:r.r, w:r.w, q:r.s - r.b, b:r.b, wb:w, tot:r.s + w}; });
     if (!team) rows.sort((a, b) => (b.wb ? 1 : 0) - (a.wb ? 1 : 0) || b.tot - a.tot);
-    let place = 0; rows.forEach((x, i) => { const pr = rows[i - 1]; if (!pr || x.tot !== pr.tot || x.r !== pr.r || x.wb !== pr.wb) place = i + 1; x.p = place; });
+    // places: players equal on the ranking rules share a place; nobody has a place when nobody scored
+    const key = x => [x.tot, x.r, (sc[x.k] || {}).w, (sc[x.k] || {}).ms].join("|");
+    let place = 0; rows.forEach((x, i) => { const pr = rows[i - 1]; if (!pr || key(x) !== key(pr)) place = i + 1; x.p = s.tres === "none" ? 0 : place; });
+    s.tbr = H.priv.tbk ? {w:tbw ? (team ? akTN(tbw) : (sc[tbw] || {}).n) : ""} : null;
     s.fin = rows.slice(0, 20).map(x => [x.n, x.t, x.r, x.w, x.q, x.b, x.wb, x.tot, x.p]);
     s.res = {}; rows.forEach(x => { s.res[x.k] = [x.p, x.tot, x.wb]; });
-    s.tbr = H.priv.tbk ? {w:tbw ? (team ? akTN(tbw) : (sc[tbw] || {}).n) : ""} : null;
     s.ph = "end"; s.step = 3; s.sp++; H.priv.spMax = s.sp; s.tb = null;
     pushHost();
   },
@@ -2484,14 +2555,17 @@ const Akml = {
     let hero;
     if (team){
       const w = s.tf.filter(x => x.p === 1);
-      hero = s.tf.every(x => !x.tot) ? `<div class="akhero"><h2>انتهت المباراة</h2><p class="muted">لم يسجّل أي فريق نقاطًا.</p></div>` : `<div class="akhero"><span class="akcrown">👑</span><p class="muted">${w.length > 1 ? "تعادل" : "الفريق الفائز"}</p><h2 class="${w.length === 1 ? "t" + w[0].t : ""}">${w.map(x => akTN(x.t)).join(" و")}</h2><p>${w[0].tot} نقطة${w[0].w ? ` <span class="muted">(${w[0].s} من الأسئلة + ${AK_PTS.win} مكافأة الفوز)</span>` : ""}</p>${s.tbr ? `<p class="muted">${s.tbr.w ? `حُسم التعادل بجولة فاصلة` : "لم تحسم الجولة الفاصلة التعادل"}</p>` : ""}</div>`;
-      hero += `<div class="aktf">${s.tf.map(x => `<div class="aktfc ${x.t}"><h3>${x.p === 1 && s.tf.filter(y => y.p === 1).length === 1 ? "🏆 " : ""}${akTN(x.t)}</h3><p class="aktot">${x.tot}</p><p class="muted">${x.s} من الأسئلة${x.w ? ` + ${x.w} مكافأة الفوز` : ""} · ${x.r} إجابة صحيحة</p><table class="aktable sm"><thead><tr><th>العضو</th><th>مساهمته في الفريق</th><th>نقاطه</th><th>✓</th><th>✗</th></tr></thead><tbody>${x.m.map(m => `<tr class="${me && m[0] === P.name ? "me" : ""}"><td>${esc(m[0])}</td><td><b>${m[4]}</b></td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join("")}</tbody></table></div>`).join("")}</div>`;
+      hero = s.tres === "none" ? `<div class="akhero"><h2>انتهت المباراة دون فائز</h2><p class="muted">لم يسجّل أي فريق نقاطًا.</p></div>`
+        : s.tres === "tie" ? `<div class="akhero"><p class="muted">النتيجة</p><h2>تعادل</h2><p>${s.tf[0].tot} نقطة لكل فريق، وعدد الإجابات الصحيحة نفسه. لا مكافأة فوز في التعادل.</p>${s.tbr ? `<p class="muted">لم تحسم الجولة الفاصلة التعادل.</p>` : ""}</div>`
+        : `<div class="akhero"><span class="akcrown">👑</span><p class="muted">الفريق الفائز</p><h2 class="t${w[0].t}">${akTN(w[0].t)}</h2><p>${w[0].tot} نقطة <span class="muted">(${w[0].s} من الأسئلة + ${AK_PTS.win} مكافأة الفوز)</span></p>${s.tbr ? `<p class="muted">حُسم التعادل بجولة فاصلة</p>` : ""}</div>`;
+      hero += `<div class="aktf">${s.tf.map(x => `<div class="aktfc ${x.t}"><h3>${s.tres === "win" && x.p === 1 ? "🏆 " : ""}${x.p ? `<span class="muted">${x.p === 1 && s.tres === "tie" ? "متعادل" : x.p === 1 ? "الأول" : "الثاني"} · </span>` : ""}${akTN(x.t)}</h3><p class="aktot">${x.tot}</p><p class="muted">${x.s} من الأسئلة${x.w ? ` + ${x.w} مكافأة الفوز` : ""} · ${x.r} إجابة صحيحة</p><table class="aktable sm"><thead><tr><th>العضو</th><th>مساهمته في الفريق</th><th>نقاطه</th><th>✓</th><th>✗</th></tr></thead><tbody>${x.m.map(m => `<tr class="${me && m[0] === P.name ? "me" : ""}"><td>${esc(m[0])}</td><td><b>${m[4]}</b></td><td>${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join("")}</tbody></table></div>`).join("")}</div><p class="muted aknote">${s.o.tsc === "avg" ? "نقاط الفريق في كل سؤال يجيب فيه الجميع = متوسط نقاط أعضائه (مقرّبًا لعدد صحيح)، وتُقسم على من سجّل منهم؛ لذلك مجموع مساهمات الأعضاء يساوي نقاط الفريق تمامًا." : "نقاط الفريق = مجموع نقاط أعضائه في الأسئلة. «مساهمته» هي ما أضافه العضو لفريقه."}</p>`;
     } else {
       const win = f.filter(x => x[6]);
       hero = win.length ? `<div class="akhero"><span class="akcrown">👑</span><p class="muted">${win.length > 1 ? "فوز مشترك" : "الفائز"}</p><h2>${win.map(x => esc(x[0])).join(" و")}</h2><p>${win[0][7]} نقطة <span class="muted">(${win[0][7] - AK_PTS.win} من الأسئلة + ${AK_PTS.win} مكافأة الفوز)</span></p>${s.tbr ? `<p class="muted">${s.tbr.w ? "حُسم التعادل بجولة فاصلة" : "لم تحسم الجولة الفاصلة التعادل، فطُبقت قواعد الحسم"}</p>` : ""}</div>`
-        : `<div class="akhero"><h2>انتهت المباراة</h2><p class="muted">لم يسجّل أحد نقاطًا.</p></div>`;
+        : s.tres === "tie" ? `<div class="akhero"><p class="muted">النتيجة</p><h2>تعادل</h2><p>${(s.ties || []).map(esc).join(" و")}: متساوون في النقاط والإجابات الصحيحة والأخطاء والوقت. لا مكافأة فوز في التعادل.</p>${s.tbr ? `<p class="muted">لم تحسم الجولة الفاصلة التعادل.</p>` : ""}</div>`
+        : `<div class="akhero"><h2>انتهت المباراة دون فائز</h2><p class="muted">لم يسجّل أي لاعب نقاطًا.</p></div>`;
     }
-    const rows = f.map(x => `<tr class="${x[6] ? "win" : ""} ${me && x[0] === P.name ? "me" : ""}"><td>${x[8]}</td><td>${x[1] ? `<i class="akdot ${x[1]}"></i>` : ""}${esc(x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td><td>${x[5]}</td>${team ? "" : `<td>${x[6] ? "+" + x[6] : "—"}</td>`}<td><b>${x[7]}</b></td></tr>`).join("");
+    const rows = f.map(x => `<tr class="${x[6] ? "win" : ""} ${me && x[0] === P.name ? "me" : ""}"><td>${x[8] || "—"}</td><td>${x[1] ? `<i class="akdot ${x[1]}"></i>` : ""}${esc(x[0])}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td><td>${x[5]}</td>${team ? "" : `<td>${x[6] ? "+" + x[6] : "—"}</td>`}<td><b>${x[7]}</b></td></tr>`).join("");
     return hero + (f.length ? `<h3>ترتيب اللاعبين</h3><div class="aktable-w"><table class="aktable"><thead><tr><th>#</th><th>اللاعب</th><th><span class="akl">صحيحة</span><span class="aks">✓</span></th><th><span class="akl">خاطئة</span><span class="aks">✗</span></th><th><span class="akl">نقاط الإجابات</span><span class="aks">إجابات</span></th><th><span class="akl">مكافآت السرعة</span><span class="aks">سرعة</span></th>${team ? "" : `<th><span class="akl">مكافأة الفوز</span><span class="aks">فوز</span></th>`}<th><span class="akl">المجموع</span><span class="aks">المجموع</span></th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="muted aknote aklegend">✓ صحيحة · ✗ خاطئة · إجابات: نقاط الإجابات · سرعة: مكافآت السرعة · فوز: مكافأة الفوز</p><p class="muted aknote">الترتيب بالمجموع، ثم الأكثر إجابات صحيحة، ثم الأقل أخطاء، ثم الأقصر وقتًا في الإجابات الصحيحة.</p>` : "");
   },
@@ -2510,10 +2584,12 @@ const Akml = {
     let meth = row("الطريقة", seg("m", akMethods(o).map(x => [x, AK_M[x]]), m));
     if (m === "c" || m === "t") meth += row("قفل الإجابة", seg("lock", [["all", AK_LOCK.all], ["first", AK_LOCK.first]], o.lock));
     if (m === "s") meth += row("شكل الإجابة", seg("sinp", [["c", "اختيار من أربعة"], ["t", "كتابة"]], o.sinp));
-    if (kinds.includes("b")) meth += row("إجابة صاحب الدور", seg("binp", [["t", "يكتبها في جواله"], ["o", "شفهيًا ويحكم المقدّم"]], o.binp));
+    if (kinds.includes("b")) meth += row("إجابة صاحب الدور", seg("binp", [["t", "يكتبها في جواله"], ["o", "شفهيًا ويحكم المقدّم"]], o.binp))
+      + row("مدة إجابة صاحب الدور", seg("bt", [[10, "10 ث"], [15, "15 ث"], [20, "20 ث"], [30, "30 ث"]], +o.bt))
+      + (o.binp === "o" ? row("بدء وقت الإجابة الشفهية", seg("bst", [["auto", "تلقائيًا عند أخذ الدور"], ["man", "يدويًا بزر المقدّم"]], o.bst)) : "");
     if (kinds.includes("tt")) meth += row("إجابة الفريق", seg("tinp", [["c", "اختيار من أربعة"], ["t", "كتابة"], ["o", "شفهيًا"]], o.tinp));
     if (team && (kinds.includes("tt") || kinds.includes("b"))) meth += row("سرقة الإجابة", `<div class="seg wrap">${tog("steal", "إذا أخطأ صاحب الدور تنتقل الفرصة للفريق الآخر")}</div>`);
-    if (kinds.includes("tt")) meth += row("يبدأ", seg("first", [["g", akTN("g")], ["o", akTN("o")], ["rnd", "قرعة"]], o.first)) + row("ترتيب الأعضاء", seg("ord", [["join", "حسب الدخول"], ["rnd", "عشوائي"]], o.ord));
+    if (kinds.includes("tt")) meth += row("يبدأ", seg("first", [["g", akTN("g")], ["o", akTN("o")], ["rnd", "قرعة"]], o.first)) + row("من يجيب عن الفريق", seg("ord", [["join", "بالتناوب حسب الدخول"], ["rnd", "بالتناوب بترتيب عشوائي"], ["host", "يختاره المقدّم قبل كل سؤال"]], o.ord));
     if (m === "mx") meth += row("الأنماط المختلطة", `<div class="seg wrap">${akMixable(o).map(x => `<button class="${o.mix.includes(x) ? "on" : ""}" data-h="set" data-k="mix" data-v="${x}">${o.mix.includes(x) ? "✓ " : ""}${AK_M[x]}</button>`).join("")}</div>`);
     if (m !== "c" && m !== "t") meth += row("قفل الإجابة", `<span class="muted">${m === "mx" ? "حسب نمط كل سؤال" : AK_LOCK[akKind(m, o).lock]}</span>`);
     const secsRow = `<div class="seg wrap"><button class="${!o.secs.length ? "on" : ""}" data-h="set" data-k="secs" data-v="all">الكل</button>${AK_SECS.map(([v, l]) => `<button class="${o.secs.includes(v) ? "on" : ""}" data-h="set" data-k="secs" data-v="${v}">${l}</button>`).join("")}</div>`;
@@ -2537,26 +2613,43 @@ const Akml = {
     } else pl = playerChips(players, false);
     const ok = Akml.canStart(o);
     return `<div class="layout"><div class="panel stack"><h2 class="lob-h">أكملها</h2>
-        ${sec("المنافسة", row("النظام", seg("sys", [["solo", "منافسة فردية"], ["team", "فريقان"]], o.sys)))}
+        ${sec("المنافسة", row("النظام", seg("sys", [["solo", "منافسة فردية"], ["team", "فريقان"]], o.sys)) + (team ? row("اسما الفريقين", `<div class="aktn">${["g", "o"].map(t => `<label class="aktnl ${t}"><span>${TEAM[t]}</span><input class="field sm" id="akTn_${t}" data-t="${t}" maxlength="18" dir="rtl" autocomplete="off" placeholder="الفريق ${TEAM[t]}" value="${esc(o.tn[t] || "")}"></label>`).join("")}</div>`)
+          + row("نقاط الفريق", seg("tsc", [["sum", "مجموع نقاط أعضائه"], ["avg", "متوسط نقاط أعضائه"]], o.tsc)) + `<p class="muted aknote">${o.tsc === "avg" ? "المتوسط يناسب الفريقين غير المتساويين في العدد، ويُطبَّق حين يجيب الجميع. في الأنماط التي يجيب فيها لاعب واحد يحصل الفريق على نقاط ذلك اللاعب." : "المجموع أوضح حين يتساوى الفريقان في العدد. إذا اختلف العدد فالمتوسط أعدل."}</p>` : ""))}
         ${sec("طريقة الإجابة", meth + `<p class="muted aknote">${how}</p>`)}
         ${sec("الأسئلة", qs)}${sec("الوقت والانتقال", tm)}${sec("جولات خاصة", sp)}${sec("التعادل", tie)}
         ${info}<div><button class="btn big" data-h="start" ${ok ? "" : "disabled"}>ابدأ المباراة</button></div></div>
       <div class="panel stack"><h3>${team ? "الفرق" : "اللاعبون"}</h3>${pl}${soloNote()}</div></div>`;
   },
+  bindTn(){
+    const D = H.priv.tnD || (H.priv.tnD = {});
+    for (const inp of document.querySelectorAll("[id^=akTn_]")){
+      const t = inp.dataset.t;
+      if (D[t] != null) inp.value = D[t];
+      inp.oninput = () => { D[t] = inp.value; };
+      inp.onfocus = () => { H.priv.tnF = t; };
+      inp.onkeydown = e => { if (e.key === "Enter"){ e.preventDefault(); inp.blur(); } };
+      inp.onblur = () => { if (H.priv.tnF === t) H.priv.tnF = null; const v = akTNameClean(inp.value); delete D[t];
+        if ((H.s.o.tn || {})[t] !== v){ H.s.o.tn = {...(H.s.o.tn || {}), [t]:v}; akFix(H.s.o); pushHost(); } };
+      if (H.priv.tnF === t && document.activeElement !== inp){ inp.focus(); const n = inp.value.length; try { inp.setSelectionRange(n, n); } catch(e){} }
+    }
+  },
   host(players){
     const s = H.s; let html;
-    if (s.ph === "lobby") return setMain(Akml.lobby(players));
+    if (s.ph === "lobby"){ setMain(Akml.lobby(players)); return Akml.bindTn(); }
     const q = s.q, team = s.o.sys === "team";
     const pendHTML = () => Akml.answersHTML(s), key = Akml.keyCard(s), kci = Akml.hidden() ? -1 : H.priv.ci;
     if (s.ph === "q" && srvNow() < s.qs){
-      html = `<div class="panel center stack akget">${Akml.head(s)}${s.tt ? `<p class="bigmsg">${s.tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${s.tt.t}">${akTN(s.tt.t)}</span></p><p class="muted">يجيب ${esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّوا…</p>`}<span class="timer">${akSec(s.qs - srvNow())}</span>${key}</div>`;
+      const tt = s.tt, pick = tt && tt.wait;
+      const picker = pick ? `<p class="muted">اختر من يجيب عن ${akTN(tt.t)}. المقترح حسب التناوب: <b>${esc(tt.n || "—")}</b></p><div class="chips akpick">${players.filter(p => s.tm[dfKey(pname(p))] === tt.t).map(p => { const k = dfKey(pname(p));
+        return `<button class="chip ${tt.t} ${k === tt.k ? "on" : ""} ${p.away ? "away" : ""}" data-h="ttpick" data-k="${esc(k)}" ${p.away ? "disabled" : ""}>${k === tt.k ? "★ " : ""}${esc(pname(p))}${p.away ? " · غير متصل" : ""}</button>`; }).join("")}</div>` : "";
+      html = `<div class="panel center stack akget">${Akml.head(s)}${tt ? `<p class="bigmsg">${tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${tt.t}">${akTN(tt.t)}</span></p>${pick ? picker : `<p class="muted">يجيب ${esc(tt.n || "—")}</p>`}` : `<p class="bigmsg">استعدّوا…</p>`}${pick ? "" : `<span class="timer">${akSec(s.qs - srvNow())}</span>`}${key}</div>`;
     } else if (s.ph === "q"){
       const left = akSec(akLeft(s));
       let side;
       if (q.m === "b"){
         const z = s.bz, cur = z.cur >= 0 ? z.q[z.cur] : null, tl = akSec(akTurnLeft(s)), oral = q.inp === "o";
         side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${cur ? "⏸" : left}</span><span class="chip">${cur ? "الوقت متوقف أثناء الإجابة" : z.only ? `باب الإجابة لـ${akTN(z.only)} فقط` : "باب الإجابة مفتوح"}</span></div>${key}
-          ${cur ? `<div class="akturn"><p class="muted">الدور الآن</p><h3>${s.tm[cur[0]] ? `<i class="akdot ${s.tm[cur[0]]}"></i>` : ""}${esc(cur[1])}</h3><span class="timer sm ${z.ta && tl <= 3 ? "warn" : ""}">${z.ta || !oral ? tl : AK_ORAL} ث</span>
+          ${cur ? `<div class="akturn"><p class="muted">الدور الآن</p><h3>${s.tm[cur[0]] ? `<i class="akdot ${s.tm[cur[0]]}"></i>` : ""}${esc(cur[1])}</h3><span class="timer sm ${z.ta && tl <= 3 ? "warn" : ""}">${z.ta || !oral ? tl : +s.o.bt || AK_TURN} ث</span>${oral && z.ta && tl <= 0 ? `<p class="note">انتهى وقت الإجابة. احكم على ما قاله اللاعب.</p>` : ""}
             ${oral ? `<div class="row" style="justify-content:center">${z.ta ? `<button class="btn ghost sm" data-h="bstop" data-tid="${z.tid}">⏸ أوقف الوقت</button>` : `<button class="btn ghost sm" data-h="bgo" data-tid="${z.tid}">▶ ابدأ وقت الإجابة</button>`}</div>
             <div class="row" style="justify-content:center"><button class="btn g" data-h="bok" data-tid="${z.tid}">✓ إجابة صحيحة</button><button class="btn o" data-h="bno" data-tid="${z.tid}">✗ إجابة خاطئة</button></div>` : `<p class="muted">يكتب إجابته في جواله، ويحكم الجهاز عليها.</p>`}</div>` : ""}
           ${pendHTML()}<h3>ترتيب طلب الإجابة</h3>${Akml.queueHTML(s)}
@@ -2564,7 +2657,7 @@ const Akml = {
       } else if (q.m === "tt"){
         const t = s.tt;
         side = `<div class="panel stack"><div class="row" style="justify-content:space-between"><span class="timer ${left <= 5 ? "warn" : ""}">${left}</span><span class="chip t${t.t}">${t.steal ? "فرصة سرقة" : "الدور"}: ${akTN(t.t)}</span></div>${key}
-          <div class="akturn"><p class="muted">يجيب</p><h3><i class="akdot ${t.t}"></i>${esc(t.n || "لا أحد متصل")}</h3>
+          <div class="akturn"><p class="muted">يجيب</p><h3><i class="akdot ${t.t}"></i>${esc(t.n || "لا أحد متصل")}</h3>${t.moved ? `<p class="muted">انتقل الدور إليه لأن صاحب الدور غير متصل، وله دوره حين يعود.</p>` : ""}${!t.k ? `<p class="note">لا أحد من الفريق متصل. ينتقل الدور تلقائيًا إذا عاد أحدهم، أو تخطَّ السؤال.</p>` : ""}
           ${q.inp === "o" ? `<div class="row" style="justify-content:center"><button class="btn g" data-h="bok" data-tid="${t.tid}">✓ إجابة صحيحة</button><button class="btn o" data-h="bno" data-tid="${t.tid}">✗ إجابة خاطئة</button></div>` : `<p class="muted">يجيب من جواله، ويحكم الجهاز.</p>`}</div>
           ${pendHTML()}${Akml.teamBar(s)}<div class="row"><button class="btn ghost sm" data-h="close">إنهاء السؤال</button><button class="btn ghost sm" data-h="skip">تخطّي السؤال</button></div></div>`;
       } else {
@@ -2634,7 +2727,7 @@ const Akml = {
     const put = (f, html, after) => { f += "|" + (myT || ""); if (P.view.akF !== f){ P.view.akF = f; pSet(html); bindPlayer(); if (after) after(); } };
     if (s.ph === "end"){
       const r = s.res[me];
-      put(`end|${s.sp}|${JSON.stringify(s.fin)}`, phead(badge) + `<div class="panel stack endcard akend">${r ? `<p class="center akmine">ترتيبك <b>${r[0]}</b> بمجموع ${r[1]} نقطة${r[2] ? ` (منها +${r[2]} مكافأة الفوز)` : ""}</p>` : ""}${Akml.finHTML(s, me)}<p class="muted center">بانتظار المقدّم…</p></div>`);
+      put(`end|${s.sp}|${JSON.stringify(s.fin)}`, phead(badge) + `<div class="panel stack endcard akend">${r && r[0] ? `<p class="center akmine">ترتيبك <b>${r[0]}</b> بمجموع ${r[1]} نقطة${r[2] ? ` (منها +${r[2]} مكافأة الفوز)` : ""}</p>` : ""}${Akml.finHTML(s, me)}<p class="muted center">بانتظار المقدّم…</p></div>`);
       return;
     }
     if (!s.qd || !s.q){ put("wait|" + s.sp, phead(badge) + `<div class="panel center stack"><p class="bigmsg">بانتظار المقدّم…</p></div>`); return; }
@@ -2649,9 +2742,9 @@ const Akml = {
       if (f) f.onsubmit = e => { e.preventDefault(); Akml.sendTyped(); }; };
     const sent = () => q.inp === "c" ? `<p class="bigmsg">تم تسجيل إجابتك</p><div class="opt c${a.c}" style="justify-content:center"><span class="sh">${SHAPES[a.c]}</span><span>${esc(s.qd.o[a.c])}</span></div>` : `<p class="bigmsg">تم إرسال إجابتك</p><p class="aksent">«${esc(a.x)}»</p>`;
     if (s.ph === "q" && now < s.qs){
-      live.akClock = `<span class="timer">${akSec(s.qs - now)}</span>`;
-      const tt = s.tt ? `<p class="bigmsg">${s.tt.t === myT ? (s.tt.steal ? "فرصة سرقة لفريقك!" : "دور فريقك") : s.tt.steal ? "فرصة سرقة للفريق الآخر" : "دور الفريق الآخر"}</p><p class="muted">${s.tt.k === me ? "أنت من يجيب" : "يجيب " + esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّ…</p>`;
-      put(`get|${s.sp}|${s.tt ? s.tt.tid : 0}`, phead(badge) + `<div class="panel center stack akget"><p class="muted">${s.tb ? "جولة فاصلة" : `السؤال ${s.i} من ${s.n}`} · ${esc(akSecName(s.qd.s))}</p>${q.tag && AK_TAG[q.tag] ? `<p class="aktag ${q.tag}">${AK_TAG[q.tag]}</p>` : ""}${q.fx ? `<p class="aktag fast">⚡ تحدي السرعة</p>` : ""}${tt}<div id="akClock"></div></div>`);
+      live.akClock = s.tt && s.tt.wait ? "" : `<span class="timer">${akSec(s.qs - now)}</span>`;
+      const tt = s.tt && s.tt.wait ? `<p class="bigmsg">${s.tt.t === myT ? "دور فريقك" : "دور الفريق الآخر"}</p><p class="muted">المقدّم يختار من يجيب عن ${akTN(s.tt.t)}…</p>` : s.tt ? `<p class="bigmsg">${s.tt.t === myT ? (s.tt.steal ? "فرصة سرقة لفريقك!" : "دور فريقك") : s.tt.steal ? "فرصة سرقة للفريق الآخر" : "دور الفريق الآخر"}</p><p class="muted">${s.tt.k === me ? "أنت من يجيب" : "يجيب " + esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّ…</p>`;
+      put(`get|${s.sp}|${s.tt ? s.tt.tid + "|" + s.tt.wait : 0}`, phead(badge) + `<div class="panel center stack akget"><p class="muted">${s.tb ? "جولة فاصلة" : `السؤال ${s.i} من ${s.n}`} · ${esc(akSecName(s.qd.s))}</p>${q.tag && AK_TAG[q.tag] ? `<p class="aktag ${q.tag}">${AK_TAG[q.tag]}</p>` : ""}${q.fx ? `<p class="aktag fast">⚡ تحدي السرعة</p>` : ""}${tt}<div id="akClock"></div></div>`);
     } else if (s.ph === "q"){
       const left = akLeft(s);
       live.akClock = `<span class="timer sm ${left <= 5000 ? "warn" : ""}">${q.m === "b" && s.bz.cur >= 0 ? "⏸" : akSec(left)}</span>`;
@@ -2727,7 +2820,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "780da55c39", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
+const BUILD = "7a9b1b0438", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -2904,7 +2997,8 @@ const GAMES = {
           {key:"binp", def:"t", choices:() => [["t"],["o"]]},
           {key:"tinp", def:"c", choices:() => [["c"],["t"],["o"]]},
           {key:"first", def:"g", choices:() => [["g"],["o"],["rnd"]]},
-          {key:"ord", def:"join", choices:() => [["join"],["rnd"]]},
+          {key:"ord", def:"join", choices:() => [["join"],["rnd"],["host"]]},
+          {key:"tsc", def:"sum", choices:() => [["sum"],["avg"]]}, {key:"bt", def:15, choices:() => [[10],[15],[20],[30]]}, {key:"bst", def:"auto", choices:() => [["auto"],["man"]]}, {key:"tn", def:{}, choices:() => []},
           {key:"sw", def:"rot", choices:() => [["rot"],["blk"],["rnd"]]},
           {key:"dif", def:"all", choices:() => [["all"],["0"],["1"],["2"],["up"]]},
           {key:"n", def:10, choices:() => [[10],[15],[20],[30]]},
@@ -2969,11 +3063,11 @@ const HELP = {
     + sec("النقاط", `<table class="htable"><tr><td>كل اختلاف</td><td>+10</td></tr><tr><td>إكمال كل الاختلافات</td><td>+50</td></tr><tr><td>دون أي خطأ (مع اختلاف واحد على الأقل)</td><td>+30</td></tr><tr><td>كل خطأ</td><td>−5</td></tr></table><p class="muted">نقاط الجولة لا تنزل تحت الصفر. الفائز بالإكمال يتصدر دائمًا. إذا انتهت الجولة دون فائز: الأكثر اكتشافًا، ثم الأقل أخطاءً، ثم الأعلى نقاطًا، ثم الأسبق في آخر اكتشاف.</p>`)
     + sec("نهاية الجولة", `<p>تنتهي الجولة بفوز أول من يُكمل، أو بانتهاء الوقت، أو باستبعاد جميع اللاعبين. بعدها تظهر كل الاختلافات، ويمكن عرض ما اكتشفه كل لاعب، مع الترتيب العام لكل الجولات وحقوق الصورة.</p>`),
   akml:() => sec("الفكرة", `<p>تظهر عبارة ناقصة: مثل شعبي أو عربي، أو حكمة، أو بيت شعر، أو معلومة عامة، ويكمل اللاعبون الجزء الناقص من جوالاتهم. بعد كل سؤال تظهر العبارة كاملة مع معناها.</p>`)
-    + sec("المنافسة", `<ul><li><b>فردية:</b> لكل لاعب نقاطه وترتيبه.</li><li><b>فريقان:</b> الأخضر والبرتقالي. المقدّم يوزّع اللاعبين يدويًا (بالضغط على الاسم) أو تلقائيًا، والقادم الجديد ينضم إلى الفريق الأقل عددًا. لا يغيّر اللاعب فريقه بنفسه، والمقدّم وحده يستطيع النقل قبل المباراة أو بين الأسئلة، وتبقى النقاط السابقة لفريقها.</li></ul>`)
+    + sec("المنافسة", `<ul><li><b>فردية:</b> لكل لاعب نقاطه وترتيبه.</li><li><b>فريقان:</b> الأخضر والبرتقالي، ويستطيع المقدّم تسميتهما. المقدّم يوزّع اللاعبين يدويًا (بالضغط على الاسم) أو تلقائيًا، والقادم الجديد ينضم إلى الفريق الأقل عددًا. لا يغيّر اللاعب فريقه بنفسه، والمقدّم وحده يستطيع النقل قبل المباراة أو بين الأسئلة، وتبقى النقاط السابقة لفريقها.</li></ul>`)
     + sec("طرق الإجابة", `<ul><li><b>اختيار من أربعة:</b> الجميع يختار من جواله.</li><li><b>إكمال مباشر:</b> الجميع يكتب الجزء الناقص.</li><li><b>أسرع إصبع:</b> أول من يضغط «أعرف الإجابة» يأخذ الدور، ولا تُفتح خانة الكتابة إلا له (أو يجيب بصوته ويحكم المقدّم). إن أخطأ انتقل الدور إلى التالي في الترتيب.</li><li><b>اقتنص الفرصة:</b> الجميع يجيب، وأول إجابة صحيحة تُنهي السؤال على الجميع.</li><li><b>تحدي الفرق:</b> يتناوب الفريقان، ويجيب عضو واحد من الفريق صاحب الدور، ويتناوب الأعضاء.</li><li><b>سرقة الإجابة:</b> في الفرق، إذا أخطأ صاحب الدور تنتقل فرصة واحدة إلى الفريق الآخر.</li><li><b>تحدي مختلط:</b> يتغير النمط من سؤال لآخر بالتناوب بين الأنماط التي يختارها المقدّم.</li></ul>`)
     + sec("قفل الإجابة", `<ul><li><b>الجميع يجيب:</b> يبقى السؤال مفتوحًا حتى انتهاء الوقت أو إجابة الجميع.</li><li><b>أول إجابة صحيحة:</b> يُغلق السؤال فور اعتماد أول إجابة صحيحة.</li><li><b>صاحب الدور فقط:</b> في أسرع إصبع وتحدي الفرق.</li></ul><p class="muted">الأسبقية بحسب لحظة وصول الإجابة إلى جهاز المقدّم، لا بساعة جوال اللاعب. ويبقى لسرعة إنترنت كل لاعب أثر لا يمكن إلغاؤه تمامًا.</p>`)
     + sec("الإجابات المكتوبة", `<ul><li>محاولة واحدة لكل لاعب في السؤال (أو في دوره).</li><li>لا تُحسب اختلافات التشكيل وأشكال الهمزة والتاء المربوطة والياء والمسافات، وتُقبل الصيغ البديلة المعتمدة.</li><li>لا تُحذف «ال»: الإجابة التي تختلف بـ«ال» فقط، أو بحرف واحد، تُعرض على المقدّم ليحكم عليها.</li></ul>`)
-    + sec("النقاط", `<table class="htable"><tr><td>إجابة صحيحة</td><td>100</td></tr><tr><td>مكافأة السرعة (الجميع يجيب)</td><td>حتى 50، تقل مع الوقت</td></tr><tr><td>أول إجابة صحيحة، أو أول من طلب الإجابة وأصاب</td><td>+50</td></tr><tr><td>الجولة الذهبية والأسئلة المفاجئة</td><td>×2</td></tr><tr><td>الجولة النهائية</td><td>×3</td></tr><tr><td>تحدي السرعة</td><td>6 ثوانٍ ومكافأة حتى 100</td></tr><tr><td>الفائز (لاعب أو فريق)</td><td>+100</td></tr></table><p class="muted">في الفرق: إذا أجاب الجميع يحصل الفريق على متوسط نقاط أعضائه في السؤال، حتى لا يتفوق الفريق الأكبر بعدده. وفي الأنماط التي يجيب فيها لاعب واحد، يحصل الفريق على نقاطه.</p>`)
+    + sec("النقاط", `<table class="htable"><tr><td>إجابة صحيحة</td><td>100</td></tr><tr><td>مكافأة السرعة (الجميع يجيب)</td><td>حتى 50، تقل مع الوقت</td></tr><tr><td>أول إجابة صحيحة، أو أول من طلب الإجابة وأصاب</td><td>+50</td></tr><tr><td>الجولة الذهبية والأسئلة المفاجئة</td><td>×2</td></tr><tr><td>الجولة النهائية</td><td>×3</td></tr><tr><td>تحدي السرعة</td><td>6 ثوانٍ ومكافأة حتى 100</td></tr><tr><td>الفائز (لاعب أو فريق)</td><td>+100</td></tr></table><p class="muted">في الفرق: نقاط الفريق مجموع نقاط أعضائه. وللفريقين غير المتساويين يستطيع المقدّم اختيار «المتوسط» حين يجيب الجميع، وتُقسم نقاط الفريق على أعضائه بحيث يساوي مجموع مساهماتهم نقاط الفريق تمامًا. في التعادل التام لا مكافأة فوز، وإذا لم يسجّل أحد نقاطًا تنتهي المباراة دون فائز.</p>`)
     + sec("التعادل", `<p>يُحسم بالأكثر إجابات صحيحة، ثم الأقل أخطاء، ثم الأقصر وقتًا في الإجابات الصحيحة؛ وإن بقي التعادل فالفوز مشترك. ويستطيع المقدّم اختيار جولة فاصلة: حتى 3 أسئلة بأسرع إصبع بين المتعادلين فقط.</p>`)
     + sec("الأسئلة", `<p>لا يتكرر سؤال داخل المباراة، وتُقدَّم الأسئلة التي لم تظهر على جهاز المقدّم من قبل. ويستطيع المقدّم تخطّي سؤال فيه خطأ، فيحل محله سؤال آخر دون نقاط للسؤال المتخطّى.</p>`),
   puzzle:() => sec("الفكرة", `<p>سباق لترتيب صورة مقسّمة إلى قطع مبعثرة. كل اللاعبين يحصلون على نفس الصورة بنفس الخلط.</p>`)
