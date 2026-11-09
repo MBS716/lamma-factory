@@ -852,7 +852,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.5-akml2 · تجريبي</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.6-akml2 · تجريبي</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -2097,7 +2097,7 @@ const Akml = {
     const qd = {pre:it.pre, post:it.post, s:it.s, l:it.l};
     if (p.inp === "c"){ const o = shuffle(it.o, rnd()); H.priv.ci = o.indexOf(it.o[0]); qd.o = o; }
     s.sp++; H.priv.spMax = s.sp; s.step = 0; s.qd = qd; s.q = {m:p.m, inp:p.inp, lock:p.lock, mul:p.mul, tag:p.tag, T:p.T, fx:p.fx};
-    s.ph = "q"; s.qs = srvNow() + AK_LEAD; s.got = []; s.cnt = 0; s.res = {}; s.rev = null; s.dist = null; s.nx = 0; s.wk = null; s.tsg = null;
+    s.ph = "q"; s.qs = srvNow() + AK_LEAD; s.got = []; s.cnt = 0; s.res = {}; s.rev = null; s.dist = null; s.nx = 0; s.wk = null; s.tsg = null; s.tsx = null;
     s.bz = p.m === "b" ? {q:[], cur:-1, bl:[], tid:0, used:0, ra:s.qs, ta:0, tu:0, only:null, st:0} : null;
     s.tt = null;
     if (p.m === "tt"){ if (replace) H.priv.ttn = Math.max(0, H.priv.ttn - 1); Akml.ttTurn(Akml.ttFirst(), false); }       // a replaced question keeps the same team on turn
@@ -2388,23 +2388,27 @@ const Akml = {
     // shared among the members who scored (largest remainders), so the members' contributions always add up to the team's
     // points exactly. When only one player can score (first right answer, the turn), the team gets that player's points.
     if (s.o.sys === "team"){
-      const tg = {g:0, o:0};
+      const tg = {g:0, o:0}, tx = {}, on = new Set(activePlayers(hostPlayers()).map(p => dfKey(pname(p))));
       for (const t of ["g", "o"]){
-        const ks = Akml.members(t).map(p => dfKey(pname(p)));
+        // with the average, a member counts if he was connected during the question or answered it: a member who was offline
+        // the whole question does not lower his team's average
+        const all = Akml.members(t).map(p => dfKey(pname(p)));
+        const ks = q.lock === "all" && s.o.tsc === "avg" ? all.filter(k => on.has(k) || H.priv.ans[k]) : all;
         const pts = ks.map(k => (gain[k] || {g:0}).g), sum = pts.reduce((a, b) => a + b, 0);
         let share = pts;
-        if (q.lock === "all" && s.o.tsc === "avg" && ks.length > 1){
+        if (q.lock === "all" && s.o.tsc === "avg" && !ks.length){ tg[t] = 0; tx[t] = {sum:0, n:0}; }
+        else if (q.lock === "all" && s.o.tsc === "avg"){
           const T = Math.round(sum / ks.length), ex = pts.map(g => g / ks.length);
           share = ex.map(Math.floor);
           let left = T - share.reduce((a, b) => a + b, 0);
           ex.map((e, i) => [e - Math.floor(e), i]).sort((a, b) => b[0] - a[0] || a[1] - b[1]).forEach(([f, i]) => { if (left > 0 && f > 0){ share[i]++; left--; } });
-          tg[t] = T;
+          tg[t] = T; tx[t] = {sum, n:ks.length};
         } else tg[t] = sum;
         H.priv.ts[t].s += tg[t]; H.priv.ts[t].r += ks.filter(k => (gain[k] || {}).v === 1).length;
         // each member's contribution to his team (kept per team, so a player moved by the host leaves it with the team he played for)
         ks.forEach((k, i) => { const r = sc[k]; if (!r) return; r.tc = r.tc || {}; r.tc[t] = (r.tc[t] || 0) + share[i]; });
       }
-      s.tsg = tg; s.ts = {g:H.priv.ts.g.s, o:H.priv.ts.o.s};
+      s.tsg = tg; s.tsx = tx; s.ts = {g:H.priv.ts.g.s, o:H.priv.ts.o.s};
     }
     const rank = Akml.ranking();
     rank.forEach(([k, r], i) => { const g = gain[k] || {g:0, b:0, v:-1}; res[k] = [g.g, g.v, r.s, i + 1, g.b]; });
@@ -2534,7 +2538,8 @@ const Akml = {
   },
   teamBar(s, gains){
     if (s.o.sys !== "team" || !s.ts) return "";
-    return `<div class="akteams">${["g", "o"].map(t => `<div class="akteam ${t}"><span>${akTN(t)}</span><b>${s.ts[t]}</b>${gains && s.tsg && s.tsg[t] ? `<em class="akgain">+${s.tsg[t]}</em>` : ""}</div>`).join("")}</div>`;
+    const x = gains && s.tsx && (s.tsx.g || s.tsx.o) && s.o.tsc === "avg" ? `<p class="muted aknote aktsx">نقاط الفريق في هذا السؤال = متوسط نقاط أعضائه: ${["g", "o"].filter(t => s.tsx[t]).map(t => s.tsx[t].n ? `${akTN(t)} ${s.tsx[t].sum} ÷ ${s.tsx[t].n} = ${s.tsg[t]}` : `${akTN(t)}: لا عضو متصل = 0`).join(" · ")}</p>` : "";
+    return `<div class="akteams">${["g", "o"].map(t => `<div class="akteam ${t}"><span>${akTN(t)}</span><b>${s.ts[t]}</b>${gains && s.tsg && s.tsg[t] ? `<em class="akgain">+${s.tsg[t]}</em>` : ""}</div>`).join("")}</div>${x}`;
   },
   topHTML(s, me){
     return s.top.length ? `${Akml.teamBar(s, true)}<div class="lb">${s.top.map(([n, sc, g, t], i) => `<div class="${me && n === P.name ? "me" : ""}"><span>${i + 1}. ${t ? `<i class="akdot ${t}"></i>` : ""}${esc(n)}</span><span>${g ? `<em class="akgain">+${g}</em> ` : ""}<b>${sc}</b></span></div>`).join("")}</div>` : `<p class="muted">لا لاعبين على الجوالات.</p>`;
@@ -2820,7 +2825,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "7a9b1b0438", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
+const BUILD = "3fb41fd2a8", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
