@@ -85,7 +85,7 @@ jobs:
         run: |
           D=reports/akml/preview; mkdir -p $D
           timeout 1800 python tests/live_akml_full.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/full > $D/full.log 2>&1; r=$?
-          grep -E '^(FAIL)|passed' $D/full.log || true; exit $r
+          grep -E '^(FAIL)|passed' $D/full.log || true; [ $r = 0 ] || tail -25 $D/full.log; exit $r
       - name: every other game on the real database (current rules)
         if: always()
         run: |
