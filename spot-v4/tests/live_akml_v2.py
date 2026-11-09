@@ -228,13 +228,13 @@ async def main():
         await host.click(f'[data-h=tmove][data-k="{kC}"]'); await host.wait_for_timeout(200); await host.click(f'[data-h=tmove][data-k="{kD}"]'); await host.wait_for_timeout(300)
         await host.screenshot(path=SHOTS + '/ak2_lobby_teams.png', full_page=True)
 
-        # ---- teams · choose · everybody answers: the team gets the average of its members ----
+        # ---- teams · choose · everybody answers: the team gets the sum of its members (default) ----
         await opt('m', 'c'); await begin(); s = await S(host); it = await ITEM(host); ci = s['qd']['o'].index(it['o'][0])
         await choose(A, ci); await choose(B, (ci + 1) % 4); await choose(C, ci); await choose(D, (ci + 2) % 4); await host.wait_for_timeout(600)
         await reveal(); s = await S(host)
         gA, gC = s['res'][kA][0], s['res'][kC][0]
         check(s['ph'] == 'r', 'the question closed when all four answered')
-        check(s['tsg']['g'] == int(gA / 2 + .5) and s['tsg']['o'] == int(gC / 2 + .5), f'team points of the question: green {s["tsg"]["g"]} = (صالح {gA} + تافير 0) / 2; orange {s["tsg"]["o"]} = (نورة {gC} + فهد 0) / 2')
+        check(s['tsg']['g'] == gA and s['tsg']['o'] == gC, f'team points of the question (sum): green {s["tsg"]["g"]} = صالح {gA} + تافير 0; orange {s["tsg"]["o"]} = نورة {gC} + فهد 0')
         check('الفريق الأخضر' in await host.inner_text('#hostMain'), 'the team totals on the host\'s screen after the question')
         await host.click('[data-h=teams]'); await host.wait_for_timeout(300); tsb = s['ts']
         await host.click(f'.akmove [data-h=tmove][data-k="{kB}"]'); await host.wait_for_timeout(400); s = await S(host)
@@ -246,7 +246,7 @@ async def main():
         await choose(A, ci); await choose(C, (ci + 1) % 4); await host.wait_for_timeout(600); await host.click('[data-h=close]'); await reveal()
         await end(); s = await S(host); tf = s['tf']
         check(len(tf) == 2 and all(len(x['m']) == 2 for x in tf) and tf[0]['w'] == 100 and tf[0]['tot'] >= tf[1]['tot'], 'end: both teams, their members\' contributions, +100 to the winning team ' + json.dumps(tf, ensure_ascii=False)[:300])
-        check(all(abs(sum(m[4] for m in x['m']) - x['s']) <= 1 for x in tf), 'each member\'s contribution adds up to his team\'s points from the questions')
+        check(all(sum(m[4] for m in x['m']) == x['s'] for x in tf), 'each member\'s contribution adds up exactly to his team\'s points from the questions')
         await A.wait_for_selector('.aktf', timeout=8000); tA = await TXT(A)
         check('مساهمته' in tA and 'ترتيب اللاعبين' in tA, 'phones: the teams\' ranking with each member\'s contribution, then the players\' ranking')
         await host.screenshot(path=SHOTS + '/ak2_end_teams_host.png', full_page=True); await A.screenshot(path=SHOTS + '/ak2_end_teams_390.png', full_page=True)
@@ -256,7 +256,7 @@ async def main():
         for k, t in want.items():
             if s['tm'][k] != t: await host.click(f'[data-h=tmove][data-k="{k}"]'); await host.wait_for_timeout(300)
         await opt('m', 'tt'); await opt('tinp', 't'); await tog('steal', 1); await opt('first', 'g'); await opt('ord', 'join')
-        lb = await host.inner_text('#hostMain'); check('سرقة الإجابة' in lb and 'يبدأ' in lb and 'ترتيب الأعضاء' in lb, 'team challenge: stealing, the starting team and the members\' order can be chosen')
+        lb = await host.inner_text('#hostMain'); check('سرقة الإجابة' in lb and 'يبدأ' in lb and 'من يجيب عن الفريق' in lb, 'team challenge: stealing, the starting team and the members\' order can be chosen')
         await begin(); s = await S(host); it = await ITEM(host)
         check(s['tt']['t'] == 'g' and s['tt']['k'] == kA, 'question 1: the green team\'s turn; صالح answers' + ('' if s['tt']['k'] == kA else ' ' + json.dumps(s['tt'], ensure_ascii=False) + await host.evaluate('JSON.stringify([H.priv.rot, hostPlayers().map(p => [pname(p), p.presence.jt])])')))
         await A.wait_for_selector('#akIn', timeout=6000)
@@ -280,7 +280,7 @@ async def main():
         await end()
 
         # ---- teams · fastest finger aloud with stealing ----
-        await lobby(); await opt('m', 'b'); await opt('binp', 'o'); await begin()
+        await lobby(); await opt('m', 'b'); await opt('binp', 'o'); await opt('bst', 'man'); await begin()
         await A.click('[data-act=akbz]'); await A.wait_for_timeout(450); await B.click('[data-act=akbz]'); await B.wait_for_timeout(450); await C.click('[data-act=akbz]')
         await host.wait_for_timeout(1000); s = await S(host); tid = s['bz']['tid']
         check([q[0] for q in s['bz']['q']] == [kA, kB, kC] and s['bz']['cur'] == 0, 'presses: صالح, تافير (green), نورة (orange)')

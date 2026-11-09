@@ -176,7 +176,8 @@ async def main():
         check(8000 < left <= 10000, f'typed turn time set by the host: 10 s ({left} ms left at the start)')
         await host.wait_for_function('H.s.bz.cur === 1', timeout=16000); s = await S(host)
         check(kC in s['bz']['bl'] and s['bz']['q'][1][0] == kA, 'نورة did not answer in 10 s: the turn passes to صالح in the order of the presses')
-        check(await C.locator('[data-act=akbz]').count() == 0 and await C.locator('#akIn').count() == 0, 'نورة cannot press or answer again on this question')
+        out = await sees(C, 'لا يمكنك الإجابة مرة أخرى')
+        check(out and await C.locator('[data-act=akbz]').count() == 0 and await C.locator('#akIn').count() == 0, 'نورة cannot press or answer again on this question')
         await typ(A, (await ITEM(host))['a']); await reveal(8000)
         await end_now(); await lobby(); await opt('bt', '15')
 
