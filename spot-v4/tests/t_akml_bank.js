@@ -15,9 +15,9 @@ const fnBody = (src, name) => {      // a top-level function or const, up to its
 };
 global.atob = s => Buffer.from(s, "base64").toString("binary");
 let code = ["rng", "shuffle", "range", "rnd"].map(n => fnBody(app, n)).join("\n") + "\n";
-code += ["AK_DIG", "akNorm", "akLev", "akCheck", "akDecode", "akKind", "akFits", "akOrder", "AK_SECS"].map(n => fnBody(ak, n)).join("\n");
+code += ["AK_DIG", "akNorm", "akLev", "akCheck", "akDecode", "akKind", "akFits", "akOrder", "akAvail", "AK_SECS"].map(n => fnBody(ak, n)).join("\n");
 code += "\nconst LS = {}; const seenGet = k => new Set(LS[k] || []); function seenAdd(k, ids, max){ const s = [...(LS[k] || [])]; for (const id of ids) if (!s.includes(id)) s.push(id); while (s.length > max) s.shift(); LS[k] = s; }";
-code += "\nmodule.exports = {akNorm, akCheck, akDecode, akKind, akFits, akOrder, AK_SECS, seenAdd, LS, shuffle, rnd};";
+code += "\nmodule.exports = {akNorm, akCheck, akDecode, akKind, akFits, akOrder, akAvail, AK_SECS, seenAdd, LS, shuffle, rnd};";
 const tmp = path.join(__dirname, ".akbank_code.js"); fs.writeFileSync(tmp, code);
 const K = require(tmp);
 let fails = 0, checks = 0; const bad = []; const ok = (c, m) => { checks++; if (!c){ fails++; if (bad.length < 40) bad.push(m); } };
@@ -54,7 +54,7 @@ for (const s of settings){
     const ids = K.akOrder(B, o, plan); matches++;
     const got = ids.filter(Boolean);
     ok(new Set(got).size === got.length, `match ${JSON.stringify(s)}: a question twice in one match`);
-    ok(got.length === n, `match ${JSON.stringify(s)} n=${n}: only ${got.length} questions found`);
+    ok(got.length === Math.min(n, K.akAvail(B, o)), `match ${JSON.stringify(s)} n=${n}: only ${got.length} questions found (the bank has ${K.akAvail(B, o)} for these settings)`);
     const secs = o.secs.length ? o.secs : SECS;
     ok(got.every(id => secs.includes(B.by[id].s)), `match ${JSON.stringify(s)}: a question of another section`);
     if (o.dif === "0" || o.dif === "2") ok(got.every(id => B.by[id].l === +o.dif), `match ${JSON.stringify(s)}: level not kept`);
