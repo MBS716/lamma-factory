@@ -852,7 +852,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.6-akml2 · emulator</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v2.0</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -2825,7 +2825,7 @@ const FIREBASE_CONFIG = {"apiKey": "demo-key", "authDomain": "demo-lamma.firebas
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "fa5f9bce18", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "7349a6031b", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -3522,7 +3522,7 @@ function finHTML(fin, unit){ return fin.length ? `<div class="lb">${fin.map((f, 
    data/letters.json [letter, level 0-2, category, question, answer]
    The small built-in sets in data.js (QB, LETTERS) are only a fallback if the files can't be loaded. */
 const BANKS = {}, BANK_WAIT = {};
-const BANK_V = "f8af5a31d4";
+const BANK_V = "d38076688c";
 function fallbackBank(name){
   if (name === "quiz") return QB;
   return LETTERS.flatMap(([L, ...qs]) => qs.map(([q, a], lv) => [L, lv, "gen", q, a]));
