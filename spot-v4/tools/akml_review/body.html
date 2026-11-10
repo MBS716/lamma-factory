@@ -1,7 +1,7 @@
 <div class="wrap">
   <header style="display:flex;flex-direction:column;gap:8px">
     <h1>مراجعة أسئلة «أكملها»</h1>
-    <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. راجع كل سؤال واختر «اعتماد» أو «يحتاج تعديل» أو «رفض» مع ملاحظتك. تُرسل قراراتك إلى قاعدة بيانات هذه الصفحة على claude.ai، وتبقى نسخة منها على جهازك حتى يؤكد الخادم حفظها.</p>
+    <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. ابدأ بـ<b>الحالات الخاصة</b> (المعلقة، والمتكررة في لعبة أخرى، وضعيفة المصدر، وما قد يحتمل أكثر من إجابة) وعلى كل منها توصيتي، ثم اعتمد البقية <b>جماعيًا</b>: حدّد مجموعة، وأزل علامة ما تريد استثناءه، ثم أكّد. لا يُعتمد أي سؤال إلا بضغطك. تُرسل قراراتك إلى قاعدة بيانات هذه الصفحة على claude.ai، وتبقى نسخة منها على جهازك حتى يؤكد الخادم حفظها.</p>
     <p class="note"><b>النسخة الاحتياطية بالملفات (لا تعتمد على الخادم ولا على المتصفح):</b> زر «⬇ تصدير المراجعة كاملة» يحفظ ملفًا فيه كل الأسئلة وقراراتك وملاحظاتك. أرسل الملف إليّ في المحادثة فأضيف قراراتك إلى السجل، أو استورده هنا لاحقًا على أي جهاز. صدّر نسخة بعد كل جلسة مراجعة، وتذكّرك الصفحة بذلك.</p>
     <p class="note"><b>ثلاث مراحل منفصلة:</b> (١) <b>أُعدّ</b>: صاغه معدّ مع مصدر. (٢) <b>اجتاز المراجعة الداخلية</b>: قبله مراجع مستقل ثم مراجعتي، وهذا <b>ليس اعتمادًا نهائيًا</b>. (٣) <b>اعتمدتَه أنت</b>: قرارك هنا هو وحده الاعتماد النهائي، ولا يدخل بنك اللعبة إلا ما اعتمدته.</p>
     <p class="note" id="testBanner" hidden><b>وضع الاختبار:</b> القرارات هنا تُحفظ في سجل اختبار منفصل («test_decisions»)، ولا تمس قراراتك الفعلية. افتح الصفحة دون «#test» في آخر الرابط للمراجعة الفعلية.</p>
@@ -15,6 +15,7 @@
       <button type="button" id="permBtn" hidden>السماح للصفحة بحفظ القرارات</button>
       <button type="button" id="fullBtn">⬇ تصدير المراجعة كاملة (JSON)</button>
       <button type="button" id="csvBtn">⬇ جدول للطباعة أو Excel (CSV)</button>
+      <button type="button" id="spBtn">⬇ قائمة الحالات الخاصة مع توصيتي (CSV)</button>
       <button type="button" id="expBtn">⬇ قراراتي فقط</button>
       <label class="imp">⬆ استيراد من ملف <input type="file" id="impFile" accept=".json,application/json"></label>
     </div>
@@ -26,8 +27,21 @@
   <div class="bar">
     <div class="row"><label>الدفعة</label><div class="seg" id="fBatch"></div><label style="margin-inline-start:10px">المراجعة الداخلية</label><div class="seg" id="fStatus"></div></div>
     <div class="row"><label>القسم</label><div class="seg" id="fSec"></div><label style="margin-inline-start:10px">قرارك</label><div class="seg" id="fMine"></div></div>
-    <div class="row"><label>الألعاب الأخرى</label><div class="seg" id="fX"></div></div>
+    <div class="row"><label>الحالات الخاصة</label><div class="seg" id="fSp"></div></div>
+    <div class="row"><label>توصيتي</label><div class="seg" id="fRec"></div><label style="margin-inline-start:10px">الألعاب الأخرى</label><div class="seg" id="fX"></div></div>
+    <div class="row"><label>العرض</label><div class="seg" id="fView"></div><label style="margin-inline-start:10px">في الصفحة</label><div class="seg" id="fPage"></div></div>
     <div class="row"><input type="search" id="q" placeholder="ابحث في العبارات والإجابات والمعاني" aria-label="بحث"><span class="count" id="count"></span></div>
+  </div>
+  <div class="bulkwrap">
+    <div class="bulk" id="bulk">
+      <span id="selCount">لم تحدد شيئًا</span>
+      <button type="button" id="selAll">تحديد كل المطابق للفلتر</button>
+      <button type="button" id="selPage">تحديد المعروض في الصفحة</button>
+      <button type="button" id="selNone">إلغاء التحديد</button>
+      <button type="button" id="bulkOk" class="d-ok">✓ اعتماد المحدد…</button>
+      <button type="button" id="bulkNo" class="d-no">✗ رفض المحدد…</button>
+    </div>
+    <div class="confirm" id="confirm" hidden></div>
   </div>
   <div class="list" id="list"><p class="empty">جارٍ التحميل…</p></div>
   <button type="button" id="moreBtn" hidden>عرض المزيد</button>
@@ -40,13 +54,13 @@
 <script>
 const DATA = /*DATA*/null;
 const SEC = {gulf:"أمثال سعودية وخليجية", arab:"أمثال عربية", hikam:"حكم وأقوال", info:"معلومات عامة", lang:"لغة وأدب", fun:"عبارات طريفة"};
-const GOAL = 2500, PAGE = 40;
-let shown = PAGE;
+const GOAL = 2500;
+let PAGE = 40, shown = 40;
 const ST = {accepted:"اجتاز المراجعة الداخلية", reserve:"مؤجل داخليًا", rejected:"مرفوض داخليًا"};
 const LV = ["سهل", "متوسط", "صعب"];
 const MODES = {c:"اختيار", t:"كتابة", b:"أسرع إصبع"};
 const VERD = {accept:"قبله المراجع", fix:"قبله المراجع بعد تصحيح", reject:"رفضه المراجع"};
-const DN = {ok:"معتمد", edit:"يحتاج تعديل", no:"مرفوض"};
+const DN = {ok:"معتمد", okfix:"معتمد مع التعديل المقترح", edit:"يحتاج تعديل", no:"مرفوض"};
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 /* Where decisions are kept: in the artifact's database on claude.ai (the "decisions" collection), not in the browser, so they
    are the same on every device and Claude reads them. "#test" at the end of the link uses a separate "test_decisions"
@@ -55,19 +69,47 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp
 const TEST = location.hash === "#test";
 const COL = TEST ? "test_decisions" : "decisions";
 const PKEY = "ak-rev-pending-" + COL;
-let F = {batch:"all", status:"accepted", sec:"all", mine:"all", x:"all", q:""};
+let F = {batch:"all", status:"accepted", sec:"all", mine:"all", x:"all", sp:"all", rec:"all", view:"full", page:"40", q:""};
+const SEL = new Set();          // questions the owner ticked for a bulk decision (nothing is decided until he confirms)
+let lastRows = [];
+const SP = {reserve:"معلقة", xgame:"تتكرر في لعبة أخرى", weak:"مصدر ضعيف أو صيغة غير مؤكدة", multi:"قد تحتمل أكثر من إجابة"};
+const REC = {keep:"أبقِه كما هو", fix:"أبقِه مع التعديل المقترح", reserve:"قرارك (سؤال لك)", reject:"أوصي برفضه"};
+const flagOf = x => x.flag || null;
+const isOpen = x => { const f = flagOf(x); return !!f && !mine(x.id).d; };   // a special case without the owner's decision
 try { const v = JSON.parse(localStorage.getItem("ak-rev-f") || "null"); if (v) F = {...F, ...v, q:""}; } catch(e){}
+PAGE = +F.page || 40; shown = PAGE;
 const SERVER = {};        // id -> {d, note, at} as the database has it
 let PENDING = {};         // id -> {d, note, at} not yet confirmed by the database
 try { PENDING = JSON.parse(localStorage.getItem(PKEY) || "{}") || {}; } catch(e){ PENDING = {}; }
-const keepPending = () => { try { localStorage.setItem(PKEY, JSON.stringify(PENDING)); } catch(e){} };
-const mine = id => { const p = PENDING[id], s = SERVER[id]; return p && (!s || (p.at || 0) >= (s.at || 0)) ? p : s || {}; };
+// a bulk decision (or an imported file) is saved as a few "batch" documents, each holding many questions' decisions,
+// instead of one write per question: a bulk of 2,500 is one or two writes. Batch documents have ids "bulk-…".
+const BATCHV = {};        // id -> {d, note, at} from the confirmed batch documents (the latest one wins)
+let PBATCH = [];          // [{key, m:{id:{d, note, at}}}] batch documents not yet confirmed by the database
+try { PBATCH = JSON.parse(localStorage.getItem(PKEY + "-b") || "[]") || []; } catch(e){ PBATCH = []; }
+let PBV = {};             // id -> entry, from the pending batch documents
+const indexPB = () => { PBV = {}; for (const b of PBATCH) for (const [id, v] of Object.entries(b.m)) if (!PBV[id] || (v.at || 0) >= (PBV[id].at || 0)) PBV[id] = v; };
+indexPB();
+const keepPending = () => { try { localStorage.setItem(PKEY, JSON.stringify(PENDING)); localStorage.setItem(PKEY + "-b", JSON.stringify(PBATCH)); } catch(e){} };
+const latest = (...c) => c.reduce((a, b) => b && (!a || (b.at || 0) >= (a.at || 0)) ? b : a, null);
+const mine = id => latest(SERVER[id], BATCHV[id], PBV[id], PENDING[id]) || {};
+const pendingN = () => Object.keys(PENDING).length + Object.keys(PBV).filter(id => PBV[id] === mine(id)).length;
+const knownIds = () => new Set([...Object.keys(SERVER), ...Object.keys(BATCHV), ...Object.keys(PBV), ...Object.keys(PENDING)]);
+// save many decisions as batch documents (at most 1,500 questions or ~150 KB each) and send them
+function saveBatch(m){
+  const ids = Object.keys(m); if (!ids.length) return;
+  const key = "bulk-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7);
+  let part = {}, size = 0, k = 0;
+  const push = () => { if (Object.keys(part).length){ PBATCH.push({key:key + "-" + (k++), m:part}); part = {}; size = 0; } };
+  for (const id of ids){ const v = m[id], e = {d:v.d || "", note:String(v.note || "").slice(0, 1000), at:+v.at || Date.now()};
+    size += id.length * 3 + e.note.length * 6 + 90; part[id] = e; if (Object.keys(part).length >= 1000 || size > 120000) push(); }
+  push(); indexPB(); keepPending(); setTimeout(backup, 0); flush();
+}
 let db = null, canWrite = true, dbState = "loading", noteTimers = {}, lastErr = "";
 
 function seg(el, key, opts){ el.innerHTML = opts.map(([v, l]) => `<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${F[key] === v}">${l}</button>`).join(""); }
 // every decision this device has seen (confirmed or not) is also kept on the device as a backup, and can be exported to a file
 const BKEY = "ak-rev-all-" + COL;
-function backup(){ try { const all = {}; for (const id of new Set([...Object.keys(SERVER), ...Object.keys(PENDING)])) all[id] = mine(id); localStorage.setItem(BKEY, JSON.stringify(all)); } catch(e){} }
+function backup(){ try { const all = {}; for (const id of knownIds()) all[id] = mine(id); localStorage.setItem(BKEY, JSON.stringify(all)); } catch(e){} }
 let permState = "?", lastOk = "", downloads = null, perms = null;
 function diag(){
   const el = document.getElementById("diag"); if (!el) return;
@@ -75,12 +117,12 @@ function diag(){
   el.innerHTML = row("قاعدة بيانات الصفحة", db ? "متاحة في هذا العرض" : dbState === "loading" ? "جارٍ الاتصال…" : "غير متاحة في هذا العرض")
     + row("إذن الحفظ", {granted:"ممنوح", prompt:"سيُطلب عند أول حفظ", denied:"مرفوض لهذه الصفحة", unavailable:"غير متاح هنا", "?":"غير معروف"}[permState] || permState)
     + row("صلاحية الكتابة", canWrite ? "نعم" : "لا")
-    + row("السجل", COL) + row("بانتظار الإرسال", String(Object.keys(PENDING).length))
+    + row("السجل", COL) + row("بانتظار الإرسال", String(pendingN()))
     + row("آخر حفظ أكّده الخادم", lastOk || "لا يوجد في هذه الجلسة") + row("آخر خطأ", lastErr || "لا يوجد");
 }
 function syncLine(){
   diag();
-  const n = Object.keys(PENDING).length, el = document.getElementById("sync");
+  const n = pendingN(), el = document.getElementById("sync");
   el.className = "sync " + (n ? "warn" : dbState === "ready" ? "ok" : "");
   el.textContent = !db && dbState !== "loading" ? `لا اتصال بقاعدة بيانات الصفحة في هذا العرض: ${n ? n + " قرار محفوظ على هذا الجهاز فقط، وسيُرفع حين تفتح الصفحة وأنت مسجل الدخول." : "لن تُحفظ القرارات إلا على هذا الجهاز."}`
     : n ? `${lastErr ? "آخر محاولة حفظ رُفضت: " + lastErr + " — " : ""}${!canWrite ? "هذا العرض لا يملك صلاحية الكتابة — " : ""}${n} قرار بانتظار التأكيد من الخادم (محفوظ على هذا الجهاز ويُعاد إرساله تلقائيًا).`
@@ -89,18 +131,18 @@ function syncLine(){
 function stats(){
   const inB = x => F.batch === "all" || String(x.batch) === F.batch;
   const its = DATA.items.filter(inB), n = st => its.filter(x => x.status === st).length;
-  const ids = new Set([...Object.keys(SERVER), ...Object.keys(PENDING)]);
+  const ids = knownIds();
   const cnt = d => [...ids].filter(id => mine(id).d === d).length;
-  const okAll = DATA.items.filter(x => mine(x.id).d === "ok").length;
+  const okAll = DATA.items.filter(x => ["ok", "okfix"].includes(mine(x.id).d)).length;
   document.getElementById("stats").innerHTML =
     `<div class="stat"><b>${its.length}</b><span>أُعدّ (${F.batch === "all" ? "كل الدفعات" : "الدفعة " + F.batch})</span></div>
      <div class="stat ok"><b>${n("accepted")}</b><span>اجتاز المراجعة الداخلية (ليس اعتمادًا نهائيًا)</span></div>
      <div class="stat hold"><b>${n("reserve")}</b><span>مؤجل داخليًا</span></div>
      <div class="stat no"><b>${n("rejected")}</b><span>مرفوض داخليًا</span></div>
-     <div class="stat mine"><b>${cnt("ok")} · ${cnt("edit")} · ${cnt("no")}</b><span>قراراتك النهائية: اعتمدتَ · تعديل · رفضتَ</span></div>`;
+     <div class="stat mine"><b>${(cnt("ok") + cnt("okfix"))} · ${cnt("edit")} · ${cnt("no")}</b><span>قراراتك النهائية: اعتمدتَ · تعديل · رفضتَ</span></div>`;
   const T = DATA.targets || {}, IG = DATA.ingame || {};
   document.getElementById("secTable").innerHTML = `<table><thead><tr><th>القسم</th><th>الهدف</th><th>في اللعبة</th><th>اجتاز المراجعة الداخلية</th><th>اعتمدتَه</th></tr></thead><tbody>${Object.keys(SEC).map(k => {
-    const acc = DATA.items.filter(x => x.sec === k && x.status === "accepted"), ok = acc.filter(x => mine(x.id).d === "ok").length;
+    const acc = DATA.items.filter(x => x.sec === k && x.status === "accepted"), ok = acc.filter(x => ["ok", "okfix"].includes(mine(x.id).d)).length;
     return `<tr><td>${SEC[k]}</td><td>${T[k] || "-"}</td><td>${IG[k] || 0}</td><td>${acc.length + (IG[k] || 0)}</td><td>${ok}</td></tr>`; }).join("")}</tbody></table><p class="muted">«اجتاز المراجعة الداخلية» يشمل أسئلة اللعبة الحالية، ولا يحتسب المؤجل ولا المرفوض.</p>`;
   backupWarn();
   document.getElementById("pfill").style.width = Math.min(100, okAll / GOAL * 100) + "%";
@@ -111,15 +153,19 @@ function stats(){
 const EXPK = "ak-rev-exported-" + (location.hash.includes("test") ? "test" : "real");
 function lastExport(){ try { return +localStorage.getItem(EXPK) || 0; } catch(e){ return 0; } }
 function backupWarn(){
-  const since = lastExport(), all = new Set([...Object.keys(SERVER), ...Object.keys(PENDING)]);
+  const since = lastExport(), all = knownIds();
   const n = [...all].filter(id => (mine(id).at || 0) > since && (mine(id).d || mine(id).note)).length;
   const el = document.getElementById("bkWarn"); if (!el) return;
   el.hidden = n < 10;
   el.textContent = `لديك ${n} قرارًا أو ملاحظة لم تُصدَّر إلى ملف منذ ${since ? "آخر تصدير (" + new Date(since).toLocaleString("ar") + ")" : "البداية"}. اضغط «⬇ تصدير المراجعة كاملة» لحفظ نسخة احتياطية.`;
 }
+function fixText(fx){
+  const L = {alt:"البدائل المقبولة", opts:"الخيارات", modes:"طرق اللعب", text:"العبارة", src:"الأصل", why:"المعنى", ans:"الإجابة"};
+  return Object.entries(fx).map(([k, v]) => `${L[k] || k}: ${k === "modes" ? String(v).split("").map(m => MODES[m]).join(" · ") : Array.isArray(v) ? v.map(esc).join("، ") : esc(v)}`).join(" | ");
+}
 function phrase(x){ const m = x.text.match(/^(.*)\{(.+)\}(.*)$/); return m ? `${esc(m[1])}<mark>${esc(m[2])}</mark>${esc(m[3])}` : esc(x.text); }
 function decisionChip(id){
-  const m = mine(id), pend = !!PENDING[id];
+  const m = mine(id), pend = !!PENDING[id] || (!!PBV[id] && PBV[id] === m);
   return `<span class="chip dec ${m.d ? "d-" + m.d : ""}">${m.d ? "قرارك: " + DN[m.d] : "لم تقرر بعد"}</span>${pend ? `<span class="chip pend">بانتظار الحفظ على الخادم</span>` : m.d || m.note ? `<span class="chip saved-chip">محفوظ</span>` : ""}`;
 }
 function card(x){
@@ -128,8 +174,19 @@ function card(x){
   const fix = x.fixed ? `<p class="rev fix"><b>ما صُحّح:</b> ${esc(x.fixed)}</p>` : "";
   const ref = /^https?:\/\//.test(x.ref) ? `<a href="${esc(x.ref)}" target="_blank" rel="noopener">${esc(x.ref.replace(/^https?:\/\//, "").slice(0, 70))}</a>` : esc(x.ref);
   const dis = !canWrite ? "disabled" : "";
-  return `<article class="card st-${x.status}" id="c-${esc(x.id)}">
-    <div class="top"><span class="id">${esc(x.id)}</span><span class="chip">الدفعة ${x.batch}</span><span class="chip ${x.status}">${ST[x.status]}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span><span>${x.modes.map(m => MODES[m]).join(" · ")}</span>${x.xgame ? `<span class="chip xg" title="${esc(x.xgame)}">يتكرر في لعبة أخرى</span>` : ""}<span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
+  const f = flagOf(x);
+  const recBox = f ? `<div class="recbox r-${esc(f.rec)}"><b>حالة خاصة:</b> ${f.cats.map(c => `<span class="chip sp">${SP[c]}</span>`).join(" ")}
+      ${f.issue ? `<p>${esc(f.issue)}</p>` : ""}<p><b>توصيتي: ${REC[f.rec] || ""}</b>${f.why ? " — " + esc(f.why) : ""}</p>${f.fix ? `<p class="fixp"><b>التعديل المقترح:</b> ${fixText(f.fix)}</p>` : ""}${f.other ? `<p class="muted">في لعبة أخرى: ${esc(f.other)}</p>` : ""}</div>` : "";
+  const chk = `<label class="sel"><input type="checkbox" data-sel="${esc(x.id)}" ${SEL.has(x.id) ? "checked" : ""}> تحديد</label>`;
+  if (F.view === "compact") return `<article class="card compact st-${x.status}${f ? " flagged" : ""}" id="c-${esc(x.id)}">
+    <div class="top">${chk}<span class="id">${esc(x.id)}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span>${f ? `<span class="chip sp">حالة خاصة: ${REC[f.rec] || ""}</span>` : ""}<span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
+    <p class="phrase">${phrase(x)}</p>
+    <p class="cmeta"><span class="opts">${x.opts.map((o, i) => `<span class="${i ? "" : "right"}">${i ? "" : "✓ "}${esc(o)}</span>`).join("")}</span>${x.alt.length ? ` <span class="muted">بدائل: ${x.alt.map(esc).join("، ")}</span>` : ""}</p>
+    ${f ? recBox : ""}
+    <div class="decide" data-id="${esc(x.id)}"><button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}" ${dis}>✓ اعتماد</button>${f && f.fix ? `<button type="button" class="d-okfix" data-d="okfix" aria-pressed="${me.d === "okfix"}" ${dis}>✓ مع التعديل</button>` : ""}<button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}" ${dis}>✗ رفض</button><button type="button" class="d-clear" data-d="clear" ${dis}>إلغاء</button><button type="button" class="more" data-full="${esc(x.id)}">التفاصيل والملاحظة</button></div>
+  </article>`;
+  return `<article class="card st-${x.status}${f ? " flagged" : ""}" id="c-${esc(x.id)}">
+    <div class="top">${chk}<span class="id">${esc(x.id)}</span><span class="chip">الدفعة ${x.batch}</span><span class="chip ${x.status}">${ST[x.status]}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span><span>${x.modes.map(m => MODES[m]).join(" · ")}</span>${x.xgame ? `<span class="chip xg" title="${esc(x.xgame)}">يتكرر في لعبة أخرى</span>` : ""}<span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
     <p class="phrase">${phrase(x)}</p>
     <dl class="kv">
       <dt>الإجابة الصحيحة</dt><dd><b>${esc(x.ans)}</b></dd>
@@ -141,10 +198,11 @@ function card(x){
       <dt>مصدر التحقق</dt><dd>${ref}</dd>
       <dt>المراجعة</dt><dd>${VERD[x.verdict] || ""}${x.note ? ` · ${esc(x.note)}` : ""}</dd>${x.xgame ? `<dt>في لعبة أخرى</dt><dd>${esc(x.xgame)}</dd>` : ""}
     </dl>
-    ${rev}${fix}
+    ${rev}${fix}${recBox}
     <div class="decide" data-id="${esc(x.id)}">
       <span class="lbl">قرارك:</span>
-      <button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}" ${dis}>✓ اعتماد</button>
+      <button type="button" class="d-ok" data-d="ok" aria-pressed="${me.d === "ok"}" ${dis}>✓ اعتماد</button>${f && f.fix ? `
+      <button type="button" class="d-okfix" data-d="okfix" aria-pressed="${me.d === "okfix"}" ${dis}>✓ اعتماد مع التعديل المقترح</button>` : ""}
       <button type="button" class="d-edit" data-d="edit" aria-pressed="${me.d === "edit"}" ${dis}>✎ يحتاج تعديل</button>
       <button type="button" class="d-no" data-d="no" aria-pressed="${me.d === "no"}" ${dis}>✗ رفض</button><button type="button" class="d-clear" data-d="clear" ${dis}>إلغاء القرار</button>
       <textarea id="nt-${esc(x.id)}" data-id="${esc(x.id)}" aria-label="ملاحظتك على ${esc(x.id)}" placeholder="ملاحظتك: التصحيح المطلوب، أو سبب الرفض، أو صيغة أخرى…" ${dis}>${esc(me.note || "")}</textarea>
@@ -170,19 +228,56 @@ function testPanel(){
 }
 function render(){
   testPanel();
-  seg(document.getElementById("fBatch"), "batch", [["all", "الكل"], ...[...new Set(DATA.items.map(x => x.batch))].map(b => [String(b), "الدفعة " + b])]);
+  seg(document.getElementById("fBatch"), "batch", [["all", "الكل"], ...[...new Set(DATA.items.map(x => x.batch))].map(b => [String(b), b === 9 ? "الدفعة 9 (بديلة)" : "الدفعة " + b])]);
   seg(document.getElementById("fStatus"), "status", [["accepted", "اجتازت"], ["reserve", "مؤجلة"], ["rejected", "مرفوضة"], ["all", "الكل"]]);
   seg(document.getElementById("fSec"), "sec", [["all", "الكل"], ...Object.entries(SEC)]);
+  const nsp = c => DATA.items.filter(x => x.flag && (c === "any" || x.flag.cats.includes(c))).length;
+  seg(document.getElementById("fSp"), "sp", [["all", "الكل"], ["any", `كل الحالات الخاصة (${nsp("any")})`], ["open", "لم أقرر فيها"], ...Object.entries(SP).map(([k, v]) => [k, `${v} (${nsp(k)})`])]);
+  seg(document.getElementById("fRec"), "rec", [["all", "الكل"], ...Object.entries(REC)]);
+  seg(document.getElementById("fView"), "view", [["full", "كامل"], ["compact", "مختصر (أسرع)"]]);
+  seg(document.getElementById("fPage"), "page", [["40", "40"], ["100", "100"], ["250", "250"]]);
   seg(document.getElementById("fX"), "x", [["all", "الكل"], ["yes", "يتكرر في لعبة أخرى"], ["no", "لا يتكرر"]]);
   seg(document.getElementById("fMine"), "mine", [["all", "الكل"], ["none", "لم أقرر"], ["ok", "اعتمدتها"], ["edit", "تحتاج تعديل"], ["no", "رفضتها"]]);
   const q = F.q.trim();
   const rows = DATA.items.filter(x => (F.batch === "all" || String(x.batch) === F.batch) && (F.status === "all" || x.status === F.status) && (F.sec === "all" || x.sec === F.sec)
-    && (F.mine === "all" || (F.mine === "none" ? !mine(x.id).d : mine(x.id).d === F.mine)) && (F.x === "all" || (F.x === "yes") === !!x.xgame)
+    && (F.mine === "all" || (F.mine === "none" ? !mine(x.id).d : F.mine === "ok" ? ["ok", "okfix"].includes(mine(x.id).d) : mine(x.id).d === F.mine)) && (F.x === "all" || (F.x === "yes") === !!x.xgame)
+    && (F.sp === "all" || (x.flag && (F.sp === "any" || (F.sp === "open" ? isOpen(x) : x.flag.cats.includes(F.sp)))))
+    && (F.rec === "all" || (x.flag && x.flag.rec === F.rec))
     && (!q || [x.text, x.ans, x.why, x.id, x.alt.join(" ")].join(" ").includes(q)));
+  lastRows = rows;
   document.getElementById("count").textContent = `${rows.length} سؤالًا مطابقًا${rows.length > shown ? "، يُعرض أول " + shown : ""}`;
   document.getElementById("list").innerHTML = rows.length ? rows.slice(0, shown).map(card).join("") : `<p class="empty">لا أسئلة بهذه الشروط.</p>`;
   const mb = document.getElementById("moreBtn"); mb.hidden = rows.length <= shown; mb.textContent = `عرض ${Math.min(PAGE, rows.length - shown)} أخرى`;
-  stats();
+  selLine(); stats();
+}
+function selLine(){
+  const n = SEL.size, shownN = Math.min(shown, lastRows.length);
+  document.getElementById("selCount").textContent = n ? `محدد: ${n} سؤالًا` : "لم تحدد شيئًا";
+  document.getElementById("selAll").textContent = `تحديد كل المطابق للفلتر (${lastRows.length})`;
+  document.getElementById("selPage").textContent = `تحديد المعروض في الصفحة (${shownN})`;
+  document.getElementById("bulkOk").disabled = document.getElementById("bulkNo").disabled = !n || !canWrite;
+}
+// bulk decision: shows what will happen and waits for the owner's confirmation; special cases without a decision are left
+// out (they are decided one by one), and existing decisions are kept unless he ticks «replace»
+function askBulk(d){
+  const ids = [...SEL], items = ids.map(id => DATA.items.find(x => x.id === id)).filter(Boolean);
+  const open = items.filter(isOpen), decided = items.filter(x => mine(x.id).d && !isOpen(x)), fresh = items.filter(x => !mine(x.id).d && !isOpen(x));
+  const el = document.getElementById("confirm"); el.hidden = false;
+  el.innerHTML = `<p><b>${d === "ok" ? "اعتماد" : "رفض"} ${fresh.length} سؤالًا</b> من ${items.length} محددًا.</p>
+    ${open.length ? `<p>استُبعد <b>${open.length}</b> من الحالات الخاصة لم تقرر فيها بعد؛ قرّر فيها واحدًا واحدًا.</p>` : ""}
+    ${decided.length ? `<label><input type="checkbox" id="bulkReplace"> استبدال قرارك السابق في ${decided.length} سؤالًا محددًا لها قرار</label>` : ""}
+    <div class="tools"><button type="button" id="bulkGo" class="${d === "ok" ? "d-ok" : "d-no"}" data-bd="${d}">تأكيد ${d === "ok" ? "الاعتماد" : "الرفض"}</button><button type="button" id="bulkCancel">إلغاء</button></div>`;
+  el.dataset.fresh = fresh.map(x => x.id).join(","); el.dataset.decided = decided.map(x => x.id).join(",");
+  el.scrollIntoView({block:"nearest"});
+}
+function doBulk(d){
+  const el = document.getElementById("confirm");
+  const ids = (el.dataset.fresh ? el.dataset.fresh.split(",") : []).concat(document.getElementById("bulkReplace") && document.getElementById("bulkReplace").checked && el.dataset.decided ? el.dataset.decided.split(",") : []);
+  const at = Date.now(), m = {};
+  ids.forEach(id => { const cur = mine(id); m[id] = {d, note:cur.note || "", at}; });
+  saveBatch(m);
+  el.hidden = true; SEL.clear(); render();
+  ioMsg(`${d === "ok" ? "اعتُمد" : "رُفض"} ${ids.length} سؤالًا بقرارك. تُرسل إلى الخادم الآن؛ صدّر ملف المراجعة الكاملة بعدها.`);
 }
 function refreshCard(id){       // update one card without redrawing the list (keeps the focus while typing)
   const m = mine(id);
@@ -208,22 +303,39 @@ async function flush(){
   if (!db || flushing) return;
   flushing = true;
   try {
-    for (const [id, v] of Object.entries(PENDING)){
-      try {
+    const one = async ([id, v]) => {
         await db.collection(COL).doc(id).set({d:v.d, note:String(v.note || "").slice(0, 1000), at:v.at});
         lastOk = new Date().toLocaleTimeString("ar") + " (" + id + ")";
         LOG[id] = `أكّد الخادم الحفظ ${new Date().toLocaleTimeString("ar")}: ${DN[v.d] || "بلا قرار"}${v.note ? " · «" + String(v.note).slice(0, 60) + "»" : ""}`;
-        if (PENDING[id] && PENDING[id].at === v.at){ SERVER[id] = {...v}; delete PENDING[id]; keepPending(); }
-      } catch(err){ lastErr = String((err && (err.code || err.message)) || err); LOG[id] = "رفض الخادم الحفظ: " + lastErr + (err && err.message && err.code ? " — " + err.message : ""); if (err && /not_granted|denied|forbidden|permission/i.test(String(err.code || err.message))) canWrite = false; break; }
-      refreshCard(id);
+        if (PENDING[id] && PENDING[id].at === v.at){ SERVER[id] = {...v}; delete PENDING[id]; }
+        refreshCard(id);
+    };
+    const fail = err => { lastErr = String((err && (err.code || err.message)) || err); if (err && /not_granted|denied|forbidden|permission/i.test(String(err.code || err.message))) canWrite = false; };
+    for (const b of [...PBATCH]){                         // batch documents first, one at a time
+      try { await db.collection(COL).doc(b.key).set({bulk:1, m:b.m, at:Date.now()}); }
+      catch(err){ fail(err); Object.keys(b.m).forEach(id => { LOG[id] = "رفض الخادم الحفظ: " + lastErr; }); throw "stop"; }
+      for (const [id, v] of Object.entries(b.m)) if (!BATCHV[id] || (v.at || 0) >= (BATCHV[id].at || 0)) BATCHV[id] = v;
+      PBATCH = PBATCH.filter(x => x.key !== b.key); indexPB(); keepPending();
+      lastOk = new Date().toLocaleTimeString("ar") + " (" + Object.keys(b.m).length + " سؤالًا دفعة واحدة)";
+      Object.keys(b.m).forEach(id => { LOG[id] = `أكّد الخادم الحفظ ${new Date().toLocaleTimeString("ar")} (قرار جماعي): ${DN[b.m[id].d] || "بلا قرار"}`; });
+      render(); syncLine();
     }
+    const all = Object.entries(PENDING);
+    for (let i = 0; i < all.length; i += 4){             // four at a time; stop at the first refusal
+      const res = await Promise.allSettled(all.slice(i, i + 4).map(one));
+      keepPending();
+      const bad = res.find(r => r.status === "rejected");
+      if (bad){ fail(bad.reason); all.slice(i, i + 4).forEach(([id]) => { if (PENDING[id]) LOG[id] = "رفض الخادم الحفظ: " + lastErr; }); break; }
+      if (i % 40 === 0) syncLine();
+    }
+  } catch(e){ if (e !== "stop") throw e;
   } finally { flushing = false; stats(); }
-  if (Object.keys(PENDING).length) setTimeout(flush, 15000);
+  if (pendingN()) setTimeout(flush, 15000);
 }
 window.addEventListener("online", flush);
 function exportData(){
   backup(); let all = {}; try { all = JSON.parse(localStorage.getItem(BKEY) || "{}"); } catch(e){}
-  for (const id of new Set([...Object.keys(SERVER), ...Object.keys(PENDING)])) all[id] = mine(id);
+  for (const id of knownIds()) all[id] = mine(id);
   return JSON.stringify({app:"akml-review", record:COL, exported:new Date().toISOString(), decisions:all}, null, 1);
 }
 function fullData(){
@@ -231,10 +343,10 @@ function fullData(){
   return JSON.stringify({app:"akml-review", kind:"full", record:COL, exported:new Date().toISOString(),
     items:DATA.items.map(x => ({...x, decision:(dec[x.id] || {}).d || "", owner_note:(dec[x.id] || {}).note || ""})), decisions:dec}, null, 1);
 }
-function csvData(){
+function csvData(only){
   const dec = JSON.parse(exportData()).decisions, q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
-  const head = ["id", "الدفعة", "القسم", "الصعوبة", "المراجعة الداخلية", "العبارة", "الإجابة", "البدائل", "الخيارات", "المعنى", "الأصل", "المصدر", "قرارك", "ملاحظتك", "في لعبة أخرى"];
-  const rows = DATA.items.map(x => [x.id, x.batch, SEC[x.sec], LV[x.lv], ST[x.status], x.text.replace(/[{}]/g, ""), x.ans, x.alt.join("، "), x.opts.join(" / "), x.why, x.src, x.ref, DN[(dec[x.id] || {}).d] || "", (dec[x.id] || {}).note || "", x.xgame || ""]);
+  const head = ["id", "الدفعة", "القسم", "الصعوبة", "المراجعة الداخلية", "العبارة", "الإجابة", "البدائل", "الخيارات", "المعنى", "الأصل", "المصدر", "قرارك", "ملاحظتك", "في لعبة أخرى", "حالة خاصة", "توصيتي", "التعديل المقترح"];
+  const rows = DATA.items.filter(x => !only || only(x)).sort((a, b) => !only ? 0 : ["reject", "reserve", "fix", "keep"].indexOf(a.flag.rec) - ["reject", "reserve", "fix", "keep"].indexOf(b.flag.rec)).map(x => [x.id, x.batch, SEC[x.sec], LV[x.lv], ST[x.status], x.text.replace(/[{}]/g, ""), x.ans, x.alt.join("، "), x.opts.join(" / "), x.why, x.src, x.ref, DN[(dec[x.id] || {}).d] || "", (dec[x.id] || {}).note || "", x.xgame || "", x.flag ? x.flag.cats.map(c => SP[c]).join("، ") : "", x.flag ? REC[x.flag.rec] + (x.flag.why ? ": " + x.flag.why : "") : "", x.flag && x.flag.fix ? JSON.stringify(x.flag.fix) : ""]);
   return "\ufeff" + [head, ...rows].map(r => r.map(q).join(",")).join("\r\n");
 }
 async function saveFile(name, data, label){
@@ -251,6 +363,7 @@ document.getElementById("expBtn").addEventListener("click", async () => {
   document.getElementById("expBox").hidden = false; document.getElementById("expText").value = data; ioMsg(`${n} قرارًا جاهزًا للنسخ.`);
 });
 document.getElementById("fullBtn").addEventListener("click", () => saveFile(`akml-review-full-${TEST ? "test-" : ""}${new Date().toISOString().slice(0, 10)}.json`, fullData(), "كل الأسئلة مع قراراتك وملاحظاتك"));
+document.getElementById("spBtn").addEventListener("click", () => saveFile(`akml-special-cases-${new Date().toISOString().slice(0, 10)}.csv`, csvData(x => !!x.flag), "قائمة الحالات الخاصة مع توصيتي"));
 document.getElementById("csvBtn").addEventListener("click", () => saveFile(`akml-review-${TEST ? "test-" : ""}${new Date().toISOString().slice(0, 10)}.csv`, csvData(), "جدول الأسئلة والقرارات"));
 document.getElementById("copyBtn").addEventListener("click", async () => {
   const t = document.getElementById("expText");
@@ -260,13 +373,13 @@ document.getElementById("impFile").addEventListener("change", async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
   try {
     const j = JSON.parse(await f.text()); if (j.app !== "akml-review" || !j.decisions) throw new Error("ليس ملف مراجعة من هذه الصفحة");
-    let n = 0;
+    const m = {}, have = new Set(DATA.items.map(x => x.id));
     for (const [id, v] of Object.entries(j.decisions)){
-      if (!DATA.items.some(x => x.id === id) || !v || !["", "ok", "edit", "no"].includes(v.d || "")) continue;
-      const cur = mine(id);
-      if ((+v.at || 0) > (cur.at || 0)){ PENDING[id] = {d:v.d || "", note:String(v.note || "").slice(0, 1000), at:+v.at || Date.now()}; n++; refreshCard(id); }
+      if (!have.has(id) || !v || !["", "ok", "okfix", "edit", "no"].includes(v.d || "")) continue;
+      if ((+v.at || 0) > (mine(id).at || 0)) m[id] = {d:v.d || "", note:String(v.note || "").slice(0, 1000), at:+v.at || Date.now()};
     }
-    keepPending(); backup(); stats(); flush();
+    const n = Object.keys(m).length;
+    saveBatch(m); render(); stats();
     ioMsg(`استُورد ${n} قرارًا أحدث مما في الصفحة${j.record !== COL ? ` (الملف من سجل «${j.record}» ويُحفظ هنا في «${COL}»)` : ""}، وتُرسل إلى الخادم الآن.`);
   } catch(err){ ioMsg("تعذّر الاستيراد: " + (err.message || err)); }
   e.target.value = "";
@@ -279,7 +392,14 @@ document.getElementById("permBtn").addEventListener("click", async () => {
 document.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.id === "moreBtn"){ shown += PAGE; render(); return; }
-  if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; shown = PAGE; try { localStorage.setItem("ak-rev-f", JSON.stringify({batch:F.batch, status:F.status, sec:F.sec, mine:F.mine, x:F.x})); } catch(e){} render(); return; }
+  if (b.id === "selAll"){ lastRows.forEach(x => SEL.add(x.id)); render(); return; }
+  if (b.id === "selPage"){ lastRows.slice(0, shown).forEach(x => SEL.add(x.id)); render(); return; }
+  if (b.id === "selNone"){ SEL.clear(); document.getElementById("confirm").hidden = true; render(); return; }
+  if (b.id === "bulkOk" || b.id === "bulkNo"){ askBulk(b.id === "bulkOk" ? "ok" : "no"); return; }
+  if (b.id === "bulkGo"){ doBulk(b.dataset.bd); return; }
+  if (b.id === "bulkCancel"){ document.getElementById("confirm").hidden = true; return; }
+  if (b.dataset.full){ const id = b.dataset.full; F.view = "full"; F.q = id; document.getElementById("q").value = id; shown = PAGE; render(); return; }
+  if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; if (b.dataset.k === "page") PAGE = +F.page; shown = PAGE; if (b.dataset.k === "sp" && b.dataset.v !== "all") F.status = "all"; try { localStorage.setItem("ak-rev-f", JSON.stringify({batch:F.batch, status:F.status, sec:F.sec, mine:F.mine, x:F.x, sp:F.sp, rec:F.rec, view:F.view, page:F.page})); } catch(e){} render(); return; }
   if (b.dataset.d){ const id = b.closest(".decide").dataset.id, d = b.dataset.d === "clear" ? "" : b.dataset.d; if (mine(id).d !== d) decide(id, {d}); }
 });
 // notes: kept on this device at every keystroke, sent a moment after typing stops (and when leaving the field)
@@ -293,6 +413,11 @@ document.addEventListener("input", e => {
   const tdc = document.getElementById("tdc-" + id); if (tdc) tdc.innerHTML = decisionChip(id);
   const tl = document.getElementById("tlog-" + id); if (tl) tl.textContent = LOG[id] || "";
   syncLine();
+});
+document.addEventListener("change", e => {
+  const t = e.target; if (!t.dataset || !t.dataset.sel) return;
+  if (t.checked) SEL.add(t.dataset.sel); else SEL.delete(t.dataset.sel);
+  selLine();
 });
 document.addEventListener("focusout", e => { const t = e.target; if (t.tagName === "TEXTAREA" && t.dataset.id){ clearTimeout(noteTimers[t.dataset.id]); flush(); } });
 document.getElementById("q").addEventListener("input", e => { F.q = e.target.value; shown = PAGE; render(); });
@@ -310,7 +435,12 @@ render(); renderSkips();
   const timer = setTimeout(() => { if (dbState === "loading"){ dbState = "slow"; syncLine(); } }, 10000);
   let first = true;
   db.collection(COL).onSnapshot(snap => {
-    for (const doc of snap.docs){ const v = doc.data() || {}; SERVER[doc.id] = {d:v.d || "", note:v.note || "", at:+v.at || 0}; }
+    let bulkSeen = false;
+    for (const doc of snap.docs){ const v = doc.data() || {};
+      if (doc.id.startsWith("bulk-") && v.m && typeof v.m === "object"){ bulkSeen = true;
+        for (const [id, e] of Object.entries(v.m)) if (e && (!BATCHV[id] || (+e.at || 0) >= (BATCHV[id].at || 0))) BATCHV[id] = {d:e.d || "", note:e.note || "", at:+e.at || 0}; }
+      else SERVER[doc.id] = {d:v.d || "", note:v.note || "", at:+v.at || 0}; }
+    if (bulkSeen && !first){ const a = document.activeElement; if (!(a && a.tagName === "TEXTAREA")) render(); }
     if (!(snap.metadata && snap.metadata.fromCache)){ dbState = "ready"; clearTimeout(timer); }
     backup();
     if (first || F.mine !== "all"){ first = false; const a = document.activeElement; if (!(a && a.tagName === "TEXTAREA")) render(); else { for (const doc of snap.docs) refreshCard(doc.id); stats(); } }

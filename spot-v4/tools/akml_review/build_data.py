@@ -1,6 +1,6 @@
 """Builds data.json for the review page: every batch (all statuses) plus skipped phrases, with a flag when the same fact and
 answer is already asked in the quiz or letters game, then assembles akml-review.html."""
-import json, re, sys, glob
+import json, re, sys, glob, os
 SP = '/tmp/claude-0/-home-claude/a7cbada7-322f-55e5-8221-30cda24e9f18/scratchpad'
 sys.path.insert(0, '/home/claude/lamma/tools'); import akml_bank as T
 K = ('id','sec','lv','text','ans','alt','opts','why','src','ref','modes','status','reason','fixed','verdict','note','check')
@@ -24,6 +24,10 @@ while True:
         items.append(d)
     sk += [s | {'batch': n} for s in b['skipped']]
     n += 1
+FL = SP + '/final2/flags.json'
+flags = json.load(open(FL)) if os.path.exists(FL) else {}
+for d in items:
+    if d['id'] in flags: d['flag'] = flags[d['id']]
 game = json.load(open('/home/claude/lamma/data/akml.src.json'))
 ingame = {}
 for q in game: ingame[q['sec']] = ingame.get(q['sec'], 0) + 1

@@ -10,6 +10,13 @@ DOC = '<!doctype html><html><head><meta charset=utf8><meta name=viewport content
 STORE = {}            # collection -> {id: data}  (the "server")
 ONLINE = {'v': True}
 R = []
+def EFF(col='test_decisions'):
+    """what the page means by the record: single documents and batch documents ("bulk-…"), the latest «at» winning"""
+    out = {}
+    for k, v in STORE.get(col, {}).items():
+        for id, e in ((v.get('m') or {}).items() if k.startswith('bulk-') else [(k, v)]):
+            if id not in out or (e.get('at') or 0) >= (out[id].get('at') or 0): out[id] = e
+    return out
 def check(ok, m): R.append((bool(ok), m)); print(('OK   ' if ok else 'FAIL ') + m, flush=True)
 
 SHIM = r'''
@@ -123,11 +130,11 @@ async def main():
         ctx4, pg4 = await device('clean'); await open_(pg4)
         check(await pg4.get_attribute(f'{card(X2)} [data-d=edit]', 'aria-pressed') == 'false', 'a clean device with an empty server shows no decisions')
         await pg4.set_input_files('#impFile', os.path.join(HERE, 'export_sample.json')); await pg4.wait_for_timeout(1500)
-        check(STORE['test_decisions'].get(X2, {}).get('d') == 'edit' and 'يُستبدل' in STORE['test_decisions'].get(X2, {}).get('note', '') and 'استُورد' in await pg4.inner_text('#ioMsg'), 'import: the decisions and notes come back and are sent to the server')
+        check(EFF().get(X2, {}).get('d') == 'edit' and 'يُستبدل' in EFF().get(X2, {}).get('note', '') and 'استُورد' in await pg4.inner_text('#ioMsg'), 'import: the decisions and notes come back and are sent to the server')
         await ctx4.close(); STORE['test_decisions'] = {}
         ctx4, pg4 = await device('clean 2'); await open_(pg4)
         await pg4.set_input_files('#impFile', os.path.join(HERE, 'export_full.json')); await pg4.wait_for_timeout(1500)
-        check(STORE['test_decisions'].get(X2, {}).get('d') == 'edit', 'import of the full export file works too')
+        check(EFF().get(X2, {}).get('d') == 'edit', 'import of the full export file works too')
         await ctx4.close()
         # the real review (no #test) does not show test decisions
         ctx3, pg3 = await device('real'); await open_(pg3, '')
