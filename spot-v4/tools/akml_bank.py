@@ -9,6 +9,12 @@ The checks are mechanical only: they do not prove a proverb is authentic or its 
 import json, re, sys, base64, os, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC, OUT, REP = (os.path.join(ROOT, 'data', f) for f in ('akml.src.json', 'akml.json', 'akml.report.json'))
+# a preview bank (questions that passed internal review, not yet approved by the owner) is built to separate files and is
+# only copied into a preview build (build.py with LAMMA_AKML_BANK); the game's own bank above is not touched:
+#   python3 tools/akml_bank.py --src data/akml.preview.src.json --out data/akml.preview.json
+if '--src' in sys.argv: SRC = os.path.join(ROOT, sys.argv[sys.argv.index('--src') + 1])
+if '--out' in sys.argv:
+    OUT = os.path.join(ROOT, sys.argv[sys.argv.index('--out') + 1]); REP = OUT.replace('.json', '.report.json')
 SECS = ['gulf', 'arab', 'hikam', 'info', 'lang', 'fun']
 KEY = b'lamma-akml-v1'
 

@@ -59,6 +59,8 @@ def banks():
     for name in ('quiz', 'letters', 'akml'):
         f = os.path.join(ROOT, 'data', name + '.json')
         if not os.path.exists(f): continue
+        if name == 'akml' and os.environ.get('LAMMA_AKML_BANK'):      # preview only: another bank file in place of the game's
+            f = os.path.join(ROOT, os.environ['LAMMA_AKML_BANK'])
         raw = open(f, 'rb').read(); h.update(raw); shutil.copy(f, os.path.join(out, name + '.json'))
         emb[name] = json.loads(raw)
     return emb, h.hexdigest()[:10]
