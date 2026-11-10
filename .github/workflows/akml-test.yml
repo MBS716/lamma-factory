@@ -7,7 +7,7 @@ name: akml-test
 on:
   push:
     branches: [main]
-    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", ".github/workflows/akml-test.yml"]
+    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", "tests/live_akml_bank.py", ".github/workflows/akml-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -69,7 +69,13 @@ jobs:
             got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-akml/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
+      - name: the bank the live preview serves (2,544) and the draws over every section, level and answer method
+        run: |
+          D=reports/akml/preview; mkdir -p $D
+          timeout 900 python tests/live_akml_bank.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/bank 2544 > $D/bank.log 2>&1; r=$?
+          tail -6 $D/bank.log; exit $r
       - name: أكملها on the real database (current rules)
+        if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
           timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1; r=$?

@@ -1968,7 +1968,9 @@ function akOrder(B, o, plan){
     const want = o.sw === "rnd" ? null : secOrder[(o.sw === "blk" ? Math.floor(i / blk) : i) % secOrder.length], lv = lvOf(i);
     const ok = q => !used.has(q.id) && secs.includes(q.s) && akFits(q, p);
     const pick = scored.find(q => ok(q) && (!want || q.s === want) && (lv == null || q.l === lv))
-      || scored.find(q => ok(q) && (lv == null || q.l === lv)) || scored.find(q => ok(q) && (!want || q.s === want)) || (o.dif === "all" || o.dif === "up" ? scored.find(ok) : null);
+      || scored.find(q => ok(q) && (lv == null || q.l === lv))
+      // a chosen level (سهل/متوسط/صعب) is never broken to fill the match: it is shorter instead, as the setup screen says
+      || (o.dif === "all" || o.dif === "up" ? scored.find(q => ok(q) && (!want || q.s === want)) || scored.find(ok) : null);
     if (pick){ used.add(pick.id); out.push(pick.id); } else out.push(null);
   });
   return out;
