@@ -109,11 +109,25 @@ async def main():
         exp = json.loads(await pg.input_value('#expText'))
         check(exp['app'] == 'akml-review' and exp['decisions'][X2]['d'] == 'edit' and 'يُستبدل' in exp['decisions'][X2]['note'], 'export: every decision and note is in the exported file')
         open(os.path.join(HERE, 'export_sample.json'), 'w').write(json.dumps(exp, ensure_ascii=False))
+        # full export (questions + decisions + notes) and the CSV table
+        await pg.click('#fullBtn'); await pg.wait_for_timeout(400)
+        full = json.loads(await pg.input_value('#expText'))
+        it2 = [x for x in full['items'] if x['id'] == X2][0]
+        check(full['kind'] == 'full' and len(full['items']) == len(json.loads(PAGE.split('const DATA = ', 1)[1].split(';\nconst SEC', 1)[0])['items']) and it2['decision'] == 'edit' and 'يُستبدل' in it2['owner_note'] and it2['ans'], 'full export: every question with its answer, the decision and the note')
+        open(os.path.join(HERE, 'export_full.json'), 'w').write(json.dumps(full, ensure_ascii=False))
+        await pg.click('#csvBtn'); await pg.wait_for_timeout(400)
+        csv = await pg.input_value('#expText')
+        check(csv.startswith('\ufeff"id"') and 'يحتاج تعديل' in csv and 'يُستبدل' in csv, 'CSV table (opens in Excel with Arabic): decisions and notes included')
+        check(await pg.is_visible('#secTable') and 'الهدف' in await pg.inner_text('#secTable') and '800' in await pg.inner_text('#secTable'), 'progress table by the approved distribution')
         STORE['test_decisions'] = {}                       # the server lost everything
         ctx4, pg4 = await device('clean'); await open_(pg4)
         check(await pg4.get_attribute(f'{card(X2)} [data-d=edit]', 'aria-pressed') == 'false', 'a clean device with an empty server shows no decisions')
         await pg4.set_input_files('#impFile', os.path.join(HERE, 'export_sample.json')); await pg4.wait_for_timeout(1500)
         check(STORE['test_decisions'].get(X2, {}).get('d') == 'edit' and 'يُستبدل' in STORE['test_decisions'].get(X2, {}).get('note', '') and 'استُورد' in await pg4.inner_text('#ioMsg'), 'import: the decisions and notes come back and are sent to the server')
+        await ctx4.close(); STORE['test_decisions'] = {}
+        ctx4, pg4 = await device('clean 2'); await open_(pg4)
+        await pg4.set_input_files('#impFile', os.path.join(HERE, 'export_full.json')); await pg4.wait_for_timeout(1500)
+        check(STORE['test_decisions'].get(X2, {}).get('d') == 'edit', 'import of the full export file works too')
         await ctx4.close()
         # the real review (no #test) does not show test decisions
         ctx3, pg3 = await device('real'); await open_(pg3, '')

@@ -1,17 +1,22 @@
 <div class="wrap">
   <header style="display:flex;flex-direction:column;gap:8px">
     <h1>مراجعة أسئلة «أكملها»</h1>
-    <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. راجع كل سؤال واختر «اعتماد» أو «يحتاج تعديل» أو «رفض» مع ملاحظتك. تُحفظ قراراتك على خادم claude.ai في قاعدة بيانات هذه الصفحة، لا في المتصفح، فتظهر لك على أي جهاز، وأقرؤها قبل إدخال أي سؤال إلى اللعبة.</p>
+    <p class="lead">هذه الأسئلة لم تدخل بنك اللعبة بعد. راجع كل سؤال واختر «اعتماد» أو «يحتاج تعديل» أو «رفض» مع ملاحظتك. تُرسل قراراتك إلى قاعدة بيانات هذه الصفحة على claude.ai، وتبقى نسخة منها على جهازك حتى يؤكد الخادم حفظها.</p>
+    <p class="note"><b>النسخة الاحتياطية بالملفات (لا تعتمد على الخادم ولا على المتصفح):</b> زر «⬇ تصدير المراجعة كاملة» يحفظ ملفًا فيه كل الأسئلة وقراراتك وملاحظاتك. أرسل الملف إليّ في المحادثة فأضيف قراراتك إلى السجل، أو استورده هنا لاحقًا على أي جهاز. صدّر نسخة بعد كل جلسة مراجعة، وتذكّرك الصفحة بذلك.</p>
     <p class="note"><b>ثلاث مراحل منفصلة:</b> (١) <b>أُعدّ</b>: صاغه معدّ مع مصدر. (٢) <b>اجتاز المراجعة الداخلية</b>: قبله مراجع مستقل ثم مراجعتي، وهذا <b>ليس اعتمادًا نهائيًا</b>. (٣) <b>اعتمدتَه أنت</b>: قرارك هنا هو وحده الاعتماد النهائي، ولا يدخل بنك اللعبة إلا ما اعتمدته.</p>
     <p class="note" id="testBanner" hidden><b>وضع الاختبار:</b> القرارات هنا تُحفظ في سجل اختبار منفصل («test_decisions»)، ولا تمس قراراتك الفعلية. افتح الصفحة دون «#test» في آخر الرابط للمراجعة الفعلية.</p>
     <section id="testPanel" class="tpanel" hidden></section>
     <div class="stats" id="stats"></div>
     <div class="prog"><div class="pbar"><i id="pfill"></i></div><span id="ptext"></span></div>
+    <details class="diag" open><summary>التقدم حسب التوزيع المعتمد</summary><div class="tbl" id="secTable"></div></details>
+    <p class="note warn" id="bkWarn" hidden></p>
     <p class="sync" id="sync" role="status"></p>
     <div class="tools">
       <button type="button" id="permBtn" hidden>السماح للصفحة بحفظ القرارات</button>
-      <button type="button" id="expBtn">⬇ تصدير قراراتي إلى ملف</button>
-      <label class="imp">⬆ استيراد قرارات من ملف <input type="file" id="impFile" accept=".json,application/json"></label>
+      <button type="button" id="fullBtn">⬇ تصدير المراجعة كاملة (JSON)</button>
+      <button type="button" id="csvBtn">⬇ جدول للطباعة أو Excel (CSV)</button>
+      <button type="button" id="expBtn">⬇ قراراتي فقط</button>
+      <label class="imp">⬆ استيراد من ملف <input type="file" id="impFile" accept=".json,application/json"></label>
     </div>
     <p class="sync" id="ioMsg" role="status"></p>
     <details class="diag"><summary>حالة الحفظ (للتشخيص)</summary><dl class="kv" id="diag"></dl></details>
@@ -21,6 +26,7 @@
   <div class="bar">
     <div class="row"><label>الدفعة</label><div class="seg" id="fBatch"></div><label style="margin-inline-start:10px">المراجعة الداخلية</label><div class="seg" id="fStatus"></div></div>
     <div class="row"><label>القسم</label><div class="seg" id="fSec"></div><label style="margin-inline-start:10px">قرارك</label><div class="seg" id="fMine"></div></div>
+    <div class="row"><label>الألعاب الأخرى</label><div class="seg" id="fX"></div></div>
     <div class="row"><input type="search" id="q" placeholder="ابحث في العبارات والإجابات والمعاني" aria-label="بحث"><span class="count" id="count"></span></div>
   </div>
   <div class="list" id="list"><p class="empty">جارٍ التحميل…</p></div>
@@ -49,7 +55,7 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp
 const TEST = location.hash === "#test";
 const COL = TEST ? "test_decisions" : "decisions";
 const PKEY = "ak-rev-pending-" + COL;
-let F = {batch:"all", status:"accepted", sec:"all", mine:"all", q:""};
+let F = {batch:"all", status:"accepted", sec:"all", mine:"all", x:"all", q:""};
 try { const v = JSON.parse(localStorage.getItem("ak-rev-f") || "null"); if (v) F = {...F, ...v, q:""}; } catch(e){}
 const SERVER = {};        // id -> {d, note, at} as the database has it
 let PENDING = {};         // id -> {d, note, at} not yet confirmed by the database
@@ -92,9 +98,24 @@ function stats(){
      <div class="stat hold"><b>${n("reserve")}</b><span>مؤجل داخليًا</span></div>
      <div class="stat no"><b>${n("rejected")}</b><span>مرفوض داخليًا</span></div>
      <div class="stat mine"><b>${cnt("ok")} · ${cnt("edit")} · ${cnt("no")}</b><span>قراراتك النهائية: اعتمدتَ · تعديل · رفضتَ</span></div>`;
+  const T = DATA.targets || {}, IG = DATA.ingame || {};
+  document.getElementById("secTable").innerHTML = `<table><thead><tr><th>القسم</th><th>الهدف</th><th>في اللعبة</th><th>اجتاز المراجعة الداخلية</th><th>اعتمدتَه</th></tr></thead><tbody>${Object.keys(SEC).map(k => {
+    const acc = DATA.items.filter(x => x.sec === k && x.status === "accepted"), ok = acc.filter(x => mine(x.id).d === "ok").length;
+    return `<tr><td>${SEC[k]}</td><td>${T[k] || "-"}</td><td>${IG[k] || 0}</td><td>${acc.length + (IG[k] || 0)}</td><td>${ok}</td></tr>`; }).join("")}</tbody></table><p class="muted">«اجتاز المراجعة الداخلية» يشمل أسئلة اللعبة الحالية، ولا يحتسب المؤجل ولا المرفوض.</p>`;
+  backupWarn();
   document.getElementById("pfill").style.width = Math.min(100, okAll / GOAL * 100) + "%";
   document.getElementById("ptext").textContent = `اعتمدتَ نهائيًا ${okAll} من ${GOAL} (الهدف). اجتاز المراجعة الداخلية ${DATA.items.filter(x => x.status === "accepted").length}، وينتظر قرارك.`;
   syncLine();
+}
+// reminder to keep a file copy: counts decisions changed since the last file export (kept per device)
+const EXPK = "ak-rev-exported-" + (location.hash.includes("test") ? "test" : "real");
+function lastExport(){ try { return +localStorage.getItem(EXPK) || 0; } catch(e){ return 0; } }
+function backupWarn(){
+  const since = lastExport(), all = new Set([...Object.keys(SERVER), ...Object.keys(PENDING)]);
+  const n = [...all].filter(id => (mine(id).at || 0) > since && (mine(id).d || mine(id).note)).length;
+  const el = document.getElementById("bkWarn"); if (!el) return;
+  el.hidden = n < 10;
+  el.textContent = `لديك ${n} قرارًا أو ملاحظة لم تُصدَّر إلى ملف منذ ${since ? "آخر تصدير (" + new Date(since).toLocaleString("ar") + ")" : "البداية"}. اضغط «⬇ تصدير المراجعة كاملة» لحفظ نسخة احتياطية.`;
 }
 function phrase(x){ const m = x.text.match(/^(.*)\{(.+)\}(.*)$/); return m ? `${esc(m[1])}<mark>${esc(m[2])}</mark>${esc(m[3])}` : esc(x.text); }
 function decisionChip(id){
@@ -108,7 +129,7 @@ function card(x){
   const ref = /^https?:\/\//.test(x.ref) ? `<a href="${esc(x.ref)}" target="_blank" rel="noopener">${esc(x.ref.replace(/^https?:\/\//, "").slice(0, 70))}</a>` : esc(x.ref);
   const dis = !canWrite ? "disabled" : "";
   return `<article class="card st-${x.status}" id="c-${esc(x.id)}">
-    <div class="top"><span class="id">${esc(x.id)}</span><span class="chip">الدفعة ${x.batch}</span><span class="chip ${x.status}">${ST[x.status]}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span><span>${x.modes.map(m => MODES[m]).join(" · ")}</span><span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
+    <div class="top"><span class="id">${esc(x.id)}</span><span class="chip">الدفعة ${x.batch}</span><span class="chip ${x.status}">${ST[x.status]}</span><span class="chip">${SEC[x.sec]}</span><span class="chip">${LV[x.lv]}</span><span>${x.modes.map(m => MODES[m]).join(" · ")}</span>${x.xgame ? `<span class="chip xg" title="${esc(x.xgame)}">يتكرر في لعبة أخرى</span>` : ""}<span id="dc-${esc(x.id)}" class="dcs">${decisionChip(x.id)}</span></div>
     <p class="phrase">${phrase(x)}</p>
     <dl class="kv">
       <dt>الإجابة الصحيحة</dt><dd><b>${esc(x.ans)}</b></dd>
@@ -118,7 +139,7 @@ function card(x){
       <dt>القسم والصعوبة</dt><dd>${SEC[x.sec]} · ${LV[x.lv]}</dd>
       <dt>الأصل</dt><dd>${esc(x.src)}</dd>
       <dt>مصدر التحقق</dt><dd>${ref}</dd>
-      <dt>المراجعة</dt><dd>${VERD[x.verdict] || ""}${x.note ? ` · ${esc(x.note)}` : ""}</dd>
+      <dt>المراجعة</dt><dd>${VERD[x.verdict] || ""}${x.note ? ` · ${esc(x.note)}` : ""}</dd>${x.xgame ? `<dt>في لعبة أخرى</dt><dd>${esc(x.xgame)}</dd>` : ""}
     </dl>
     ${rev}${fix}
     <div class="decide" data-id="${esc(x.id)}">
@@ -152,10 +173,11 @@ function render(){
   seg(document.getElementById("fBatch"), "batch", [["all", "الكل"], ...[...new Set(DATA.items.map(x => x.batch))].map(b => [String(b), "الدفعة " + b])]);
   seg(document.getElementById("fStatus"), "status", [["accepted", "اجتازت"], ["reserve", "مؤجلة"], ["rejected", "مرفوضة"], ["all", "الكل"]]);
   seg(document.getElementById("fSec"), "sec", [["all", "الكل"], ...Object.entries(SEC)]);
+  seg(document.getElementById("fX"), "x", [["all", "الكل"], ["yes", "يتكرر في لعبة أخرى"], ["no", "لا يتكرر"]]);
   seg(document.getElementById("fMine"), "mine", [["all", "الكل"], ["none", "لم أقرر"], ["ok", "اعتمدتها"], ["edit", "تحتاج تعديل"], ["no", "رفضتها"]]);
   const q = F.q.trim();
   const rows = DATA.items.filter(x => (F.batch === "all" || String(x.batch) === F.batch) && (F.status === "all" || x.status === F.status) && (F.sec === "all" || x.sec === F.sec)
-    && (F.mine === "all" || (F.mine === "none" ? !mine(x.id).d : mine(x.id).d === F.mine))
+    && (F.mine === "all" || (F.mine === "none" ? !mine(x.id).d : mine(x.id).d === F.mine)) && (F.x === "all" || (F.x === "yes") === !!x.xgame)
     && (!q || [x.text, x.ans, x.why, x.id, x.alt.join(" ")].join(" ").includes(q)));
   document.getElementById("count").textContent = `${rows.length} سؤالًا مطابقًا${rows.length > shown ? "، يُعرض أول " + shown : ""}`;
   document.getElementById("list").innerHTML = rows.length ? rows.slice(0, shown).map(card).join("") : `<p class="empty">لا أسئلة بهذه الشروط.</p>`;
@@ -204,13 +226,32 @@ function exportData(){
   for (const id of new Set([...Object.keys(SERVER), ...Object.keys(PENDING)])) all[id] = mine(id);
   return JSON.stringify({app:"akml-review", record:COL, exported:new Date().toISOString(), decisions:all}, null, 1);
 }
+function fullData(){
+  const dec = JSON.parse(exportData()).decisions;
+  return JSON.stringify({app:"akml-review", kind:"full", record:COL, exported:new Date().toISOString(),
+    items:DATA.items.map(x => ({...x, decision:(dec[x.id] || {}).d || "", owner_note:(dec[x.id] || {}).note || ""})), decisions:dec}, null, 1);
+}
+function csvData(){
+  const dec = JSON.parse(exportData()).decisions, q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+  const head = ["id", "الدفعة", "القسم", "الصعوبة", "المراجعة الداخلية", "العبارة", "الإجابة", "البدائل", "الخيارات", "المعنى", "الأصل", "المصدر", "قرارك", "ملاحظتك", "في لعبة أخرى"];
+  const rows = DATA.items.map(x => [x.id, x.batch, SEC[x.sec], LV[x.lv], ST[x.status], x.text.replace(/[{}]/g, ""), x.ans, x.alt.join("، "), x.opts.join(" / "), x.why, x.src, x.ref, DN[(dec[x.id] || {}).d] || "", (dec[x.id] || {}).note || "", x.xgame || ""]);
+  return "\ufeff" + [head, ...rows].map(r => r.map(q).join(",")).join("\r\n");
+}
+async function saveFile(name, data, label){
+  if (downloads){ try { await downloads.save({filename:name, data}); markExported(); ioMsg(`حُفظ ${label} في الملف «${name}».`); return; } catch(e){ if (e && e.code === "cancelled"){ ioMsg("أُلغي التصدير."); return; } } }
+  try { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], {type:"application/octet-stream"})); a.download = name; document.body.appendChild(a); a.click(); a.remove(); markExported(); ioMsg(`جرى تنزيل ${label} («${name}»). إن لم يظهر الملف فانسخ النص أدناه.`); } catch(e){}
+  document.getElementById("expBox").hidden = false; document.getElementById("expText").value = data;
+}
+function markExported(){ try { localStorage.setItem(EXPK, String(Date.now())); } catch(e){} backupWarn(); }
 const ioMsg = t => { document.getElementById("ioMsg").textContent = t; };
 document.getElementById("expBtn").addEventListener("click", async () => {
   const data = exportData(), n = Object.values(JSON.parse(data).decisions).filter(v => v.d || v.note).length;
   const name = `akml-decisions-${TEST ? "test-" : ""}${new Date().toISOString().slice(0, 10)}.json`;
-  if (downloads){ try { const r = await downloads.save({filename:name, data}); ioMsg(`صُدّر ${n} قرارًا إلى الملف «${name}».`); return; } catch(e){ if (e && e.code === "cancelled"){ ioMsg("أُلغي التصدير."); return; } } }
+  if (downloads){ try { const r = await downloads.save({filename:name, data}); markExported(); ioMsg(`صُدّر ${n} قرارًا إلى الملف «${name}».`); return; } catch(e){ if (e && e.code === "cancelled"){ ioMsg("أُلغي التصدير."); return; } } }
   document.getElementById("expBox").hidden = false; document.getElementById("expText").value = data; ioMsg(`${n} قرارًا جاهزًا للنسخ.`);
 });
+document.getElementById("fullBtn").addEventListener("click", () => saveFile(`akml-review-full-${TEST ? "test-" : ""}${new Date().toISOString().slice(0, 10)}.json`, fullData(), "كل الأسئلة مع قراراتك وملاحظاتك"));
+document.getElementById("csvBtn").addEventListener("click", () => saveFile(`akml-review-${TEST ? "test-" : ""}${new Date().toISOString().slice(0, 10)}.csv`, csvData(), "جدول الأسئلة والقرارات"));
 document.getElementById("copyBtn").addEventListener("click", async () => {
   const t = document.getElementById("expText");
   try { await navigator.clipboard.writeText(t.value); ioMsg("نُسخ النص."); } catch(e){ t.select(); ioMsg("حدّد النص وانسخه يدويًا."); }
@@ -218,7 +259,7 @@ document.getElementById("copyBtn").addEventListener("click", async () => {
 document.getElementById("impFile").addEventListener("change", async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
   try {
-    const j = JSON.parse(await f.text()); if (j.app !== "akml-review" || !j.decisions) throw new Error("ليس ملف قرارات هذه الصفحة");
+    const j = JSON.parse(await f.text()); if (j.app !== "akml-review" || !j.decisions) throw new Error("ليس ملف مراجعة من هذه الصفحة");
     let n = 0;
     for (const [id, v] of Object.entries(j.decisions)){
       if (!DATA.items.some(x => x.id === id) || !v || !["", "ok", "edit", "no"].includes(v.d || "")) continue;
@@ -238,7 +279,7 @@ document.getElementById("permBtn").addEventListener("click", async () => {
 document.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.id === "moreBtn"){ shown += PAGE; render(); return; }
-  if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; shown = PAGE; try { localStorage.setItem("ak-rev-f", JSON.stringify({batch:F.batch, status:F.status, sec:F.sec, mine:F.mine})); } catch(e){} render(); return; }
+  if (b.dataset.k){ F[b.dataset.k] = b.dataset.v; shown = PAGE; try { localStorage.setItem("ak-rev-f", JSON.stringify({batch:F.batch, status:F.status, sec:F.sec, mine:F.mine, x:F.x})); } catch(e){} render(); return; }
   if (b.dataset.d){ const id = b.closest(".decide").dataset.id, d = b.dataset.d === "clear" ? "" : b.dataset.d; if (mine(id).d !== d) decide(id, {d}); }
 });
 // notes: kept on this device at every keystroke, sent a moment after typing stops (and when leaving the field)
