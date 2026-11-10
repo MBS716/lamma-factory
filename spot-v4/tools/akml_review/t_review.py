@@ -104,6 +104,17 @@ async def main():
         for d in ('no', 'edit', 'ok', 'no'): await pg.click(f'{card(X3)} [data-d={d}]')
         await pg.wait_for_timeout(1500)
         check(STORE['test_decisions'][X3].get('d') == 'no' and 'بانتظار' not in await pg.inner_text('#sync'), 'four quick changes on one question: the server keeps the last one (رفض), nothing left waiting')
+        # export to a file (here without the downloads capability: the text is shown to copy) and import it on a clean device
+        await pg.click('#expBtn'); await pg.wait_for_timeout(400)
+        exp = json.loads(await pg.input_value('#expText'))
+        check(exp['app'] == 'akml-review' and exp['decisions'][X2]['d'] == 'edit' and 'يُستبدل' in exp['decisions'][X2]['note'], 'export: every decision and note is in the exported file')
+        open(os.path.join(HERE, 'export_sample.json'), 'w').write(json.dumps(exp, ensure_ascii=False))
+        STORE['test_decisions'] = {}                       # the server lost everything
+        ctx4, pg4 = await device('clean'); await open_(pg4)
+        check(await pg4.get_attribute(f'{card(X2)} [data-d=edit]', 'aria-pressed') == 'false', 'a clean device with an empty server shows no decisions')
+        await pg4.set_input_files('#impFile', os.path.join(HERE, 'export_sample.json')); await pg4.wait_for_timeout(1500)
+        check(STORE['test_decisions'].get(X2, {}).get('d') == 'edit' and 'يُستبدل' in STORE['test_decisions'].get(X2, {}).get('note', '') and 'استُورد' in await pg4.inner_text('#ioMsg'), 'import: the decisions and notes come back and are sent to the server')
+        await ctx4.close()
         # the real review (no #test) does not show test decisions
         ctx3, pg3 = await device('real'); await open_(pg3, '')
         check(not await pg3.is_visible('#testBanner') and await pg3.get_attribute(f'{card(X1)} [data-d=ok]', 'aria-pressed') == 'false', 'the real review page (without #test) shows none of the test decisions')

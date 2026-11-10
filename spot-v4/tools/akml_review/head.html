@@ -28,6 +28,8 @@ h1{font-family:var(--display);font-size:1.9rem;margin:0;text-wrap:balance}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 14px;display:flex;flex-direction:column;min-width:110px}
 .stat b{font-size:1.5rem;font-variant-numeric:tabular-nums}
 .stat span{color:var(--muted);font-size:.85rem}
+.prog{display:flex;flex-direction:column;gap:4px}.pbar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.pbar i{display:block;height:100%;background:var(--gold);width:0}#ptext{font-size:.88rem;color:var(--muted)}
+#moreBtn{align-self:center;margin:12px auto;display:block;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 22px}#moreBtn[hidden]{display:none}
 .stat.ok b{color:var(--ok)} .stat.no b{color:var(--no)} .stat.hold b{color:var(--hold)} .stat.mine b{color:var(--gold)}
 .note{background:var(--gold-soft);border-radius:12px;padding:10px 14px;font-size:.92rem}
 .bar{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -73,6 +75,11 @@ input[type=search]{font:inherit;border:1px solid var(--line);background:var(--pa
 .trow .decide{border-top:0;padding-top:0} .tphr mark{background:none;color:var(--gold);border-bottom:2px solid var(--gold)}
 .decide button.d-clear{color:var(--muted);border-style:dashed;font-size:.8rem} .trow textarea{min-height:2em}
 .tlog{margin:0;font-size:.85rem;color:var(--ok)}
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools button,.imp{font:inherit;font-size:.88rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:5px 12px;cursor:pointer}
+.imp input{display:none} #permBtn{border-color:var(--gold);color:var(--gold);font-weight:600}
+.diag summary{cursor:pointer;color:var(--muted);font-size:.88rem} .diag .kv{margin-top:6px}
+#expBox{display:flex;flex-direction:column;gap:6px} #expText{min-height:8em;font-family:ui-monospace,monospace;font-size:.8rem;direction:ltr;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
 .sync{margin:0;font-size:.9rem;color:var(--muted)}
 .sync.ok{color:var(--ok)} .sync.warn{color:var(--hold);font-weight:600}
 .dcs{display:inline-flex;gap:6px;flex-wrap:wrap}
