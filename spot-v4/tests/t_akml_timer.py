@@ -128,6 +128,16 @@ async def main():
         await reveal(); sc = await host.evaluate('JSON.parse(JSON.stringify(H.priv.ans))'); s = await S(host)
         check(sc[kA]['ms'] < 2000 and s['res'][kA][4] >= 48, f'automatic: صالح {sc[kA]["ms"]} ms from the start of the answer time, bonus {s["res"][kA][4]}; the 10 s reading not counted')
 
+        # ================= every answer time: 10, 15, 20, 30 (45 and 60 above) =================
+        for T in (10, 15, 20, 30):
+            await lobby(); await opt('rs', 'man'); await opt('m', 'c'); await opt('t', str(T))
+            await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "q"', timeout=15000); await host.wait_for_timeout(800)
+            s = await S(host); rd_ok = s['rd'] and s['rd']['a'] == 0 and s['qs'] - await NOW(host) > 3600e3
+            await go(); await started(); await A.wait_for_selector('[data-ak]', timeout=6000)
+            tc = (await A.inner_text('#akClock')).strip()
+            await host.wait_for_function(f'H.s.ph === "r"', timeout=(T + 8) * 1000); s = await S(host)
+            check(s['q']['T'] == T and rd_ok and tc.isdigit() and T - 3 <= int(tc) <= T, f'{T} s: reading first, then the clock starts at {tc} on the phone and the question closes after {T} s')
+
         # ================= fastest finger · aloud · manual =================
         await lobby(); await opt('rs', 'man'); await opt('m', 'b'); await opt('binp', 'o'); await opt('t', '30')
         await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "q"', timeout=15000); await host.wait_for_timeout(1200)
