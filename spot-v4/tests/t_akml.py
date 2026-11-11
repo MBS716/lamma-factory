@@ -3,6 +3,8 @@ seven answer methods, the answer locks, typed answers, special rounds, the tie a
 Real pages and real taps; the test reads the host's private data only to know which answer is right."""
 import asyncio, json, sys, os
 from common import Env
+# the answer check is tested on these questions of the game's first bank (some are no longer in the bank: they repeat other games)
+AKFIX = {"AK031": {"a": "الأكسجين", "alt": ["أكسجين", "اكسجين", "الاكسجين", "الأوكسجين", "الاوكسجين", "أوكسجين"], "o": ["الأكسجين", "النيتروجين", "الكربون", "الهيليوم"]}, "AK033": {"a": "الجمل", "alt": ["جمل", "البعير", "الإبل", "الناقة"], "o": ["الجمل", "الحصان", "الحمار", "الغزال"]}, "AK036": {"a": "100", "alt": ["مئة", "مائة", "١٠٠"], "o": ["100", "90", "80", "120"]}, "AK011": {"a": "الضيق", "alt": [], "o": ["الضيق", "الفرح", "السفر", "العمل"]}, "AK055": {"a": "الشجرة", "alt": ["الشجره", "شجرة"], "o": ["الشجرة", "السطح", "الجدار", "السماء"]}, "AK038": {"a": "إيفرست", "alt": ["افرست", "إفرست", "ايفرست", "إيفريست", "افريست"], "o": ["إيفرست", "كليمنجارو", "مون بلان", "كي 2"]}, "AK034": {"a": "المشتري", "alt": ["مشتري"], "o": ["المشتري", "زحل", "نبتون", "أورانوس"]}, "AK016": {"a": "حنين", "alt": [], "o": ["حنين", "حسين", "حمدان", "سليمان"]}, "AK037": {"a": "366", "alt": ["٣٦٦"], "o": ["366", "365", "364", "360"]}}
 R = []
 def check(ok, msg): R.append((bool(ok), msg)); print(('OK   ' if ok else 'FAIL ') + msg, flush=True); return ok
 S = lambda pg: pg.evaluate('JSON.parse(JSON.stringify(H.s))')
@@ -122,7 +124,7 @@ async def main():
         else:
             await reveal(); s = await S(host); check(v_al == 'ok', f'«{alv}» is an approved alternative of «{ans}»')
         check(s['res'][kA][1] == 1 and s['res'][kD][1] == 1 and s['res'][kC][1] == 0, 'the answer (with extra spaces) right for two players; another option of the question wrong')
-        cases = await host.evaluate('''() => { const by = H.priv.B.by, t = (id, x) => akCheck(by[id], x);
+        cases = await host.evaluate('''() => { const by = Object.assign(''' + json.dumps(AKFIX, ensure_ascii=False) + ''', H.priv.B.by), t = (id, x) => akCheck(by[id], x);
           return {hamza:t("AK031","الاكسجين"), alt:t("AK033","البعير"), digits:t("AK036","١٠٠"), word:t("AK036","مئة"), al:t("AK011","ضيق"), al2:t("AK011","الضيق"),
                   taa:t("AK055","الشجره"), near:t("AK038","افرصت"), opt:t("AK011","الفرح"), other:t("AK034","زحل"), similar:t("AK016","حسين"), num:t("AK037","365"), tash:t("AK011","الضِّيقِ")}; }''')
         check(all(cases[k] == 'ok' for k in ('hamza', 'alt', 'digits', 'word', 'al2', 'taa', 'tash')), f'accepted: missing hamza, approved alternative, Arabic-Indic digits, «مئة», ه for ة, diacritics {cases}')
