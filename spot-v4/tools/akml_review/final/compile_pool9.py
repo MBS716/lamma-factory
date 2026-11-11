@@ -19,9 +19,11 @@ for sec in ['arab', 'info', 'info_c', 'lang', 'fun']:
 by = {x['id']: x for x in items}
 # cross-section decisions (a verse or saying appears once in the whole bank)
 override = {}
+# my own read: «الوجد» in the text is the answer word of AK013 «من جدّ {وجد}» (same letters)
+textfix = {'B9-L027': '«الجَوى» هو {الحُرقة} وشدّة الشوق من عشقٍ أو حزن'}
 out = []
 for it in items:   # my own read
-    pass
+    if it['id'] in textfix: it['text'] = textfix[it['id']]
 for it in items:
     rv = it['review']
     st = 'rejected' if rv['verdict'] == 'reject' else 'accepted'
