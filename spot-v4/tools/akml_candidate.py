@@ -33,7 +33,7 @@ for x in items:
         if rec == 'reject': why['out: recommended for rejection'] += 1; continue
     q = {k: x[k] for k in F if k in x}
     fix = fl.get('fix') or {}
-    if fix and (d == 'okfix' or (not d and rec == 'fix')):
+    if fix and (d == 'okfix' or (not d and rec in ('fix', 'keep'))):          # a kept question keeps its recommended fix
         for k, v in fix.items(): q[k] = list(v) if k in ('modes', 'alt', 'opts') else v
         why['in: with the recommended fix'] += 1
     else: why['in' + (': the owner approved' if d else '')] += 1

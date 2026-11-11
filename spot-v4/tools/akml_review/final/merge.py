@@ -21,7 +21,7 @@ for f in sorted(glob.glob(os.path.join(D, 'out_g*.json'))):
     for r in json.load(open(f)):
         for c in r['cat']: add(r['id'], c, r['rec'], r.get('why', ''), r.get('issue', ''), r.get('fix'))
 for k, v in json.load(open(os.path.join(D, 'mine.json'))).items():   # my own final read wins
-    flags[k].update(v)
+    flags.setdefault(k, {'cats': [], 'rec': 'keep', 'why': '', 'issue': '', 'fix': None, 'other': ''}).update(v)
 for f in flags.values():
     if not f['fix']: del f['fix']
 json.dump(flags, open(os.path.join(D, 'flags.json'), 'w'), ensure_ascii=False, indent=0)
