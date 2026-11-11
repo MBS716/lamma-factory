@@ -705,6 +705,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akrev p:not(.akx){font-size:1.08rem;line-height:1.7}
 .aksrc{font-size:.92rem!important}
 .akget .timer{font-size:4.5rem}
+.akcard .opt[disabled]{opacity:.5;cursor:default;filter:saturate(.6)}   /* أكملها: the options during the reading time, not yet open */
 .akform{display:flex;gap:10px;margin-top:6px}
 .akform .field{flex:1;font-size:1.35rem}
 .aknote{font-size:.92rem;text-align:center}
@@ -852,7 +853,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
         <span class="tid"><span dir="ltr">ID: <b id="tidNum">10000008</b></span><button class="btn ghost sm" id="copyId" type="button">نسخ</button></span>
       </div>
     </div>
-    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.6-akml2 · معاينة 2544</span></p>
+    <p class="copy">© جميع حقوق النشر محفوظة لـ TIGER<br><span class="ver" dir="ltr">لمّة v4.7-akml3 · معاينة 2544</span></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1852,6 +1853,12 @@ const AK_MDESC = {
 const AK_LOCK = {all:"الجميع يجيب", first:"أول إجابة صحيحة", turn:"صاحب الدور فقط"};
 const AK_INP = {c:"اختيار من أربعة", t:"كتابة", o:"شفهيًا ويحكم المقدّم"};
 const AK_LEAD = 3000;          // ms between sending a question and the start of its clock (every phone has it on screen)
+/* reading: a question is shown first with its clock stopped (s.rd), and nobody may answer or press «أعرف الإجابة».
+   The answer time starts when the host presses «ابدأ وقت الإجابة» (o.rs "man") or after a reading time he chose (o.rs
+   "auto", o.rw seconds). It starts at one moment of the shared clock (s.qs) for every phone, AK_GO after the press;
+   the speed bonus counts from that moment only. */
+const AK_GO = 2000;            // ms between the host's press and the start of the answer time (the start reaches every phone)
+const AK_HOLD = 864e5;         // a clock that waits for the host: its start is far away until he starts it
 const AK_TURN = 15;            // default seconds for the player on turn in «أسرع إصبع» (the host can choose 10–30)
 const AK_DRAIN = 150;          // ms: answers and presses are ordered by the moment they reached the host, a moment after they arrive
 const AK_AUTO = 8;             // seconds on the answer before the next question (automatic mode)
@@ -1927,6 +1934,9 @@ function akFix(o){                  // keeps the settings consistent after any c
   if (o.tn.g && o.tn.g === o.tn.o) o.tn.o = "";             // two teams never share a name
   if (!["sum", "avg"].includes(o.tsc)) o.tsc = "sum";
   if (![10, 15, 20, 30].includes(+o.bt)) o.bt = AK_TURN;
+  if (![10, 15, 20, 30, 45, 60].includes(+o.t)) o.t = 20;
+  if (!["man", "auto"].includes(o.rs)) o.rs = "man";
+  if (![10, 15, 20].includes(+o.rw)) o.rw = 15;
   if (!["auto", "man"].includes(o.bst)) o.bst = "auto";
   if (!["join", "rnd", "host"].includes(o.ord)) o.ord = "join";
   return o;
@@ -1997,7 +2007,7 @@ const akLeft = s => {
 const akTurnLeft = s => { const z = s.bz; if (!z || z.cur < 0) return 0; const T = (+s.o.bt || AK_TURN) * 1000; return Math.max(0, T - (z.tu || 0) - (z.ta ? Math.max(0, srvNow() - z.ta) : 0)); };
 
 const Akml = {
-  init: () => ({sp:0, step:0, i:0, n:10, qs:0, qd:null, q:null, got:[], cnt:0, res:{}, top:[], rev:null, dist:null, bz:null, tt:null, hk:"", nx:0, fin:null, tm:{}, ts:null, tsg:null, wk:null, tb:null}),
+  init: () => ({sp:0, step:0, i:0, n:10, qs:0, qd:null, q:null, got:[], cnt:0, res:{}, top:[], rev:null, dist:null, bz:null, tt:null, hk:"", nx:0, fin:null, tm:{}, ts:null, tsg:null, wk:null, tb:null, rd:null}),
   savePriv(){ const p = H.priv; return {order:p.order || [], plan:p.plan || [], pos:p.pos || 0, sc:p.sc || {}, ts:p.ts || null, ans:p.ans || {}, arr:p.arr || [], ci:p.ci, qid:p.qid, revealedK:p.revealedK, own:p.own || {}, hkp:p.hkp || null, pend:p.pend || [], dec:p.dec || {}, bzw:p.bzw || {}, ids:p.ids || [], spMax:p.spMax || 0, tmk:p.tmk || null, rot:p.rot || null, ttn:p.ttn || 0, spare:p.spare || [], tbk:p.tbk || null}; },
   async restore(pv){
     Object.assign(H.priv, {order:pv.order || [], plan:pv.plan || [], pos:+pv.pos || 0, sc:pv.sc || {}, ts:pv.ts || null, ans:pv.ans || {}, arr:pv.arr || [], ci:pv.ci, qid:pv.qid, revealedK:pv.revealedK, own:pv.own || {}, hkp:pv.hkp || null, pend:pv.pend || [], dec:pv.dec || {}, bzw:pv.bzw || {}, ids:pv.ids || [], spMax:+pv.spMax || 0, tmk:pv.tmk || null, rot:pv.rot || null, ttn:+pv.ttn || 0, spare:pv.spare || [], tbk:pv.tbk || null});
@@ -2045,6 +2055,7 @@ const Akml = {
     }
     if (a === "tauto"){ Akml.teamsAuto(); return pushHost(); }
     if (a === "ttpick") return Akml.ttPick(d.k);
+    if (a === "akgo") return Akml.go();
     if (a === "tmove"){             // only the host moves a player (before the match, or between questions)
       if (s.ph !== "lobby" && s.ph !== "r") return;
       const k = d.k; if (!k) return; s.tm[k] = s.tm[k] === "g" ? "o" : "g"; H.priv.tmk = {...s.tm}; return pushHost();
@@ -2099,11 +2110,23 @@ const Akml = {
     const qd = {pre:it.pre, post:it.post, s:it.s, l:it.l};
     if (p.inp === "c"){ const o = shuffle(it.o, rnd()); H.priv.ci = o.indexOf(it.o[0]); qd.o = o; }
     s.sp++; H.priv.spMax = s.sp; s.step = 0; s.qd = qd; s.q = {m:p.m, inp:p.inp, lock:p.lock, mul:p.mul, tag:p.tag, T:p.T, fx:p.fx};
-    s.ph = "q"; s.qs = srvNow() + AK_LEAD; s.got = []; s.cnt = 0; s.res = {}; s.rev = null; s.dist = null; s.nx = 0; s.wk = null; s.tsg = null; s.tsx = null;
+    s.ph = "q"; Akml.readStart(); s.got = []; s.cnt = 0; s.res = {}; s.rev = null; s.dist = null; s.nx = 0; s.wk = null; s.tsg = null; s.tsx = null;
     s.bz = p.m === "b" ? {q:[], cur:-1, bl:[], tid:0, used:0, ra:s.qs, ta:0, tu:0, only:null, st:0} : null;
     s.tt = null;
     if (p.m === "tt"){ if (replace) H.priv.ttn = Math.max(0, H.priv.ttn - 1); Akml.ttTurn(Akml.ttFirst(), false); }       // a replaced question keeps the same team on turn
     H.priv.tickAt = Date.now(); clearInterval(H.priv.tick); H.priv.tick = setInterval(Akml.tick, 250);
+    pushHost();
+  },
+  // the reading of a new question: its clock waits for the host (manual) or for the reading time (automatic)
+  readStart(){
+    const s = H.s, auto = s.o.rs === "auto", e = srvNow() + (auto ? (+s.o.rw || 15) * 1000 : AK_HOLD);
+    s.rd = {a:auto ? 1 : 0, e}; s.qs = e;
+  },
+  // «ابدأ وقت الإجابة»: the answer time starts at the same moment for every phone
+  go(){
+    const s = H.s; if (s.ph !== "q" || !s.rd || s.rd.a || srvNow() >= s.qs || (s.tt && s.tt.wait)) return;
+    s.rd = null; const at = srvNow() + AK_GO;
+    s.qs = at; if (s.bz && s.bz.cur < 0 && !s.bz.used) s.bz.ra = at; if (s.tt) s.tt.at = at;
     pushHost();
   },
   next(force){
@@ -2143,7 +2166,7 @@ const Akml = {
     const s = H.s, k = Akml.ttWho(t), prev = s.tt;
     const T = steal ? Math.max(5, Math.round(s.q.T / 2)) : s.q.T;
     s.tt = {t, k, n:k ? Akml.nm(k) : "", steal:steal ? 1 : 0, tid:(prev ? prev.tid : 0) + 1, T, at:prev ? srvNow() + 1500 : s.qs, first:prev ? prev.first : t, wait:0};
-    if (prev) s.qs = s.tt.at;            // the stolen chance has its own short countdown and clock
+    if (prev){ s.qs = s.tt.at; s.rd = null; }           // the stolen chance has its own short countdown and clock
     // «يختاره المقدّم»: the clock waits until the host picks who answers (the rotation's member is suggested)
     if (s.o.ord === "host"){ s.tt.wait = 1; s.tt.at = s.qs = srvNow() + 864e5; }
   },
@@ -2154,7 +2177,9 @@ const Akml = {
     const R = H.priv.rot; R.owe = R.owe || {g:[], o:[]};
     if (t.k && t.k !== k && !R.owe[t.t].includes(t.k)) R.owe[t.t].unshift(t.k);
     R.owe[t.t] = R.owe[t.t].filter(x => x !== k);
-    t.k = k; t.n = Akml.nm(k); t.wait = 0; t.tid++; t.at = s.qs = srvNow() + AK_LEAD;
+    t.k = k; t.n = Akml.nm(k); t.wait = 0; t.tid++;
+    // still reading: the clock keeps waiting for the host's start, or for the end of the reading time
+    t.at = s.qs = s.rd && !s.rd.a ? s.rd.e : Math.max(srvNow() + AK_LEAD, s.rd ? s.rd.e : 0);
     pushHost();
   },
   // the member on turn went offline: after 3 seconds the turn passes to another member of the same team, with a fresh clock;
@@ -2243,6 +2268,7 @@ const Akml = {
     const T = (s.tt ? s.tt.T : q.T) * 1000, t0 = q.lock === "turn" && q.m === "b" ? (s.bz.ta || arr) : s.qs;
     const rec = arr - t0, said = Number.isFinite(+m.at) ? +m.at - t0 : rec;
     if (q.m !== "b" && (said > T + 1000 || rec > T + 5000 || said < -1500)) return;       // outside the answer time
+    if (rec < -1000) return;                              // reached the host before the answer time started (reading)
     // the answer time on the shared clock: a phone cannot claim to be more than 3 s faster than the moment its answer
     // arrived, unless the host's page was asleep (then the phone's own time counts)
     const asleep = Date.now() - (H.priv.tickAt || 0) > 1500;
@@ -2486,7 +2512,7 @@ const Akml = {
     const it = B.by[H.priv.tbq.shift()]; H.priv.tbn++; s.tb.n = H.priv.tbn;
     H.priv.ids.push(it.id); Object.assign(H.priv, {qid:it.id, ans:{}, arr:[], pend:[], dec:{}, bzw:{}, ci:-1});
     s.sp++; H.priv.spMax = s.sp; s.qd = {pre:it.pre, post:it.post, s:it.s, l:it.l}; s.q = {m:"b", inp:"t", lock:"turn", mul:1, tag:"tb", T:30, fx:0};
-    s.ph = "q"; s.qs = srvNow() + AK_LEAD; s.got = []; s.cnt = 0; s.rev = null; s.wk = null; s.tt = null;
+    s.ph = "q"; Akml.readStart(); s.got = []; s.cnt = 0; s.rev = null; s.wk = null; s.tt = null;
     s.bz = {q:[], cur:-1, bl:[], tid:0, used:0, ra:s.qs, ta:0, tu:0, only:null, st:0, tb:s.o.sys === "team" ? null : H.priv.tbk};
     clearInterval(H.priv.tick); H.priv.tick = setInterval(Akml.tick, 250); pushHost();
   },
@@ -2603,7 +2629,9 @@ const Akml = {
     const nsec = o.secs.length || AK_SECS.length;
     const qs = row("الأقسام", secsRow) + (nsec > 1 ? row("التبديل بين الأقسام", seg("sw", [["rot", "بالتناوب"], ["blk", "قسم بعد قسم"], ["rnd", "عشوائي"]], o.sw)) : "")
       + row("الصعوبة", seg("dif", [["all", "الكل"], ["0", "سهل"], ["1", "متوسط"], ["2", "صعب"], ["up", "متدرّج"]], String(o.dif))) + row("عدد الأسئلة", seg("n", [[10, "10"], [15, "15"], [20, "20"], [30, "30"]], o.n));
-    const tm = row("مدة الإجابة", seg("t", [[10, "10 ث"], [15, "15 ث"], [20, "20 ث"], [30, "30 ث"]], o.t)) + row("السؤال التالي", seg("go", [["man", "يدويًا"], ["auto", "تلقائيًا بعد 8 ث"]], o.go));
+    const tm = row("مدة الإجابة", seg("t", [[10, "10 ث"], [15, "15 ث"], [20, "20 ث"], [30, "30 ث"], [45, "45 ث"], [60, "دقيقة"]], o.t))
+      + row("بدء وقت الإجابة", seg("rs", [["man", "يدويًا: يضغط المقدّم"], ["auto", "تلقائيًا بعد مهلة قراءة"]], o.rs)) + (o.rs === "auto" ? row("مهلة القراءة", seg("rw", [[10, "10 ث"], [15, "15 ث"], [20, "20 ث"]], o.rw)) : "")
+      + row("السؤال التالي", seg("go", [["man", "يدويًا"], ["auto", "تلقائيًا بعد 8 ث"]], o.go));
     const fastOk = kinds.some(x => x === "c" || x === "t") && (o.lock === "all" || m === "mx");
     const sp = `<div class="seg wrap">${tog("gold", "جولة ذهبية ×2")}${tog("fin", "جولة نهائية ×3")}${tog("surp", "أسئلة مفاجئة ×2")}${fastOk ? tog("fast", "تحدي السرعة") : ""}</div><p class="muted aknote">الذهبية: ثلاثة أسئلة في منتصف المباراة. النهائية: آخر ثلاثة أسئلة. المفاجئة: أسئلة لا يُعرف مكانها مسبقًا.${fastOk ? ` تحدي السرعة: سؤال من كل أربعة بـ${AK_FAST_T} ثوانٍ ومكافأة سرعة حتى ${AK_PTS.fastX}.` : ""}</p>`;
     const tie = row("عند التعادل", seg("tie", [["rules", "قواعد الحسم"], ["round", "جولة فاصلة"]], o.tie));
@@ -2649,7 +2677,13 @@ const Akml = {
       const tt = s.tt, pick = tt && tt.wait;
       const picker = pick ? `<p class="muted">اختر من يجيب عن ${akTN(tt.t)}. المقترح حسب التناوب: <b>${esc(tt.n || "—")}</b></p><div class="chips akpick">${players.filter(p => s.tm[dfKey(pname(p))] === tt.t).map(p => { const k = dfKey(pname(p));
         return `<button class="chip ${tt.t} ${k === tt.k ? "on" : ""} ${p.away ? "away" : ""}" data-h="ttpick" data-k="${esc(k)}" ${p.away ? "disabled" : ""}>${k === tt.k ? "★ " : ""}${esc(pname(p))}${p.away ? " · غير متصل" : ""}</button>`; }).join("")}</div>` : "";
-      html = `<div class="panel center stack akget">${Akml.head(s)}${tt ? `<p class="bigmsg">${tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${tt.t}">${akTN(tt.t)}</span></p>${pick ? picker : `<p class="muted">يجيب ${esc(tt.n || "—")}</p>`}` : `<p class="bigmsg">استعدّوا…</p>`}${pick ? "" : `<span class="timer">${akSec(s.qs - srvNow())}</span>`}${key}</div>`;
+      // the question is on every screen; the answer time has not started (reading, or the moment before the start)
+      const rd = s.rd, man = rd && !rd.a, who = tt ? `<p class="bigmsg">${tt.steal ? "فرصة السرقة: " : "الدور: "}<span class="t${tt.t}">${akTN(tt.t)}</span></p>${pick ? picker : `<p class="muted">يجيب ${esc(tt.n || "—")}</p>`}` : "";
+      const clock = man ? `<p class="bigmsg">وقت القراءة</p><p class="muted">اقرأ السؤال على اللاعبين. لا تُقبل إجابة قبل أن يبدأ الوقت.</p><button class="btn big" data-h="akgo" ${pick ? "disabled" : ""}>▶ ابدأ وقت الإجابة</button>${pick ? `<p class="muted">اختر من يجيب أولًا.</p>` : ""}`
+        : rd ? `<p class="bigmsg">وقت القراءة</p><p class="muted">يبدأ وقت الإجابة تلقائيًا بعد</p><span class="timer">${akSec(s.qs - srvNow())}</span>`
+        : pick ? "" : `<p class="bigmsg">يبدأ وقت الإجابة بعد</p><span class="timer">${akSec(s.qs - srvNow())}</span>`;
+      html = `<div class="layout"><div class="panel stack akcard">${Akml.head(s)}${akGapHTML(s.qd, null, "big")}${q.inp === "c" ? Akml.optsHTML(s, false, null, kci) : ""}</div>
+        <div class="panel stack center akget">${who}${clock}${key}${s.tb ? "" : `<div class="row" style="justify-content:center"><button class="btn ghost sm" data-h="skip">تخطّي السؤال</button></div>`}</div></div>`;
     } else if (s.ph === "q"){
       const left = akSec(akLeft(s));
       let side;
@@ -2750,8 +2784,13 @@ const Akml = {
     const sent = () => q.inp === "c" ? `<p class="bigmsg">تم تسجيل إجابتك</p><div class="opt c${a.c}" style="justify-content:center"><span class="sh">${SHAPES[a.c]}</span><span>${esc(s.qd.o[a.c])}</span></div>` : `<p class="bigmsg">تم إرسال إجابتك</p><p class="aksent">«${esc(a.x)}»</p>`;
     if (s.ph === "q" && now < s.qs){
       live.akClock = s.tt && s.tt.wait ? "" : `<span class="timer">${akSec(s.qs - now)}</span>`;
-      const tt = s.tt && s.tt.wait ? `<p class="bigmsg">${s.tt.t === myT ? "دور فريقك" : "دور الفريق الآخر"}</p><p class="muted">المقدّم يختار من يجيب عن ${akTN(s.tt.t)}…</p>` : s.tt ? `<p class="bigmsg">${s.tt.t === myT ? (s.tt.steal ? "فرصة سرقة لفريقك!" : "دور فريقك") : s.tt.steal ? "فرصة سرقة للفريق الآخر" : "دور الفريق الآخر"}</p><p class="muted">${s.tt.k === me ? "أنت من يجيب" : "يجيب " + esc(s.tt.n || "—")}</p>` : `<p class="bigmsg">استعدّ…</p>`;
-      put(`get|${s.sp}|${s.tt ? s.tt.tid + "|" + s.tt.wait : 0}`, phead(badge) + `<div class="panel center stack akget"><p class="muted">${s.tb ? "جولة فاصلة" : `السؤال ${s.i} من ${s.n}`} · ${esc(akSecName(s.qd.s))}</p>${q.tag && AK_TAG[q.tag] ? `<p class="aktag ${q.tag}">${AK_TAG[q.tag]}</p>` : ""}${q.fx ? `<p class="aktag fast">⚡ تحدي السرعة</p>` : ""}${tt}<div id="akClock"></div></div>`);
+      const tt = s.tt && s.tt.wait ? `<p class="bigmsg">${s.tt.t === myT ? "دور فريقك" : "دور الفريق الآخر"}</p><p class="muted">المقدّم يختار من يجيب عن ${akTN(s.tt.t)}…</p>` : s.tt ? `<p class="bigmsg">${s.tt.t === myT ? (s.tt.steal ? "فرصة سرقة لفريقك!" : "دور فريقك") : s.tt.steal ? "فرصة سرقة للفريق الآخر" : "دور الفريق الآخر"}</p><p class="muted">${s.tt.k === me ? "أنت من يجيب" : "يجيب " + esc(s.tt.n || "—")}</p>` : "";
+      // the question is shown while the clock waits: options can be read but not chosen, and nothing can be sent
+      const man = s.rd && !s.rd.a, state = man ? "man" : s.rd ? "auto" : "go";
+      if (man) live.akClock = "";
+      const msg = man ? `<p class="muted">وقت القراءة · ينتظر الوقت المقدّم</p>` : s.rd ? `<p class="muted">وقت القراءة · يبدأ وقت الإجابة بعد</p>` : `<p class="muted">يبدأ وقت الإجابة بعد</p>`;
+      const opts = q.inp === "c" ? `<div class="opts">${range(4).map(i => `<button class="opt c${i}" disabled><span class="sh">${SHAPES[i]}</span><span>${esc(s.qd.o[i])}</span></button>`).join("")}</div>` : "";
+      put(`get|${s.sp}|${s.tt ? s.tt.tid + "|" + s.tt.wait : 0}|${state}`, phead(badge) + `<div class="panel center stack akget">${q.fx ? `<p class="aktag fast">⚡ تحدي السرعة</p>` : ""}${tt}${msg}<div id="akClock"></div></div>` + card(opts) + `</div>`);
     } else if (s.ph === "q"){
       const left = akLeft(s);
       live.akClock = `<span class="timer sm ${left <= 5000 ? "warn" : ""}">${q.m === "b" && s.bz.cur >= 0 ? "⏸" : akSec(left)}</span>`;
@@ -2827,7 +2866,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "adf1d48340", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
+const BUILD = "8a4be6bdda", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-akml/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -3009,7 +3048,7 @@ const GAMES = {
           {key:"sw", def:"rot", choices:() => [["rot"],["blk"],["rnd"]]},
           {key:"dif", def:"all", choices:() => [["all"],["0"],["1"],["2"],["up"]]},
           {key:"n", def:10, choices:() => [[10],[15],[20],[30]]},
-          {key:"t", def:20, choices:() => [[10],[15],[20],[30]]},
+          {key:"t", def:20, choices:() => [[10],[15],[20],[30],[45],[60]]}, {key:"rs", def:"man", choices:() => [["man"],["auto"]]}, {key:"rw", def:15, choices:() => [[10],[15],[20]]},
           {key:"go", def:"man", choices:() => [["man"],["auto"]]},
           {key:"tie", def:"rules", choices:() => [["rules"],["round"]]},
           {key:"steal", def:1, choices:() => []}, {key:"gold", def:0, choices:() => []}, {key:"fin", def:0, choices:() => []},
@@ -3074,7 +3113,7 @@ const HELP = {
     + sec("طرق الإجابة", `<ul><li><b>اختيار من أربعة:</b> الجميع يختار من جواله.</li><li><b>إكمال مباشر:</b> الجميع يكتب الجزء الناقص.</li><li><b>أسرع إصبع:</b> أول من يضغط «أعرف الإجابة» يأخذ الدور، ولا تُفتح خانة الكتابة إلا له (أو يجيب بصوته ويحكم المقدّم). إن أخطأ انتقل الدور إلى التالي في الترتيب.</li><li><b>اقتنص الفرصة:</b> الجميع يجيب، وأول إجابة صحيحة تُنهي السؤال على الجميع.</li><li><b>تحدي الفرق:</b> يتناوب الفريقان، ويجيب عضو واحد من الفريق صاحب الدور، ويتناوب الأعضاء.</li><li><b>سرقة الإجابة:</b> في الفرق، إذا أخطأ صاحب الدور تنتقل فرصة واحدة إلى الفريق الآخر.</li><li><b>تحدي مختلط:</b> يتغير النمط من سؤال لآخر بالتناوب بين الأنماط التي يختارها المقدّم.</li></ul>`)
     + sec("قفل الإجابة", `<ul><li><b>الجميع يجيب:</b> يبقى السؤال مفتوحًا حتى انتهاء الوقت أو إجابة الجميع.</li><li><b>أول إجابة صحيحة:</b> يُغلق السؤال فور اعتماد أول إجابة صحيحة.</li><li><b>صاحب الدور فقط:</b> في أسرع إصبع وتحدي الفرق.</li></ul><p class="muted">الأسبقية بحسب لحظة وصول الإجابة إلى جهاز المقدّم، لا بساعة جوال اللاعب. ويبقى لسرعة إنترنت كل لاعب أثر لا يمكن إلغاؤه تمامًا.</p>`)
     + sec("الإجابات المكتوبة", `<ul><li>محاولة واحدة لكل لاعب في السؤال (أو في دوره).</li><li>لا تُحسب اختلافات التشكيل وأشكال الهمزة والتاء المربوطة والياء والمسافات، وتُقبل الصيغ البديلة المعتمدة.</li><li>لا تُحذف «ال»: الإجابة التي تختلف بـ«ال» فقط، أو بحرف واحد، تُعرض على المقدّم ليحكم عليها.</li></ul>`)
-    + sec("النقاط", `<table class="htable"><tr><td>إجابة صحيحة</td><td>100</td></tr><tr><td>مكافأة السرعة (الجميع يجيب)</td><td>حتى 50، تقل مع الوقت</td></tr><tr><td>أول إجابة صحيحة، أو أول من طلب الإجابة وأصاب</td><td>+50</td></tr><tr><td>الجولة الذهبية والأسئلة المفاجئة</td><td>×2</td></tr><tr><td>الجولة النهائية</td><td>×3</td></tr><tr><td>تحدي السرعة</td><td>6 ثوانٍ ومكافأة حتى 100</td></tr><tr><td>الفائز (لاعب أو فريق)</td><td>+100</td></tr></table><p class="muted">في الفرق: نقاط الفريق مجموع نقاط أعضائه. وللفريقين غير المتساويين يستطيع المقدّم اختيار «المتوسط» حين يجيب الجميع، وتُقسم نقاط الفريق على أعضائه بحيث يساوي مجموع مساهماتهم نقاط الفريق تمامًا. في التعادل التام لا مكافأة فوز، وإذا لم يسجّل أحد نقاطًا تنتهي المباراة دون فائز.</p>`)
+    + sec("النقاط", `<table class="htable"><tr><td>إجابة صحيحة</td><td>100</td></tr><tr><td>مكافأة السرعة (الجميع يجيب)</td><td>حتى 50، تقل مع الوقت من بداية وقت الإجابة</td></tr><tr><td>أول إجابة صحيحة، أو أول من طلب الإجابة وأصاب</td><td>+50</td></tr><tr><td>الجولة الذهبية والأسئلة المفاجئة</td><td>×2</td></tr><tr><td>الجولة النهائية</td><td>×3</td></tr><tr><td>تحدي السرعة</td><td>6 ثوانٍ ومكافأة حتى 100</td></tr><tr><td>الفائز (لاعب أو فريق)</td><td>+100</td></tr></table><p class="muted">في الفرق: نقاط الفريق مجموع نقاط أعضائه. وللفريقين غير المتساويين يستطيع المقدّم اختيار «المتوسط» حين يجيب الجميع، وتُقسم نقاط الفريق على أعضائه بحيث يساوي مجموع مساهماتهم نقاط الفريق تمامًا. في التعادل التام لا مكافأة فوز، وإذا لم يسجّل أحد نقاطًا تنتهي المباراة دون فائز.</p>`)
     + sec("التعادل", `<p>يُحسم بالأكثر إجابات صحيحة، ثم الأقل أخطاء، ثم الأقصر وقتًا في الإجابات الصحيحة؛ وإن بقي التعادل فالفوز مشترك. ويستطيع المقدّم اختيار جولة فاصلة: حتى 3 أسئلة بأسرع إصبع بين المتعادلين فقط.</p>`)
     + sec("الأسئلة", `<p>لا يتكرر سؤال داخل المباراة، وتُقدَّم الأسئلة التي لم تظهر على جهاز المقدّم من قبل. ويستطيع المقدّم تخطّي سؤال فيه خطأ، فيحل محله سؤال آخر دون نقاط للسؤال المتخطّى.</p>`),
   puzzle:() => sec("الفكرة", `<p>سباق لترتيب صورة مقسّمة إلى قطع مبعثرة. كل اللاعبين يحصلون على نفس الصورة بنفس الخلط.</p>`)

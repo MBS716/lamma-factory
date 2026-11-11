@@ -7,7 +7,7 @@ name: akml-test
 on:
   push:
     branches: [main]
-    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", "tests/live_akml_bank.py", ".github/workflows/akml-test.yml"]
+    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", "tests/live_akml_bank.py", "tests/live_akml_timer.py", ".github/workflows/akml-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -38,13 +38,14 @@ jobs:
           timeout 1500 python tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.log 2>&1; r2=$?
           timeout 900 python tests/live_akml_key.py http://localhost:8799/ $D/key > $D/key.log 2>&1; r4=$?
           timeout 1500 python tests/live_akml_full.py http://localhost:8799/ $D/full > $D/full.log 2>&1; r5=$?
+          timeout 900 python tests/live_akml_timer.py http://localhost:8799/ $D/timer > $D/timer.log 2>&1; r6=$?
           EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.log 2>&1; r3=$?
-          echo "rules: $r1  akml: $r2  answer card: $r4  full matches: $r5  other games on the emulator: $r3" | tee $D/result.txt
-          exit $(( r1 || r2 || r3 || r4 || r5 ))
+          echo "rules: $r1  akml: $r2  answer card: $r4  full matches: $r5  timer: $r6  other games on the emulator: $r3" | tee $D/result.txt
+          exit $(( r1 || r2 || r3 || r4 || r5 || r6 ))
           EOF
           timeout 6600 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emulators.log 2>&1; echo "exit $?"; tail -15 /tmp/emulators.log
-          grep -E '^(FAIL)|passed' reports/akml/emulator/akml.log reports/akml/emulator/key.log reports/akml/emulator/full.log || true
-          python -c "import json,sys; a=json.load(open('reports/akml/emulator/akml/result.json')); k=json.load(open('reports/akml/emulator/key/result.json')); f=json.load(open('reports/akml/emulator/full/result.json')); s=json.load(open('reports/akml/emulator/site/result.json')); sys.exit(0 if a['PASS'] and k['PASS'] and f['PASS'] and s['PASS'] else 1)"
+          grep -E '^(FAIL)|passed' reports/akml/emulator/akml.log reports/akml/emulator/key.log reports/akml/emulator/full.log reports/akml/emulator/timer.log || true
+          python -c "import json,sys; a=json.load(open('reports/akml/emulator/akml/result.json')); k=json.load(open('reports/akml/emulator/key/result.json')); f=json.load(open('reports/akml/emulator/full/result.json')); s=json.load(open('reports/akml/emulator/site/result.json')); import re; t=re.findall(r'(\d+)/(\d+) passed', open('reports/akml/emulator/timer.log').read()); tok=bool(t) and t[-1][0]==t[-1][1]; sys.exit(0 if a['PASS'] and k['PASS'] and f['PASS'] and s['PASS'] and tok else 1)"
       - name: save
         if: always()
         run: |
@@ -92,6 +93,12 @@ jobs:
           D=reports/akml/preview; mkdir -p $D
           timeout 1800 python tests/live_akml_full.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/full > $D/full.log 2>&1; r=$?
           grep -E '^(FAIL)|passed' $D/full.log || true; [ $r = 0 ] || tail -25 $D/full.log; exit $r
+      - name: the answer timer on the real database (current rules)
+        if: always()
+        run: |
+          D=reports/akml/preview; mkdir -p $D
+          timeout 900 python tests/live_akml_timer.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/timer > $D/timer.log 2>&1; r=$?
+          grep -E '^(FAIL)|passed' $D/timer.log || true; [ $r = 0 ] || tail -25 $D/timer.log; exit $r
       - name: every other game on the real database (current rules)
         if: always()
         run: |
