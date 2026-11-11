@@ -97,7 +97,7 @@ jobs:
         if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
-          timeout 900 python tests/live_akml_timer.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/timer > $D/timer.log 2>&1; r=$?
+          r=0; timeout 900 python tests/live_akml_timer.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/timer > $D/timer.log 2>&1 || r=$?
           mkdir -p $D/timer; cp $D/timer.log $D/timer/log.txt; cat $D/timer.log; exit $r
       - name: every other game on the real database (current rules)
         if: always()
