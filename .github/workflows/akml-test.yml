@@ -79,19 +79,19 @@ jobs:
         if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
-          timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1; r=$?
-          grep -E '^(FAIL)|passed' $D/akml.log || true; exit $r
+          r=0; timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1 || r=$?
+          grep -E '^(FAIL)|passed' $D/akml.log || true; [ $r = 0 ] || tail -25 $D/akml.log; exit $r
       - name: the host's answer card on the real database (current rules)
         if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
-          timeout 900 python tests/live_akml_key.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/key > $D/key.log 2>&1; r=$?
-          grep -E '^(FAIL)|passed' $D/key.log || true; exit $r
+          r=0; timeout 900 python tests/live_akml_key.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/key > $D/key.log 2>&1 || r=$?
+          grep -E '^(FAIL)|passed' $D/key.log || true; [ $r = 0 ] || tail -25 $D/key.log; exit $r
       - name: complete matches on the real database (current rules)
         if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
-          timeout 1800 python tests/live_akml_full.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/full > $D/full.log 2>&1; r=$?
+          r=0; timeout 1800 python tests/live_akml_full.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/full > $D/full.log 2>&1 || r=$?
           grep -E '^(FAIL)|passed' $D/full.log || true; [ $r = 0 ] || tail -25 $D/full.log; exit $r
       - name: the answer timer on the real database (current rules)
         if: always()
