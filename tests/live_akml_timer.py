@@ -96,8 +96,14 @@ async def main():
         # the host starts the answer time
         tpress = await go(); s = await S(host)
         check(1500 <= s['qs'] - tpress <= 2600, f'the answer time starts {s["qs"] - tpress} ms after the press, at one moment for every phone')
-        starts = [await pg.evaluate('findHost().presence.s.qs') for pg in P3]
-        check(all(x == s['qs'] for x in starts), 'every phone has the same start of the answer time')
+        # every phone gets the same start moment, and gets it before that moment comes (so all start together)
+        got = []
+        for pg in P3:
+            try:
+                await pg.wait_for_function(f'findHost() && findHost().presence.s.qs === {s["qs"]}', timeout=max(100, s['qs'] - await NOW(pg)))
+                got.append(s['qs'] - await NOW(pg))
+            except Exception: got.append(None)
+        check(all(x is not None and x >= 0 for x in got), f'every phone has the same start of the answer time, received before it starts (with {", ".join(str(round(x)) + " ms" if x is not None else "late" for x in got)} to spare)')
         await A.wait_for_selector('[data-ak]', timeout=6000); t_open = await NOW(A)
         check(t_open >= s['qs'] - 300, 'the options open on the phone at the start of the answer time, not before')
         await choose(A, await right())
