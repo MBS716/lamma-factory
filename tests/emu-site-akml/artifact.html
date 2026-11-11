@@ -2828,6 +2828,10 @@ const FIREBASE_CONFIG = null;
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
 const BUILD = /*@@BUILD@@*/"dev", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
+/* A host of «أكملها» announces itself one protocol step up (4). Pages of this version know it and join it as usual; a page
+   still showing an older version of لمّة (opened before a publish, without «أكملها») sees a host on a newer version and
+   moves to the current version by itself (its code already does that), instead of searching for the game forever. */
+const HOST_V = g => g === "akml" ? APP_V + 1 : APP_V;
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
 /* one clock for everybody: the database server's time (Firebase tells each device its offset). Deadlines are stored in
@@ -3157,7 +3161,7 @@ async function claimCode(prefer){
 }
 function hostPresence(){ let s = H.s; if (JSON.stringify(s).length > 3800 && s.res) s = {...s, res:{}};
   // spot the difference: while the closing window is open the phones keep seeing the counts from before the first completion
-  if (H.g === "diff" && s.ph === "play" && H.priv.winAt && H.priv.frozen) s = {...s, pl:H.priv.frozen}; return {r:"h", v:APP_V, b:BUILD, g:H.g, s, hs:H.hs, c:H.c || 0, dup:H.priv.dup || []}; }
+  if (H.g === "diff" && s.ph === "play" && H.priv.winAt && H.priv.frozen) s = {...s, pl:H.priv.frozen}; return {r:"h", v:HOST_V(H.g), b:BUILD, g:H.g, s, hs:H.hs, c:H.c || 0, dup:H.priv.dup || []}; }
 function pushHost(){
   if (!H) return;
   saveHost();
@@ -3394,7 +3398,7 @@ async function playerLeave(force){
 function findHost(){
   if (!NR) return null;
   const hs = NR.peers().filter(p => !p.sameTab && p.hv && p.presence && p.presence.r === "h" && !(p.away && srvNow() - (+p.ts || 0) > CLOUD_H));
-  const ok = hs.filter(p => p.presence.v === APP_V && GAMES[p.presence.g]);
+  const ok = hs.filter(p => GAMES[p.presence.g] && p.presence.v === HOST_V(p.presence.g));
   if (P && P.hostId){ const h = ok.find(p => p.peer === P.hostId); if (h) return h; }
   const mine = P && P.seat ? ok.find(p => p.presence.hs === P.seat.hs) : null;
   const h = mine || ok.slice().sort((a, b) => (+a.presence.c || 0) - (+b.presence.c || 0))[0] || null;
@@ -3402,7 +3406,7 @@ function findHost(){
   return h;
 }
 // a host on another version of لمّة in the same room (or an older version's rooms): explain instead of "not found"
-function otherVersionHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && (p.presence.v !== APP_V || !p.hv) && !p.away) : null; }
+function otherVersionHost(){ return NR ? NR.peers().find(p => !p.sameTab && p.presence && p.presence.r === "h" && (!GAMES[p.presence.g] || p.presence.v !== HOST_V(p.presence.g) || !p.hv) && !p.away) : null; }
 async function probeOldRooms(code){
   if (!ROOM || !ROOM.peek || !P) return;
   for (const pre of OTHER_PREFIXES){
@@ -5370,7 +5374,11 @@ photosReady.then(() => { if (H && H.s.ph === "lobby" && H.g === "puzzle"){ if (P
 { const q = new URLSearchParams(location.search), hc = (location.hash || "").replace("#", "") || q.get("code") || "";
   if (q.has("v")) history.replaceState(null, "", location.pathname + (q.get("code") ? "?code=" + q.get("code") : "") + location.hash);   // the version tag has done its job
   const sh = savedHost(), st = seatLatest();
-  if (/^\d{4}$/.test(hc)){ $("#joinCode").value = hc; playerJoin(hc); }          // a game link always joins as a player
+  // a page that moved to a new version after a round comes back with its room code: on the host's own device that is
+  // the host's game coming back, not a player joining it (otherwise the host would land as a player in its own room)
+  // (only this tab's own saved game counts: another tab of the host's device opening the invite link is a player)
+  if (/^\d{4}$/.test(hc) && sh && !sh.dev && String(sh.code) === hc && (!st || st.code !== hc || sh.at >= st.at)) hostResume();
+  else if (/^\d{4}$/.test(hc)){ $("#joinCode").value = hc; playerJoin(hc); }          // a game link always joins as a player
   else if (sh && (!st || sh.at >= st.at)) hostResume();
   else if (st) playerJoin(st.code, {auto:true}); }
 /* opening another game link in the same tab (only the #code changes) joins that game */

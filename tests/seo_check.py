@@ -44,6 +44,9 @@ def run():
             w, hh = int.from_bytes(b[16:20], "big"), int.from_bytes(b[20:24], "big"); check((w, hh) == (1200, 630), f"preview image size {w}x{hh}")
         if f == "sitemap.xml" and s == 200:
             locs = [e.text for e in ET.fromstring(b).iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]; check(locs == [CANON], f"sitemap lists {locs}")
+            import re as _re
+            mods = [e.text for e in ET.fromstring(b).iter("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod")]
+            check("xml" in ct and all(_re.fullmatch(r"\d{4}-\d{2}-\d{2}", m or "") for m in mods) and len(mods) == len(locs), f"sitemap: valid XML served as {ct}, lastmod {mods}")
     # Google reads robots.txt only at the root of the host
     root = re.match(r"https?://[^/]+/", URL).group(0)
     s, h, b = get(root + "robots.txt"); txt = b.decode("utf-8", "replace")

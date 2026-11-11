@@ -7,7 +7,7 @@ name: akml-test
 on:
   push:
     branches: [main]
-    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", "tests/live_akml_bank.py", "tests/live_akml_timer.py", ".github/workflows/akml-test.yml"]
+    paths: ["preview-akml/**", "tests/emu-site-akml/**", "tests/live_akml.py", "tests/live_akml_key.py", "tests/live_akml_full.py", "tests/live_akml_bank.py", "tests/live_akml_timer.py", "tests/akml_suite.sh", ".github/workflows/akml-test.yml"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -70,40 +70,14 @@ jobs:
             got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-akml/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
           done; echo "pages did not update"; exit 1
-      - name: the bank the live preview serves (2,445) and the draws over every section, level and answer method
+      - name: «أكملها» on the preview, real database (the same suite the publish runs on the release branch and the live site)
         run: |
-          D=reports/akml/preview; mkdir -p $D
-          timeout 900 python tests/live_akml_bank.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/bank 2445 > $D/bank.log 2>&1; r=$?
-          tail -6 $D/bank.log; exit $r
-      - name: أكملها on the real database (current rules)
-        if: always()
-        run: |
-          D=reports/akml/preview; mkdir -p $D
-          r=0; timeout 1500 python tests/live_akml.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/akml > $D/akml.log 2>&1 || r=$?
-          grep -E '^(FAIL)|passed' $D/akml.log || true; [ $r = 0 ] || tail -25 $D/akml.log; exit $r
-      - name: the host's answer card on the real database (current rules)
-        if: always()
-        run: |
-          D=reports/akml/preview; mkdir -p $D
-          r=0; timeout 900 python tests/live_akml_key.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/key > $D/key.log 2>&1 || r=$?
-          grep -E '^(FAIL)|passed' $D/key.log || true; [ $r = 0 ] || tail -25 $D/key.log; exit $r
-      - name: complete matches on the real database (current rules)
-        if: always()
-        run: |
-          D=reports/akml/preview; mkdir -p $D
-          r=0; timeout 1800 python tests/live_akml_full.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/full > $D/full.log 2>&1 || r=$?
-          grep -E '^(FAIL)|passed' $D/full.log || true; [ $r = 0 ] || tail -25 $D/full.log; exit $r
-      - name: the answer timer on the real database (current rules)
-        if: always()
-        run: |
-          D=reports/akml/preview; mkdir -p $D
-          r=0; timeout 900 python tests/live_akml_timer.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/timer > $D/timer.log 2>&1 || r=$?
-          mkdir -p $D/timer; cp $D/timer.log $D/timer/log.txt; cat $D/timer.log; exit $r
+          r=0; BANK_FILE=preview-akml/data/akml.json bash tests/akml_suite.sh https://mbs716.github.io/lamma-factory/preview-akml/ reports/akml/preview || r=$?; exit $r
       - name: every other game on the real database (current rules)
         if: always()
         run: |
           D=reports/akml/preview; mkdir -p $D
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/site https://mbs716.github.io/lamma/ > $D/site.log 2>&1; r=$?
+          r=0; AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/site https://mbs716.github.io/lamma/ > $D/site.log 2>&1 || r=$?
           grep -E '^(OK|FAIL)' $D/site.log | grep -E 'FAIL' || true; exit $r
       - name: save
         if: always()

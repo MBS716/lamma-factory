@@ -45,7 +45,7 @@ with sync_playwright() as p:
 # the bank file the page fetches, compared with the file in this commit
 try:
     live = urllib.request.urlopen(URL.rstrip('/') + '/data/akml.json?nc=' + str(os.getpid()), timeout=60).read()
-    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'preview-akml', 'data', 'akml.json')
+    here = os.environ.get('BANK_FILE') or os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'preview-akml', 'data', 'akml.json')
     R['bank_file_same_as_commit'] = os.path.exists(here) and open(here, 'rb').read() == live
 except Exception as e:
     R['bank_file_same_as_commit'] = 'error: ' + str(e)
