@@ -38,7 +38,7 @@ jobs:
           timeout 1500 python tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.log 2>&1; r2=$?
           timeout 900 python tests/live_akml_key.py http://localhost:8799/ $D/key > $D/key.log 2>&1; r4=$?
           timeout 1500 python tests/live_akml_full.py http://localhost:8799/ $D/full > $D/full.log 2>&1; r5=$?
-          timeout 900 python tests/live_akml_timer.py http://localhost:8799/ $D/timer > $D/timer.log 2>&1; r6=$?
+          timeout 900 python tests/live_akml_timer.py http://localhost:8799/ $D/timer > $D/timer.log 2>&1; r6=$?; mkdir -p $D/timer; cp $D/timer.log $D/timer/log.txt
           EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.log 2>&1; r3=$?
           echo "rules: $r1  akml: $r2  answer card: $r4  full matches: $r5  timer: $r6  other games on the emulator: $r3" | tee $D/result.txt
           exit $(( r1 || r2 || r3 || r4 || r5 || r6 ))
@@ -98,7 +98,7 @@ jobs:
         run: |
           D=reports/akml/preview; mkdir -p $D
           timeout 900 python tests/live_akml_timer.py https://mbs716.github.io/lamma-factory/preview-akml/ $D/timer > $D/timer.log 2>&1; r=$?
-          grep -E '^(FAIL)|passed' $D/timer.log || true; [ $r = 0 ] || tail -25 $D/timer.log; exit $r
+          mkdir -p $D/timer; cp $D/timer.log $D/timer/log.txt; cat $D/timer.log; exit $r
       - name: every other game on the real database (current rules)
         if: always()
         run: |

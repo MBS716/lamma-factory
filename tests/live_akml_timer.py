@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 URL = sys.argv[1].rstrip('/') + '/'; OUT = sys.argv[2] if len(sys.argv) > 2 else 'reports/akml'
 class Env:
     """every page is its own device: its own browser context (own storage, own anonymous sign-in)"""
-    def __init__(self, port=None): self.errs = []; self.U = URL
+    def __init__(self, port=None, autogo=False): self.errs = []; self.U = URL
     async def __aenter__(self):
         self.pw = await async_playwright().start(); self.b = await self.pw.chromium.launch(); self.ctxs = []; return self
     async def page(self, name, w, h, device=None):
