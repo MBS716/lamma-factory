@@ -2866,7 +2866,7 @@ const FIREBASE_CONFIG = {"apiKey": "demo-key", "authDomain": "demo-lamma.firebas
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "1378fba2ee", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "9ccbfe365e", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 const OTHER_PREFIXES = PREVIEW ? ["lm3-", "lm2-"] : ["lmp3-", "lm2-"];     // recognised only to explain, never joined
 const TAB_ID = Math.random().toString(36).slice(2, 10);
@@ -3563,7 +3563,7 @@ function finHTML(fin, unit){ return fin.length ? `<div class="lb">${fin.map((f, 
    data/letters.json [letter, level 0-2, category, question, answer]
    The small built-in sets in data.js (QB, LETTERS) are only a fallback if the files can't be loaded. */
 const BANKS = {}, BANK_WAIT = {};
-const BANK_V = "1d0e6abaa4";
+const BANK_V = "b5e02c20e2";
 function fallbackBank(name){
   if (name === "quiz") return QB;
   return LETTERS.flatMap(([L, ...qs]) => qs.map(([q, a], lv) => [L, lv, "gen", q, a]));
