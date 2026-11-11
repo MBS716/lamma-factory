@@ -13,6 +13,8 @@ class Env:
         ctx = await self.b.new_context(has_touch=True, viewport={'width': w, 'height': h}); self.ctxs.append(ctx)
         pg = await ctx.new_page(); pg.on('pageerror', lambda e: self.errs.append(f'{name}: {e}')); return pg
     async def start(self, host, game, opts=None):
+        if game == 'akml':        # the host presses «ابدأ وقت الإجابة» at once (the timer test presses it itself)
+            await host.add_init_script("setInterval(() => { const b = !window.__noGo && document.querySelector('[data-h=akgo]:not([disabled])'); if (b) b.click(); }, 400);")
         await host.goto(self.U); await host.wait_for_function('typeof AUTH_UID !== "undefined" && !window.__resuming', timeout=30000); await host.wait_for_timeout(1500)
         if await host.is_visible('#endBtn'): await host.click('#endBtn'); await host.wait_for_timeout(600)
         await host.click(f'.gact [data-game={game}]'); await host.wait_for_selector('.code', timeout=30000)

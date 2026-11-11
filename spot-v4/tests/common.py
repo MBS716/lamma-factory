@@ -9,8 +9,11 @@ DEVICE = r"""(() => { const dev = '__DEV__', P = Storage.prototype, g = P.getIte
   window.__device = dev; })();"""
 CLOCK = "(()=>{const n=Date.now.bind(Date);Date.now=()=>n()+(window.__off||0);})();"
 DIST = os.environ.get('DIST', '/home/claude/lamma/dist')
+# «أكملها»: a question waits in its reading time until the host presses «ابدأ وقت الإجابة». The older tests play the host
+# who presses it at once (this clicks the real button); the timer test (t_akml_timer.py) presses it itself.
+AUTOGO = "setInterval(() => { const b = !window.__noGo && document.querySelector('[data-h=akgo]:not([disabled])'); if (b) b.click(); }, 400);"
 class Env:
-    def __init__(self, port=8790): self.port = port; self.errs = []; self.U = f'http://localhost:{port}/'
+    def __init__(self, port=8790, autogo=True): self.port = port; self.errs = []; self.U = f'http://localhost:{port}/'; self.autogo = autogo
     async def __aenter__(self):
         self.srv = subprocess.Popen(['python3', '-m', 'http.server', str(self.port), '-d', DIST], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); time.sleep(0.8)
         self.pw = await async_playwright().start(); self.b = await self.pw.chromium.launch()
@@ -28,6 +31,7 @@ class Env:
         await pg.add_init_script(DEVICE.replace('__DEV__', device or name))
         pg.on('pageerror', lambda e: self.errs.append(f'{name}: {e} @ {(getattr(e, "stack", "") or "")[:400]}')); return pg
     async def start(self, host, game, opts=None):
+        if self.autogo and game == 'akml': await host.add_init_script(AUTOGO)
         await host.goto(self.U); await host.wait_for_timeout(300); await host.wait_for_function('!window.__resuming', timeout=20000); await host.wait_for_timeout(300)
         if await host.is_visible('#endBtn'): await host.click('#endBtn'); await host.wait_for_timeout(400)   # back in an unfinished game: end it first
         await host.click(f'.gact [data-game={game}]'); await host.wait_for_selector('.code', timeout=8000)

@@ -664,6 +664,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akrev p:not(.akx){font-size:1.08rem;line-height:1.7}
 .aksrc{font-size:.92rem!important}
 .akget .timer{font-size:4.5rem}
+.akcard .opt[disabled]{opacity:.5;cursor:default;filter:saturate(.6)}   /* أكملها: the options during the reading time, not yet open */
 .akform{display:flex;gap:10px;margin-top:6px}
 .akform .field{flex:1;font-size:1.35rem}
 .aknote{font-size:.92rem;text-align:center}
