@@ -13,13 +13,13 @@ OK   answers during the reading are refused: a tap, a call from the page, and a 
 OK   the phone keeps no answer from the reading time, so it can still answer when the time starts
 OK   host reloads during the reading: still reading, the clock still waits, the button is back
 OK   a phone reloads during the reading: the question again, options still closed
-OK   the answer time starts 2023 ms after the press, at one moment for every phone
-OK   every phone has the same start of the answer time, received before it starts (with 1975 ms, 1963 ms, 1960 ms to spare)
+OK   the answer time starts 2040 ms after the press, at one moment for every phone
+OK   every phone has the same start of the answer time, received before it starts (with 1964 ms, 1959 ms, 1954 ms to spare)
 OK   the options open on the phone at the start of the answer time, not before
 OK   host reloads during the answer time: same start, the clock goes on (36 s → 33 s left)
-OK   a phone reloads during the answer time: its clock shows the same time left (34 s)
-OK   صالح answered at once: 342 ms counted, the reading time (more than 8 s) is not counted
-OK   تافير answered about 9 s after the start: 9383 ms counted
+OK   a phone reloads during the answer time: its clock shows the same time left (33 s)
+OK   صالح answered at once: 367 ms counted, the reading time (more than 8 s) is not counted
+OK   تافير answered about 9 s after the start: 9400 ms counted
 OK   speed bonus from the start of the answer time: صالح +150 (bonus 50)
 OK   تافير +140 (bonus 40), less for answering later
 OK   نورة wrong: no points
@@ -28,7 +28,11 @@ OK   automatic: no button, the host sees the countdown of the reading
 OK   automatic: an answer sent during the reading is refused
 OK   a phone reloads during the automatic reading: options still closed
 OK   the 60 s clock starts at 60 on the phone (60)
-OK   automatic: صالح 340 ms from the start of the answer time, bonus 50; the 10 s reading not counted
+OK   automatic: صالح 347 ms from the start of the answer time, bonus 50; the 10 s reading not counted
+OK   10 s: reading first, then the clock starts at 10 on the phone and the question closes after 10 s
+OK   15 s: reading first, then the clock starts at 15 on the phone and the question closes after 15 s
+OK   20 s: reading first, then the clock starts at 20 on the phone and the question closes after 20 s
+OK   30 s: reading first, then the clock starts at 30 on the phone and the question closes after 30 s
 OK   fastest finger: no «أعرف الإجابة» during the reading
 OK   a press during the reading is refused (from the page and sent anyway)
 OK   after the start: صالح presses first and has the turn
@@ -37,4 +41,4 @@ OK   the match ends with its results
 OK   the phone shows its rank at the end
 OK   no page errors 
 
-38/38 passed
+42/42 passed
