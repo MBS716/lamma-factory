@@ -15,7 +15,7 @@
   "OK typed: the card shows the answer, the accepted alternatives and the full phrase from the start",
   "OK typed: each player's answer appears on the host's screen when it arrives, with the device's check",
   "OK typed: a non-matching answer is shown with «اعتمدها» for the host",
-  "OK typed: «الأدبَه» (differs by «ال») waits for the host's judgement",
+  "OK typed: «لاش» (differs by «ال») waits for the host's judgement",
   "OK typed, while the host reviews: the answer is on no phone and not in the room data",
   "OK typed: the host accepts it (right in meaning); the button is gone",
   "OK a decision once given cannot be changed (a second decision is ignored)",
