@@ -27,6 +27,7 @@
   "OK site.webmanifest: 200, 872 bytes, application/manifest+json",
   "OK sitemap.xml: 200, 250 bytes, application/xml",
   "OK sitemap lists ['https://mbs716.github.io/lamma/']",
+  "OK sitemap: valid XML served as application/xml, lastmod ['2026-11-12']",
   "OK robots.txt: 200, 76 bytes, text/plain",
   "OK host robots.txt (http://localhost:8799/robots.txt): 200, does not block the site"
  ],

@@ -1,0 +1,9 @@
+branch: akml-release
+commit: fc1e6f5b0066a9852b0b700e675fbabcf7345529
+date (UTC): 2026-11-12 18:03
+index.html: 6dd3cb8628346981c928e1374435afee (expected 6dd3cb8628346981c928e1374435afee)
+spot files: 124 (expected 124)
+build: 2f9a266539 (tested 2f9a266539)
+files: 139, sha256 of every file identical to the tested build: yes
+main untouched: 107b7ec83cff
+files identical to site/: yes
