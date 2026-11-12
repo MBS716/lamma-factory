@@ -1,6 +1,6 @@
 """أكملها: the host sees the right answer from the moment a question is shown, in every answer method; the players never
 see it (screen or room data) before the question ends. A host and 3 players (phone 390, phone 360, computer)."""
-import asyncio, json, sys, os
+import os, asyncio, json, sys, os
 from common import Env
 R = []
 def check(ok, msg): R.append((bool(ok), msg)); print(('OK   ' if ok else 'FAIL ') + msg, flush=True); return ok
@@ -83,10 +83,20 @@ async def main():
 
         # ================= typed (everybody answers) =================
         await lobby(); await opt('m', 't'); await host.click('[data-h=start]'); await live()
+        NEAR = lambda a: [a[2:] if a.startswith('ال') else 'ال' + a, a[:-1], a + 'ه', a[0] + a[2:], a[:-1] + 'ي']
+        near_js = lambda a: f'(() => {{ const it = H.priv.B.by[H.priv.qid]; return {json.dumps(NEAR(a))}.find(w => w && akCheck(it, w) === "?") || ""; }})()'
+        for _ in range(8):      # a few typed answers are too short for a near-answer variant: such a question is skipped
+            it = await ITEM(host)
+            if await host.evaluate(near_js(it['a'])) and not (_ == 0 and os.environ.get('AK_SKIP_FIRST')): break
+            q0 = await host.evaluate('H.priv.qid'); await host.click('[data-h=skip]')
+            await host.wait_for_function(f'H.priv.qid !== {json.dumps(q0)}', timeout=10000); await live()
         it = await ITEM(host); ans = it['a']; k = await card()
         check(ans in k and (not it['alt'] or it['alt'][0] in k) and 'العبارة الكاملة' in k, 'typed: the card shows the answer, the accepted alternatives and the full phrase from the start')
-        alv = ans[2:] if ans.startswith('ال') else 'ال' + ans
-        v_al = await host.evaluate(f'akCheck(H.priv.B.by[H.priv.qid], {json.dumps(alv)})')
+        # a near answer that the device cannot decide (with/without «ال», or a slip of one letter) is always tried, whatever
+        # the question drawn: the first variant the game's own check sends to the host's judgement is used
+        alv = await host.evaluate(near_js(ans))
+        check(alv != '', f'typed: a near answer for the host\'s judgement found for «{ans}»: «{alv}»')
+        v_al = '?' if alv else 'none'
         odd = 'كلمة بمعناها'
         await typ(A, ans); await A.wait_for_timeout(300); await typ(B, odd); await B.wait_for_timeout(300)
         if v_al == '?': await typ(C, alv)
@@ -94,7 +104,7 @@ async def main():
         lst = await host.inner_text('.akans')
         check('صالح' in lst and '«' + ans + '»' in lst and 'مطابقة' in lst, 'typed: each player\'s answer appears on the host\'s screen when it arrives, with the device\'s check')
         check('تافير' in lst and 'غير مطابقة' in lst and await host.locator('[data-h=jover]').count() == 1, 'typed: a non-matching answer is shown with «اعتمدها» for the host')
-        if v_al == '?': check('تحتاج حكمك' in lst and await host.locator('[data-h=jok]').count() == 1, f'typed: «{alv}» (differs by «ال») waits for the host\'s judgement')
+        check('تحتاج حكمك' in lst and await host.locator('[data-h=jok]').count() == 1, f'typed: «{alv}» (near the answer) waits for the host\'s judgement')
         await hidden_from_players(it, 'typed, while the host reviews', typed_it=(A,))
         await host.screenshot(path=SHOTS + '/key_typed_host.png')
         await host.click('[data-h=jover]'); await host.wait_for_timeout(500)

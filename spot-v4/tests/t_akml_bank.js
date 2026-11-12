@@ -24,7 +24,7 @@ let fails = 0, checks = 0; const bad = []; const ok = (c, m) => { checks++; if (
 const B = K.akDecode(JSON.parse(fs.readFileSync(BANK, "utf8")));
 console.log("bank", BANK, "questions", B.list.length);
 const SECS = K.AK_SECS.map(s => s[0]);
-const seenText = new Map();
+const seenText = new Map(), shortTyped = [];   // typed questions too short for a near-answer variant (the host's card test skips them)
 for (const q of B.list){
   ok(SECS.includes(q.s), q.id + " section");
   ok([0, 1, 2].includes(q.l), q.id + " level");
@@ -37,6 +37,10 @@ for (const q of B.list){
   for (const w of q.o.slice(1)) ok(K.akCheck(q, w) === "no", q.id + " wrong option refused: " + w + " → " + K.akCheck(q, w));
   ok(K.akCheck(q, "") === "no" && K.akCheck(q, "   ") === "no", q.id + " empty refused");
   const key = K.akNorm(q.t.replace(/[{}]/g, "")); ok(!seenText.has(key), q.id + " same phrase as " + seenText.get(key)); seenText.set(key, q.id);
+  // typed questions: a near answer (with/without «ال», or a one-letter slip) goes to the host's judgement — the host's card
+  // test (t_akml_key.py) relies on finding one, whatever question it draws
+  if (q.md.includes("t")){ const A = q.a, near = [A.startsWith("ال") ? A.slice(2) : "ال" + A, A.slice(0, -1), A + "ه", A[0] + A.slice(2), A.slice(0, -1) + "ي"];
+    if (!near.some(w => w && K.akCheck(q, w) === "?")) shortTyped.push(q.id); }
 }
 // ids unique
 ok(new Set(B.list.map(q => q.id)).size === B.list.length, "ids unique");
