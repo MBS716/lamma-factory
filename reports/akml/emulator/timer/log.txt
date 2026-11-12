@@ -1,44 +1,34 @@
-OK   answer time: 10, 15, 20, 30 kept, 45 and 60 added
-OK   the new durations read «45 ث» and «دقيقة»
-OK   the start of the answer time: manual by default, no reading time shown
-OK   automatic: a reading time of 10, 15 or 20 s can be chosen
-OK   the question has 45 s of answer time
-OK   manual: the question is shown in its reading time, the clock waits for the host
-OK   the host sees the question, «وقت القراءة» and the button «ابدأ وقت الإجابة»
-OK   صالح: sees the question and the four options, which cannot be chosen yet
-OK   تافير: sees the question and the four options, which cannot be chosen yet
-OK   نورة: sees the question and the four options, which cannot be chosen yet
-OK   after 5 s of reading the clock has still not started
-OK   answers during the reading are refused: a tap, a call from the page, and a sealed answer sent anyway
-OK   the phone keeps no answer from the reading time, so it can still answer when the time starts
-OK   host reloads during the reading: still reading, the clock still waits, the button is back
-OK   a phone reloads during the reading: the question again, options still closed
-OK   the answer time starts 2027 ms after the press, at one moment for every phone
-OK   every phone has the same start of the answer time, received before it starts (with 1957 ms, 1948 ms, 1943 ms to spare)
-OK   the options open on the phone at the start of the answer time, not before
-OK   host reloads during the answer time: same start, the clock goes on (35 s → 32 s left)
-OK   a phone reloads during the answer time: its clock shows the same time left (33 s)
-OK   صالح answered at once: 879 ms counted, the reading time (more than 8 s) is not counted
-OK   تافير answered about 9 s after the start: 9915 ms counted
-OK   speed bonus from the start of the answer time: صالح +149 (bonus 49)
-OK   تافير +139 (bonus 39), less for answering later
-OK   نورة wrong: no points
-OK   automatic: 60 s of answer time after 10 s of reading (starts in 9.9 s)
-OK   automatic: no button, the host sees the countdown of the reading
-OK   automatic: an answer sent during the reading is refused
-OK   a phone reloads during the automatic reading: options still closed
-OK   the 60 s clock starts at 60 on the phone (60)
-OK   automatic: صالح 346 ms from the start of the answer time, bonus 50; the 10 s reading not counted
-OK   10 s: reading first, then the clock starts at 10 on the phone and the question closes after 10 s
-OK   15 s: reading first, then the clock starts at 15 on the phone and the question closes after 15 s
-OK   20 s: reading first, then the clock starts at 20 on the phone and the question closes after 20 s
-OK   30 s: reading first, then the clock starts at 30 on the phone and the question closes after 30 s
-OK   fastest finger: no «أعرف الإجابة» during the reading
-OK   a press during the reading is refused (from the page and sent anyway)
-OK   after the start: صالح presses first and has the turn
-OK   judging aloud unchanged: the host says right, صالح +150 (100 + 50 first)
-OK   the match ends with its results
-OK   the phone shows its rank at the end
-OK   no page errors 
+Traceback (most recent call last):
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_akml_timer.py", line 181, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_akml_timer.py", line 40, in main
+    code = await E.start(host, 'akml')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_akml_timer.py", line 15, in start
+    await host.goto(self.U); await host.wait_for_function('typeof AUTH_UID !== "undefined" && !window.__resuming', timeout=30000); await host.wait_for_timeout(1500)
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 8969, in goto
+    await self._impl_obj.goto(
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py", line 553, in goto
+    return await self._main_frame.goto(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 145, in goto
+    await self._channel.send("goto", locals_to_params(locals()))
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+navigating to "http://localhost:8799/", waiting until "load"
 
-42/42 passed
