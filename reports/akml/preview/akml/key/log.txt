@@ -8,8 +8,10 @@ OK   the host can hide the answer from his screen (when it is shown to the playe
 OK   … and show it again
 OK   choice: after the question ends the players see the answer
 OK   typed: the card shows the answer, the accepted alternatives and the full phrase from the start
+OK   typed: a near answer for the host's judgement found for «الباء»: «باء»
 OK   typed: each player's answer appears on the host's screen when it arrives, with the device's check
 OK   typed: a non-matching answer is shown with «اعتمدها» for the host
+OK   typed: «باء» (near the answer) waits for the host's judgement
 OK   typed, while the host reviews: the answer is on no phone and not in the room data
 OK   typed: the host accepts it (right in meaning); the button is gone
 OK   a decision once given cannot be changed (a second decision is ignored)
@@ -35,8 +37,8 @@ OK   team challenge (aloud): card and judge buttons for the member on turn
 OK   team challenge: the answer is on no phone and not in the room data
 OK   stealing: the card stays for the other team's chance
 OK   stealing: the answer is on no phone and not in the room data
-OK   mixed (b): the card is there
+OK   mixed (c): the card is there
 OK   mixed: the answer is on no phone and not in the room data
 OK   no page errors
 
-40/40 passed
+42/42 passed
