@@ -144,7 +144,7 @@ jobs:
           bash tests/akml_suite.sh http://localhost:8799/ $D
           # the publish itself, played through: the old version (main now) is replaced by this build while people play
           git clone -q --depth 1 https://github.com/MBS716/lamma.git oldmain && rm -rf oldmain/.git
-          (cd tests/local && OLD=$GITHUB_WORKSPACE/oldmain NEW=$GITHUB_WORKSPACE/site SHOTS=$GITHUB_WORKSPACE/$D/version-switch python t_version_switch.py) > $D/version-switch.log 2>&1; r=$?
+          r=0; (cd tests/local && OLD=$GITHUB_WORKSPACE/oldmain NEW=$GITHUB_WORKSPACE/site SHOTS=$GITHUB_WORKSPACE/$D/version-switch python t_version_switch.py) > $D/version-switch.log 2>&1 || r=$?
           cat $D/version-switch.log; rm -rf oldmain; [ $r = 0 ]
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
