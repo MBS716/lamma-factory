@@ -28,6 +28,12 @@ jobs:
     runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages (ubuntu-latest moved)
     steps:
       - uses: actions/checkout@v4
+      - name: an outside photo host that does not answer fails fast (it would hold every page's load event)
+        run: |
+          if ! curl -s -o /dev/null -m 10 https://picsum.photos/seed/lamma-7/32/32; then
+            echo "::warning::picsum.photos does not answer from this machine: it is made to fail at once for this run (the puzzle's photos are an outside service)"
+            echo "0.0.0.0 picsum.photos" | sudo tee -a /etc/hosts > /dev/null
+          else echo "picsum.photos answers"; fi
       - name: what to do
         id: mode
         run: |

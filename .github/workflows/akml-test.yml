@@ -18,6 +18,12 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: an outside photo host that does not answer fails fast (it would hold every page's load event)
+        run: |
+          if ! curl -s -o /dev/null -m 10 https://picsum.photos/seed/lamma-7/32/32; then
+            echo "::warning::picsum.photos does not answer from this machine: it is made to fail at once for this run (the puzzle's photos are an outside service)"
+            echo "0.0.0.0 picsum.photos" | sudo tee -a /etc/hosts > /dev/null
+          else echo "picsum.photos answers"; fi
       - uses: actions/setup-java@v4
         with: {distribution: temurin, java-version: "21"}
       - uses: actions/setup-node@v4
@@ -60,6 +66,12 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: an outside photo host that does not answer fails fast (it would hold every page's load event)
+        run: |
+          if ! curl -s -o /dev/null -m 10 https://picsum.photos/seed/lamma-7/32/32; then
+            echo "::warning::picsum.photos does not answer from this machine: it is made to fail at once for this run (the puzzle's photos are an outside service)"
+            echo "0.0.0.0 picsum.photos" | sudo tee -a /etc/hosts > /dev/null
+          else echo "picsum.photos answers"; fi
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
       - run: pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
