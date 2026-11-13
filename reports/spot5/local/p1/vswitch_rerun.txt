@@ -1,0 +1,22 @@
+OK   before the publish: everybody on the old version (2f9a266539)
+OK   a phone opening the site after the publish gets the new version (a03683e304)
+OK   the new phone joins the match opened on the old version (same game protocol), as a player
+OK   the new phone sees no error
+OK   host on the old page: not reloaded in the middle of the match
+OK   host sees a clear notice: «يتوفر إصدار أحدث من لمّة. سيُحدَّث تلقائيًا بعد انتهاء الجولة الحالية.»
+OK   the old phone sees the same notice and stays in the match
+OK   the old host counts the new phone's answer: تافير is in the results of the question
+OK   still on the old version until the match ends
+OK   the host page moved to the new version and is back as the host of room 2411 (not as a player)
+OK   the match state is kept: the final results are on the host's screen ([['صالح', 941], ['تافير', 749]])
+OK   no points lost: صالح 941 (two right, one on the old version), تافير 749 (one right)
+OK   the results after the move are the same as the old page showed
+OK   the old phone moved to the new version too: back in the same room, as the same player, without joining again
+OK   each phone shows its own final points after the move (صالح 941, تافير 749)
+OK   the same room plays a new match on the new version with both players
+OK   a host opens «أكملها» on the new version
+OK   the phone on the old page invited to «أكملها»: its version already has «أكملها»: it joins
+OK   after updating it joins the «أكملها» room
+OK   no page errors 
+
+20/20 passed

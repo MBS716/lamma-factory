@@ -1,0 +1,40 @@
+# «اكتشف الفرق» v5 (branch spot-v5), test copy only: preview-spot5/ on GitHub Pages of this repo, played on the real
+# database with today's published rules (anonymous sign-in, separate preview rooms lmp3-). The rules are not changed here,
+# and nothing in MBS716/lamma (the official site) changes.
+name: spot5-test
+on:
+  push:
+    branches: [main]
+    paths: ["preview-spot5/**", "tests/spot5/**", ".github/workflows/spot5-test.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: {group: spot5-test, cancel-in-progress: false}
+jobs:
+  preview:
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q playwright==1.48.0 pillow && python -m playwright install --with-deps chromium > /dev/null
+      - name: wait until GitHub Pages serves this commit
+        run: |
+          want=$(md5sum preview-spot5/index.html | cut -c1-32)
+          for i in $(seq 1 60); do
+            got=$(curl -s "https://mbs716.github.io/lamma-factory/preview-spot5/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
+            [ "$got" = "$want" ] && echo "live after $((i*15))s" && exit 0; sleep 15
+          done; echo "pages did not update"; exit 1
+      - name: a host and 3 players on the preview, real database
+        run: |
+          r=0; LIVE_URL=https://mbs716.github.io/lamma-factory/preview-spot5/ DIST=preview-spot5 OUT=reports/spot5/preview bash tests/spot5/run_live.sh || r=$?
+          cat reports/spot5/preview/result.txt; grep -h '^FAIL' reports/spot5/preview/*.log || true; exit $r
+      - name: save
+        if: always()
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/spot5 || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "spot v5 preview test results" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase && git push -q && exit 0; sleep 15; done; exit 1

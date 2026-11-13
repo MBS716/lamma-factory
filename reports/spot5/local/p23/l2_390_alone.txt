@@ -1,0 +1,52 @@
+OK   reading phase: no answer clock yet (q0=0), no options (direct question)
+OK   reading phase: the host sees «ابدأ وقت الإجابة» and no lock button (cannot lock before the start)
+OK   locking before the start is refused
+OK   phones: question visible while it is read, no answer button yet
+OK   manual mode: 25 s of reading, still not started
+OK   points count from the start, not from the question: 3 s after start = 100 despite 25 s of reading and 60 s of judging (100)
+OK   wrong answer = 0
+OK   time out = 0 (green keeps 100)
+OK   short question on a 390px phone: readable (18px), no sideways scroll
+OK   long question on a 390px phone: readable (18px), no sideways scroll
+OK   automatic start: countdown shown to the host and the phones
+OK   after 4 s still reading
+OK   answer time started by itself after 10 s (11500 ms)
+OK   auto start: points from the automatic start (2 s -> 100)
+OK   the host may still start earlier than the automatic start
+OK   reading: options prepared on the host only (not in the shared state)
+OK   reading: none of the options is in what phones can read
+OK   reading: no options on the phones
+OK   4 different options, all starting with «ك», the right one at its place
+OK   start: the four options appear on the host and both phones
+OK   answering: which option is right is not in anything phones can read
+OK   answer time locked: still not revealed to phones
+OK   after the result: the right option is shown to everyone
+OK   replace: new question, same letter, same team, same type; 1 left
+OK   replace: no attempt and no points counted
+OK   second replacement: 0 left, the button is disabled
+OK   a third replacement is refused
+OK   after the start: replacing is refused (no button, no effect)
+OK   the other team still has its 2 replacements
+OK   host back during reading: same question, clock still not started, same hidden options
+OK   host back while answering: the clock goes on from the same start (20 s left), same options
+OK   phone back while answering: the options are there again
+OK   host back after locking: the locked time is kept (12183 ms)
+OK   host back after the result: points not counted twice
+OK   question 3: 3 options on the phone (3 expected)
+OK   question 4: 3 options on the phone (3 expected)
+OK   question 5: 4 options on the phone (4 expected)
+OK   question 6: 4 options on the phone (4 expected)
+OK   mixed: each pair gives both teams the same type ([0, 3, 4, 3, 4, 0, 4, 0, 3, 0])
+OK   mixed: same number of each type per team {0: 4, 3: 3, 4: 3}
+OK   mixed levels: both teams get the same level in each pair (10/10 pairs)
+OK   full mixed match: winner green 1000 vs 900, 10 questions each
+OK   right-option places balanced (4: [2, 2, 1, 1], 3: [2, 2, 2])
+OK   3 options prepared
+OK   3 options: right place never twice in a row, balanced [2, 1, 0, 1, 0, 2, 1, 2, 0, 2, 1, 0]
+OK   second team: a letter without a question at the pair's level asks for another letter (the cell stays free)
+OK   tie after 20 -> tiebreak pair
+OK   tiebreak decides the winner with equal questions
+OK   green phone 390px: no sideways scroll
+OK   orange phone 390px: no sideways scroll
+OK   no script errors []
+51/51 passed (phone 390px, host 1280px)
