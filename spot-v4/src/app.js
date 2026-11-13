@@ -157,6 +157,9 @@ function myPeer(){ const me = NR && NR.peers().find(p => p.sameTab); return me ?
 const joinLink = code => BASE_URL ? BASE_URL + "#" + code
   : location.protocol.startsWith("http") ? (SITE_URL && !PREVIEW && (location.origin + location.pathname).startsWith(SITE_URL.replace(/\/$/, "")) ? SITE_URL : location.origin + location.pathname) + "?v=" + encodeURIComponent(BUILD) + "#" + code : "";
 
+// the host's own player link (spot the difference): the join link with a one-time mark
+const hpLink = (code, tok) => { const L = joinLink(code), i = L.indexOf("#"); if (i < 0) return ""; const b = L.slice(0, i); return b + (b.includes("?") ? "&" : "?") + "hp=" + tok + L.slice(i); };
+
 /* ================= GAMES REGISTRY ================= */
 const LV3 = [[0,"سهل"],[1,"متوسط"],[2,"صعب"]];
 const GAMES = {
@@ -700,7 +703,9 @@ function bindPlayer(){
       if (taken){ $("#pErr").textContent = "هذا الاسم مستخدم في هذه اللعبة. اختر اسمًا آخر (مثلًا أضف حرفًا أو رقمًا)."; return; }
       P.name = name; lsSet("lm-name", name); P.joined = true; P.dupName = "";
       const jt = Date.now(); P.seat = seatSet(P.code, {pid:P.pid, hs:host.presence.hs, n:name, tm:P.team || null, jt, prog:{}});
-      NR.presence({r:"p", n:name, tm:P.team || null, dv:devId, hs:host.presence.hs, jt}).catch(() => {});
+      // a phone opened from the host's own «العب من جوالك» link carries its one-time mark (the host's player, shown as such)
+      let hp = ""; try { const m = JSON.parse(sessionStorage.getItem("lm-hp") || "null"); if (m && m.c === P.code && /^[a-z0-9]{6,16}$/.test(m.t)) hp = m.t; } catch(e){}
+      NR.presence({r:"p", n:name, tm:P.team || null, dv:devId, hs:host.presence.hs, jt, ...(hp ? {hp} : {})}).catch(() => {});
       $("#playerMain").dataset.k = ""; playerRender(); return;
     }
     if (P && P.g && MOD[P.g].pclick) MOD[P.g].pclick(t);
@@ -2046,11 +2051,12 @@ const DFC = {
 };
 const fmtMS = ms => fmtT(Math.max(0, Math.round((ms || 0) / 1000)));
 const Diff = {
-  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null, hist:H.priv.hist || [], crounds:H.priv.crounds || []}; },
+  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null, hist:H.priv.hist || [], crounds:H.priv.crounds || [], hpTok:H.priv.hpTok || ""}; },
   async restore(pv){
     H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; H.priv.dfs = pv.dfs || null; H.priv.seen = pv.seen || {};
     H.priv.pf = pv.pf || {}; H.priv.hkp = pv.hkp || null; H.priv.mb = pv.mb || []; H.priv.own = pv.own || {}; H.priv.winAt = +pv.winAt || 0; H.priv.frozen = pv.frozen || null;
     H.s.pick = 0;                                                  // the picture library is not open after a reload
+    H.priv.hpTok = typeof pv.hpTok === "string" ? pv.hpTok : "";
     H.priv.hist = Array.isArray(pv.hist) ? pv.hist : []; H.priv.crounds = Array.isArray(pv.crounds) ? pv.crounds : [];
     // a game saved before competitions existed: it is competition 1, with the rounds it already played
     if (!(H.s.cn >= 1)){ H.s.cn = 1; H.s.cr = Math.max(0, ...Object.values(H.s.tot || {}).map(t => +t.r || 0)); H.s.cs = 0; H.s.past = []; }
@@ -2099,7 +2105,7 @@ const Diff = {
     s.ph = "play"; Diff.step(s); Diff.enroll(hostPlayers()); startRaceClock(); pushHost();
   },
   // everybody in the room when the round starts (or who joins during it) plays this round
-  enroll(players){ const s = H.s; let ch = false; for (const p of players){ const k = dfKey(pname(p)); if (!s.pl[k] && !p.away){ s.pl[k] = dfZero(pname(p)); ch = true; } } return ch; },
+  enroll(players){ const s = H.s; let ch = false; for (const p of players){ const k = dfKey(pname(p)); if (p.presence.dv === devId) continue; if (!s.pl[k] && !p.away){ s.pl[k] = dfZero(pname(p)); ch = true; } } return ch; },
   act(a, b){
     const s = H.s;
     if (a === "start" || a === "go"){ if (s.o.pk === "auto") Diff.start(); else Diff.openPick(); }
@@ -2116,6 +2122,9 @@ const Diff = {
     else if (a === "dfhretry"){ H.priv.dfRd = null; renderHost(); }
     else if (a === "replay") Diff.start(true);
     else if (a === "dfsel" && b){ H.priv.dfSel = b.dataset.k || ""; renderHost(); }
+    else if (a === "hpon"){ if (!H.priv.hpTok) H.priv.hpTok = Math.random().toString(36).slice(2, 10).replace(/[^a-z0-9]/g, "x").padEnd(8, "x"); H.priv.hpShow = true; saveHost(); renderHost(); }
+    else if (a === "hphide"){ H.priv.hpShow = false; renderHost(); }
+    else if (a === "hpoff"){ s.hp = ""; s.hpn = ""; pushHost(); }
     else if (a === "nc"){ H.priv.ncAsk = true; renderHost(); }
     else if (a === "ncno"){ H.priv.ncAsk = false; renderHost(); }
     else if (a === "ncgo"){ H.priv.ncAsk = false; Diff.newComp(); }
@@ -2165,7 +2174,7 @@ const Diff = {
   // the summary of the competition now running (what is exported, and what is archived when a new one starts)
   compNow(){
     const s = H.s, T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), at = Date.now();
-    return {cn:s.cn || 1, from:s.cs || at, to:at, r:s.cr || 0, rank:ks.map(k => ({n:T[k].n, rk:rn[k], p:T[k].p, r:T[k].r, w:T[k].w || 0, f:T[k].f})), rounds:(H.priv.crounds || []).slice(-100)};
+    return {cn:s.cn || 1, from:s.cs || at, to:at, r:s.cr || 0, rank:ks.map(k => ({n:T[k].n, rk:rn[k], p:T[k].p, r:T[k].r, w:T[k].w || 0, f:T[k].f, ...(T[k].hp ? {hp:1} : {})})), rounds:(H.priv.crounds || []).slice(-100)};
   },
   newComp(){
     const s = H.s;
@@ -2188,7 +2197,7 @@ const Diff = {
     const q = v => { let t = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return `"${t.replace(/"/g, '""')}"`; };
     const d = t => t ? new Date(t).toLocaleString("ar-SA-u-nu-latn", {dateStyle:"medium", timeStyle:"short"}) : "";
     const rows = [["لمّة · اكتشف الفرق"], ["المنافسة", c.cn], ["من", d(c.from)], ["إلى", d(c.to)], ["عدد الجولات", c.r], [],
-      ["المركز", "اللاعب", "النقاط", "الجولات", "مرات الفوز", "الاختلافات"], ...c.rank.map(x => [x.rk, x.n, x.p, x.r, x.w, x.f]), [],
+      ["المركز", "اللاعب", "النقاط", "الجولات", "مرات الفوز", "الاختلافات", "ملاحظة"], ...c.rank.map(x => [x.rk, x.n, x.p, x.r, x.w, x.f, x.hp ? "المقدّم (من جهاز مستقل)" : ""]), [],
       ["الجولة", "الصورة", "المستوى", "الفائز"], ...(c.rounds || []).map((x, i) => [i + 1, x.t, LV_NAMES[x.lv] || "", x.w && x.w.length ? x.w.join(" و ") : "لا فائز"])];
     return "\ufeff" + rows.map(r => r.map(q).join(",")).join("\r\n");
   },
@@ -2219,6 +2228,7 @@ const Diff = {
   plobby(s){
     const last = (s.past || [])[(s.past || []).length - 1], fresh = !(s.cr > 0);
     const w = last && last.top.filter(x => x[2] === 1);
+    if (P && (s.sd || []).includes(dfKey(P.name))) return `<div class="panel center stack dfsd"><p class="bigmsg">هذا الجهاز هو جهاز إدارة الغرفة</p><p class="muted">جهاز الإدارة يحمل حلول الجولة، فلا يُلعب منه. للمشاركة افتح رابط الدخول من جوالك أو من جهاز آخر.</p></div>`;
     return `${s.pick ? `<p class="dfwait">المقدّم يختار صورة الجولة…</p>` : ""}<p class="chip dfcn">المنافسة ${s.cn || 1}</p>${fresh && last ? `<p class="dfpast-n">انتهت المنافسة ${last.cn} بعد ${Diff.rounds(last.r)}. الفائز: <b>${w.map(x => esc(x[0])).join(" و ")}</b> (${w[0] ? w[0][1] : 0} نقطة).<br>النقاط بدأت من جديد.</p>` : ""}${Diff.standHTML(s, P ? dfKey(P.name) : "")}`;
   },
   // the referee: one tap of one player (at = when it reached this device), against that player's own finds only
@@ -2312,7 +2322,7 @@ const Diff = {
     for (const k of Object.keys(s.pl)){ const p = s.pl[k]; if (p.f > 0 && !p.w && !p.out){ p.p += DF_PTS.clean; p.b += DF_PTS.clean; } }
     const r = Diff.rank(s); s.rk = r.rk; s.rn = r.rn;
     const tot = s.tot || (s.tot = {}), before = Diff.totRanks(tot);
-    for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
+    for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; if (k === s.hp) t.hp = 1; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
     // what this round changed in the overall ranking: the place before it (0 = first round) and the points it added
     for (const k of Object.keys(tot)){ tot[k].pr = before[k] || 0; tot[k].dp = s.pl[k] ? s.pl[k].p : 0; }
     // the round belongs to the competition now running (its number travels with the state: nothing is added to another)
@@ -2336,13 +2346,38 @@ const Diff = {
     const r = db.ref("taps/" + ROOM_PREFIX + H.code); for (const id of Object.keys(H.priv.taps || {})) try { r.child(id).remove().catch(() => {}); } catch(e){}
     H.priv.taps = {};
   },
+  /* the host playing from a separate device: the one who opened the host's one-time link is the host's player (a mark on
+     the results, nothing else: the same taps, attempts and points as everybody, and nothing of the answers is sent to it).
+     A player on the referee's own device (another tab of it) cannot play: that device holds the answers. */
+  hostSeat(players){
+    const s = H.s; let ch = false;
+    const sd = players.filter(p => p.presence.dv === devId).map(p => dfKey(pname(p))).sort();
+    if (JSON.stringify(sd) !== JSON.stringify(s.sd || [])){ s.sd = sd; ch = true; }
+    const tok = H.priv.hpTok, p = tok && players.find(x => x.presence.hp === tok && x.presence.dv !== devId);
+    if (p){ s.hp = dfKey(pname(p)); s.hpn = pname(p); H.priv.hpTok = ""; H.priv.hpShow = false; ch = true; }
+    if (ch) pushHost();
+  },
+  hpTag: (s, k) => k && s.hp === k ? ` <span class="chip dfhp">المقدّم</span>` : "",
+  hpHTML(s){
+    if (s.hp) return `<div class="row dfhp-on"><span>يلعب المقدّم من جهاز مستقل باسم <b>${esc(s.hpn || "")}</b>، ويُحتسب مثل بقية اللاعبين.</span><button class="btn ghost sm" data-h="hpoff">إلغاء وسم المقدّم</button></div>`;
+    if (!H.priv.hpShow || !H.priv.hpTok || !H.code) return "";
+    const L = hpLink(H.code, H.priv.hpTok);
+    return `<div class="panel stack dfhp-box"><h3>العب من جوالك</h3>
+      <p>امسح الرمز بجوالك أو افتح الرابط عليه (جهاز غير هذا)، وادخل باسمك.</p>
+      <div class="row dfhp-qr"><div id="hpQr" aria-label="رمز الدخول كلاعب"></div><input class="field" readonly value="${esc(L)}" dir="ltr" onfocus="this.select()"></div>
+      <ul class="dfnote muted"><li>محاولاتك ونقاطك تُحتسب بالطريقة نفسها المطبقة على بقية اللاعبين.</li><li>لا تصل أماكن الاختلافات إلى جوالك.</li><li>تبقى هذه الشاشة للإدارة والتحكيم، ولا تعرض أي اختلاف أثناء اللعب.</li><li>الرابط يُستخدم مرة واحدة.</li></ul>
+      <div class="row"><button class="btn ghost sm" data-h="hphide">إخفاء</button></div></div>`;
+  },
+  hpQR(){ const el = $("#hpQr"); if (!el || el.childNodes.length || !H.priv.hpTok || !window.QRCode) return; try { new QRCode(el, {text:hpLink(H.code, H.priv.hpTok), width:140, height:140, colorDark:"#0f1430", colorLight:"#ffffff"}); } catch(e){} },
   hostPeers(players){
+    Diff.hostSeat(players);
     const s = H.s; if (s.ph !== "play") return;
     if (DF_SRV) Diff.tapsWatch();
     const now = srvNow();
     let ch = Diff.enroll(players);
     const pk = H.priv.pk || (H.priv.pk = {}), le = H.priv.le || (H.priv.le = {});
     for (const p of players){
+      if (p.presence.dv === devId) continue;                              // the referee's own device does not play
       const z = p.presence.df; if (!z || z.rd !== s.rd || typeof z.pk !== "string" || z.pk.length > 200) continue;
       const k = dfKey(pname(p));
       // a player's record belongs to the device identity that first played under that name (the database guarantees a
@@ -2416,7 +2451,7 @@ const Diff = {
   // the large announcement: the winner (or joint winners), or why the round ended and who leads
   heroHTML(s, me){
     const pl = s.pl || {}, win = (s.win || []).filter(k => pl[k]), lead = (s.rk || [])[0], L = lead && pl[lead];
-    const names = ks => ks.map(k => `<b>${esc(pl[k].n)}</b>`).join(" و");
+    const names = ks => ks.map(k => `<b>${esc(pl[k].n)}</b>${Diff.hpTag(s, k)}`).join(" و");
     let title, big, sub;
     if (win.length){
       const t = Math.max(...win.map(k => pl[k].dt || 0));
@@ -2443,13 +2478,13 @@ const Diff = {
   },
   resultsHTML(s, me, sel, attr){
     const win = new Set(s.win || []), rn = s.rn || {};
-    const rows = (s.rk || []).map(k => { const p = s.pl[k]; return `<tr class="${win.has(k) ? "win" : ""} ${k === me ? "me" : ""}"><td class="dfrank">${win.has(k) ? "🏆" : rn[k] || ""}</td><td class="dfname">${esc(p.n)}</td><td><b>${p.f}</b><small>/${s.nd}</small></td><td>${p.w}</td><td>${Diff.status(s, k)}</td><td class="dfpts"><b>${p.p}</b></td></tr>`; }).join("");
+    const rows = (s.rk || []).map(k => { const p = s.pl[k]; return `<tr class="${win.has(k) ? "win" : ""} ${k === me ? "me" : ""}"><td class="dfrank">${win.has(k) ? "🏆" : rn[k] || ""}</td><td class="dfname">${esc(p.n)}${Diff.hpTag(s, k)}</td><td><b>${p.f}</b><small>/${s.nd}</small></td><td>${p.w}</td><td>${Diff.status(s, k)}</td><td class="dfpts"><b>${p.p}</b></td></tr>`; }).join("");
     const T = s.tot || {}, tk = Diff.totOrder(T), tr = Diff.totRanks(T);
     const moved = tk.some(k => T[k].pr);              // the first round has no earlier place to compare with
     const chg = k => { const t = T[k], d = (t.pr || 0) - tr[k];
       return !t.pr ? `<span class="dfchg new">جديد</span>` : d > 0 ? `<span class="dfchg up" aria-label="تقدّم ${d}"><bdi dir="ltr">▲${d}</bdi></span>` : d < 0 ? `<span class="dfchg down" aria-label="تراجع ${-d}"><bdi dir="ltr">▼${-d}</bdi></span>` : `<span class="dfchg">–</span>`; };
     const tot = tk.length ? `<div class="panel stack dfoverall"><div class="row" style="justify-content:space-between"><h3>الترتيب العام</h3><span class="muted dfcap">المنافسة ${s.cn || 1} · ${Diff.rounds(s.cr || 0)}</span></div>
-      <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th>${moved ? "<th>التغيّر</th>" : ""}<th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map(k => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${tr[k]}</td><td class="dfname">${esc(T[k].n)}</td>${moved ? `<td>${chg(k)}</td>` : ""}<td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b>${moved && T[k].dp ? `<small class="dfplus"><bdi dir="ltr">+${T[k].dp}</bdi></small>` : ""}</td></tr>`).join("")}</table></div></div>` : "";
+      <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th>${moved ? "<th>التغيّر</th>" : ""}<th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map(k => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${tr[k]}</td><td class="dfname">${esc(T[k].n)}${T[k].hp ? ` <span class="chip dfhp">المقدّم</span>` : ""}</td>${moved ? `<td>${chg(k)}</td>` : ""}<td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b>${moved && T[k].dp ? `<small class="dfplus"><bdi dir="ltr">+${T[k].dp}</bdi></small>` : ""}</td></tr>`).join("")}</table></div></div>` : "";
     return `<div class="panel stack dfround"><h3>نتيجة الجولة</h3>
       <div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الاختلافات</th><th>الأخطاء</th><th>الوقت أو الحالة</th><th>نقاط الجولة</th></tr>${rows}</table></div>
       <p class="muted dfnote">نقاط الجولة: +10 لكل اختلاف، +50 لإكمالها كلها، +30 دون أي خطأ، −5 لكل خطأ.</p></div>${tot}`;
@@ -2509,7 +2544,8 @@ const Diff = {
       if (!H.priv.idxAsked){ H.priv.idxAsked = true; Spot.loadIndex().then(() => { if (H && H.g === "diff" && H.s.ph === "lobby"){ $("#hostMain").dataset.k = ""; renderHost(); } }); }
       const ix = Spot.index, cnt = ix ? ix.levels : null;
       setMain(lobbyHTML(players, `${cnt ? `<p class="muted">عدد الصور: سهل ${cnt[0]} · متوسط ${cnt[1]} · صعب ${cnt[2]}. لا يتكرر زوج داخل الغرفة حتى تُلعب كل صور المستوى.</p>` : ""}
-        <p class="muted">${["سهل: 5 اختلافات.","متوسط: 8 اختلافات.","صعب: 12 اختلافًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث بنفسه. أول من يكتشف كل الاختلافات يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.</p>${Diff.compHTML(s)}`, s.o.pk === "auto" ? "ابدأ الجولة" : "اختر الصورة وابدأ"));
+        <p class="muted">${["سهل: 5 اختلافات.","متوسط: 8 اختلافات.","صعب: 12 اختلافًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث بنفسه. أول من يكتشف كل الاختلافات يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.</p>${Diff.compHTML(s)}${s.hp || H.priv.hpShow ? Diff.hpHTML(s) : H.code ? `<div class="row"><button class="btn ghost sm" data-h="hpon">العب من جوالك أيضًا</button></div>` : ""}`, s.o.pk === "auto" ? "ابدأ الجولة" : "اختر الصورة وابدأ"));
+      Diff.hpQR();
       return;
     }
     if (s.ph === "done" || s.ph === "fail"){ H.priv.dfRd = null; clearInterval(H.priv.tick);
@@ -2554,7 +2590,8 @@ const Diff = {
     setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
     setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h")
       : solo ? `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>جولتك</h3>${clockChip(s)}</div>${Diff.standHTML(s, "host")}</div>` : Diff.hostPlayHTML(s));
-    setEl($("#dfAct"), H.priv.ncAsk ? Diff.ncHTML(s) : `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${over ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    setEl($("#dfAct"), H.priv.ncAsk ? Diff.ncHTML(s) : Diff.hpHTML(s) + `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${!s.hp && !H.priv.hpShow && H.code ? `<button class="btn ghost sm" data-h="hpon">العب من جوالك</button>` : ""}${over ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    Diff.hpQR();
   },
   meHTML(p, s){
     const left = DF_MAX_W - p.w;
@@ -2598,6 +2635,7 @@ const Diff = {
   },
   player(s){
     const pair = s.pair, me = dfKey(P.name);
+    if ((s.sd || []).includes(me)){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack dfsd"><p class="bigmsg">هذا الجهاز هو جهاز إدارة الغرفة</p><p class="muted">جهاز الإدارة يحمل حلول الجولة، فلا يُلعب منه. للمشاركة افتح رابط الدخول من جوالك أو من جهاز آخر.</p></div>`); bindPlayer(); return; }
     if (!DFC.ok()){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><p class="bigmsg">هذا المتصفح لا يدعم اللعبة</p><p class="muted">افتح الرابط في متصفح حديث مثل Safari أو Chrome.</p></div>`); bindPlayer(); return; }
     if (s.ph === "done" || s.ph === "fail"){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><p class="bigmsg">بانتظار المقدّم…</p><p class="muted">${s.ph === "done" ? "لُعبت كل صور هذا المستوى." : ""}</p></div>`); bindPlayer(); return; }
     if (s.ph === "prep" || !pair){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><div class="spinner"></div><p class="bigmsg">جولة جديدة…</p></div>`); bindPlayer(); return; }
@@ -2732,7 +2770,8 @@ photosReady.then(() => { if (H && H.s.ph === "lobby" && H.g === "puzzle"){ if (P
 /* opening لمّة: a game link (#code) joins that game; otherwise a game this device was in comes back automatically
    (the host's game or the player's seat, whichever is more recent) */
 { const q = new URLSearchParams(location.search), hc = (location.hash || "").replace("#", "") || q.get("code") || "";
-  if (q.has("v")) history.replaceState(null, "", location.pathname + (q.get("code") ? "?code=" + q.get("code") : "") + location.hash);   // the version tag has done its job
+  if (q.has("hp") && /^\d{4}$/.test(hc) && /^[a-z0-9]{6,16}$/.test(q.get("hp"))){ try { sessionStorage.setItem("lm-hp", JSON.stringify({t:q.get("hp"), c:hc})); } catch(e){} }
+  if (q.has("v") || q.has("hp")) history.replaceState(null, "", location.pathname + (q.get("code") ? "?code=" + q.get("code") : "") + location.hash);   // the version tag (and the host's mark) have done their job
   const sh = savedHost(), st = seatLatest();
   // a page that moved to a new version after a round comes back with its room code: on the host's own device that is
   // the host's game coming back, not a player joining it (otherwise the host would land as a player in its own room)

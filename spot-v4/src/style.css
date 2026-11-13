@@ -797,3 +797,12 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfpk-c.used{opacity:.72}
 @media (max-width:440px){.dfpk-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dfpk-c{padding:6px}.dfpk-s{font-size:.68rem}}
 .dfwait{color:var(--gold)}
+/* the host playing from a separate device */
+.chip.dfhp{font-size:.72em;padding:1px 7px;color:var(--gold);border-color:color-mix(in srgb,var(--gold) 55%,transparent);vertical-align:middle}
+.dfhp-box{border:2px dashed var(--gold)}
+.dfhp-box h3{margin:0;color:var(--gold)}
+.dfhp-box ul{margin:0;padding-inline-start:20px;line-height:1.8}
+.dfhp-qr{gap:12px;align-items:center;flex-wrap:wrap}
+.dfhp-qr #hpQr{background:#fff;padding:6px;border-radius:10px;line-height:0}
+.dfhp-qr .field{flex:1 1 220px;min-width:0;font-size:.85rem}
+.dfhp-on{justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent)}
