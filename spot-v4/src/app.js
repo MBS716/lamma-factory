@@ -189,6 +189,7 @@ const GAMES = {
     desc:"أول من يكتشف كل الاختلافات يفوز.",
     how:"الصورة نفسها للجميع، وكل لاعب يبحث عن الاختلافات بنفسه دون أن يرى اكتشافات غيره. أول من يكتشفها كلها يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.",
     opts:[{key:"lv", label:"الصعوبة", def:3, choices:() => [...LV3, [3,"الكل"]]},
+          {key:"pk", label:"اختيار الصورة", def:"host", choices:() => [["host","يختارها المقدّم"],["auto","تلقائي"]]},
           {key:"lim", label:"وقت الجولة", def:180, choices:() => [[60,"دقيقة"],[120,"دقيقتان"],[180,"3 دقائق"],[300,"5 دقائق"],[0,"بلا وقت"]]}],
     art:`<div class="art-df art-ph"><img src="spot/thumb_a.webp" alt=""><img src="spot/thumb_b.webp" alt=""></div>`},
   akml:{name:"أكملها", group:"race", teams:false, tag:"فردي أو فريقان · 7 طرق للإجابة",
@@ -1839,6 +1840,16 @@ const Spot = {
   markSeen(id, devs){ rememberLocal(id); const db = fbdb(); if (db) devs.forEach(d => { try { db.ref("spotseen/" + d + "/" + id).set(Date.now()).catch(() => {}); } catch(e){} }); },
   report(id){ const db = fbdb(); try { if (db) return Promise.resolve(db.ref("spotreports/" + id + "/" + devId).set(Date.now())); } catch(e){} return Promise.resolve(); },
   levelOk: (lv, l) => lv === 3 || l === lv,
+  // the whole library (for the host's picture library): every shard, without the hidden pairs
+  async all(){
+    const idx = await this.loadIndex(); if (!idx || !idx.shards) return null;
+    const out = []; for (const sh of idx.shards){ try { out.push(...(await this.shard(sh.name))); } catch(e){ return null; } }
+    return out.filter(e => !this.hidden.has(e.id));
+  },
+  async get(id, devs){
+    const list = await this.all(), e = list && list.find(x => x.id === id); if (!e) return null;
+    const seen = await this.seenBy(devs); return {pair:this.norm(e), fresh:!seen.get(id), total:list.length};
+  },
   /* Pick a pair for this room.
      - A pair already played in THIS room is never repeated until the room has played every pair of the level
        (then {done:true}, and the host decides: other level or replay).
@@ -2035,17 +2046,24 @@ const DFC = {
 };
 const fmtMS = ms => fmtT(Math.max(0, Math.round((ms || 0) / 1000)));
 const Diff = {
-  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null}; },
+  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null, hist:H.priv.hist || [], crounds:H.priv.crounds || []}; },
   async restore(pv){
     H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; H.priv.dfs = pv.dfs || null; H.priv.seen = pv.seen || {};
     H.priv.pf = pv.pf || {}; H.priv.hkp = pv.hkp || null; H.priv.mb = pv.mb || []; H.priv.own = pv.own || {}; H.priv.winAt = +pv.winAt || 0; H.priv.frozen = pv.frozen || null;
+    H.s.pick = 0;                                                  // the picture library is not open after a reload
+    H.priv.hist = Array.isArray(pv.hist) ? pv.hist : []; H.priv.crounds = Array.isArray(pv.crounds) ? pv.crounds : [];
+    // a game saved before competitions existed: it is competition 1, with the rounds it already played
+    if (!(H.s.cn >= 1)){ H.s.cn = 1; H.s.cr = Math.max(0, ...Object.values(H.s.tot || {}).map(t => +t.r || 0)); H.s.cs = 0; H.s.past = []; }
     H.priv.pk = {}; H.priv.le = {}; H.priv.box = {}; H.priv.qd = new Set(); H.priv.unsealing = 0;
     // records saved by an earlier version (with a hint) are read as they are: the hint parts are simply not used any more
     for (const k of Object.keys(H.s.pl || {})){ const p = H.s.pl[k]; if (p && typeof p === "object"){ delete p.h; for (const f of ["dt", "da"]) if (!Number.isFinite(p[f])) p[f] = 0; } }
     if (H.s.ph === "play" && H.s.pair && H.priv.dfs){ H.priv.dfRd = null; H.priv.dfq = []; Diff.hostKey(); startRaceClock(true); if (H.priv.winAt) Diff.armClose(); }      // the round goes on
     else if (H.s.ph === "play" || H.s.ph === "prep") H.s.ph = "lobby";
   },
-  init: () => ({rd:0, pair:null, nd:0, lv:1, fresh:true, pl:{}, rev:null, pf:null, rk:null, win:null, rn:null, tot:{}, end:"", hk:""}),
+  init: () => ({rd:0, pair:null, nd:0, lv:1, fresh:true, pl:{}, rev:null, pf:null, rk:null, win:null, rn:null, tot:{}, end:"", hk:"", cn:1, cr:0, cs:0, past:[], sp:0}),
+  /* every move of the game (a round prepared, played, ended, a new competition) is one step further: the database copy is
+     written at once, and after a reload the copy that went further wins (stateOrder) */
+  step(s){ s.sp = (+s.sp || 0) + 1; s.step = 0; },
   // the host's key pair: kept in its private saved data, so after a reload the phones' sealed messages still open
   hostKey(){
     if (!DFC.ok()) return Promise.reject(new Error("no crypto"));
@@ -2053,18 +2071,19 @@ const Diff = {
     return H.priv.hkP;
   },
   pf(k){ const a = H.priv.pf || (H.priv.pf = {}); return a[k] || (a[k] = {fi:[], lr:[]}); },
-  async start(replay){
+  async start(replay, chosen){
     if (H.priv.picking) return;
+    H.priv.pk = null; H.s.pick = 0;                                  // the picture library closes
     const s = H.s, rd = s.rd + 1;
     Diff.clearBoxes(); Diff.tapsClear(); clearTimeout(H.priv.closeT); H.priv.closeT = null;
-    s.rd = rd; s.ph = "prep"; s.pl = {}; s.rev = null; s.pf = null; s.rk = null; s.win = null; s.rn = null; s.end = ""; s.pair = null;
+    s.rd = rd; s.ph = "prep"; Diff.step(s); s.pl = {}; s.rev = null; s.pf = null; s.rk = null; s.win = null; s.rn = null; s.end = ""; s.pair = null;
     H.priv.dfs = null; H.priv.seen = {}; H.priv.dfq = []; H.priv.pf = {}; H.priv.le = {}; H.priv.box = {}; H.priv.qd = new Set(); H.priv.winAt = 0; H.priv.frozen = null;
     pushHost();
     const devs = [devId, ...hostPlayers().map(p => p.presence.dv).filter(d => typeof d === "string" && /^[a-z0-9]{10,24}$/.test(d))].slice(0, 40);
     let r; H.priv.picking = true;
     const played = H.priv.played || (H.priv.played = new Set());
     if (replay){ for (const id of [...played]) if (Spot.levelOk(s.o.lv, (H.priv.playedLv || {})[id])) played.delete(id); }
-    try { await Diff.hostKey(); r = await Spot.pick(s.o.lv, devs, played); } catch(e){ console.warn(e); r = null; }
+    try { await Diff.hostKey(); r = chosen ? await Spot.get(chosen, devs) : await Spot.pick(s.o.lv, devs, played); } catch(e){ console.warn(e); r = null; }
     if (H) H.priv.picking = false;
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;
     if (!r){ s.ph = "fail"; pushHost(); return; }
@@ -2077,19 +2096,130 @@ const Diff = {
     pushHost();
     try { await preloadSpot(p); } catch(e){ console.warn(e); }
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;
-    s.ph = "play"; Diff.enroll(hostPlayers()); startRaceClock(); pushHost();
+    s.ph = "play"; Diff.step(s); Diff.enroll(hostPlayers()); startRaceClock(); pushHost();
   },
   // everybody in the room when the round starts (or who joins during it) plays this round
   enroll(players){ const s = H.s; let ch = false; for (const p of players){ const k = dfKey(pname(p)); if (!s.pl[k] && !p.away){ s.pl[k] = dfZero(pname(p)); ch = true; } } return ch; },
   act(a, b){
     const s = H.s;
-    if (a === "start" || a === "go") Diff.start();
+    if (a === "start" || a === "go"){ if (s.o.pk === "auto") Diff.start(); else Diff.openPick(); }
+    else if (a === "pkclose"){ H.priv.pk = null; s.pick = 0; H.priv.dfRd = null; $("#hostMain").dataset.k = ""; pushHost(); }
+    else if (a === "pklv" && H.priv.pk){ H.priv.pk.lv = +b.dataset.lv; H.priv.pk.ask = ""; renderHost(); }
+    else if (a === "pkauto"){ Diff.start(); }
+    else if (a === "dfpick" && H.priv.pk){ const id = b.dataset.id || "";
+      if ((H.priv.played || new Set()).has(id) && H.priv.pk.ask !== id){ H.priv.pk.ask = id; renderHost(); const x = $("#dfPkAsk"); if (x) x.scrollIntoView({block:"center", behavior:"smooth"}); }
+      else Diff.start(false, id); }
+    else if (a === "pkok" && H.priv.pk && H.priv.pk.ask) Diff.start(false, H.priv.pk.ask);
+    else if (a === "pkno" && H.priv.pk){ H.priv.pk.ask = ""; renderHost(); }
     else if (a === "end") Diff.finish("host");
     else if (a === "lobby"){ clearInterval(H.priv.tick); s.ph = "lobby"; pushHost(); }
     else if (a === "dfhretry"){ H.priv.dfRd = null; renderHost(); }
     else if (a === "replay") Diff.start(true);
     else if (a === "dfsel" && b){ H.priv.dfSel = b.dataset.k || ""; renderHost(); }
+    else if (a === "nc"){ H.priv.ncAsk = true; renderHost(); }
+    else if (a === "ncno"){ H.priv.ncAsk = false; renderHost(); }
+    else if (a === "ncgo"){ H.priv.ncAsk = false; Diff.newComp(); }
+    else if (a === "dfcsv"){ const cn = +((b && b.dataset.cn) || s.cn), c = cn === s.cn ? Diff.compNow() : (H.priv.hist || []).find(x => x.cn === cn);
+      if (c) Diff.download(`lamma-spot-competition-${c.cn}-${new Date(c.to || Date.now()).toISOString().slice(0, 10)}.csv`, Diff.csv(c)); }
     else if (a === "dfreport" && s.pair && s.ph === "over"){ Spot.report(s.pair.id).then(() => { const x = $("#hostMain .dfreport"); if (x){ x.textContent = "وصل البلاغ للمراجعة (لا تُخفى الصورة تلقائيًا)"; x.disabled = true; } }).catch(() => {}); }
+  },
+  /* ---------- the host's picture library: the host chooses the next picture (the default), or lets the game choose ---------- */
+  async openPick(){
+    const s = H.s; if (H.priv.picking) return;
+    H.priv.pk = {open:true, lv:s.o.lv, q:"", ask:"", list:null, seen:null, err:false}; s.pick = 1; pushHost();
+    const devs = [devId, ...hostPlayers().map(p => p.presence.dv).filter(d => typeof d === "string" && /^[a-z0-9]{10,24}$/.test(d))].slice(0, 40);
+    let list = null, seen = null; try { [list, seen] = await Promise.all([Spot.all(), Spot.seenBy(devs)]); } catch(e){ console.warn(e); }
+    if (!H || !H.priv.pk || !H.priv.pk.open) return;
+    H.priv.pk.list = list; H.priv.pk.seen = seen || new Map(); H.priv.pk.err = !list; renderHost();
+  },
+  // a picture's state for this room: used in this competition, seen before on a device of the room, or new
+  pkState(id){ const pk = H.priv.pk; return (H.priv.played || new Set()).has(id) ? "used" : pk && pk.seen && pk.seen.get(id) ? "seen" : "new"; },
+  pickHTML(s){
+    const pk = H.priv.pk, lvs = [[0, "سهل"], [1, "متوسط"], [2, "صعب"], [3, "الكل"]];
+    if (!pk.list) return `<div class="panel center stack" style="margin-top:18px">${pk.err ? `<p class="bigmsg">تعذّر تحميل مكتبة الصور</p><div class="row" style="justify-content:center"><button class="btn" data-h="go">إعادة المحاولة</button><button class="btn ghost" data-h="pkauto">اختيار تلقائي</button><button class="btn ghost" data-h="pkclose">رجوع</button></div>` : `<div class="spinner"></div><p class="bigmsg">جارٍ تحميل مكتبة الصور…</p>`}</div>`;
+    const ST = {new:"جديدة", seen:"شوهدت سابقًا على أجهزة الغرفة", used:"استُخدمت في هذه المنافسة"}, O = {new:0, seen:1, used:2};
+    const list = pk.list.filter(e => Spot.levelOk(pk.lv, e.l)).sort((a, b) => (O[Diff.pkState(a.id)] - O[Diff.pkState(b.id)]) || a.l - b.l);
+    const cnt = st => list.filter(e => Diff.pkState(e.id) === st).length;
+    const ask = pk.ask && pk.list.find(e => e.id === pk.ask);
+    const card = e => { const st = Diff.pkState(e.id), t = e.t || THEME_AR[e.th] || "صورة";
+      return `<button class="dfpk-c ${st}" data-h="dfpick" data-id="${esc(e.id)}" data-t="${esc(normName(t))}"><span class="dfpk-im"><img loading="lazy" src="${SPOT_CDN}thumbs/${esc(e.id)}.webp" alt=""></span>
+        <span class="dfpk-t">${esc(t)}</span><span class="dfpk-m">${LV_NAMES[e.l]} · ${e.d.length} ${e.d.length > 10 ? "اختلافًا" : "اختلافات"}</span><span class="chip dfpk-s ${st}">${ST[st]}</span></button>`; };
+    return `<div class="panel stack dfpicker" style="margin-top:18px">
+      <div class="row" style="justify-content:space-between"><h2 class="dfpk-h">اختر صورة الجولة</h2><button class="btn ghost sm" data-h="pkclose">رجوع</button></div>
+      <p class="muted dfnote">الصور المصغّرة من الصورة الأصلية فقط، ولا تظهر فيها الاختلافات. يرى اللاعبون أنك تختار الصورة.</p>
+      ${ask ? `<div class="panel stack dfnc" id="dfPkAsk" role="alertdialog"><p><b>«${esc(ask.t || "صورة")}»</b> استُخدمت في هذه المنافسة. هل تريد استخدامها مرة أخرى؟</p><div class="row"><button class="btn" data-h="pkok">نعم، استخدمها</button><button class="btn ghost" data-h="pkno">إلغاء</button></div></div>` : ""}
+      <div class="row dfpk-f"><div class="seg wrap">${lvs.map(([v, l]) => `<button class="${pk.lv === v ? "on" : ""}" data-h="pklv" data-lv="${v}">${l}</button>`).join("")}</div>
+        <input class="field dfpk-q" id="dfq" type="search" placeholder="ابحث باسم المشهد" aria-label="ابحث باسم المشهد" autocomplete="off"></div>
+      <div class="row dfpk-sum"><span class="muted"><b>${list.length}</b> صورة · جديدة ${cnt("new")} · شوهدت ${cnt("seen")} · استُخدمت ${cnt("used")}</span><button class="btn ghost sm" data-h="pkauto">اختيار تلقائي لهذه الجولة</button></div>
+      <div class="dfpk-grid">${list.map(card).join("") || `<p class="muted">لا توجد صور في هذا المستوى.</p>`}</div><p class="muted dfpk-none" hidden>لا توجد صورة بهذا الاسم.</p></div>`;
+  },
+  // the search filters the cards in place (no new drawing: the typing is never interrupted)
+  pickFilter(){
+    const inp = $("#dfq"), pk = H.priv.pk; if (!inp || !pk) return;
+    if (!inp.dataset.b){ inp.dataset.b = "1"; inp.value = pk.q || ""; inp.oninput = () => { pk.q = inp.value; Diff.pickFilter(); }; }
+    const q = normName(pk.q || ""); let n = 0;
+    document.querySelectorAll("#hostMain .dfpk-c").forEach(c => { const on = !q || (c.dataset.t || "").includes(q); c.hidden = !on; n += on; });
+    const none = $("#hostMain .dfpk-none"); if (none) none.hidden = n > 0;
+  },
+  /* ---------- competitions: the host closes one and opens the next without anybody leaving the room ---------- */
+  // the summary of the competition now running (what is exported, and what is archived when a new one starts)
+  compNow(){
+    const s = H.s, T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), at = Date.now();
+    return {cn:s.cn || 1, from:s.cs || at, to:at, r:s.cr || 0, rank:ks.map(k => ({n:T[k].n, rk:rn[k], p:T[k].p, r:T[k].r, w:T[k].w || 0, f:T[k].f})), rounds:(H.priv.crounds || []).slice(-100)};
+  },
+  newComp(){
+    const s = H.s;
+    // a round being played is ended first and counted in the competition it belongs to; a round being prepared is dropped
+    if (s.ph === "play"){ Diff.drain(true); Diff.finish("host"); }
+    else if (s.ph === "prep"){ s.rd++; H.priv.dfs = null; }        // the pending start sees another round number and stops
+    clearInterval(H.priv.tick); clearTimeout(H.priv.closeT); H.priv.closeT = null;
+    const c = Diff.compNow();
+    if (c.rank.length){
+      H.priv.hist = [...(H.priv.hist || []), c].slice(-6);
+      s.past = [...(s.past || []), {cn:c.cn, at:c.to, r:c.r, top:c.rank.slice(0, 3).map(x => [x.n, x.p, x.rk])}].slice(-2);
+    }
+    s.cn = (s.cn || 1) + 1; s.cr = 0; s.cs = 0; s.tot = {}; H.priv.crounds = [];
+    H.priv.played = new Set(); H.priv.playedLv = {};                // the pictures of this competition start again
+    s.ph = "lobby"; s.pl = {}; s.rk = null; s.rn = null; s.win = null; s.rev = null; s.pf = null; s.end = ""; Diff.step(s);
+    pushHost();
+  },
+  csv(c){
+    // a spreadsheet file (Excel opens it in Arabic): text that could be read as a formula is kept as text
+    const q = v => { let t = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return `"${t.replace(/"/g, '""')}"`; };
+    const d = t => t ? new Date(t).toLocaleString("ar-SA-u-nu-latn", {dateStyle:"medium", timeStyle:"short"}) : "";
+    const rows = [["لمّة · اكتشف الفرق"], ["المنافسة", c.cn], ["من", d(c.from)], ["إلى", d(c.to)], ["عدد الجولات", c.r], [],
+      ["المركز", "اللاعب", "النقاط", "الجولات", "مرات الفوز", "الاختلافات"], ...c.rank.map(x => [x.rk, x.n, x.p, x.r, x.w, x.f]), [],
+      ["الجولة", "الصورة", "المستوى", "الفائز"], ...(c.rounds || []).map((x, i) => [i + 1, x.t, LV_NAMES[x.lv] || "", x.w && x.w.length ? x.w.join(" و ") : "لا فائز"])];
+    return "\ufeff" + rows.map(r => r.map(q).join(",")).join("\r\n");
+  },
+  download(name, text){
+    try { const a = document.createElement("a"), u = URL.createObjectURL(new Blob([text], {type:"text/csv;charset=utf-8"}));
+      a.href = u; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 2000); } catch(e){ console.warn(e); }
+  },
+  rounds: n => n === 1 ? "جولة واحدة" : n === 2 ? "جولتان" : n >= 3 && n <= 10 ? `${n} جولات` : `${n} جولة`,
+  // asking before a new competition: who leads now, what is kept, what is reset
+  ncHTML(s){
+    const T = s.tot || {}, ks = Diff.totOrder(T), L = ks[0] && T[ks[0]], live = s.ph === "play" || s.ph === "prep";
+    return `<div class="panel stack dfnc" role="alertdialog" aria-labelledby="dfncT"><h3 id="dfncT">بدء منافسة جديدة؟</h3>
+      <p>${L ? `المتصدّر الآن: <b>${esc(L.n)}</b> بـ <b>${L.p}</b> نقطة، بعد ${Diff.rounds(s.cr || 0)}.` : "لم تُحتسب أي جولة في هذه المنافسة بعد."}</p>
+      <p class="muted">تُحفظ نتيجة المنافسة ${s.cn || 1} ويمكن تنزيلها، ثم تبدأ النقاط من صفر. يبقى اللاعبون في الغرفة بأسمائهم.</p>
+      ${live ? `<p class="note">الجولة جارية: ستنتهي الآن وتُحتسب في المنافسة الحالية، ثم تبدأ المنافسة الجديدة.</p>` : ""}
+      <div class="row"><button class="btn" data-h="ncgo">${live ? "إنهاء الجولة واحتسابها ثم بدء منافسة جديدة" : "نعم، ابدأ منافسة جديدة"}</button><button class="btn ghost" data-h="ncno">إلغاء</button></div></div>`;
+  },
+  // the host's competition panel (in the settings): this competition's ranking, a new competition, the earlier ones
+  compHTML(s){
+    const T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), hist = (H.priv.hist || []).slice().reverse();
+    const table = ks.length ? `<div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th><th>الجولات</th><th>مرات الفوز</th><th>النقاط</th></tr>${ks.map(k => `<tr><td class="dfrank">${rn[k]}</td><td class="dfname">${esc(T[k].n)}</td><td>${T[k].r}</td><td>${T[k].w || 0}</td><td class="dfpts"><b>${T[k].p}</b></td></tr>`).join("")}</table></div>` : `<p class="muted">لم تُلعب جولة في هذه المنافسة بعد.</p>`;
+    const past = hist.length ? `<div class="stack dfpast"><b>المنافسات السابقة في هذه الغرفة</b>${hist.map(c => { const w = c.rank.filter(x => x.rk === 1);
+      return `<div class="row dfpast-i"><span>المنافسة ${c.cn} · ${Diff.rounds(c.r)} · الفائز: <b>${w.map(x => esc(x.n)).join(" و ") || "—"}</b>${w[0] ? ` (${w[0].p} نقطة)` : ""}</span><button class="btn ghost sm" data-h="dfcsv" data-cn="${c.cn}">تنزيل</button></div>`; }).join("")}</div>` : "";
+    return `<div class="panel stack dfcomp"><div class="row" style="justify-content:space-between"><h3>المنافسة ${s.cn || 1}</h3>${s.cr ? `<span class="muted">${Diff.rounds(s.cr)}</span>` : ""}</div>${table}
+      ${H.priv.ncAsk ? Diff.ncHTML(s) : `<div class="row"><button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${ks.length ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}</div>`}${past}</div>`;
+  },
+  // a phone waiting in the lobby: which competition, and how the last one ended
+  plobby(s){
+    const last = (s.past || [])[(s.past || []).length - 1], fresh = !(s.cr > 0);
+    const w = last && last.top.filter(x => x[2] === 1);
+    return `${s.pick ? `<p class="dfwait">المقدّم يختار صورة الجولة…</p>` : ""}<p class="chip dfcn">المنافسة ${s.cn || 1}</p>${fresh && last ? `<p class="dfpast-n">انتهت المنافسة ${last.cn} بعد ${Diff.rounds(last.r)}. الفائز: <b>${w.map(x => esc(x[0])).join(" و ")}</b> (${w[0] ? w[0][1] : 0} نقطة).<br>النقاط بدأت من جديد.</p>` : ""}${Diff.standHTML(s, P ? dfKey(P.name) : "")}`;
   },
   // the referee: one tap of one player (at = when it reached this device), against that player's own finds only
   judge(k, x, y, tol, id, at){
@@ -2172,7 +2302,7 @@ const Diff = {
   finish(why){
     const s = H.s; if (s.ph !== "play") return;                          // a round ends once: no bonus or result is counted twice
     clearInterval(H.priv.tick); clearTimeout(H.priv.dfT); H.priv.dfT = null; clearTimeout(H.priv.closeT); H.priv.closeT = null;
-    s.ph = "over";
+    s.ph = "over"; Diff.step(s);
     const close = H.priv.winAt ? H.priv.winAt + DF_WIN : 0;
     s.win = close ? Object.keys(s.pl).filter(k => s.pl[k].done && s.pl[k].da && s.pl[k].da <= close) : [];
     s.end = s.win.length ? "win" : (why || "");
@@ -2185,6 +2315,10 @@ const Diff = {
     for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
     // what this round changed in the overall ranking: the place before it (0 = first round) and the points it added
     for (const k of Object.keys(tot)){ tot[k].pr = before[k] || 0; tot[k].dp = s.pl[k] ? s.pl[k].p : 0; }
+    // the round belongs to the competition now running (its number travels with the state: nothing is added to another)
+    s.cr = (+s.cr || 0) + 1; if (!s.cs) s.cs = Date.now();
+    const cr = H.priv.crounds || (H.priv.crounds = []);
+    cr.push({rd:s.rd, t:s.pair ? s.pair.title : "", id:s.pair ? s.pair.id : "", lv:s.lv, end:s.end, w:s.win.map(k => s.pl[k].n), at:Date.now()}); if (cr.length > 100) cr.splice(0, cr.length - 100);
     H.priv.dfSel = ""; H.priv.dfq = []; H.priv.frozen = null;
     Diff.clearBoxes(); Diff.tapsClear();
     pushHost();
@@ -2314,7 +2448,7 @@ const Diff = {
     const moved = tk.some(k => T[k].pr);              // the first round has no earlier place to compare with
     const chg = k => { const t = T[k], d = (t.pr || 0) - tr[k];
       return !t.pr ? `<span class="dfchg new">جديد</span>` : d > 0 ? `<span class="dfchg up" aria-label="تقدّم ${d}"><bdi dir="ltr">▲${d}</bdi></span>` : d < 0 ? `<span class="dfchg down" aria-label="تراجع ${-d}"><bdi dir="ltr">▼${-d}</bdi></span>` : `<span class="dfchg">–</span>`; };
-    const tot = tk.length ? `<div class="panel stack dfoverall"><div class="row" style="justify-content:space-between"><h3>الترتيب العام</h3><span class="muted dfcap">مجموع كل الجولات في هذه الغرفة</span></div>
+    const tot = tk.length ? `<div class="panel stack dfoverall"><div class="row" style="justify-content:space-between"><h3>الترتيب العام</h3><span class="muted dfcap">المنافسة ${s.cn || 1} · ${Diff.rounds(s.cr || 0)}</span></div>
       <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th>${moved ? "<th>التغيّر</th>" : ""}<th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map(k => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${tr[k]}</td><td class="dfname">${esc(T[k].n)}</td>${moved ? `<td>${chg(k)}</td>` : ""}<td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b>${moved && T[k].dp ? `<small class="dfplus"><bdi dir="ltr">+${T[k].dp}</bdi></small>` : ""}</td></tr>`).join("")}</table></div></div>` : "";
     return `<div class="panel stack dfround"><h3>نتيجة الجولة</h3>
       <div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الاختلافات</th><th>الأخطاء</th><th>الوقت أو الحالة</th><th>نقاط الجولة</th></tr>${rows}</table></div>
@@ -2336,7 +2470,7 @@ const Diff = {
     const rn = Diff.totRanks(T), md = ["🥇", "🥈", "🥉"], top = ks.slice(0, 3);
     const item = k => `<span class="dfstand-i ${k === me ? "me" : ""}"><span aria-hidden="true">${md[rn[k] - 1] || ""}</span>${md[rn[k] - 1] ? "" : rn[k] + ". "}${esc(T[k].n)} <b>${T[k].p}</b></span>`;
     const mine = me && T[me] && !top.includes(me) ? `<span class="dfstand-i me">أنت: المركز ${rn[me]} · <b>${T[me].p}</b></span>` : "";
-    return `<div class="dfstand"><span class="muted">الترتيب العام قبل هذه الجولة:</span>${top.map(item).join("")}${mine}</div>`;
+    return `<div class="dfstand"><span class="muted">ترتيب المنافسة ${s.cn || 1} قبل هذه الجولة:</span>${top.map(item).join("")}${mine}</div>`;
   },
   // the host's screen during the round (often seen by everybody): how many play, no counts per player and no places
   hostPlayHTML(s){
@@ -2369,12 +2503,13 @@ const Diff = {
   review(s, sel){ const got = new Set((s.pf && s.pf[sel]) || []), all = s.rev || []; return {found:all.filter((d, i) => got.has(i)), rev:all.filter((d, i) => !got.has(i))}; },
   host(players){
     const s = H.s, m = $("#hostMain");
+    if (H.priv.pk && H.priv.pk.open){ H.priv.dfRd = null; setMain(Diff.pickHTML(s)); Diff.pickFilter(); return; }
     if (s.ph === "lobby"){
       H.priv.dfRd = null;
       if (!H.priv.idxAsked){ H.priv.idxAsked = true; Spot.loadIndex().then(() => { if (H && H.g === "diff" && H.s.ph === "lobby"){ $("#hostMain").dataset.k = ""; renderHost(); } }); }
       const ix = Spot.index, cnt = ix ? ix.levels : null;
       setMain(lobbyHTML(players, `${cnt ? `<p class="muted">عدد الصور: سهل ${cnt[0]} · متوسط ${cnt[1]} · صعب ${cnt[2]}. لا يتكرر زوج داخل الغرفة حتى تُلعب كل صور المستوى.</p>` : ""}
-        <p class="muted">${["سهل: 5 اختلافات.","متوسط: 8 اختلافات.","صعب: 12 اختلافًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث بنفسه. أول من يكتشف كل الاختلافات يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.</p>`, "ابدأ الجولة"));
+        <p class="muted">${["سهل: 5 اختلافات.","متوسط: 8 اختلافات.","صعب: 12 اختلافًا.","الكل: زوج عشوائي من أي مستوى."][s.o.lv]} الصورة نفسها للجميع، وكل لاعب يبحث بنفسه. أول من يكتشف كل الاختلافات يفوز وتتوقف الجولة. لكل لاعب 5 أخطاء.</p>${Diff.compHTML(s)}`, s.o.pk === "auto" ? "ابدأ الجولة" : "اختر الصورة وابدأ"));
       return;
     }
     if (s.ph === "done" || s.ph === "fail"){ H.priv.dfRd = null; clearInterval(H.priv.tick);
@@ -2419,7 +2554,7 @@ const Diff = {
     setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
     setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h")
       : solo ? `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>جولتك</h3>${clockChip(s)}</div>${Diff.standHTML(s, "host")}</div>` : Diff.hostPlayHTML(s));
-    setEl($("#dfAct"), `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    setEl($("#dfAct"), H.priv.ncAsk ? Diff.ncHTML(s) : `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${over ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
   },
   meHTML(p, s){
     const left = DF_MAX_W - p.w;
@@ -2517,7 +2652,7 @@ const Diff = {
     setEl($("#dfRev"), over ? Diff.reviewHTML(s, sel, "data-act") : "");
     setEl($("#dfCred"), over ? Diff.creditHTML(pair, false) : "");
     if (over && P.view.dfHeroRd !== s.rd){ P.view.dfHeroRd = s.rd; const h = $("#dfHeroCard"); if (h) h.scrollIntoView({block:"start", behavior:"smooth"}); }
-    setEl($("#pDfStatus"), over ? Diff.resultsHTML(s, me, sel, "data-act") + `<p class="muted center dfwait">النتائج باقية حتى يبدأ المقدّم الجولة التالية…</p>`
+    setEl($("#pDfStatus"), over ? Diff.resultsHTML(s, me, sel, "data-act") + `<p class="muted center dfwait">${s.pick ? "المقدّم يختار صورة الجولة التالية…" : "النتائج باقية حتى يبدأ المقدّم الجولة التالية…"}</p>`
       : Diff.standHTML(s, me));
   },
   pclick(t){

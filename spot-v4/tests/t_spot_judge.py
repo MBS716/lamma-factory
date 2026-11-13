@@ -8,7 +8,7 @@ from common import Env
 async def main():
     async with Env(8782) as E:
         host = await E.page('host', 1280, 900); A = await E.page('A', 390, 844)
-        code = await E.start(host, 'diff', {'lv': 1, 'lim': 300}); await E.join(A, code, 'سارة'); await host.wait_for_timeout(600)
+        code = await E.start(host, 'diff', {'lv': 1, 'pk': 'auto', 'lim': 300}); await E.join(A, code, 'سارة'); await host.wait_for_timeout(600)
         await host.click('[data-h=start]'); await host.wait_for_function('H.s.ph === "play"', timeout=15000)
         res = await host.evaluate('''async () => {
           const idx = await (await fetch("spot/catalog/index.json")).json(); let all = [];

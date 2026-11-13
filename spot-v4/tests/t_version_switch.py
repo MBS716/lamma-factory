@@ -99,9 +99,11 @@ async def main():
         await C.wait_for_timeout(6000)
         cb, ct = await BUILD(C), await C.inner_text('body')
         await C.screenshot(path=SHOTS + '/vs_old_phone_akml.png')
-        ok = cb == new_b or any(w in ct for w in ('إصدار أحدث', 'حدّث', 'تحديث'))
-        check(ok, f'the phone on the old page invited to «أكملها»: ' + ('it updated itself to the new version' if cb == new_b else 'it shows an update message' if ok else 'STUCK: ' + ct[:160].replace('\n', ' ')))
-        if cb == new_b:
+        knows = await C.evaluate('!!(typeof GAMES !== "undefined" && GAMES.akml)')       # an old version that already has «أكملها» (v4.8 and later) simply joins
+        named = await C.locator('#pName').count() > 0
+        ok = cb == new_b or any(w in ct for w in ('إصدار أحدث', 'حدّث', 'تحديث')) or (knows and named)
+        check(ok, f'the phone on the old page invited to «أكملها»: ' + ('it updated itself to the new version' if cb == new_b else 'its version already has «أكملها»: it joins' if knows and named else 'it shows an update message' if ok else 'STUCK: ' + ct[:160].replace('\n', ' ')))
+        if cb == new_b or (knows and named):
             await C.wait_for_selector('#pName', timeout=10000); await C.fill('#pName', 'نورة'); await C.click('[data-act=enter]'); await D.wait_for_timeout(1500)
             check('نورة' in await D.inner_text('#hostMain'), 'after updating it joins the «أكملها» room')
         check(not E.errs, 'no page errors ' + '; '.join(E.errs[:3]))

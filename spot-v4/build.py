@@ -35,10 +35,16 @@ def spot_catalog():
     LIB = os.environ.get('LAMMA_SPOTLIB', 'spotlib')       # spotlib-v4: the 15-pair sample of the new spot game
     pairs = json.load(open(os.path.join(ROOT, LIB, 'pairs.json'), encoding='utf-8'))
     out = os.path.join(DIST, 'spot'); shutil.rmtree(out, ignore_errors=True)
-    os.makedirs(os.path.join(out, 'pairs')); os.makedirs(os.path.join(out, 'catalog'))
+    os.makedirs(os.path.join(out, 'pairs')); os.makedirs(os.path.join(out, 'catalog')); os.makedirs(os.path.join(out, 'thumbs'))
+    from PIL import Image          # the host's picture library: a small copy of the ORIGINAL picture (a) only, never the changed one
     ents = []
     for p in pairs:
         for k in ('a', 'b'): shutil.copy(os.path.join(ROOT, LIB, p[k]), os.path.join(out, 'pairs', p['id'] + k + '.webp'))
+        cache = os.path.join(ROOT, LIB, 'thumbs', p['id'] + '.webp')          # made once, kept with the library
+        if not os.path.exists(cache):
+            os.makedirs(os.path.dirname(cache), exist_ok=True)
+            im = Image.open(os.path.join(ROOT, LIB, p['a'])).convert('RGB'); im.thumbnail((320, 320), Image.LANCZOS); im.save(cache, 'WEBP', quality=70, method=6)
+        shutil.copy(cache, os.path.join(out, 'thumbs', p['id'] + '.webp'))
         ents.append({'id': p['id'], 'l': p['level'], 'w': p['w'], 'h': p['h'], 't': p.get('title', ''), 'k': p.get('kind', 'photo'),
                      'd': [[d['x'], d['y'], d['rx'], d['ry']] + ([d['m']] if d.get('m') else []) for d in p['diffs']], 'c': p.get('credit')})
     for f in ('thumb_a.webp', 'thumb_b.webp'): shutil.copy(os.path.join(ROOT, LIB, f), os.path.join(out, f))

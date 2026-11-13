@@ -20,11 +20,13 @@ wait
 run others python3 t_others.py &
 run spot4 python3 t_spot4.py &
 run spotjudge python3 t_spot_judge.py &
+run spotcomp python3 t_spot_comp.py &
+run spotpick python3 t_spot_pick.py &
 run akml python3 t_akml.py &
 run akmlkey python3 t_akml_key.py &
 run akmlfull python3 t_akml_full.py &
 run akmltimer python3 t_akml_timer.py &
-run vswitch env OLD=/home/claude/lamma-factory/site NEW=/home/claude/lamma/dist python3 t_version_switch.py &
+run vswitch env OLD=/home/claude/lamma-factory/site NEW=$DIST python3 t_version_switch.py &
 run touch python3 t_touch_puzzle.py &
 wait
 run w3eng node t_wheel3_engine.js &

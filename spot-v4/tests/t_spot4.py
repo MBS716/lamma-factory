@@ -21,7 +21,7 @@ async def main():
     async with Env(8784) as E:
         host = await E.page('host', 1280, 900)
         A = await E.page('A', 390, 844); B = await E.page('B', 360, 740); C = await E.page('C', 1280, 860)
-        code = await E.start(host, 'diff', {'lv': 0, 'lim': 300})
+        code = await E.start(host, 'diff', {'lv': 0, 'pk': 'auto', 'lim': 300})
         await E.join(A, code, 'صالح'); await E.join(B, code, 'تافير'); await E.join(C, code, 'نورة'); await host.wait_for_timeout(700)
         G = {}
         async def new_round(lv=None):
@@ -195,7 +195,7 @@ async def main():
 
         # ================= solo rooms
         host2 = await E.page('host2', 1280, 900); Dp = await E.page('D', 390, 844)
-        code2 = await E.start(host2, 'diff', {'lv': 0, 'lim': 0})
+        code2 = await E.start(host2, 'diff', {'lv': 0, 'pk': 'auto', 'lim': 0})
         await E.join(Dp, code2, 'ليلى'); await host2.wait_for_timeout(700); await host2.click('[data-h=start]')
         await Dp.wait_for_selector('#pDf .dfimg img', timeout=15000); await host2.wait_for_timeout(900)
         s2 = await S(host2); G['D'] = await host2.evaluate('H.priv.dfs'); G['W'], G['H'] = s2['pair']['w'], s2['pair']['h']
