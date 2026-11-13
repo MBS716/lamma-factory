@@ -28,6 +28,12 @@ def cells(d):
     x0, y0, c, rs = d[4]
     return [((x0 + a) * 16 + 8, (y0 + j) * 16 + 8) for j, r in enumerate(rs.split('.')) for a in range(c) if int(r or '0', 16) >> a & 1]
 
+async def over_or_dump(host, t=20000):
+    """the round should end: if it does not, print what the referee has (to see why) and fail"""
+    try: await host.wait_for_function('H.s.ph === "over"', timeout=t)
+    except Exception:
+        print('DEBUG', await host.evaluate('JSON.stringify({ph:H.s.ph, nd:H.s.nd, pl:H.s.pl, pf:H.priv.pf, q:(H.priv.dfq||[]).length, uns:H.priv.unsealing, winAt:H.priv.winAt, now:srvNow()})'), flush=True); raise
+
 async def main():
     os.makedirs(SHOTS, exist_ok=True)
     n, bad = thumbs_from_original()
@@ -78,7 +84,7 @@ async def main():
             b = await pg.locator('#pDf .dfimg >> nth=1').bounding_box(); await pg.touchscreen.tap(b['x'] + x / W * b['width'], b['y'] + y / Hh * b['height']); await pg.wait_for_timeout(350)
         await host.wait_for_timeout(900)
         for i in range(5): await tap(A, i)
-        await host.wait_for_function('H.s.ph === "over"', timeout=8000)
+        await over_or_dump(host)
         # next round: the library again, the results stay on the phones
         await host.click('[data-h=go]'); await host.wait_for_selector('.dfpk-c', timeout=15000); await host.wait_for_timeout(400)
         await A.wait_for_function('document.querySelector("#playerMain").innerText.includes("المقدّم يختار صورة الجولة التالية")', timeout=5000)

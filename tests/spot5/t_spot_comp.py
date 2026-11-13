@@ -17,6 +17,12 @@ def cells(d):
     x0, y0, c, rs = d[4]
     return [((x0 + a) * 16 + 8, (y0 + j) * 16 + 8) for j, r in enumerate(rs.split('.')) for a in range(c) if int(r or '0', 16) >> a & 1]
 
+async def over_or_dump(host, t=20000):
+    """the round should end: if it does not, print what the referee has (to see why) and fail"""
+    try: await host.wait_for_function('H.s.ph === "over"', timeout=t)
+    except Exception:
+        print('DEBUG', await host.evaluate('JSON.stringify({ph:H.s.ph, nd:H.s.nd, pl:H.s.pl, pf:H.priv.pf, q:(H.priv.dfq||[]).length, uns:H.priv.unsealing, winAt:H.priv.winAt, now:srvNow()})'), flush=True); raise
+
 async def main():
     os.makedirs(SHOTS, exist_ok=True)
     async with Env(8811) as E:
@@ -46,7 +52,7 @@ async def main():
         s = await new_round()
         check(s['cn'] == 1 and s['cr'] == 0, 'a new room is competition 1')
         await taps(B, [0, 1]); await host.wait_for_timeout(600)
-        await taps(A, [0, 1, 2, 3, 4]); await host.wait_for_function('H.s.ph === "over"', timeout=8000); s = await S(host)
+        await taps(A, [0, 1, 2, 3, 4]); await over_or_dump(host); s = await S(host)
         T = s['tot']; check((T[kA]['p'], T[kB]['p'], T[kC]['p']) == (130, 50, 0) and s['cr'] == 1, f'round 1 counted in competition 1: صالح 130, تافير 50, نورة 0 ({T[kA]["p"]}, {T[kB]["p"]}, {T[kC]["p"]})')
         # the download of the competition running now
         async with host.expect_download() as dl: await host.click('#dfAct [data-h=dfcsv]')
