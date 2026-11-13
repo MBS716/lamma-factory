@@ -2181,8 +2181,10 @@ const Diff = {
     s.pf = {}; for (const k of Object.keys(s.pl)) s.pf[k] = Diff.pf(k).fi.slice();
     for (const k of Object.keys(s.pl)){ const p = s.pl[k]; if (p.f > 0 && !p.w && !p.out){ p.p += DF_PTS.clean; p.b += DF_PTS.clean; } }
     const r = Diff.rank(s); s.rk = r.rk; s.rn = r.rn;
-    const tot = s.tot || (s.tot = {});
+    const tot = s.tot || (s.tot = {}), before = Diff.totRanks(tot);
     for (const k of s.rk){ const p = s.pl[k], t = tot[k] || (tot[k] = {n:p.n, p:0, r:0, f:0, w:0}); t.n = p.n; t.p += p.p; t.r++; t.f += p.f; t.w = (t.w || 0) + (s.win.includes(k) ? 1 : 0); }
+    // what this round changed in the overall ranking: the place before it (0 = first round) and the points it added
+    for (const k of Object.keys(tot)){ tot[k].pr = before[k] || 0; tot[k].dp = s.pl[k] ? s.pl[k].p : 0; }
     H.priv.dfSel = ""; H.priv.dfq = []; H.priv.frozen = null;
     Diff.clearBoxes(); Diff.tapsClear();
     pushHost();
@@ -2285,11 +2287,13 @@ const Diff = {
     if (win.length){
       const t = Math.max(...win.map(k => pl[k].dt || 0));
       title = win.length > 1 ? "فوز مشترك" : "الفائز بالجولة"; big = names(win);
-      sub = `${win.length > 1 ? "أكملوا" : "أكمل"} ${s.nd} من ${s.nd} اختلافات خلال <bdi>${fmtMS(t)}</bdi>`;
+      const pts = [...new Set(win.map(k => pl[k].p))];
+      sub = `${win.length > 1 ? "أكملوا" : "أكمل"} ${s.nd} من ${s.nd} اختلافات خلال <bdi>${fmtMS(t)}</bdi>`
+        + `<span class="dfhero-pts">${pts.length === 1 ? `<b>${pts[0]}</b> نقطة${win.length > 1 ? " لكل منهم" : ""}` : win.map(k => `${esc(pl[k].n)} <b>${pl[k].p}</b>`).join(" · ") + " نقطة"}</span>`;
     } else {
       title = {time:"انتهى الوقت", out:"استُبعد جميع اللاعبين", solo:"انتهت محاولاتك الخمس", host:"أنهى المقدّم الجولة", away:"لم يبقَ لاعب متصل"}[s.end] || "انتهت الجولة";
       big = L ? `<span class="dfhero-k">متصدر الجولة:</span> <b>${esc(L.n)}</b>` : "";
-      sub = L ? `اكتشف ${L.f} من ${s.nd} اختلافات` : "";
+      sub = L ? `اكتشف ${L.f} من ${s.nd} اختلافات<span class="dfhero-pts"><b>${L.p}</b> نقطة</span>` : "";
     }
     const why = win.length ? `انتهت الجولة لأن ${win.length > 1 ? "أكثر من لاعب أكملوا" : "لاعبًا أكمل"} جميع الاختلافات` : {time:"انتهت الجولة لانتهاء الوقت", out:"انتهت الجولة لاستبعاد جميع المشاركين", solo:"انتهت الجولة بالخطأ الخامس", host:"أنهى المقدّم الجولة", away:"انتهت الجولة لعدم وجود لاعب متصل"}[s.end] || "";
     const mine = me && pl[me] && s.rn ? `<p class="dfhero-me">أنت: المركز <b>${s.rn[me]}</b> · ${pl[me].f} من ${s.nd} · <b>${pl[me].p}</b> نقطة</p>` : "";
@@ -2306,14 +2310,40 @@ const Diff = {
   resultsHTML(s, me, sel, attr){
     const win = new Set(s.win || []), rn = s.rn || {};
     const rows = (s.rk || []).map(k => { const p = s.pl[k]; return `<tr class="${win.has(k) ? "win" : ""} ${k === me ? "me" : ""}"><td class="dfrank">${win.has(k) ? "🏆" : rn[k] || ""}</td><td class="dfname">${esc(p.n)}</td><td><b>${p.f}</b><small>/${s.nd}</small></td><td>${p.w}</td><td>${Diff.status(s, k)}</td><td class="dfpts"><b>${p.p}</b></td></tr>`; }).join("");
-    const T = s.tot || {}, tk = Object.keys(T).sort((a, b) => T[b].p - T[a].p || (T[b].w || 0) - (T[a].w || 0) || T[b].f - T[a].f);
+    const T = s.tot || {}, tk = Diff.totOrder(T), tr = Diff.totRanks(T);
+    const moved = tk.some(k => T[k].pr);              // the first round has no earlier place to compare with
+    const chg = k => { const t = T[k], d = (t.pr || 0) - tr[k];
+      return !t.pr ? `<span class="dfchg new">جديد</span>` : d > 0 ? `<span class="dfchg up" aria-label="تقدّم ${d}"><bdi dir="ltr">▲${d}</bdi></span>` : d < 0 ? `<span class="dfchg down" aria-label="تراجع ${-d}"><bdi dir="ltr">▼${-d}</bdi></span>` : `<span class="dfchg">–</span>`; };
     const tot = tk.length ? `<div class="panel stack dfoverall"><div class="row" style="justify-content:space-between"><h3>الترتيب العام</h3><span class="muted dfcap">مجموع كل الجولات في هذه الغرفة</span></div>
-      <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th><th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map((k, i) => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${i + 1}</td><td class="dfname">${esc(T[k].n)}</td><td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b></td></tr>`).join("")}</table></div></div>` : "";
-    const who = (s.rk || []).length > 1 ? `<div class="row dfsel"><span class="muted">على الصورتين:</span>${s.rk.map(k => `<button class="btn ghost sm ${k === sel ? "on" : ""}" ${attr}="dfsel" data-k="${esc(k)}">${esc(s.pl[k].n)}</button>`).join("")}</div>` : "";
+      <div class="tbl"><table class="htable dfres dftot"><tr><th>#</th><th>اللاعب</th>${moved ? "<th>التغيّر</th>" : ""}<th>الجولات</th><th>مرات الفوز</th><th>الاختلافات</th><th>إجمالي النقاط</th></tr>${tk.map(k => `<tr class="${k === me ? "me" : ""}"><td class="dfrank">${tr[k]}</td><td class="dfname">${esc(T[k].n)}</td>${moved ? `<td>${chg(k)}</td>` : ""}<td>${T[k].r}</td><td>${T[k].w || 0}</td><td>${T[k].f}</td><td class="dfpts"><b>${T[k].p}</b>${moved && T[k].dp ? `<small class="dfplus"><bdi dir="ltr">+${T[k].dp}</bdi></small>` : ""}</td></tr>`).join("")}</table></div></div>` : "";
     return `<div class="panel stack dfround"><h3>نتيجة الجولة</h3>
       <div class="tbl"><table class="htable dfres"><tr><th>#</th><th>اللاعب</th><th>الاختلافات</th><th>الأخطاء</th><th>الوقت أو الحالة</th><th>نقاط الجولة</th></tr>${rows}</table></div>
-      <p class="muted dfnote">نقاط الجولة: +10 لكل اختلاف، +50 لإكمالها كلها، +30 دون أي خطأ، −5 لكل خطأ.</p>
-      ${who}<p class="muted dfnote">الدوائر الخضراء ما اكتشفه ${sel && s.pl[sel] ? `<b>${esc(s.pl[sel].n)}</b>` : "اللاعب"}، والبرتقالية ما فاته.</p></div>${tot}`;
+      <p class="muted dfnote">نقاط الجولة: +10 لكل اختلاف، +50 لإكمالها كلها، +30 دون أي خطأ، −5 لكل خطأ.</p></div>${tot}`;
+  },
+  // under the picture after the round: whose finds are drawn (green: found, orange: missed)
+  reviewHTML(s, sel, attr){
+    const who = (s.rk || []).length > 1 ? `<div class="row dfsel"><span class="muted">اعرض اكتشافات:</span>${s.rk.map(k => `<button class="btn ghost sm ${k === sel ? "on" : ""}" ${attr}="dfsel" data-k="${esc(k)}">${esc(s.pl[k].n)}</button>`).join("")}</div>` : "";
+    return `<h3 class="dfrevt">الاختلافات على الصورة</h3>${who}<p class="muted dfnote">الدوائر الخضراء ما اكتشفه ${sel && s.pl[sel] ? `<b>${esc(s.pl[sel].n)}</b>` : "اللاعب"}، والبرتقالية ما فاته.</p>`;
+  },
+  /* the overall ranking: more points, then more wins, then more differences; equal players share a place */
+  totOrder(T){ T = T || {}; return Object.keys(T).sort((a, b) => T[b].p - T[a].p || (T[b].w || 0) - (T[a].w || 0) || T[b].f - T[a].f || String(T[a].n).localeCompare(String(T[b].n), "ar")); },
+  totRanks(T){ T = T || {}; const ks = Object.keys(T), out = {};
+    for (const k of ks){ const t = T[k]; out[k] = 1 + ks.filter(j => { const u = T[j]; return u.p > t.p || (u.p === t.p && ((u.w || 0) > (t.w || 0) || ((u.w || 0) === (t.w || 0) && u.f > t.f))); }).length; }
+    return out; },
+  // during the round: one short line of the overall ranking as it was BEFORE the round (it does not move while playing)
+  standHTML(s, me){
+    const T = s.tot || {}, ks = Diff.totOrder(T); if (!ks.length) return "";
+    const rn = Diff.totRanks(T), md = ["🥇", "🥈", "🥉"], top = ks.slice(0, 3);
+    const item = k => `<span class="dfstand-i ${k === me ? "me" : ""}"><span aria-hidden="true">${md[rn[k] - 1] || ""}</span>${md[rn[k] - 1] ? "" : rn[k] + ". "}${esc(T[k].n)} <b>${T[k].p}</b></span>`;
+    const mine = me && T[me] && !top.includes(me) ? `<span class="dfstand-i me">أنت: المركز ${rn[me]} · <b>${T[me].p}</b></span>` : "";
+    return `<div class="dfstand"><span class="muted">الترتيب العام قبل هذه الجولة:</span>${top.map(item).join("")}${mine}</div>`;
+  },
+  // the host's screen during the round (often seen by everybody): how many play, no counts per player and no places
+  hostPlayHTML(s){
+    const pl = (H.priv.winAt && H.priv.frozen) || s.pl || {}, ks = Object.keys(pl), out = ks.filter(k => pl[k].out).length;
+    return `<div class="panel stack dfplay"><div class="row" style="justify-content:space-between"><h3>الجولة جارية</h3>${clockChip(s)}</div>
+      <p class="dfplay-n">${ks.length ? `في الجولة: <b>${ks.length}</b> ${ks.length === 1 ? "لاعب" : ks.length === 2 ? "لاعبان" : ks.length <= 10 ? "لاعبين" : "لاعبًا"}${out ? ` · استُبعد <b>${out}</b>` : ""}` : "بانتظار اللاعبين…"}</p>
+      <p class="muted dfnote">لا تظهر نقاط اللاعبين أثناء اللعب. النتائج كاملة بعد انتهاء الجولة.</p>${Diff.standHTML(s, "")}</div>`;
   },
   // the picture's author, source and licence: shown in full after the round (the source would reveal the answer before)
   creditLine(p){
@@ -2335,12 +2365,6 @@ const Diff = {
     } else rows = `<tr><th>المصدر</th><td>${esc(String(c[0] || ""))}</td></tr>`;
     return `<details class="panel dfcredit-box"><summary>حقوق الصورة${host ? " وتفاصيل الجولة" : ""}</summary><table class="htable info">${rows}</table>${host ? `<div class="row">${reportBtn('data-h="dfreport"')}</div><p class="muted dfnote">البلاغ يصل للمراجعة فقط، ولا يُخفي الصورة تلقائيًا.</p>` : ""}</details>`;
   },
-  // during the round everybody sees only how many each player found, never where
-  liveHTML(s, me){
-    const ks = Object.keys(s.pl).sort((a, b) => s.pl[b].f - s.pl[a].f || s.pl[a].w - s.pl[b].w);
-    if (!ks.length) return `<p class="muted">بانتظار اللاعبين…</p>`;
-    return `<div class="lb dflive">${ks.map(k => { const p = s.pl[k]; return `<div class="${k === me ? "me" : ""} ${p.out ? "out" : ""}"><span>${esc(p.n)}${p.done ? ` <span class="chip ok">أكمل ✓</span>` : p.out ? ` <span class="chip warn">استُبعد</span>` : ""}</span><span class="muted"><b class="dfbig">${p.f}</b> من ${s.nd} · أخطاء ${p.w}/${DF_MAX_W}</span></div>`; }).join("")}</div>`;
-  },
   // the picture after the round: the chosen player's finds in green, the rest in orange
   review(s, sel){ const got = new Set((s.pf && s.pf[sel]) || []), all = s.rev || []; return {found:all.filter((d, i) => got.has(i)), rev:all.filter((d, i) => !got.has(i))}; },
   host(players){
@@ -2361,7 +2385,7 @@ const Diff = {
     const solo = !H.code || !players.length || !!s.pl.host;       // nobody joined: the host plays on this screen
     if (H.priv.dfRd !== s.rd){
       H.priv.dfRd = s.rd; H.priv.dfm = null; H.priv.dfHeroRd = null;
-      m.innerHTML = `<div class="dfhost"><div id="dfHero"></div><div class="panel stack"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div id="dfMe"></div><div class="df-holder"></div><p class="dfcredit">${Diff.creditLine(pair)}</p></div><div class="stack" id="dfSide"></div><div id="dfAct"></div></div>`;
+      m.innerHTML = `<div class="dfhost" id="dfWrap"><div id="dfHero"></div><div class="panel stack dfpic"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)} · ${LV_NAMES[s.lv]}</h3><b id="dfHostCount" class="count"></b></div><div id="dfMe"></div><div id="dfRev"></div><div class="df-holder"></div><p class="dfcredit">${Diff.creditLine(pair)}</p><div id="dfCred"></div></div><div class="stack" id="dfSide"></div><div id="dfAct"></div></div>`;
       m.dataset.k = "";
       const rd = s.rd, holder = m.querySelector(".df-holder");
       preloadSpot(pair).then(() => {
@@ -2386,13 +2410,16 @@ const Diff = {
       const lr = mine && mine.lr && mine.lr[mine.lr.length - 1];
       if (lr && H.priv.dfLr !== lr[0]){ H.priv.dfLr = lr[0]; Diff.feedback(H.priv.dfm, lr); }
     }
+    const wrap = $("#dfWrap"); if (wrap) wrap.classList.toggle("over", over);
     setEl($("#dfHero"), over ? Diff.heroHTML(s, solo ? "host" : "") : "");
+    setEl($("#dfRev"), over ? Diff.reviewHTML(s, sel, "data-h") : "");
+    setEl($("#dfCred"), over ? Diff.creditHTML(pair, true) : "");
     if (over && H.priv.dfHeroRd !== s.rd){ H.priv.dfHeroRd = s.rd; const h = $("#dfHeroCard"); if (h) h.scrollIntoView({block:"start", behavior:"smooth"}); }
     setEl($("#dfHostCount"), solo && hp ? `${hp.f} من ${s.nd}` : `${s.nd} اختلافات`);
     setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
-    setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h") + Diff.creditHTML(pair, true)
-      : `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>تقدّم اللاعبين</h3>${clockChip(s)}</div>${Diff.liveHTML(H.priv.winAt && H.priv.frozen ? {...s, pl:H.priv.frozen} : s, solo ? "host" : "")}</div>`);
-    setEl($("#dfAct"), `<div class="row dfactions">${over ? `<button class="btn big" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h")
+      : solo ? `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>جولتك</h3>${clockChip(s)}</div>${Diff.standHTML(s, "host")}</div>` : Diff.hostPlayHTML(s));
+    setEl($("#dfAct"), `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
   },
   meHTML(p, s){
     const left = DF_MAX_W - p.w;
@@ -2441,7 +2468,7 @@ const Diff = {
     if (s.ph === "prep" || !pair){ P.view.dfRd = null; pSet(phead() + `<div class="panel center stack"><div class="spinner"></div><p class="bigmsg">جولة جديدة…</p></div>`); bindPlayer(); return; }
     if (P.view.dfRd !== s.rd){
       P.view.dfRd = s.rd; P.view.dfm = null; P.view.dfq = []; P.view.dfLr = {}; P.view.dfPend = []; P.view.dfBox = null; P.view.dfBoxE = null; P.view.dfSel = ""; P.view.dfHeroRd = null;
-      pSet(phead(`<span id="pClock"></span>`) + `<div id="dfHero"></div><div class="panel stack dfpanel"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)}</h3><b id="dfCount" class="count"></b></div><div id="dfMe"></div><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><p class="dfcredit">${Diff.creditLine(pair)}</p></div><div id="pDfStatus"></div>`);
+      pSet(phead(`<span id="pClock"></span>`) + `<div class="dfwrap" id="dfWrap"><div id="dfHero"></div><div class="panel stack dfpanel dfpic"><div class="row" style="justify-content:space-between"><h3>${esc(pair.title)}</h3><b id="dfCount" class="count"></b></div><div id="dfMe"></div><div id="dfRev"></div><div id="pDf"><div class="center stack"><div class="spinner"></div><p class="muted">جارٍ تحميل الصورتين…</p></div></div><p class="dfcredit">${Diff.creditLine(pair)}</p><div id="dfCred"></div></div><div id="pDfStatus"></div></div>`);
       rememberLocal(pair.id);
       bindPlayer();
       const rd = s.rd;
@@ -2485,10 +2512,13 @@ const Diff = {
     setEl($("#pClock"), clockChip(s));
     setEl($("#dfCount"), mine ? `${mine.f} من ${s.nd}` : `${s.nd} اختلافات`);
     setEl($("#dfMe"), mine && !over ? Diff.meHTML(mine, s) : "");
+    const wrap = $("#dfWrap"); if (wrap) wrap.classList.toggle("over", over);
     setEl($("#dfHero"), over ? Diff.heroHTML(s, s.pl[me] ? me : "") : "");
+    setEl($("#dfRev"), over ? Diff.reviewHTML(s, sel, "data-act") : "");
+    setEl($("#dfCred"), over ? Diff.creditHTML(pair, false) : "");
     if (over && P.view.dfHeroRd !== s.rd){ P.view.dfHeroRd = s.rd; const h = $("#dfHeroCard"); if (h) h.scrollIntoView({block:"start", behavior:"smooth"}); }
-    setEl($("#pDfStatus"), over ? Diff.resultsHTML(s, me, sel, "data-act") + Diff.creditHTML(pair, false) + `<p class="muted center dfwait">بانتظار المقدّم لبدء الجولة التالية…</p>`
-      : `<div class="panel stack"><h3>تقدّم اللاعبين</h3>${Diff.liveHTML(s, me)}</div>`);
+    setEl($("#pDfStatus"), over ? Diff.resultsHTML(s, me, sel, "data-act") + `<p class="muted center dfwait">النتائج باقية حتى يبدأ المقدّم الجولة التالية…</p>`
+      : Diff.standHTML(s, me));
   },
   pclick(t){
     if (t.dataset.act === "dfretry"){ P.view.dfRd = null; playerRender(); }

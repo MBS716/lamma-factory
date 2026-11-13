@@ -744,3 +744,28 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .akpick{justify-content:center}
 .akpick .chip.on{outline:2px solid var(--gold)}
 @media (prefers-reduced-motion:reduce){.akok,.akno{animation:none}}
+/* spot v5: the results screen (big, the same on every device) and the overall line during the round */
+.dfwrap{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+#dfHero:empty,#dfRev:empty,#dfCred:empty{display:none}
+.dfhost.over #dfHero,.dfwrap.over #dfHero{order:0}
+.dfhost.over #dfSide,.dfwrap.over #pDfStatus{order:1}
+.dfhost.over #dfAct{order:2}
+.dfhost.over .dfpic,.dfwrap.over .dfpic{order:3}
+.dfwrap.over #pDfStatus{display:grid;gap:14px}
+.dfhost.over .dfres,.dfwrap.over .dfres{font-size:1.06rem}
+.dfhost.over .dfres td.dfname,.dfwrap.over .dfres td.dfname{font-weight:700}
+.dfhost.over #dfAct .dfactions{justify-content:center}
+.dfnext{min-width:min(260px,100%)}
+.dfhero-pts{display:block;margin-top:6px;font-size:1.05em}
+.dfhero-pts b{color:var(--gold);font-size:1.3em}
+.dfchg{font-weight:700;font-size:.88em;color:var(--muted);white-space:nowrap}
+.dfchg.up{color:var(--green)}
+.dfchg.down{color:var(--bad)}
+.dfchg.new{color:var(--blue);font-weight:400}
+.dfres td small.dfplus{color:var(--green);margin-inline-start:4px;font-weight:700}
+.dfstand{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.92rem}
+.dfstand-i{white-space:nowrap}
+.dfstand-i b{color:var(--gold)}
+.dfstand-i.me{outline:2px solid var(--gold);border-radius:8px;padding:0 6px}
+.dfplay-n{font-size:1.2rem;margin:0}
+.dfrevt{margin:0}

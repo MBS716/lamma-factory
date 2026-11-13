@@ -72,6 +72,11 @@ async def main():
         await taps(B, [1]); await B.wait_for_function(CIRCLES + ' === 2', timeout=6000)
         check(await A.evaluate(CIRCLES) == 1 and await C.evaluate(CIRCLES) == 1, 'a find of B shows on B only')
         check(await host.evaluate('document.querySelectorAll("#hostMain .dfm").length') == 0, 'the host screen shows no circle during the round')
+        # v5: no live ranking while playing: a phone sees only its own record, the host only how many play
+        ta = await A.inner_text('#playerMain')
+        check(await A.locator('.dflive').count() == 0 and 'تافير' not in ta and 'نورة' not in ta, 'v5: during the round a phone shows no list of the other players (no live ranking)')
+        th = await host.inner_text('#dfSide')
+        check('في الجولة: 3' in th and 'تافير' not in th and await host.locator('.dflive').count() == 0, f'v5: the host screen during the round: how many play, no names or counts ({th.splitlines()[:2]})')
         raw = await A.evaluate('JSON.stringify(NR.peers().map(p => p.raw))')
         check(not any(f'{d[0]},{d[1]},{d[2]},{d[3]}' in raw for d in G['D']) and '"q":[' not in raw, 'what a phone can read from the room: no place of a difference, no plain tap')
         await tap(A, on(0)[0] + 3, on(0)[1]); await settle(); s = await S(host)
@@ -101,7 +106,17 @@ async def main():
         check(f[kB]['p'] == 50 + 50 + 30 and f[kC]['p'] == 130 and f[kA]['p'] == 0 and f[kA]['b'] == 0, f'points: each winner 5×10 +50 +30 = {f[kB]["p"]}/{f[kC]["p"]}; A 0')
         check(s['rn'][kB] == 1 and s['rn'][kC] == 1 and s['rk'][-1] == kA, 'both winners ranked 1, A last')
         for pg in (A, B, C): await pg.wait_for_selector('#dfHeroCard', timeout=6000)
-        hero = await A.inner_text('#dfHeroCard'); check('فوز مشترك' in hero and 'تافير' in hero and 'نورة' in hero and '5 من 5' in hero, f'results: «🏆 فوز مشترك: تافير ونورة», completed 5 of 5 ({hero.splitlines()[1:3]})')
+        hero = await A.inner_text('#dfHeroCard'); check('130 نقطة لكل منهم' in hero, 'v5: the hero gives the winners\' points («130 نقطة لكل منهم»)')
+        async def order(pg, sels):
+            ys = [await pg.evaluate(f'(() => {{ const e = document.querySelector({json.dumps(q)}); return e ? e.getBoundingClientRect().top + scrollY : -1; }})()') for q in sels]
+            return all(y >= 0 for y in ys) and ys == sorted(ys), ys
+        for pg, n in ((A, 'phone 390'), (B, 'phone 360'), (C, 'computer')):
+            ok, ys = await order(pg, ['#dfHeroCard', '.dfround', '.dfoverall', '.dfpic'])
+            check(ok, f'v5 {n}: results screen in order: winner, round results, overall ranking, then the picture with the differences ({[round(y) for y in ys]})')
+        ok, ys = await order(host, ['#dfHeroCard', '.dfround', '[data-h=go]', '.dfpic'])
+        check(ok, f'v5 host: winner, results, «الجولة التالية», then the picture ({[round(y) for y in ys]})')
+        check('جديد' not in await A.inner_text('.dfoverall') and 'التغيّر' not in await A.inner_text('.dfoverall') and '+130' not in await A.inner_text('.dfoverall'), 'v5: first round: no «change» column yet')
+        check('فوز مشترك' in hero and 'تافير' in hero and 'نورة' in hero and '5 من 5' in hero, f'results: «🏆 فوز مشترك: تافير ونورة», completed 5 of 5 ({hero.splitlines()[1:3]})')
         txt = await A.inner_text('#pDfStatus'); check('استُبعد — 5 أخطاء' in txt and 'الترتيب العام' in txt and 'مرات الفوز' in txt, 'table: A «استُبعد — 5 أخطاء»; overall board with wins shown separately')
         check(await A.locator('.dfres tr.win').count() == 2, 'the two winners are marked gold in the table')
         g = await A.evaluate(REVIEW); check(g == [1, 4], f'review on A: its 1 find green, 4 orange ({g})')
@@ -141,14 +156,23 @@ async def main():
         txt = await C.inner_text('#pDfStatus'); hero = await C.inner_text('#dfHeroCard')
         check('الفائز بالجولة' in hero and 'تافير' in hero and 'توقفت الجولة بفوز المنافس' in txt, 'results: «🏆 الفائز بالجولة: تافير»; C and A «توقفت الجولة بفوز المنافس»')
         check(s['rk'] == [kB, kC, kA], 'ranking: the winner, then more differences')
+        T = s['tot']; ov = await C.inner_text('.dfoverall')
+        check((T[kB]['pr'], T[kC]['pr'], T[kA]['pr']) == (1, 1, 3) and (T[kB]['dp'], T[kC]['dp'], T[kA]['dp']) == (130, 70, 40), f'v5: overall keeps the place before the round (B 1, C 1, A 3) and the round\'s points (+130, +70, +40)')
+        check('التغيّر' in ov and '▼1' in ov and '+130' in ov and '+70' in ov, 'v5: the overall table shows what changed: نورة ▼1, +130 / +70 added')
+        await A.wait_for_timeout(3000); check(await A.locator('#dfHeroCard').count() == 1 and await C.locator('.dfoverall').count() == 1, 'v5: the results stay on the phones (3 s later) until the host moves on')
         await host.screenshot(path=f'{SHOTS}/host_results_single.png', full_page=True); await C.screenshot(path=f'{SHOTS}/computer_results_single.png', full_page=True)
 
         # ================= round 3 (medium): time is up, nobody completed
         s = await new_round(1)
+        st0 = await A.inner_text('.dfstand')
+        check('قبل هذه الجولة' in st0 and 'تافير' in st0 and '260' in st0 and await A.locator('#dfHeroCard').count() == 0, f'v5: during the round one short line of the overall ranking as before it («{st0}»)')
+        await A.screenshot(path=f'{SHOTS}/v5_phone_playing_stand.png', full_page=True); await host.screenshot(path=f'{SHOTS}/v5_host_playing.png', full_page=True)
         await taps(A, [0, 1]); await taps(B, [0]); await tap(B, *wrong(1)); await settle(1200)
+        check(await A.inner_text('.dfstand') == st0, 'v5: the overall line does not move while the round is played')
         await host.evaluate('window.__off = (window.__off || 0) + 301000'); await host.wait_for_function('H.s.ph === "over"', timeout=6000); s = await S(host)
         check(s['end'] == 'time' and not s['win'] and s['rk'] == [kA, kB, kC], 'time is up, nobody completed: A 2, B 1, C 0 in that order')
         hero = await B.inner_text('#dfHeroCard'); check('انتهى الوقت' in hero and 'صالح' in hero, '«انتهى الوقت — متصدر الجولة: صالح»')
+        check(await A.locator('.dfstand').count() == 0, 'v5: after the round the short line gives way to the full results')
         # ================= round 4 (hard): everybody out
         s = await new_round(2)
         for k in range(5):
