@@ -81,7 +81,7 @@ async def main():
         D = await host.evaluate('H.priv.dfs'); W, Hh = s['pair']['w'], s['pair']['h']
         async def tap(pg, i):
             d = D[i]; x, y = min(cells(d), key=lambda q: (q[0] - d[0]) ** 2 + (q[1] - d[1]) ** 2)
-            b = await pg.locator('#pDf .dfimg >> nth=1').bounding_box(); await pg.touchscreen.tap(b['x'] + x / W * b['width'], b['y'] + y / Hh * b['height']); await pg.wait_for_timeout(350)
+            await pg.locator('#pDf .dfimg >> nth=1').scroll_into_view_if_needed(); b = await pg.locator('#pDf .dfimg >> nth=1').bounding_box(); await pg.touchscreen.tap(b['x'] + x / W * b['width'], b['y'] + y / Hh * b['height']); await pg.wait_for_timeout(350)
         await host.wait_for_timeout(900)
         for i in range(5): await tap(A, i)
         await over_or_dump(host)
