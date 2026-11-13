@@ -1,7 +1,7 @@
 """Spot the difference v4, final rules: every player finds the differences alone, the FIRST to find them all wins and the
 round stops for everybody; completions within 0.3 s of the first are a joint win. No hints, no image buttons while playing.
 A host and 3 players (phone 390, phone 360, computer), then solo rooms. Real pages, real taps."""
-import asyncio, json, sys
+import asyncio, json, os, sys
 from common import Env
 R = []
 def check(ok, msg): R.append((bool(ok), msg)); print(('OK   ' if ok else 'FAIL ') + msg, flush=True); return ok
@@ -9,7 +9,7 @@ S = lambda pg: pg.evaluate('JSON.parse(JSON.stringify(H.s))')
 key = lambda pg, n: pg.evaluate(f'dfKey({json.dumps(n)})')
 CIRCLES = 'document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm:not(.rev)").length'
 REVIEW = '[document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm:not(.rev)").length, document.querySelectorAll("#pDf .dfimg:nth-child(2) .dfm.rev").length]'
-SHOTS = '/tmp/claude-0/-home-claude/a7cbada7-322f-55e5-8221-30cda24e9f18/scratchpad/shots'
+SHOTS = os.environ.get('SHOTS', '/tmp/claude-0/-home-claude/a7cbada7-322f-55e5-8221-30cda24e9f18/scratchpad/shots')
 
 def cells(d):
     if len(d) < 5: return [(d[0], d[1])]
