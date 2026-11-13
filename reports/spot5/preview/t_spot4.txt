@@ -1,0 +1,70 @@
+OK   round 1: 5 differences, 3 players, each with a record (s5-w24879808)
+OK   phone 390: no hint, image-info or report button while playing
+OK   phone 360: no hint, image-info or report button while playing
+OK   computer: no hint, image-info or report button while playing
+OK   a short credit line under the pictures, no link to the original while playing («تصوير: Arild Vågen · CC BY-SA 3.0 · Wikimedia Commons»)
+OK   host screen: no link to the original picture while playing
+OK   zoom and drag are not mistakes
+OK   three players find the same difference: each +10
+OK   a find of B shows on B only
+OK   the host screen shows no circle during the round
+OK   v5: during the round a phone shows no list of the other players (no live ranking)
+OK   v5: the host screen during the round: how many play, no names or counts (['الجولة جارية', '4:56'])
+OK   what a phone can read from the room: no place of a difference, no plain tap
+OK   A taps its own find again: no points, no mistake
+OK   A reloads after 4 mistakes: its find and 1 attempt left come back
+OK   A's 5th mistake: A stops, the round goes on
+OK   A leaves and joins again: still out, mistakes not reset
+OK   host reloads: same records, no phone shows «the game ended»
+OK   B and C both at 4 of 5
+OK   B and C complete within the 0.3 s window (12 ms apart on the host): joint win
+OK   points: each winner 5×10 +50 +30 = 130/130; A 0
+OK   both winners ranked 1, A last
+OK   v5: the hero gives the winners' points («130 نقطة لكل منهم»)
+OK   v5 phone 390: results screen in order: winner, round results, overall ranking, then the picture with the differences ([279, 627, 969, 1262])
+OK   v5 phone 360: results screen in order: winner, round results, overall ranking, then the picture with the differences ([279, 624, 982, 1291])
+OK   v5 computer: results screen in order: winner, round results, overall ranking, then the picture with the differences ([222, 624, 938, 1248])
+OK   v5 host: winner, results, «الجولة التالية», then the picture ([318, 671, 1267, 1357])
+OK   v5: first round: no «change» column yet
+OK   results: «🏆 فوز مشترك: تافير ونورة», completed 5 of 5 (['', 'فوز مشترك'])
+OK   table: A «استُبعد — 5 أخطاء»; overall board with wins shown separately
+OK   the two winners are marked gold in the table
+OK   review on A: its 1 find green, 4 orange ([1, 4])
+OK   after the round: the picture's author, source link and licence
+OK   report: host only, inside the round details after the round
+OK   host and phone reload after the round: results and win counts are not counted again
+OK   new round: everybody has 5 new attempts (A too)
+OK   no circle of the last round left on the phone
+OK   no circle of the last round left on the phone
+OK   no circle of the last round left on the phone
+OK   inside the 0.3 s window only another completion can count: A's new find and C's mistake 0.1 s after B's completion were not counted (A 1→1, C mistakes 0→0)
+OK   phones see no completion and no result before the window closes (result seen 681 ms after the winning tap was made)
+OK   the result does not change after it is announced
+OK   C completes 0.8 s after B (outside the window): B wins alone, C's late tap is not counted (C 4 of 5)
+OK   points: B 130, C 4×10 +30 = 70, A 1×10 +30 = 40
+OK   results: «🏆 الفائز بالجولة: تافير»; C and A «توقفت الجولة بفوز المنافس»
+OK   ranking: the winner, then more differences
+OK   v5: overall keeps the place before the round (B 1, C 1, A 3) and the round's points (+130, +70, +40)
+OK   v5: the overall table shows what changed: نورة ▼1, +130 / +70 added
+OK   v5: the results stay on the phones (3 s later) until the host moves on
+OK   v5: during the round one short line of the overall ranking as before it («ترتيب المنافسة 1 قبل هذه الجولة:
+🥇تافير 260
+🥈نورة 200
+🥉صالح 40»)
+OK   v5: the overall line does not move while the round is played
+OK   time is up, nobody completed: A 2, B 1, C 0 in that order
+OK   «انتهى الوقت — متصدر الجولة: صالح»
+OK   v5: after the round the short line gives way to the full results
+OK   everybody used their 5 attempts: the round ends, «استُبعد جميع اللاعبين»
+OK   overall over 4 rounds (rounds, wins, finds, points): صالح (4, 0, 4, 90), تافير (4, 2, 11, 265), نورة (4, 1, 9, 200) (expected (4, 0, 4, 90), (4, 2, 11, 265), (4, 1, 9, 200))
+OK   the overall board shows those totals
+OK   no horizontal scroll at 390 px (390)
+OK   no horizontal scroll at 360 px (360)
+OK   no horizontal scroll at 1280 px (1280)
+OK   host seat under the database limit (1539)
+OK   the first to complete ranks first even with fewer points than a player who did not complete (['w', 'l', 'm'])
+OK   data saved by the earlier version (with a hint) restores without errors
+OK   a single player who finds all 5 wins: 50 +50 +30 = 130
+OK   a single player's 5th mistake ends the round
+PAGE ERRORS: none
+65/65 passed

@@ -1,0 +1,30 @@
+OK   the host's screen shows a QR code and a one-time link (?v=d51d5ded86&hp=d65eeut7#2073)
+OK   it says: same counting as everybody, no places of differences sent to the phone
+OK   the mark is removed from the phone's address bar once read
+OK   the host's phone joins as «محمد», marked as the host; the link is used up
+OK   the host's screen says the host plays from a separate device as «محمد»
+OK   somebody else opening the same link later is an ordinary player (the link works once)
+OK   a tab on the referee's own device: «هذا الجهاز هو جهاز إدارة الغرفة», it cannot play
+OK   the round has the host's phone and the 4 players; the referee's tab is not in it
+OK   the same play counts the same: the host's phone 2 finds, 1 mistake, 15 points; تافير 2, 1, 15
+OK   the host's phone has the same 5 attempts (4 left)
+OK   the host's phone holds no place of a difference it has not found (room, mailbox, storage) []
+OK   the host's phone never loaded the picture catalog or the host's saved game ([])
+OK   the referee's screen shows no difference and no one's progress during the round
+OK   صالح wins; the host's phone keeps its 15 points
+OK   phone 390: the results mark «محمد» as «المقدّم»
+OK   phone 360: the results mark «محمد» as «المقدّم»
+OK   computer: the results mark «محمد» as «المقدّم»
+OK   host's phone: the results mark «محمد» as «المقدّم»
+OK   the overall ranking marks the host too
+OK   the downloaded results mark the host too
+OK   the host's 5th mistake: out like any player, the round goes on
+OK   the referee reloads: the host's player and its record are kept
+OK   the host's phone reloads: same player, still out
+OK   «إلغاء وسم المقدّم» removes the mark; the button to play from a phone is back
+OK   no horizontal scroll at 390 px (390)
+OK   no horizontal scroll at 360 px (360)
+OK   no horizontal scroll at 390 px (390)
+OK   no page errors 
+
+28/28 passed
