@@ -1,0 +1,309 @@
+{
+ "w87977081": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #5 problem gone: big pillow is now fully and evenly brown with clean edges. All five big, natural recolours.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w33551811": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier problems fixed: #3 wall is now evenly yellow over its whole height; #4 flag is fully red with no blue remnant and no pink halo. Minor: #3 also lightly yellows the white rope/pipe in front of the wall (reads as same paint light). #1 rope is thin but long and obvious against the flat water.",
+  "diffs": {
+   "1": "ok (thin but long)",
+   "2": "ok",
+   "3": "ok (minor: rope/pipe in front slightly tinted)",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w27193127": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Ghost fence board is gone: #5 is now a whole shrub removed with a clean rebuilt fence/grass fill. #1 green is flat/posterised and tints the glass; #2 blue keeps thin white slivers on the left shutter edge and the cornice's left tip (~955-980, 530-560) and turns the curtain reflection blue. All only visible when zoomed; all five big and obvious.",
+  "diffs": {
+   "1": "ok (flat paint look)",
+   "2": "ok (minor: thin white edge slivers)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w25580487": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier issues fixed: the too-small window is replaced by the big middle roof turning brown (#2), and the sign-post removal (#5) no longer leaves its shadow; brick fill is only slightly soft. #3 lamp-post removal gives a believable brick/grass fill (slightly soft bricks on zoom). Posts #3/#5 are thin but tall and obvious at easy. Side-wing roofs stay grey, which is correct (separate objects).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok (minor: soft bricks on zoom)",
+   "4": "ok",
+   "5": "ok (minor: slightly blurred brick band on zoom)"
+  }
+ },
+ "w28094815": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Earlier hose/towel problem gone (that diff is replaced by the tank turning yellow, clean). Tent roof #1 is now clean (no white band, no spill onto the blue sign). New defect in #3 tractor: the recolour is a box with keep_hue=green, so it also turns the green grass bank behind the hood into a hard-edged red rectangle (~1395-1470, 585-600) and stops at x=1470, leaving the hood nose and the grille end green; roof also keeps green fringes at both corners (~1050-1080, 430-445). The red block is visible in the crop and on the full picture. #1 box starts at x=0 (object reaches the edge, unavoidable).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "red leaks onto the grass bank as a hard rectangle (~1395-1470, 585-600); hood nose beyond x=1470 and roof corners stay green (cut at box edge)",
+   "4": "ok",
+   "5": "ok (clothing only)"
+  }
+ },
+ "w26952043": {
+  "verdict": "fix",
+  "level_ok": false,
+  "notes": "Earlier defects are gone (small hut and the jetty-destroying boat removal were replaced; tree #4 now a natural green without neon speckles). Edits are all clean. Remaining problem is size for easy in this wide landscape: #5 sailboat hull is only ~127x37 px (below the ~150 px easy minimum; about 20 px wide on a phone), and #2 boat roof (~210x70) and #1 dog (~200x85) are at the low end. Suggest swapping #5 for a bigger target. Minor: #1 grass fill a little darker/blurred with faint dark leg-like streaks (~215-275, 1240-1270); #5 has a hard straight top edge on the left (~2100-2140, 990).",
+  "diffs": {
+   "1": "ok (minor: slightly dark blurry fill)",
+   "2": "ok (smallish for easy)",
+   "3": "ok",
+   "4": "ok",
+   "5": "too small for easy (~127x37 px); minor hard top edge"
+  }
+ },
+ "w20002195": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #5 problem fixed: lamp-post removal now rebuilds both windows and the wall cleanly, no blocky patches or bracket stubs. #1 statue brown is still a flat matte bronze, and the thin reins near the horse's mouth stay bluish-lavender (~1180-1250, 370-410), visible only on zoom; the green rim on the back is gone. #4 rooftop statue (~80x160) is small for easy but stands alone against the sky. Plaques: one removed, one recoloured, text untouched.",
+  "diffs": {
+   "1": "ok (minor: flat brown; bluish reins left)",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok (small-ish for easy)",
+   "5": "ok"
+  }
+ },
+ "w45024588": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #4 problem fixed: only the mask changes (now pink), the scissors stay. #4 mask is small for medium (~47x75 px) but a strong colour change. #7 bag removal still a soft dark blotch of soil (passes). #1 juice carton keeps its original printed text/brand, only colour changed (nothing added). #3 black helmet on dark cupboard is the hardest one for medium but clearly missing on comparison.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok (small for medium)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok (minor: soft dark fill)",
+   "8": "ok"
+  }
+ },
+ "w51610325": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "#4 white chair is now clean (no halo, no seat speckles) and #8 is a convincing dark wood. New/remaining problem in #5 door: the box/poly recolour paints green onto objects in front of the door: two green stripes on the top rail of the front wooden chair (~2047-2058 and ~2173-2199, y 930-950, also visible in crops #5 and #6) and a dark-green tint on the left wooden frame of the leather chair (~2050-2075, 840-930); a strip of the door just above that chair (~2075-2170, 845-860) stays orange with a hard edge. Needs a mask that excludes the chairs.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "green leaks onto the front chair's top rail (two stripes ~2047-2058 and ~2173-2199, y 930-950) and the leather chair's frame (~2050-2075, 840-930); strip of door above the chair stays wood-coloured",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w152654470": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #2 problem fixed: barrier is now fully red with clean stripes, no yellow remnants. #5 is now a flipped copy of a small plant pasted on empty grass; looks natural (still a duplicate of an existing plant, acceptable). Removals blend well with the painted style. #7 pale fern removed from the teal forest is low-contrast and the hardest for medium, but findable on comparison.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok (flipped copy of an existing plant)",
+   "6": "ok",
+   "7": "ok (faint, hardest of the set)",
+   "8": "ok"
+  }
+ },
+ "w52071480": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Both earlier defects are gone: the smeared floodlight removal was replaced by a clean vent-box removal (#4) and the half-recoloured stool by a fully yellow metal barrel (#9). All 12 clean and well spread. Minor: #10 sprayer keeps a thin orange rim on the trigger top (~185-215, 1200-1208). #12 chair: the woman's hand on the chair is untouched. Content note for the editor: the original market stalls show SpongeBob plush toys, Barbie packaging and toy pistols (unchanged, not added); #8 names a toy water gun. Probably fine for families, but it is visible branding.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok (toy water gun)",
+   "9": "ok",
+   "10": "ok (minor: thin orange rim at top)",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w38102138": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Earlier issues gone: the muddy card-removal blob and the blotchy yellow card were replaced (#2 is now a clean green card, #4 a card removal that blends into the out-of-focus tea). New problem in #3: the grey-blue card is turned brown together with its blue handwriting, so the writing is brown-on-brown and nearly vanishes (~1000-1130, 260-400); it reads as a blank card, i.e. the text is effectively erased, which the rules forbid. Keep the writing dark/blue (mask only the card). Others clean; printed Kerim's signs (#1, #12) keep their text and shop logo, only the colour changed.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "handwriting turned brown with the card and is almost invisible (text effectively removed)",
+   "4": "ok (soft fill, matches blur)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w42187197": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #2 problem fixed: the skirting board is now blue along its whole visible length, no red stub, no spill onto the floor. All 12 clean and well spread; #10 CATEQUESIS sign keeps its text. Minor: #4 green door (rect ends x=1632) and #2 skirting (starts x=1685) are only ~53 px apart, slightly under the 60 px rule, though they are clearly separate objects. #12 leaves the last blue book on the right blue (reads as a separate book).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w33241094": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #12 smeared drain removal is gone: it is now a recolour of the drain cover to silver-grey, clean, downpipe untouched. #10 bench removal is still the weakest: the paving fill is smooth/soft (cobble pattern lost) and the wall base just right of the downpipe shows pale smeared strips (~900-960, 1010-1070); passable at normal size since the area is in the distance. #7 chimney removal leaves a slightly soft roof patch with a small bump on the ridge (~1350-1370, 455). #6 butcher's sign changes colour only, text intact.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok (minor: soft tiles, small ridge bump)",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok (minor: soft paving fill, smeared wall base)",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w31614364": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier problems gone: the unnatural mandarin-to-lemon is replaced by a clean removal of the hole in the white crate (#9), and #3 fruit is now evenly green with no yellow cap left. #12 snake-fruit removal is still a large, featureless dark-brown void with soft edges (~90-310, 140-320); it reads as a shadowy gap between fruits but is the weakest edit. #4 Chinese label (南丰蜜桔, a product name) only recoloured, text intact; the Korean text on the box at left is original and untouched.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok (minor: featureless dark fill)"
+  }
+ },
+ "w23819693": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Earlier #8 bell spill is fixed (bell cleanly gold, no yellow block below). New problem in #6 pulley removal: the hanging rope is erased only down to y~760, so its lower part now starts in mid-air (~2100, 730-780). The removal also half-erases the short scaffold pole beside it, leaving a faint ghost line (~2088-2092, 695-740) and trimming the right end of the top bar. These traces show in crop #6. Remove the full rope and keep the pole. #5 sill removal still leaves a dark smudge band above the shrubs (~2090-2240, 1525-1545); it reads as shadow. #1 urn is orange including its leaves (terracotta look, fine).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok (minor: dark smudge band)",
+   "6": "ghost traces: rope lower end left hanging from mid-air (~2100, 730-780); neighbouring scaffold pole half-erased into a faint ghost (~2090, 695-740)",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w73745961": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "New pair, well spread and mostly clean. Defect in #4 crate: the blue spills onto the vegetables in it. The zucchini/cucumbers lying in the crate get large blue blotches (~1270-1410, 500-545) and the leek roots turn bluish (~1210-1250, 490-510). It is visible in crop #4 and on the full picture. Mask the crate only. Minor: #7 panel green is very flat/posterised with a thin yellow rim on the inner left edge (~235-245); #8 heater removal leaves a soft but believable wall/floor fill. Content: a dark unlabelled bottle stands on the counter (could read as wine; it is original, untouched).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "blue leaks onto the zucchini/cucumbers and leek roots inside the crate (~1210-1410, 490-545)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok (minor: flat colour, thin yellow rim)",
+   "8": "ok"
+  }
+ },
+ "w69344105": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "New pair. Good set overall (awning, door, meter cap recolours and lamp/sticker removals are clean; #8 tuft of weeds looks natural). Problem in #6 menu-board removal: the fill is a ghostly, darker brick patch whose pattern does not match the pillar's bricks, and it keeps the board's outline as a dark frame line on the right (~2320-2330, 860-1080) and a dark band under the cap. It reads as a smeared rectangle in crop #6 and on the full picture. #4 sign removal leaves a soft, slightly smeared fill (~1650-1720, 480-600), and the empty hanging bracket stays, which is believable. Content: the original shows a real restaurant name (WILLIES on the door glass, kept unchanged). Removing the 'Willie's' sign and menu actually reduces branding.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok (minor: soft smeared fill; empty bracket left)",
+   "5": "ok",
+   "6": "ghosted fill: darker mismatched bricks with the board's frame outline still visible (~2170-2330, 860-1080)",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w63805436": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "New pair, strong and well spread over a busy sawmill interior; recolours (#3 rope blue, #5 part green, #6 machine head red-rust) look natural and removals blend well (#4 saw and guard, #8 shiny rod, #7 plate). Minor in #1 wood-pile removal: the left ends of the planks below are slightly smeared (~85-130, 555-575), and the grey board on the right is cut short with a soft smudge (~175-240, 495-530). Not noticeable at normal size.",
+  "diffs": {
+   "1": "ok (minor: smeared plank ends, grey board partly erased)",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w62881727": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "New pair, very good hard set: 12 small but clear colour changes and removals spread over the whole old-town panorama, all clean and natural. Minor: #2 cypress removal leaves a slightly blurred patch where the tree met the rooftops (~355-385, 548-560); #7 dish removal keeps its thin cable, which now ends on the bare wall (believable). Sizes at the low end (#2 ~34x48, #12 ~29x36) but they contrast well when zoomed.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok (minor: soft patch at roof line)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ }
+}

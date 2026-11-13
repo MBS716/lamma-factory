@@ -1,0 +1,8 @@
+w27839216 lower half is open water with reflections; edits cluster in a thin band of boats and hull/mast changes would contradict their reflections
+w22621904 aerial view: large open water, boat details (flags, fenders, rings) mostly under 60 px and repetitive; cannot spread 8 good medium differences
+w21814411 only ~6 independent medium targets (lamp, globe, clock, poster, door, bench); lower 40% is bare floor and overlapping desk rows, so 8 well-spread differences not possible
+w16845169 picture is dominated by a large beer advertisement (brand text, beer glasses) - unsuitable for the family Arabic audience
+w23140952 half sky and half bare marble floor; right side is crowded with people; city skyline details too small; finial carries religious calligraphy - not enough good targets
+w25294065 mosque scene (avoid editing a religious building), top half empty sky, Arabic text sign; remaining targets crowd into the bottom street band
+w70636373 natural beach/forest landscape: only a tent, a few logs and rocks are editable; sky, fog and pebbles would need unnatural edits
+w26244439 bottom half is a pile of cut fish with visible blood (weak for a family game) and offers no clean targets; the rest crowds around the vendor

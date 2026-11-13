@@ -1,0 +1,417 @@
+{
+ "w87977081": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Clean recolours overall; #5 big pillow is only partly recoloured: a green strip with a blotchy edge remains on its left side.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "half-recoloured: left edge (x~1850-1890) stays green with a ragged boundary"
+  }
+ },
+ "w6690181": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "All five natural. Removals #2/#4 also removed the boats' reflections (pixels changed just below the listed boxes, which is correct); water fill slightly soft but believable.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok (fill a little smeary on zoom)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w33551811": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "#3 wall only partly yellow (upper band stays white, blotchy fade). #4 flag has a pink halo into the sky and a blue remnant at the top by the pole. #1 rope is thin for easy but long and findable.",
+  "diffs": {
+   "1": "ok (thin line; borderline for easy)",
+   "2": "ok",
+   "3": "half-recoloured: upper part of the wall stays white with a blotchy yellow-to-white fade around y~880-900 and at right edge",
+   "4": "pink/red fringe leaking into sky around flag edges; small blue patch left at top near pole (~1545,315)",
+   "5": "ok"
+  }
+ },
+ "w29984759": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "All five clean. #2 hull: a thin blue line remains along the waterline and a little red appears in the water at the stern, both read as plausible reflection/trim. #3 arm and #4 hut roof are on the small side for easy but very visible.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok (minor: thin blue waterline strip kept)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w27193127": {
+  "verdict": "fix",
+  "level_ok": false,
+  "notes": "#3 fence-board removal leaves an obvious ghost: a smeared, blocky grey vertical strip where the board was. A single thin picket is also too subtle for easy; replace with a bigger object. #1 green frame is flat/posterised and tints the glass green, acceptable at normal view.",
+  "diffs": {
+   "1": "ok (flat paint look, glass panes tinted green)",
+   "2": "ok",
+   "3": "ghost board: translucent smeared/pixelated strip at x~1365-1400; also too thin for easy",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w25580487": {
+  "verdict": "fix",
+  "level_ok": false,
+  "notes": "Roof recolours and the lamp removal are clean. #2 the window behind the gate is only ~40x70 px, far below the easy size; swap for a bigger object. #5 sign-post removal leaves a slightly blurred vertical band on the tower bricks and the post's short shadow on the grass.",
+  "diffs": {
+   "1": "ok",
+   "2": "too small for easy (~40x70 px)",
+   "3": "ok",
+   "4": "ok",
+   "5": "minor: soft blurred band on brick wall at x~2250-2300 and the post's shadow left on the grass (~2190-2260, 1095)"
+  }
+ },
+ "w17277823": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Good set. #1 pine removal leaves a soft, hazy greenish blob where the trunk met the treeline (reads as a distant tree at normal size); its box also starts 22 px from the left edge (rule says 30).",
+  "diffs": {
+   "1": "ok (minor: blurry fill at x~50-170, y~640-720; near edge)",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok"
+  }
+ },
+ "w28094815": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "#2 hose removal also wiped out the red towel on the grass and the left wooden trestle leg of the table (unlisted changes, several objects in one diff, blurry grass fill); box also touches the left edge. #1 tent roof is fine overall but its ragged lower edge shows a blotchy white band and red spills slightly onto the blue sign corner at right; box touches left edge. #3-#5 clean.",
+  "diffs": {
+   "1": "minor: jagged white band along lower edge of the red roof; slight red spill onto the blue panel corner (~x 805-830, y 440-480)",
+   "2": "removes more than the hose: red towel and the left trestle leg also vanished; blurry fill; at picture edge",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok (clothing, no skin touched)"
+  }
+ },
+ "w26952043": {
+  "verdict": "fix",
+  "level_ok": false,
+  "notes": "Wide landscape where objects are small; #2 hut (~120x60) is too small for easy. #5 boat removal also takes away the wooden jetty beside it, leaves a hard horizontal seam between reeds and a blurred water patch and a jetty stub near the mast. #4 tree green has neon lime speckles in the highlights (borderline natural).",
+  "diffs": {
+   "1": "ok",
+   "2": "too small for easy (~120x60 px)",
+   "3": "ok",
+   "4": "ok (minor: speckled neon-green highlights)",
+   "5": "also removes the jetty (unlisted); visible seam at reed/water line (~y 995) and blurred water fill; jetty stub left at ~2245-2270, 975-990"
+  }
+ },
+ "w20002195": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "#5 lamp-post removal is poorly filled: blocky/pixelated patches over both windows, smeared right window edges and the lamp's wall-bracket dots left behind. #1 statue brown is flat/matte with a pale green-white rim left along the horse's back. #4 small rooftop statue (~80x160) is at the low end for easy. #2/#3 fine (plaque text not altered, only removed/recoloured).",
+  "diffs": {
+   "1": "minor: flat matte brown; pale verdigris rim left on horse's back (~650-720, 355)",
+   "2": "ok",
+   "3": "ok (mottled gold, reads as weathered metal)",
+   "4": "ok (small for easy)",
+   "5": "blocky pixelated fill over the windows at x~1990-2030, y~950-1160 and ~1290-1490; bracket stubs left at ~(2020,1083) and (2088,1083)"
+  }
+ },
+ "w45024588": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Mostly clean and well spread. #4 removes two objects at once (mask and scissors); restore one of them so it is a single object. #7 bag removal fill is a dark, soft blotch (passes as shadowed soil). Carton #1 keeps its printed text, only colour changed.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "two objects in one difference (mask + scissors)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok (minor: soft dark blurry fill)",
+   "8": "ok"
+  }
+ },
+ "w69520084": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Strong pair: clean, believable recolours well spread. #1 wire-coil removal leaves the two feed wires ending abruptly on the wall (~800-870, 100-150) and slightly soft bricks; not distracting at normal size.",
+  "diffs": {
+   "1": "ok (minor: cut-off wire ends above the removed coil)",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w23133119": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "All eight clean and natural, well spread. #1 also removed a small bird sitting on the chimney (fine, same spot).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w51610325": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Removals (#1,#2,#6,#7) are clean. #5 door is half-recoloured: its bottom panel behind the chair stays wood-coloured. #4 white chair glows: white haze bleeds onto the wall/wainscot at its right edge and white speckles smear the dark seat. #8 'dark' chair is a muddy olive-grey wash, borderline natural.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "white halo leaking onto wall/wainscot around right side (~1660-1690, 830-900) and white speckle smear on the seat",
+   "5": "half-recoloured: bottom of the door (y~840-890) and left edge strip stay wood colour",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok (minor: muddy olive-grey tint rather than a convincing dark wood)"
+  }
+ },
+ "w70268123": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Clean, well-spread set. Banners/signs (#1, #8) only change colour; their printed text is untouched. #2 banner removal leaves a faint darker vertical band on the wall (barely visible). #6 flag removal rebuilds the window/door frames convincingly.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok (very faint vertical band on wall)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w82157030": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "All eight clean and natural. #4 café sign changes colour only, text intact. #7 drainpipe is thin (~28 px) but long, so still findable at medium. #1/#2 shutters are small-ish but very visible colour changes.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok (thin, borderline for medium)",
+   "8": "ok"
+  }
+ },
+ "w152654470": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Illustration; removals and #3/#8 are clean. #2 barrier is only partly recoloured: the top highlight strip and the bottom edge stay yellow with patchy yellow-green blotches. #5 'add' copies the small plant from (488,1038) to ~(1108-1205,1098-1172) (outside its listed rect, which is the source); looks fine but is an exact duplicate of a plant elsewhere in the picture.",
+  "diffs": {
+   "1": "ok",
+   "2": "half-recoloured: yellow top highlight and blotchy yellow bottom edge remain (~1440-1590, 245-335)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok (copied plant; rect lists the source, not the destination)",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok"
+  }
+ },
+ "w52071480": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Good variety and sizes for hard. #9 stool is half-recoloured: the part seen through the glass case and the foot of the outside leg stay orange, and green spills onto items inside the case. #3 floodlight removal leaves a blurry smear with a dark ghost blotch and a partly erased brick lattice. Others clean (#12 chair next to a seated woman: chair only, person untouched).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "smeared fill: dark ghost blotch (~1960-2000, 330-370) and blurred/erased lattice bricks",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "half-recoloured: stool legs behind the glass (~400-450, 1340-1600) and bottom of outer leg stay orange; green tint leaks onto objects in the case",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w37767781": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Very good hard pair: small but clear changes spread over the whole room, all clean. #5 sign only changes colour (text intact). #11 missing floor circle is a nice pattern-break difference.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w28891946": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Good hard pair, clean and spread out. #4 dinghy: thin pinkish-orange rims remain around the new blue patches (visible only when zoomed). #11 is a copy of the gull at (355,1320) pasted at ~(695,1210); it looks natural. #9 flipped gull keeps a believable shadow.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok (minor: pinkish rims around blue patches at ~330-345, 1035-1045)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w62851708": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Clean, well-spread set. Note #2 and #3 are the same ferry moved from the right to the left side of the bay, so one object yields two differences; the two spots are far apart and both clearly findable, but the editor may prefer a different second change. #12 dormer removal gives a convincing tiled roof (slightly soft in the middle).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok (same ferry as #3, moved)",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w38102138": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Nice choice of small targets in a busy picture. #3 hand-written card turned a dirty yellow with large grey-blue blotches; it looks stained rather than recoloured. #2 card removal leaves a muddy dark-brown blob in an otherwise bright bokeh area (noticeable on the full picture). Printed cards #1/#12 keep their text and existing logo; only the colour changed.",
+  "diffs": {
+   "1": "ok",
+   "2": "minor: muddy dark blob fill (~560-700, 200-300)",
+   "3": "blotchy: card only partly yellow, large grey-blue patches remain around the writing",
+   "4": "ok (fill soft, matches out-of-focus area)",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w42187197": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Strong hard pair (book recolours behind glass, missing bulb, padlock, alarm sign), all clean except #2: the skirting board is cut in half, with a red stub left at its left end behind a hard vertical edge, and blue tint leaks onto the floor along the bottom edge. #10 CATEQUESIS sign only changes colour; text unchanged.",
+  "diffs": {
+   "1": "ok",
+   "2": "half-recoloured: red stub left at ~1686-1700 with a hard vertical cut; blue spill onto floor at ~1700-1795, 1340-1355",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ },
+ "w33241094": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Mostly good, well spread. #12 drain-cover removal is a smeared, washed-out patch of paving that also blurs the bottom of the downpipe into a grey smear. #10 bench removal is acceptable at normal size but leaves smeary ghost texture where the bench met the wall (~900-940, 1020-1080). #6 butcher's sign changes colour only (text intact).",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "ok",
+   "10": "ok (minor: smeary ghost at wall base)",
+   "11": "ok",
+   "12": "smeared, blurry paving fill; downpipe foot smudged (~200-240, 1420-1440)"
+  }
+ },
+ "w31614364": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Bright market stall; most changes clean. #9 mandarin-to-lemon is unnatural: a flat yellow blob painted over the orange net, with orange net fragments left as blotches on it. #3 has a thin yellow cap left along the top edge (minor). #1 'hole in bag' removed is a nice hard difference. #4 sign with Chinese characters only recoloured (text intact). #12 removal leaves a dark gap, acceptable.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok (minor: thin yellow band left at top edge ~1130-1260, 25-35)",
+   "4": "ok",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "unnatural: flat yellow fill covers the net, leaving orange net blotches; half-recoloured look",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok (dark gap)"
+  }
+ },
+ "w29664845": {
+  "verdict": "reject",
+  "level_ok": true,
+  "notes": "Too many leaky recolours on the vehicles: #4 red floods a rectangle over the fence, the van in the background and the pallet in front, with a visible box edge at the right; #9 van only red on top (blue band left at bottom) and red blotches spill onto the white van next to it; #12 gas bottle has a pink halo on the white cabin. Rest (#1,#2,#3,#5-#8,#10,#11) is fine. Could be salvaged by redoing #4/#9/#12 with tighter masks, but as it stands it is below the bar.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "red leaks in a rectangle onto the fence, pallet and the background van; hard box edge at x~2100-2110",
+   "5": "ok",
+   "6": "ok",
+   "7": "ok",
+   "8": "ok",
+   "9": "half-recoloured (blue band left at bottom ~y 800-815); red blotches on the neighbouring white van (~300-340, 750-770)",
+   "10": "ok",
+   "11": "ok",
+   "12": "pink halo around the cylinder on the white wall"
+  }
+ },
+ "w23819693": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "Good hard set spread over the whole skyline. #8 bell: gold colour leaks onto the background below the bell as a yellow block (~443-460, 1250-1268). #5 white sill removal leaves a dark blurry smudge along the shrub line; acceptable but the weakest change (the sill was also two separate pieces). #1 urn recolour includes its leaves (whole object orange), reads as terracotta, fine.",
+  "diffs": {
+   "1": "ok",
+   "2": "ok",
+   "3": "ok",
+   "4": "ok",
+   "5": "ok (minor: dark smudge where the sill was)",
+   "6": "ok",
+   "7": "ok",
+   "8": "yellow spill below the bell onto the scaffold/background (~443-460, 1250-1268)",
+   "9": "ok",
+   "10": "ok",
+   "11": "ok",
+   "12": "ok"
+  }
+ }
+}

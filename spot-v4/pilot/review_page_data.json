@@ -1,0 +1,1402 @@
+[
+ {
+  "id": "w87977081",
+  "level": 0,
+  "title": "غرفة مطلّة على البحر",
+  "kind": "photo",
+  "credit": [
+   "Frank Schulenburg",
+   "https://commons.wikimedia.org/wiki/File:Living_room_of_34988_Crows_Nest_Drive,_Sea_Ranch-1397.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "الوسادة المخططة على الكرسي الأيسر تغيّرت ألوانها",
+   "الوسادة الخضراء على الكرسي صارت حمراء",
+   "الستارة الملفوفة فوق النافذة صارت زرقاء",
+   "الوسادة البرتقالية على الأريكة صارت زرقاء",
+   "الوسادة الخضراء الكبيرة صارت بنية"
+  ],
+  "qc": "PASS w87977081: 5 differences, smallest gap 131 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #5 problem gone: big pillow is now fully and evenly brown with clean edges. All five big, natural recolours.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "الخمسة كبيرة وطبيعية. أربعة منها وسائد، فالتنوع قليل."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w87977081a.webp",
+  "b": "img/w87977081b.webp",
+  "rev": "img/w87977081r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w6690181",
+  "level": 0,
+  "title": "ميناء الصيادين",
+  "kind": "photo",
+  "credit": [
+   "Finn Rindahl",
+   "https://commons.wikimedia.org/wiki/File:Hus%C3%B8ya_harbour_02.JPG",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "البيت الأحمر الصغير صار أصفر",
+   "اختفاء القارب الأصفر الصغير",
+   "بدن القارب البرتقالي صار أزرق",
+   "اختفاء القارب الأبيض الصغير",
+   "الرافعة البرتقالية صارت زرقاء"
+  ],
+  "qc": "PASS w6690181: 5 differences, smallest gap 71 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "All five natural. Removals #2/#4 also removed the boats' reflections (pixels changed just below the listed boxes, which is correct); water fill slightly soft but believable.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok (fill a little smeary on zoom)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "الخمسة طبيعية. إزالة القاربين أزالت انعكاسهما أيضًا كما ينبغي، والماء في مكانهما ناعم قليلًا عند التكبير."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w6690181a.webp",
+  "b": "img/w6690181b.webp",
+  "rev": "img/w6690181r.webp",
+  "w": 1200,
+  "h": 900
+ },
+ {
+  "id": "w33551811",
+  "level": 0,
+  "title": "قارب صيد في الخليج",
+  "kind": "photo",
+  "credit": [
+   "CEphoto, Uwe Aranas",
+   "https://commons.wikimedia.org/wiki/File:Lahad_Datu_Sabah_Fishing-vessels-04.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "الحبل الممتد من مقدمة القارب اختفى",
+   "الصاري الأزرق في المقدمة صار أحمر",
+   "جدار الكابينة السفلية الأبيض صار أصفر",
+   "العلم الأزرق صار أحمر",
+   "المدخنة البنية صارت زرقاء"
+  ],
+  "qc": "PASS w33551811: 5 differences, smallest gap 88 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier problems fixed: #3 wall is now evenly yellow over its whole height; #4 flag is fully red with no blue remnant and no pink halo. Minor: #3 also lightly yellows the white rope/pipe in front of the wall (reads as same paint light). #1 rope is thin but long and obvious against the flat water.",
+   "diffs": {
+    "1": "ok (thin but long)",
+    "2": "ok",
+    "3": "ok (minor: rope/pipe in front slightly tinted)",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "صُحّح الجدار والعلم. الحبل في الاختلاف 1 رفيع لكنه طويل."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w33551811a.webp",
+  "b": "img/w33551811b.webp",
+  "rev": "img/w33551811r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w29984759",
+  "level": 0,
+  "title": "قارب الشباك",
+  "kind": "photo",
+  "credit": [
+   "JLPC",
+   "https://commons.wikimedia.org/wiki/File:Mortagne-sur-Gironde_Civellier_Mayflowers_2013.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "اختفاء عمود الإنارة ذي الكرة البيضاء",
+   "الجزء الأزرق من بدن القارب صار أحمر",
+   "الذراع الحمراء صارت زرقاء",
+   "سقف الكوخ الأخضر صار أحمر",
+   "اختفاء العمود الأبيض على الرصيف"
+  ],
+  "qc": "PASS w29984759: 5 differences, smallest gap 54 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "All five clean. #2 hull: a thin blue line remains along the waterline and a little red appears in the water at the stern, both read as plausible reflection/trim. #3 arm and #4 hut roof are on the small side for easy but very visible.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok (minor: thin blue waterline strip kept)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "الخمسة نظيفة. ذراع الرافعة وسقف الكوخ أصغر قليلًا من المعتاد للسهل لكنهما واضحان."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w29984759a.webp",
+  "b": "img/w29984759b.webp",
+  "rev": "img/w29984759r.webp",
+  "w": 1200,
+  "h": 813
+ },
+ {
+  "id": "w27193127",
+  "level": 0,
+  "title": "بيت خشبي في القرية",
+  "kind": "photo",
+  "credit": [
+   "A.Savin",
+   "https://commons.wikimedia.org/wiki/File:RybnoeDistrict_06-13_Konstantinovo_village_05.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "إطار النافذة اليسرى صار أخضر",
+   "إطار النافذة الوسطى صار أزرق",
+   "إطار النافذة الكبيرة البيضاء صار أصفر",
+   "الباب الخشبي صار أحمر",
+   "اختفاء الشجيرة الصغيرة"
+  ],
+  "qc": "PASS w27193127: 5 differences, smallest gap 77 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Ghost fence board is gone: #5 is now a whole shrub removed with a clean rebuilt fence/grass fill. #1 green is flat/posterised and tints the glass; #2 blue keeps thin white slivers on the left shutter edge and the cornice's left tip (~955-980, 530-560) and turns the curtain reflection blue. All only visible when zoomed; all five big and obvious.",
+   "diffs": {
+    "1": "ok (flat paint look)",
+    "2": "ok (minor: thin white edge slivers)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "أُزيل أثر لوح السياج واستُبدل بشجيرة تختفي. لون الإطار الأخضر مسطّح قليلًا عند التكبير."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w27193127a.webp",
+  "b": "img/w27193127b.webp",
+  "rev": "img/w27193127r.webp",
+  "w": 1200,
+  "h": 772
+ },
+ {
+  "id": "w25580487",
+  "level": 0,
+  "title": "بوابة القلعة",
+  "kind": "photo",
+  "credit": [
+   "Tuxyso",
+   "https://commons.wikimedia.org/wiki/File:Burg-Vondern-Westen-vom-Weg-2013.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "سقف البرج الأيسر صار أحمر",
+   "سقف المبنى الأوسط صار بنيًا",
+   "اختفاء عمود الإنارة",
+   "سقف البرج الأيمن صار أخضر",
+   "اختفاء عمود اللافتة"
+  ],
+  "qc": "PASS w25580487: 5 differences, smallest gap 37 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier issues fixed: the too-small window is replaced by the big middle roof turning brown (#2), and the sign-post removal (#5) no longer leaves its shadow; brick fill is only slightly soft. #3 lamp-post removal gives a believable brick/grass fill (slightly soft bricks on zoom). Posts #3/#5 are thin but tall and obvious at easy. Side-wing roofs stay grey, which is correct (separate objects).",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok (minor: soft bricks on zoom)",
+    "4": "ok",
+    "5": "ok (minor: slightly blurred brick band on zoom)"
+   },
+   "ar": "استُبدلت النافذة الصغيرة بسقف كبير، وأُزيل ظل العمود. الطوب ناعم قليلًا عند التكبير."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w25580487a.webp",
+  "b": "img/w25580487b.webp",
+  "rev": "img/w25580487r.webp",
+  "w": 1200,
+  "h": 667
+ },
+ {
+  "id": "w17277823",
+  "level": 0,
+  "title": "مبنى أثري في الحديقة",
+  "kind": "photo",
+  "credit": [
+   "MrPanyGoff",
+   "https://commons.wikimedia.org/wiki/File:Bali_Bey_Mosque_-_Ni%C5%A1_Fortress,_Ni%C5%A1,_Serbia.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "اختفاء شجرة الصنوبر",
+   "الشجرة الخضراء خلف القبة الصغيرة صارت برتقالية",
+   "القبة الكبيرة صارت رمادية",
+   "اختفاء الجدار الحجري المهدّم",
+   "الشجرة الصفراء يمين المبنى صارت خضراء"
+  ],
+  "qc": "PASS w17277823: 5 differences, smallest gap 48 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Good set. #1 pine removal leaves a soft, hazy greenish blob where the trunk met the treeline (reads as a distant tree at normal size); its box also starts 22 px from the left edge (rule says 30).",
+   "diffs": {
+    "1": "ok (minor: blurry fill at x~50-170, y~640-720; near edge)",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   },
+   "ar": "جيد. مكان شجرة الصنوبر المزالة ضبابي قليلًا، ويقرأ كشجرة بعيدة."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w17277823a.webp",
+  "b": "img/w17277823b.webp",
+  "rev": "img/w17277823r.webp",
+  "w": 1200,
+  "h": 812
+ },
+ {
+  "id": "w28094815",
+  "level": 0,
+  "title": "سيارة السباق الزرقاء",
+  "kind": "photo",
+  "credit": [
+   "VT98Fan",
+   "https://commons.wikimedia.org/wiki/File:Stock_Car_Alzingen_Luxembourg_01_09_2013_03.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "سقف الخيمة الأبيض صار أحمر",
+   "الخزان الرمادي صار أصفر",
+   "الجرار الأخضر صار أحمر",
+   "العجلة الأمامية الحمراء صارت صفراء",
+   "بدلة الرجل الزرقاء صارت حمراء"
+  ],
+  "qc": "PASS w28094815: 5 differences, smallest gap 76 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #3 tractor problem is gone: hood, nose and roof are fully red with clean edges, no red block on the grass, 5900 badge and yellow stripe untouched. All five big, clean and obvious.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok (clothing only)"
+   },
+   "ar": "صُحّح الجرار والخرطوم. الخمسة كبيرة وواضحة."
+  },
+  "rounds": 3,
+  "flag": "",
+  "a": "img/w28094815a.webp",
+  "b": "img/w28094815b.webp",
+  "rev": "img/w28094815r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w26952043",
+  "level": 0,
+  "title": "بيوت على البحيرة",
+  "kind": "photo",
+  "credit": [
+   "ArildV",
+   "https://commons.wikimedia.org/wiki/File:Skarp%C3%B6_June_2013_03.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "اختفاء الكلب في العشب",
+   "سقف القارب الأبيض بين القصب صار أزرق",
+   "جدران البيت الأحمر صارت صفراء",
+   "الشجرة البنفسجية الداكنة صارت خضراء",
+   "الكوخ الأحمر على الرصيف صار أزرق"
+  ],
+  "qc": "PASS w26952043: 5 differences, smallest gap 158 px",
+  "review": {
+   "verdict": "fix",
+   "level_ok": false,
+   "notes": "Edits are clean, but the size problem remains. #5 is now the red boathouse on the jetty turned blue: it is clean, but only ~118x54 px at 2400 (about 60x27 on the review sheet, ~20 px wide on a phone). That is below the ~150 px easy minimum, the same small hut that was swapped out before. #1 dog (~200x85) and #2 boat roof (~210x70) are still at the low end. Minor: #1 grass fill still has faint dark leg-like streaks (~215-275, 1235-1270). Swap #5 for a big target (e.g. a large tree, the big yellow house roof, or a big boat).",
+   "diffs": {
+    "1": "ok (minor: dark streaks in fill)",
+    "2": "ok (smallish for easy)",
+    "3": "ok",
+    "4": "ok",
+    "5": "too small for easy (~118x54 px), though clean"
+   },
+   "ar": "التعديلات نظيفة، لكن الاختلاف 5 (الكوخ صار أزرق) أصغر من حجم المستوى السهل. أقترح رفضه، أو نقله للمتوسط بعد إضافة 3 اختلافات."
+  },
+  "rounds": 3,
+  "flag": "الاختلاف 5 (الكوخ الأحمر) نحو 115×50 بكسل، أصغر من حجم المستوى السهل. اقتراحي: نقله للمتوسط بعد إضافة 3 اختلافات، أو رفضه.",
+  "a": "img/w26952043a.webp",
+  "b": "img/w26952043b.webp",
+  "rev": "img/w26952043r.webp",
+  "w": 1200,
+  "h": 801
+ },
+ {
+  "id": "w20002195",
+  "level": 0,
+  "title": "تمثال الفارس في الساحة",
+  "kind": "photo",
+  "credit": [
+   "Daderot",
+   "https://commons.wikimedia.org/wiki/File:Frederik_V_statue_in_Amalienborg_Palace_-_DSC07144.JPG",
+   "CC0",
+   "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  ],
+  "diffs": [
+   "تمثال الفارس صار بنيًا",
+   "اختفاء اللوحة النحاسية اليسرى",
+   "اللوحة النحاسية اليمنى صارت ذهبية",
+   "اختفاء التمثال الصغير فوق المبنى",
+   "اختفاء عمود الفانوس"
+  ],
+  "qc": "PASS w20002195: 5 differences, smallest gap 119 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #5 problem fixed: lamp-post removal now rebuilds both windows and the wall cleanly, no blocky patches or bracket stubs. #1 statue brown is still a flat matte bronze, and the thin reins near the horse's mouth stay bluish-lavender (~1180-1250, 370-410), visible only on zoom; the green rim on the back is gone. #4 rooftop statue (~80x160) is small for easy but stands alone against the sky. Plaques: one removed, one recoloured, text untouched.",
+   "diffs": {
+    "1": "ok (minor: flat brown; bluish reins left)",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok (small-ish for easy)",
+    "5": "ok"
+   },
+   "ar": "أُعيدت إزالة عمود الإنارة بنظافة. لون التمثال البرونزي مسطّح قليلًا."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w20002195a.webp",
+  "b": "img/w20002195b.webp",
+  "rev": "img/w20002195r.webp",
+  "w": 1200,
+  "h": 900
+ },
+ {
+  "id": "w45024588",
+  "level": 1,
+  "title": "مخزن الأخشاب",
+  "kind": "photo",
+  "credit": [
+   "CEphoto, Uwe Aranas",
+   "https://commons.wikimedia.org/wiki/File:Singapadu_Bali_Carpenters-workshop-01.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "علبة العصير الصفراء صارت حمراء",
+   "اختفاء الورقة البيضاء عن الأرض",
+   "اختفاء الخوذة السوداء فوق الخزانة",
+   "الكمامة الزرقاء على الجدار صارت وردية",
+   "السترة المعلقة صارت زرقاء",
+   "باب الغرفة الخلفية الخشبي صار أزرق",
+   "اختفاء الكيس البلاستيكي عن الأرض",
+   "اختفاء اللوح الخشبي القصير"
+  ],
+  "qc": "PASS w45024588: 8 differences, smallest gap 61 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #4 problem fixed: only the mask changes (now pink), the scissors stay. #4 mask is small for medium (~47x75 px) but a strong colour change. #7 bag removal still a soft dark blotch of soil (passes). #1 juice carton keeps its original printed text/brand, only colour changed (nothing added). #3 black helmet on dark cupboard is the hardest one for medium but clearly missing on comparison.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok (small for medium)",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok (minor: soft dark fill)",
+    "8": "ok"
+   },
+   "ar": "صُحّح: القناع وحده يتغير الآن. القناع صغير نسبيًا للمتوسط لكن تغيّره واضح."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w45024588a.webp",
+  "b": "img/w45024588b.webp",
+  "rev": "img/w45024588r.webp",
+  "w": 1200,
+  "h": 901
+ },
+ {
+  "id": "w69520084",
+  "level": 1,
+  "title": "زقاق الأصص",
+  "kind": "photo",
+  "credit": [
+   "Michal Klajban",
+   "https://commons.wikimedia.org/wiki/File:Willie%27s_Bakery_and_Colonial_Metropole_Building_from_the_back,_Victoria,_British_Columbia,_Canada_26.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء لفة السلك عن الجدار",
+   "الباب الأحمر صار أزرق",
+   "ستارة الخيزران صارت خضراء",
+   "الجرة السوداء الكبيرة صارت بنية فاتحة",
+   "الجرة السوداء الصغيرة صارت زرقاء",
+   "الأصيص الأسود على اليمين صار أحمر",
+   "صندوق الزهور البرتقالي صار أخضر",
+   "إطارات النوافذ البرتقالية صارت زرقاء"
+  ],
+  "qc": "PASS w69520084: 8 differences, smallest gap 80 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Strong pair: clean, believable recolours well spread. #1 wire-coil removal leaves the two feed wires ending abruptly on the wall (~800-870, 100-150) and slightly soft bricks; not distracting at normal size.",
+   "diffs": {
+    "1": "ok (minor: cut-off wire ends above the removed coil)",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "زوج قوي ونظيف. سلكا الكهرباء ينتهيان فجأة مكان اللفة المزالة، ولا يلفت النظر."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w69520084a.webp",
+  "b": "img/w69520084b.webp",
+  "rev": "img/w69520084r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w23133119",
+  "level": 1,
+  "title": "حديقة القصر",
+  "kind": "photo",
+  "credit": [
+   "Moonik",
+   "https://commons.wikimedia.org/wiki/File:Grand_Kiosk_of_Topkap%C4%B1_Palace_in_Istanbul,_Turkey_002.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "اختفاء المدخنة اليسرى عن السطح",
+   "اختفاء المدخنة المزدوجة",
+   "الباب الخشبي صار أخضر",
+   "ستائر النافذة البيضاء صارت صفراء",
+   "الصندوق الخشبي المزخرف صار أزرق",
+   "القبة الرمادية صارت خضراء",
+   "الباب الخشبي للمبنى الخلفي صار أزرق",
+   "اختفاء حامل اللوحة المعدني الثاني"
+  ],
+  "qc": "PASS w23133119: 8 differences, smallest gap 47 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "All eight clean and natural, well spread. #1 also removed a small bird sitting on the chimney (fine, same spot).",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "الثمانية نظيفة وطبيعية وموزعة جيدًا."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w23133119a.webp",
+  "b": "img/w23133119b.webp",
+  "rev": "img/w23133119r.webp",
+  "w": 1200,
+  "h": 779
+ },
+ {
+  "id": "w51610325",
+  "level": 1,
+  "title": "قاعة الاجتماعات",
+  "kind": "photo",
+  "credit": [
+   "Marcin Konsek",
+   "https://commons.wikimedia.org/wiki/File:2016_Gori,_Muzeum_Stalina_(05).jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء اللوحة الصغيرة عن الجدار",
+   "اختفاء الهاتف الأسود عن الطاولة",
+   "الكرسي الجلدي الكبير صار أخضر",
+   "الكرسي ذو الظهر المزخرف صار أبيض",
+   "الباب الخشبي صار أخضر",
+   "اختفاء الحبل بين العمودين",
+   "اختفاء المربع الداكن من الأرضية",
+   "الكرسي الخشبي الأمامي صار داكنًا"
+  ],
+  "qc": "PASS w51610325: 8 differences, smallest gap 42 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #5 leak is gone: the front chair's top rail and the leather chair's frame keep their wood colour, and the door is green right down behind the chair. Tiny pale-green tint on the small ledge left of the door (~2035-2055, 832-842), only visible when zoomed. Others clean.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok (minor: tiny tint on ledge at left)",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "صُحّح الباب والكرسي الأبيض. صبغة خضراء خفيفة جدًا على حافة صغيرة يسار الباب عند التكبير فقط."
+  },
+  "rounds": 3,
+  "flag": "",
+  "a": "img/w51610325a.webp",
+  "b": "img/w51610325b.webp",
+  "rev": "img/w51610325r.webp",
+  "w": 1200,
+  "h": 774
+ },
+ {
+  "id": "w70268123",
+  "level": 1,
+  "title": "واجهة المحلات",
+  "kind": "photo",
+  "credit": [
+   "Michal Klajban",
+   "https://commons.wikimedia.org/wiki/File:Rhode%27s_Bakery,_Victoria,_British_Columbia,_Canada_14.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اللافتة الخضراء على اليسار صارت زرقاء",
+   "اختفاء الراية الضيقة عن الجدار",
+   "إطار الباب الأخضر صار أحمر",
+   "عداد الموقف الأزرق صار أحمر",
+   "صندوق الدراجة النارية الأبيض صار أحمر",
+   "اختفاء علم كندا",
+   "إطار النافذة الأحمر صار أخضر",
+   "اللافتة الحمراء على عمود الإنارة صارت زرقاء"
+  ],
+  "qc": "PASS w70268123: 8 differences, smallest gap 73 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Clean, well-spread set. Banners/signs (#1, #8) only change colour; their printed text is untouched. #2 banner removal leaves a faint darker vertical band on the wall (barely visible). #6 flag removal rebuilds the window/door frames convincingly.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok (very faint vertical band on wall)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "نظيف وموزع جيدًا. اللافتات تغيّر لونها فقط ولم تُمسّ كتابتها."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w70268123a.webp",
+  "b": "img/w70268123b.webp",
+  "rev": "img/w70268123r.webp",
+  "w": 1200,
+  "h": 670
+ },
+ {
+  "id": "w82157030",
+  "level": 1,
+  "title": "ساحة المدينة القديمة",
+  "kind": "photo",
+  "credit": [
+   "Matti Blume",
+   "https://commons.wikimedia.org/wiki/File:Old_Town,_Zadar_(P1080713).jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "مصاريع النافذة العلوية صارت خضراء",
+   "مصاريع النافذة الوسطى صارت زرقاء",
+   "مظلة المقهى البيضاء صارت خضراء",
+   "لافتة المقهى الحمراء صارت زرقاء",
+   "حاوية النفايات الخضراء صارت زرقاء",
+   "اختفاء غطاء الصرف في الأرضية",
+   "اختفاء أنبوب المزراب",
+   "اختفاء النافذة العلوية في المبنى الأيمن"
+  ],
+  "qc": "PASS w82157030: 8 differences, smallest gap 46 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "All eight clean and natural. #4 café sign changes colour only, text intact. #7 drainpipe is thin (~28 px) but long, so still findable at medium. #1/#2 shutters are small-ish but very visible colour changes.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok (thin, borderline for medium)",
+    "8": "ok"
+   },
+   "ar": "الثمانية نظيفة. ماسورة المطر رفيعة لكنها طويلة."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w82157030a.webp",
+  "b": "img/w82157030b.webp",
+  "rev": "img/w82157030r.webp",
+  "w": 1200,
+  "h": 900
+ },
+ {
+  "id": "w152654470",
+  "level": 1,
+  "title": "عربة المنجم والبطريق",
+  "kind": "art",
+  "credit": [
+   "David Revoy",
+   "https://commons.wikimedia.org/wiki/File:2023-02-11_Another-error-page_301-308_by-David-Revoy.jpg",
+   "CC BY 4.0",
+   "https://creativecommons.org/licenses/by/4.0"
+  ],
+  "diffs": [
+   "اختفاء اللافتة الخشبية الخضراء",
+   "الحاجز الأصفر صار أحمر",
+   "العربة الخشبية صارت حمراء",
+   "اختفاء النبتة الكبيرة",
+   "نبتة جديدة على العشب",
+   "اختفاء سعف النخيل فوق الشلال",
+   "اختفاء النبتة في الغابة اليمنى",
+   "عارضة خشبية في السكة صارت داكنة"
+  ],
+  "qc": "PASS w152654470: 8 differences, smallest gap 69 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #2 problem fixed: barrier is now fully red with clean stripes, no yellow remnants. #5 is now a flipped copy of a small plant pasted on empty grass; looks natural (still a duplicate of an existing plant, acceptable). Removals blend well with the painted style. #7 pale fern removed from the teal forest is low-contrast and the hardest for medium, but findable on comparison.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok (flipped copy of an existing plant)",
+    "6": "ok",
+    "7": "ok (faint, hardest of the set)",
+    "8": "ok"
+   },
+   "ar": "رسم رقمي. صُحّح الحاجز. النبتة المضافة نسخة معكوسة من نبتة موجودة، والسرخس الباهت أصعب الاختلافات."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w152654470a.webp",
+  "b": "img/w152654470b.webp",
+  "rev": "img/w152654470r.webp",
+  "w": 1200,
+  "h": 675
+ },
+ {
+  "id": "w73745961",
+  "level": 1,
+  "title": "مطبخ القصر القديم",
+  "kind": "photo",
+  "credit": [
+   "Agnes Monkelbaan",
+   "https://commons.wikimedia.org/wiki/File:Kasteel_Doorwerth._(actm)_20.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "البطاطس في السلة صارت حمراء",
+   "الجرة الفخارية صارت خضراء",
+   "اختفاء الشمعة البيضاء اليمنى",
+   "الصندوق الخشبي للخضار صار أزرق",
+   "اختفاء الإناء الأبيض الصغير",
+   "اختفاء الوعاء الأبيض من رف الخزانة",
+   "لوح الخزانة الأصفر الكبير صار أخضر",
+   "اختفاء المدفأة البيضاء"
+  ],
+  "qc": "PASS w73745961: 8 differences, smallest gap 41 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #4 leak is gone: crate fully blue, the zucchini, cucumbers and leek roots keep natural colours. #8 heater fill is soft with a faint seam near x~2305 but believable. #7 green panel is clean. Content: an original dark unlabelled bottle on the counter, untouched.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok (minor: soft fill)"
+   },
+   "ar": "صُحّح الصندوق. مكان المدفأة المزالة ناعم قليلًا."
+  },
+  "rounds": 2,
+  "flag": "في الصورة الأصلية زجاجة داكنة على الطاولة قد تُفهم أنها زجاجة نبيذ (لم تُعدَّل).",
+  "a": "img/w73745961a.webp",
+  "b": "img/w73745961b.webp",
+  "rev": "img/w73745961r.webp",
+  "w": 1200,
+  "h": 803
+ },
+ {
+  "id": "w69344105",
+  "level": 1,
+  "title": "المدخل الحجري",
+  "kind": "photo",
+  "credit": [
+   "Michal Klajban",
+   "https://commons.wikimedia.org/wiki/File:Willie%27s_Cafe_%26_Bakery,_Victoria,_British_Columbia,_Canada_02.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "المظلة الرمادية صارت خضراء",
+   "اختفاء المصباح المعلق فوق الشرفة",
+   "الباب الخشبي صار أزرق",
+   "اختفاء لافتة المطعم المعلقة",
+   "اختفاء ملصق منع التدخين عن الواجهة",
+   "إطار لوحة قائمة الطعام صار أسود",
+   "غطاء عداد الموقف الأصفر صار أزرق",
+   "ظهور نبتة جديدة أسفل الجدار"
+  ],
+  "qc": "PASS w69344105: 8 differences, smallest gap 66 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "The smeared menu-board removal is replaced by a frame recolour (#6, wood to black). It is clean: the brick pillar and the menu text are untouched. #4 sign removal still has a soft, slightly smeared fill with faint bluish blotches (~1650-1720, 470-560); at normal size it reads as the background. Content: WILLIES text on door glass and menu, original and unchanged.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok (minor: soft smeared fill, empty bracket left)",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "استُبدلت إزالة لوحة القائمة بتغيير لون إطارها. مكان اللافتة المزالة ناعم قليلًا."
+  },
+  "rounds": 2,
+  "flag": "اسم مطعم حقيقي («WILLIES») ظاهر على زجاج الباب في الصورة الأصلية (أُزيلت اللافتة واللوحة، وبقي الاسم على الباب).",
+  "a": "img/w69344105a.webp",
+  "b": "img/w69344105b.webp",
+  "rev": "img/w69344105r.webp",
+  "w": 1200,
+  "h": 713
+ },
+ {
+  "id": "w63805436",
+  "level": 1,
+  "title": "المنشرة القديمة",
+  "kind": "photo",
+  "credit": [
+   "Dominicus Johannes Bergsma",
+   "https://commons.wikimedia.org/wiki/File:Houtzagerij_Sagi_Tschiertschen_03.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء كومة القطع الخشبية الصغيرة",
+   "اختفاء القش عن الرف",
+   "الحبل الملفوف صار أزرق",
+   "اختفاء شفرة المنشار الدائرية",
+   "القطعة الصفراء تحت العربة صارت خضراء",
+   "الجزء الأخضر من الآلة صار أحمر",
+   "اختفاء الصفيحة الحديدية عن العارضة",
+   "اختفاء العمود المعدني اللامع أعلى المكبس"
+  ],
+  "qc": "PASS w63805436: 8 differences, smallest gap 58 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "New pair, strong and well spread over a busy sawmill interior; recolours (#3 rope blue, #5 part green, #6 machine head red-rust) look natural and removals blend well (#4 saw and guard, #8 shiny rod, #7 plate). Minor in #1 wood-pile removal: the left ends of the planks below are slightly smeared (~85-130, 555-575), and the grey board on the right is cut short with a soft smudge (~175-240, 495-530). Not noticeable at normal size.",
+   "diffs": {
+    "1": "ok (minor: smeared plank ends, grey board partly erased)",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok"
+   },
+   "ar": "زوج قوي في ورشة مزدحمة. أطراف الألواح مكان كومة الخشب المزالة ممسوحة قليلًا."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w63805436a.webp",
+  "b": "img/w63805436b.webp",
+  "rev": "img/w63805436r.webp",
+  "w": 1200,
+  "h": 820
+ },
+ {
+  "id": "w52071480",
+  "level": 2,
+  "title": "رواق السوق القديم",
+  "kind": "photo",
+  "credit": [
+   "Diego Delso",
+   "https://commons.wikimedia.org/wiki/File:Bazaar_de_Kerman,_Ir%C3%A1n,_2016-09-22,_DD_38.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء المصباح المعلق من السقف",
+   "اختفاء القضيب الحديدي السفلي تحت القبة",
+   "اللوحة الرمادية المعلقة صارت زرقاء",
+   "اختفاء صندوق التهوية الصغير",
+   "اختفاء الطوبة عن الغطاء",
+   "الغطاء الوردي صار أزرق",
+   "الكيس الأصفر صار أحمر",
+   "المسدس المائي البرتقالي صار أخضر",
+   "البرميل المعدني الأمامي صار أصفر",
+   "البخاخ البرتقالي صار أزرق",
+   "القبعة الحمراء المعلقة صارت زرقاء",
+   "الكرسي الأزرق صار أحمر"
+  ],
+  "qc": "PASS w52071480: 12 differences, smallest gap 30 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Both earlier defects are gone: the smeared floodlight removal was replaced by a clean vent-box removal (#4) and the half-recoloured stool by a fully yellow metal barrel (#9). All 12 clean and well spread. Minor: #10 sprayer keeps a thin orange rim on the trigger top (~185-215, 1200-1208). #12 chair: the woman's hand on the chair is untouched. Content note for the editor: the original market stalls show SpongeBob plush toys, Barbie packaging and toy pistols (unchanged, not added); #8 names a toy water gun. Probably fine for families, but it is visible branding.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok (toy water gun)",
+    "9": "ok",
+    "10": "ok (minor: thin orange rim at top)",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "صُحّح الخللان السابقان. الاثنا عشر نظيفة."
+  },
+  "rounds": 2,
+  "flag": "في الصورة الأصلية ألعاب لشخصيات تجارية معروفة وألعاب مسدسات، وأحد الاختلافات مسدس ماء لعبة.",
+  "a": "img/w52071480a.webp",
+  "b": "img/w52071480b.webp",
+  "rev": "img/w52071480r.webp",
+  "w": 1200,
+  "h": 809
+ },
+ {
+  "id": "w37767781",
+  "level": 2,
+  "title": "المكتبة الدائرية",
+  "kind": "photo",
+  "credit": [
+   "Arild Vågen",
+   "https://commons.wikimedia.org/wiki/File:Stockholm_Public_Library_January_2015_04.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء إحدى النوافذ العلوية",
+   "اختفاء السقالة البيضاء",
+   "اختفاء إكليل الزينة على السياج الأيسر",
+   "اختفاء المصباح الجداري الأيسر",
+   "اللوحة البرتقالية صارت زرقاء",
+   "اختفاء إكليل الزينة على السياج الأوسط",
+   "شريطة الإكليل الأيمن صارت زرقاء",
+   "الصناديق البيضاء على الرف صارت زرقاء",
+   "غطاء المقعد الدائري الذهبي صار أحمر",
+   "النجمة المضيئة صارت وردية",
+   "اختفاء الدائرة الداكنة من أرضية القاعة",
+   "الصندوق الأحمر على المكتب صار أزرق"
+  ],
+  "qc": "PASS w37767781: 12 differences, smallest gap 41 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Very good hard pair: small but clear changes spread over the whole room, all clean. #5 sign only changes colour (text intact). #11 missing floor circle is a nice pattern-break difference.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "زوج صعب ممتاز: تغييرات صغيرة وواضحة موزعة على القاعة كلها."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w37767781a.webp",
+  "b": "img/w37767781b.webp",
+  "rev": "img/w37767781r.webp",
+  "w": 1200,
+  "h": 801
+ },
+ {
+  "id": "w28891946",
+  "level": 2,
+  "title": "مرفأ القوارب عند الجزر",
+  "kind": "photo",
+  "credit": [
+   "Dietmar Rabich",
+   "https://commons.wikimedia.org/wiki/File:Ilfracombe_(Devon,_UK),_Harbour_--_2013_--_1785.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء الغيمة الصغيرة فوق الأشجار",
+   "اختفاء العوامة البيضاء عن الصاري",
+   "هيكل القارب الأحمر صار أخضر",
+   "القارب المطاطي البرتقالي صار أزرق",
+   "هيكل القارب الأزرق صار أحمر",
+   "الغطاء الأحمر على مقدمة القارب صار أزرق",
+   "الكابينة الحمراء للقارب صارت زرقاء",
+   "الشريط الأزرق للقارب الكبير صار أحمر",
+   "النورس الواقف على اليمين صار معكوسًا",
+   "اختفاء النورس على اليسار",
+   "نورس جديد على الرمل في الوسط",
+   "اختفاء قطعة القماش البيضاء عن الرمل"
+  ],
+  "qc": "PASS w28891946: 12 differences, smallest gap 46 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Good hard pair, clean and spread out. #4 dinghy: thin pinkish-orange rims remain around the new blue patches (visible only when zoomed). #11 is a copy of the gull at (355,1320) pasted at ~(695,1210); it looks natural. #9 flipped gull keeps a believable shadow.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok (minor: pinkish rims around blue patches at ~330-345, 1035-1045)",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "زوج صعب جيد ونظيف. حواف وردية رفيعة حول القارب الصغير عند التكبير فقط."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w28891946a.webp",
+  "b": "img/w28891946b.webp",
+  "rev": "img/w28891946r.webp",
+  "w": 1200,
+  "h": 706
+ },
+ {
+  "id": "w62851708",
+  "level": 2,
+  "title": "البلدة القديمة والقلعة",
+  "kind": "photo",
+  "credit": [
+   "Martin Falbisoner",
+   "https://commons.wikimedia.org/wiki/File:The_Old_Fortress_and_the_Old_Town_of_Corfu_-_September_2017.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء الصاري المعدني فوق القلعة",
+   "سفينة جديدة في البحر على اليسار",
+   "اختفاء السفينة البيضاء من البحر",
+   "قبة برج الجرس الحمراء صارت خضراء",
+   "قبة البرج الصغير الحمراء صارت خضراء",
+   "المبنى البرتقالي صار أصفر",
+   "مصراعا النافذة الخضراوان صارا أزرقين",
+   "مصراعا النافذة اليسرى صارا بنيين",
+   "المصاريع الفيروزية في المبنى العلوي صارت حمراء",
+   "الواجهة الوردية صارت صفراء",
+   "اختفاء الساعة من برج الجرس",
+   "اختفاء النافذة البارزة من السقف"
+  ],
+  "qc": "PASS w62851708: 12 differences, smallest gap 78 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Clean, well-spread set. Note #2 and #3 are the same ferry moved from the right to the left side of the bay, so one object yields two differences; the two spots are far apart and both clearly findable, but the editor may prefer a different second change. #12 dormer removal gives a convincing tiled roof (slightly soft in the middle).",
+   "diffs": {
+    "1": "ok",
+    "2": "ok (same ferry as #3, moved)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "نظيف. الاختلافان 2 و3 هما العبّارة نفسها نُقلت من يمين الخليج إلى يساره."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w62851708a.webp",
+  "b": "img/w62851708b.webp",
+  "rev": "img/w62851708r.webp",
+  "w": 1200,
+  "h": 631
+ },
+ {
+  "id": "w38102138",
+  "level": 2,
+  "title": "دكان الشاي والأعشاب",
+  "kind": "photo",
+  "credit": [
+   "Martin Falbisoner",
+   "https://commons.wikimedia.org/wiki/File:Sample_of_Tee_-_Grand_Bazaar.JPG",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "لوحة شاي الياسمين صارت وردية",
+   "البطاقة البيضاء صارت خضراء",
+   "البطاقة الرمادية الزرقاء صارت بنية",
+   "اختفاء بطاقة الشاي الشتوي",
+   "زهرة كرة الشاي الوردية صارت صفراء",
+   "زهرة كرة الشاي السفلى صارت بيضاء",
+   "برعم الورد الوردي صار أخضر فاتحًا",
+   "اختفاء قطعة الفاكهة الحمراء العلوية",
+   "قطعة الفاكهة الحمراء الصغيرة صارت صفراء",
+   "اختفاء العود من بين أزهار البابونج",
+   "اختفاء البطاقة في الشاي الأخضر",
+   "لوحة شاي الرمان صارت زرقاء فاتحة"
+  ],
+  "qc": "PASS w38102138: 12 differences, smallest gap 53 px",
+  "review": {
+   "verdict": "fix",
+   "level_ok": true,
+   "notes": "#3 is better: the blue handwriting is kept on the brown card. But the price line is partly eaten away: the right part of the last line (~1090-1200, 340-390) is now broken fragments, and the first line is thinner. Bigger problem: #2 white card to green has the same fault that #3 had before. The faint blue writing in A (~600-720, 180-300) is gone in B, which shows a blank green card with smudges, so the text is effectively erased. Mask only the card in #2 and keep the writing, or replace #2. The remaining ten are clean; Kerim's signs (#1, #12) keep their text.",
+   "diffs": {
+    "1": "ok",
+    "2": "card's blue handwriting erased by the green recolour (blank card in B)",
+    "3": "ok (minor: price line partly broken up)",
+    "4": "ok (soft fill matches blur)",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "الاختلاف 2 (البطاقة البيضاء صارت خضراء) أزال كتابتها الزرقاء الباهتة، وهذا مخالف لقاعدة عدم تغيير النص. حاولت حلولًا أخرى ولم تكن نظيفة. أقترح رفضه أو تعديله لاحقًا."
+  },
+  "rounds": 3,
+  "flag": "",
+  "a": "img/w38102138a.webp",
+  "b": "img/w38102138b.webp",
+  "rev": "img/w38102138r.webp",
+  "w": 1200,
+  "h": 878
+ },
+ {
+  "id": "w42187197",
+  "level": 2,
+  "title": "المكتبة الخشبية",
+  "kind": "photo",
+  "credit": [
+   "Diego Delso",
+   "https://commons.wikimedia.org/wiki/File:Museo_de_la_Catedral_de_Quito,_Quito,_Ecuador,_2015-07-22,_DD_94-96_HDR.JPG",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "اختفاء المصباح الأيسر من الثريا",
+   "الإطار السفلي الأحمر للجدار صار أزرق",
+   "الكتب العنابية في خزانة السير صارت خضراء",
+   "الباب الأحمر صار أخضر",
+   "اختفاء علامة الإنذار الحمراء",
+   "اختفاء القفل من باب الخزانة السفلية",
+   "الكتب الزرقاء في خزانة الخطابة صارت حمراء",
+   "الكتب الخضراء في الخزانة اليسرى صارت حمراء",
+   "الكتابان الأحمران صارا أخضرين",
+   "لافتة كاتيكيسيس صارت زرقاء",
+   "الكتابان الأحمران في خزانة سجرادا صارا أخضرين",
+   "الكتب الزرقاء في الخزانة اليمنى صارت حمراء"
+  ],
+  "qc": "PASS w42187197: 12 differences, smallest gap 25 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #2 problem fixed: the skirting board is now blue along its whole visible length, no red stub, no spill onto the floor. All 12 clean and well spread; #10 CATEQUESIS sign keeps its text. Minor: #4 green door (rect ends x=1632) and #2 skirting (starts x=1685) are only ~53 px apart, slightly under the 60 px rule, though they are clearly separate objects. #12 leaves the last blue book on the right blue (reads as a separate book).",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "صُحّح الإفريز. الاثنا عشر نظيفة."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w42187197a.webp",
+  "b": "img/w42187197b.webp",
+  "rev": "img/w42187197r.webp",
+  "w": 1200,
+  "h": 812
+ },
+ {
+  "id": "w33241094",
+  "level": 2,
+  "title": "زقاق القرية الحجرية",
+  "kind": "photo",
+  "credit": [
+   "Pline",
+   "https://commons.wikimedia.org/wiki/File:Village_de_Marcol%C3%A8s_DSC_3995.JPG",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "صندوق الزرع الأخضر تحت النافذة صار أحمر",
+   "صندوق البريد البني صار أخضر",
+   "اختفاء الفانوس المعلق",
+   "اختفاء المصباح الجداري الصغير",
+   "المصراعان الرماديان صارا أزرقين",
+   "اللافتة البرتقالية المعلقة صارت زرقاء",
+   "اختفاء المدخنة الصغيرة",
+   "اختفاء صندوق الزهور عن النافذة اليمنى",
+   "المصراع البني الكبير صار أخضر",
+   "اختفاء المقعد الخشبي",
+   "أصيص الفخار الكبير صار أزرق",
+   "غطاء الصرف المربع البني صار فضيًا"
+  ],
+  "qc": "PASS w33241094: 12 differences, smallest gap 51 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier #12 smeared drain removal is gone: it is now a recolour of the drain cover to silver-grey, clean, downpipe untouched. #10 bench removal is still the weakest: the paving fill is smooth/soft (cobble pattern lost) and the wall base just right of the downpipe shows pale smeared strips (~900-960, 1010-1070); passable at normal size since the area is in the distance. #7 chimney removal leaves a slightly soft roof patch with a small bump on the ridge (~1350-1370, 455). #6 butcher's sign changes colour only, text intact.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok (minor: soft tiles, small ridge bump)",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok (minor: soft paving fill, smeared wall base)",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "صُحّح غطاء الصرف. مكان المقعد المزال ناعم قليلًا."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w33241094a.webp",
+  "b": "img/w33241094b.webp",
+  "rev": "img/w33241094r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w31614364",
+  "level": 2,
+  "title": "بسطة الرامبوتان واليوسفي",
+  "kind": "photo",
+  "credit": [
+   "CEphoto, Uwe Aranas",
+   "https://commons.wikimedia.org/wiki/File:Kundasang_Sabah_Vegetable-Market-05.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "اختفاء الثقب من الكيس الوردي",
+   "اختفاء الليمونة الصغيرة من الصينية",
+   "الثمرة الصفراء الكبيرة صارت خضراء",
+   "البطاقة الحمراء صارت زرقاء",
+   "اختفاء فرع العود القصير على اليسار",
+   "اختفاء الورقة الخضراء",
+   "ثمرة رامبوتان صارت صفراء",
+   "ثمرة رامبوتان في الأسفل صارت صفراء",
+   "اختفاء الفتحة في الصندوق الأبيض",
+   "اختفاء العود من أسفل الكومة",
+   "اختفاء الشيء الأصفر عن الأرض",
+   "اختفاء ثمرة السلق الكبيرة"
+  ],
+  "qc": "PASS w31614364: 12 differences, smallest gap 28 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "Earlier problems gone: the unnatural mandarin-to-lemon is replaced by a clean removal of the hole in the white crate (#9), and #3 fruit is now evenly green with no yellow cap left. #12 snake-fruit removal is still a large, featureless dark-brown void with soft edges (~90-310, 140-320); it reads as a shadowy gap between fruits but is the weakest edit. #4 Chinese label (南丰蜜桔, a product name) only recoloured, text intact; the Korean text on the box at left is original and untouched.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok (minor: featureless dark fill)"
+   },
+   "ar": "صُحّح التغييران السابقان. مكان فاكهة الثعبان المزالة فراغ داكن."
+  },
+  "rounds": 2,
+  "flag": "",
+  "a": "img/w31614364a.webp",
+  "b": "img/w31614364b.webp",
+  "rev": "img/w31614364r.webp",
+  "w": 1200,
+  "h": 800
+ },
+ {
+  "id": "w23819693",
+  "level": 2,
+  "title": "قباب الكاتدرائية",
+  "kind": "photo",
+  "credit": [
+   "Moonik",
+   "https://commons.wikimedia.org/wiki/File:Courtyard_of_the_Doge%27s_Palace_(Venice)_002.jpg",
+   "CC BY-SA 3.0",
+   "https://creativecommons.org/licenses/by-sa/3.0"
+  ],
+  "diffs": [
+   "الجرة الحجرية اليسرى صارت برتقالية",
+   "الكرات الذهبية على الصليب الأيسر صارت خضراء",
+   "اختفاء الراية فوق القبة الوسطى",
+   "رأس البرج الصغير البرتقالي صار أبيض",
+   "اختفاء الحافة البيضاء فوق الشجيرات",
+   "القبة الصغيرة فوق القبة اليمنى صارت خضراء",
+   "الكوخ الخشبي صار أخضر",
+   "الجرس صار ذهبيًا",
+   "وسط الساعة الرمادي صار أزرق",
+   "اختفاء الجرة الحجرية اليمنى",
+   "اختفاء النافذة الدائرية",
+   "اختفاء النافذة المقوسة في البرج الأيمن"
+  ],
+  "qc": "PASS w23819693: 12 differences, smallest gap 73 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "The pulley/rope removal with its ghost traces is gone. #6 is now the small onion dome turned green, which looks natural and clean on the dome. Minor: the box recolour also turns the small flag at right partly green (~1820-1840, 615-640) and only the left ball of the cross on top (~1740, 520), so the right ball stays brown. Both are tiny and inside the #6 circle. #5 ledge removal still leaves a dark blurred band above the shrubs (~2100-2250, 1525-1545) that reads as shadow.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok (minor: dark smudge band)",
+    "6": "ok (minor: flag partly green, one cross ball green)",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "صُحّح الجرس واستُبدلت البكرة بقبة صغيرة خضراء. العلم الصغير بجانبها صار أخضر جزئيًا."
+  },
+  "rounds": 3,
+  "flag": "",
+  "a": "img/w23819693a.webp",
+  "b": "img/w23819693b.webp",
+  "rev": "img/w23819693r.webp",
+  "w": 1200,
+  "h": 823
+ },
+ {
+  "id": "w62881727",
+  "level": 2,
+  "title": "أسطح المدينة القديمة",
+  "kind": "photo",
+  "credit": [
+   "Martin Falbisoner",
+   "https://commons.wikimedia.org/wiki/File:The_Old_Fortress_and_the_Old_Town_of_Corfu_2_-_September_2017.jpg",
+   "CC BY-SA 4.0",
+   "https://creativecommons.org/licenses/by-sa/4.0"
+  ],
+  "diffs": [
+   "قبة برج الجرس الحمراء صارت خضراء",
+   "اختفاء شجرة السرو أمام البحر",
+   "المبنى الأبيض أسفل القلعة صار أصفر",
+   "سقف البرج الأحمر الصغير صار أزرق",
+   "المصراع البرتقالي صار أخضر",
+   "الجدار البرتقالي صار أصفر",
+   "اختفاء الصحن اللاقط عن الجدار",
+   "المدخنة البرتقالية صارت بيضاء",
+   "المظلة الخضراء صارت حمراء",
+   "اللوح الأحمر على السطح صار أزرق",
+   "غرفة السطح الصفراء صارت زرقاء",
+   "اختفاء نافذة من المبنى العالي"
+  ],
+  "qc": "PASS w62881727: 12 differences, smallest gap 73 px",
+  "review": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "New pair, very good hard set: 12 small but clear colour changes and removals spread over the whole old-town panorama, all clean and natural. Minor: #2 cypress removal leaves a slightly blurred patch where the tree met the rooftops (~355-385, 548-560); #7 dish removal keeps its thin cable, which now ends on the bare wall (believable). Sizes at the low end (#2 ~34x48, #12 ~29x36) but they contrast well when zoomed.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok (minor: soft patch at roof line)",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   },
+   "ar": "زوج صعب جديد جيد جدًا: 12 تغييرًا صغيرًا وواضحًا على أسطح المدينة."
+  },
+  "rounds": 1,
+  "flag": "",
+  "a": "img/w62881727a.webp",
+  "b": "img/w62881727b.webp",
+  "rev": "img/w62881727r.webp",
+  "w": 1200,
+  "h": 665
+ }
+]

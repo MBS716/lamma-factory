@@ -1,0 +1,44 @@
+{
+ "w28094815": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #3 tractor problem is gone: hood, nose and roof are fully red with clean edges, no red block on the grass, 5900 badge and yellow stripe untouched. All five big, clean and obvious.",
+  "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok (clothing only)"}
+ },
+ "w26952043": {
+  "verdict": "fix",
+  "level_ok": false,
+  "notes": "Edits are clean, but the size problem remains. #5 is now the red boathouse on the jetty turned blue: it is clean, but only ~118x54 px at 2400 (about 60x27 on the review sheet, ~20 px wide on a phone). That is below the ~150 px easy minimum, the same small hut that was swapped out before. #1 dog (~200x85) and #2 boat roof (~210x70) are still at the low end. Minor: #1 grass fill still has faint dark leg-like streaks (~215-275, 1235-1270). Swap #5 for a big target (e.g. a large tree, the big yellow house roof, or a big boat).",
+  "diffs": {"1": "ok (minor: dark streaks in fill)", "2": "ok (smallish for easy)", "3": "ok", "4": "ok", "5": "too small for easy (~118x54 px), though clean"}
+ },
+ "w51610325": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #5 leak is gone: the front chair's top rail and the leather chair's frame keep their wood colour, and the door is green right down behind the chair. Tiny pale-green tint on the small ledge left of the door (~2035-2055, 832-842), only visible when zoomed. Others clean.",
+  "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok (minor: tiny tint on ledge at left)", "6": "ok", "7": "ok", "8": "ok"}
+ },
+ "w73745961": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "Earlier #4 leak is gone: crate fully blue, the zucchini, cucumbers and leek roots keep natural colours. #8 heater fill is soft with a faint seam near x~2305 but believable. #7 green panel is clean. Content: an original dark unlabelled bottle on the counter, untouched.",
+  "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok (minor: soft fill)"}
+ },
+ "w69344105": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "The smeared menu-board removal is replaced by a frame recolour (#6, wood to black). It is clean: the brick pillar and the menu text are untouched. #4 sign removal still has a soft, slightly smeared fill with faint bluish blotches (~1650-1720, 470-560); at normal size it reads as the background. Content: WILLIES text on door glass and menu, original and unchanged.",
+  "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok (minor: soft smeared fill, empty bracket left)", "5": "ok", "6": "ok", "7": "ok", "8": "ok"}
+ },
+ "w38102138": {
+  "verdict": "fix",
+  "level_ok": true,
+  "notes": "#3 is better: the blue handwriting is kept on the brown card. But the price line is partly eaten away: the right part of the last line (~1090-1200, 340-390) is now broken fragments, and the first line is thinner. Bigger problem: #2 white card to green has the same fault that #3 had before. The faint blue writing in A (~600-720, 180-300) is gone in B, which shows a blank green card with smudges, so the text is effectively erased. Mask only the card in #2 and keep the writing, or replace #2. The remaining ten are clean; Kerim's signs (#1, #12) keep their text.",
+  "diffs": {"1": "ok", "2": "card's blue handwriting erased by the green recolour (blank card in B)", "3": "ok (minor: price line partly broken up)", "4": "ok (soft fill matches blur)", "5": "ok", "6": "ok", "7": "ok", "8": "ok", "9": "ok", "10": "ok", "11": "ok", "12": "ok"}
+ },
+ "w23819693": {
+  "verdict": "accept",
+  "level_ok": true,
+  "notes": "The pulley/rope removal with its ghost traces is gone. #6 is now the small onion dome turned green, which looks natural and clean on the dome. Minor: the box recolour also turns the small flag at right partly green (~1820-1840, 615-640) and only the left ball of the cross on top (~1740, 520), so the right ball stays brown. Both are tiny and inside the #6 circle. #5 ledge removal still leaves a dark blurred band above the shrubs (~2100-2250, 1525-1545) that reads as shadow.",
+  "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok (minor: dark smudge band)", "6": "ok (minor: flag partly green, one cross ball green)", "7": "ok", "8": "ok", "9": "ok", "10": "ok", "11": "ok", "12": "ok"}
+ }
+}

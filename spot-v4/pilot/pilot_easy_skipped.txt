@@ -1,0 +1,3 @@
+w32368237 one boat on empty beach; not 5 separate large objects with enough spacing
+w37670886 only 4 clean diffs; removals of reed panel/green fence smear over choppy water
+w19870281 too few large separable objects; lamp shade recolour flat, ring stand/grinder/books too close together
