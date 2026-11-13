@@ -1,30 +1,34 @@
 OK   a new room is competition 1
-Traceback (most recent call last):
-  File "/tmp/tmp.Kik0SJuhdu/t_spot_comp.py", line 143, in <module>
-    asyncio.run(main())
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/tmp/tmp.Kik0SJuhdu/t_spot_comp.py", line 49, in main
-    await taps(A, [0, 1, 2, 3, 4]); await host.wait_for_function('H.s.ph === "over"', timeout=8000); s = await S(host)
-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 11452, in wait_for_function
-    await self._impl_obj.wait_for_function(
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py", line 1083, in wait_for_function
-    return await self._main_frame.wait_for_function(**locals_to_params(locals()))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 771, in wait_for_function
-    return from_channel(await self._channel.send("waitForFunction", params))
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
-    return await self._connection.wrap_api_call(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
-    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
-playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 8000ms exceeded.
+OK   round 1 counted in competition 1: صالح 130, تافير 50, نورة 0 (130, 50, 0)
+OK   «تنزيل النتائج» gives a spreadsheet file of competition 1 (lamma-spot-competition-1-2026-11-13.csv)
+OK   the host is asked first: leader, points, rounds, players stay («»)
+OK   «إلغاء»: nothing changes
+OK   a sealed tap message of round 1 kept for the late-delivery test
+OK   competition 2: points at zero, competition 1 summarised for everybody (winner صالح 130)
+OK   the 3 players are still in the room (nobody joined again)
+OK   the full summary of competition 1 is kept on the host (ranking and rounds)
+OK   phone 390: «المنافسة 2», how competition 1 ended, points start again
+OK   phone 360: «المنافسة 2», how competition 1 ended, points start again
+OK   computer: «المنافسة 2», how competition 1 ended, points start again
+OK   the earlier competition downloads from the settings: ranking and each round
+OK   competition 2, round 1: everybody at zero
+OK   a tap message of competition 1 delivered again now: not counted
+OK   the same message relabelled with the new round number: it does not open (sealed for round 1), not counted
+OK   تافير's taps are waiting on the phone (offline)
+OK   a round is being played: the host is told it will end and count in competition 2 first
+OK   the round ended by the new competition counted in competition 2 (صالح 2×10 +30 = 50); تافير's offline taps not counted (0)
+OK   تافير comes back online with its old taps: competition 3 still at zero
+OK   and competition 2 does not change afterwards
+OK   host reloads: competition 3, the two earlier competitions kept
+OK   a phone reloads: «المنافسة 3», how competition 2 ended
+OK   host reloads in the middle of a round of competition 3: the round counts once, in competition 3 only (نورة 130)
+OK   host reloads after the round: nothing counted twice
+OK   the database copy of the room is already at competition 3 with the result
+OK   40 players with more than 2,000 points and 6 kept competitions of 100 rounds: room 4975/3708 < 12,000, saved game 4868 < 20,000, private copy 63233 < 120,000
+OK   points above 2,000 ranked correctly (لاعب طويل الاسم 39 2539); the 6 latest competitions kept
+OK   no horizontal scroll at 390 px (390)
+OK   no horizontal scroll at 360 px (360)
+OK   no horizontal scroll at 1280 px (1280)
+OK   no page errors 
+
+32/32 passed

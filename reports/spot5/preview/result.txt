@@ -1,4 +1,4 @@
 t_spot4 exit=0 65/65 passed
-t_spot_comp exit=1 
+t_spot_comp exit=0 32/32 passed
 t_spot_pick exit=1 
 t_spot_host exit=0 28/28 passed
