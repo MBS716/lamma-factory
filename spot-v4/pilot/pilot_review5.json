@@ -1,0 +1,46 @@
+{
+  "w52071480": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "Recrop to 2400x2232 removed the toy stall: the right edge now ends at a spice/saffron shop (shelves of packets, tins, a white cloth). New #11 plastic-bag removal on the floor is clean (small, ~49x52, but fine for hard; the tile pattern continues). All 12 re-checked in crops: clean, no ghosts or leaks. #10 still has the tiny cable stub noted before (not noticeable). All boxes >=60 px apart and >=30 px from edges; no changed pixels outside the boxes.",
+    "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok", "9": "ok", "10": "ok (minor cable stub, unchanged from last round)", "11": "ok", "12": "ok"},
+    "content": "Suitable. No toy guns, doll boxes or toy stall left anywhere. Branded items: only small real-world packaging on the right shop shelves (red saffron boxes with a tiny printed brand name 'EDMAN', ~2180-2280 x 1290-1480) and the original Persian shop signs and a blue religious-shop poster; all part of the photo, small and not prominent, nothing added. A tiny pile of colourful packets/balloons at the foot of the far stall (~1420-1480 x 1540-1620) is too small to read and shows nothing unsuitable. People are an ordinary market scene."
+  },
+  "w38102138": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "#2 redone: the leaf is now a muted red-brown, the cream piece under the tip and the dark background on the left are unchanged (no pink leak). The colour is a bit flat but this area is out of focus, so it reads as a dried brown leaf. Very minor: the thin faint olive tail at the right end of the leaf (~2220-2240, 1335-1360) keeps its low-saturation tint; not noticeable at play size. Text: handwritten lines on #3, and the printed/handwritten prices on #1 and #12 are all intact; #4 and #11 remove whole cards (allowed). Pixel diff shows zero changes outside the 12 boxes, so no other text anywhere is touched. Kerim's brand is in the source, not added.",
+    "diffs": {"1": "ok", "2": "ok (fixed; faint olive tail is negligible)", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok", "9": "ok", "10": "ok", "11": "ok", "12": "ok"}
+  },
+  "w62851708": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "#4 lead-grey dome looks natural (like a real lead/zinc dome): shading kept, crisp edges, no red fringe, the bell, the railing and the tower below are unchanged. It is clearly separate from #11: different part of the tower (dome colour at top vs missing clock face lower down, ~150 px apart) and a different kind of change. All 12 clean; no changes outside boxes.",
+    "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok", "9": "ok", "10": "ok", "11": "ok", "12": "ok"}
+  },
+  "w42187197": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "New #2 (magenta book in the REVISTAS cabinet turned blue) is clean: one whole book, the neighbouring green and white books are untouched. #12 re-mask: all three blue books are now fully red, tops included; the pale light-blue book at the far right (~2372-2380) is a different book and stays as it is, which is fine. Measured: every pair of boxes >=60 px apart and every box >=30 px from the edges (#10 and #12 now end at x 2370). No changed pixels outside boxes.",
+    "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok", "9": "ok", "10": "ok", "11": "ok", "12": "ok"}
+  },
+  "w152654470": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "#5 rock removal: the water strokes continue cleanly; at full zoom the filled area is slightly smoother than the streaky water around it, but in this painted style it is not noticeable. Findability: the rock is about 45x85 px, muted translucent green on pale cyan water, right next to the green bank, so it is the hardest of the 8 (similar to #7). At play size it is still visible as a green patch in the falls, so it is findable for medium but on the subtle side; if the editor wants a safer medium set, a bolder replacement would help, but it is not a defect. No longer any plant-moved confusion with #4.",
+    "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok (subtle for medium: low contrast, ~45 px wide)", "6": "ok", "7": "ok", "8": "ok"}
+  },
+  "w73745961": {
+    "verdict": "accept",
+    "level_ok": true,
+    "independent": true,
+    "notes": "New #5: the large slip-ware bowl is now a muted blue; the slip lines and texture are kept, and a pixel map shows the change stays inside the bowl (no blue on the wall, counter, the fish plate or the tureen beside it). Big and easy to see, fits medium. Original photo kept with the bottle area untouched (no smudge). All 8 clean; nothing changed outside the boxes; #5/#8 gap 78 px.",
+    "diffs": {"1": "ok", "2": "ok", "3": "ok", "4": "ok", "5": "ok", "6": "ok", "7": "ok", "8": "ok"},
+    "content": "Suitable. The dark green bottle (~1690-1730 x 290-430) is unlabelled and part of a museum kitchen display; its wine/champagne shape is the only hint, same as last round, not a blocker (a conservative editor may still prefer another picture). The only printed brand is the small original 'SALTER FAMILY SCALE' text on the scale dial, part of the photo and not added. Nothing else unsuitable."
+  }
+}

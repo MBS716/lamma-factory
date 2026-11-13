@@ -1,0 +1,110 @@
+{
+ "quality": {
+  "w26952043": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "New #5 reed bed (~590x80) is big and obvious, and clean: the man and the white boat in front stay untouched, a natural dry-golden colour, no hard seams. All five are now big enough for easy (dog ~200x85 and boat roof ~210x70 are the smallest but still clear). #1 dog fill is a little soft but has no ghost at normal size.",
+   "diffs": {
+    "1": "ok (fill slightly soft)",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok"
+   }
+  },
+  "w38102138": {
+   "verdict": "fix",
+   "level_ok": true,
+   "notes": "#3: compared A and B closely. All handwritten lines are still there in B (name line, 'Tea', '100gr', price and the lira sign). The ink is a bit stronger/bolder blue, but it is not erased or broken up, so it passes. New #2 leaf: the recolour is a flat pinkish crimson that looks painted, and it leaks onto neighbours. The cream/white bit under the leaf tip (~2205-2240, 1370-1390) turned pink, and a pink edge spills onto the dark background left of the leaf (~2160-2170, 1305-1345). Mask the leaf only, and use a darker, less saturated red-brown. The other ten are clean.",
+   "diffs": {
+    "1": "ok",
+    "2": "colour leak: cream piece below the leaf (~2205-2240,1370-1390) and left rim (~2160-2170,1305-1345) turned pink; flat pink-crimson rather than dried red",
+    "3": "ok (handwriting intact, ink slightly bolder)",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   }
+  },
+  "w62851708": {
+   "verdict": "accept",
+   "level_ok": true,
+   "notes": "New #2 castle clock tower red to yellow is clean: the clock face, windows and stone base are untouched and the edges are crisp. It is independent of the #3 ship removal. All 12 are clean.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok",
+    "12": "ok"
+   }
+  },
+  "w52071480": {
+   "verdict": "fix",
+   "level_ok": true,
+   "notes": "All 12 differences are clean (the verdict is fix only because of the content problem: the toy guns and doll box remain, so another crop is needed, and #10 near the new right edge must be rechecked). Quality: all 12 are clean. #7 re-mask is good: the bag is fully red-orange, the white bag beside it stays white, and no yellow-green is left. New #10 window pane blue to yellow is clean and the neighbouring panes are untouched; hard but fair. New #11 cloth-bag removal rebuilds the brick plausibly. Minor: the yellow cable that ran behind the bag top now starts out of the wall at ~1745,970. New #12 lamp cap green to red is clean and only the cap changed. See content: the crop did NOT remove the toys.",
+   "diffs": {
+    "1": "ok",
+    "2": "ok",
+    "3": "ok",
+    "4": "ok",
+    "5": "ok",
+    "6": "ok",
+    "7": "ok",
+    "8": "ok",
+    "9": "ok",
+    "10": "ok",
+    "11": "ok (minor: cable stub ~1745,970)",
+    "12": "ok"
+   }
+  }
+ },
+ "independence": {
+  "w87977081": "ok",
+  "w6690181": "ok",
+  "w33551811": "ok",
+  "w29984759": "ok",
+  "w27193127": "ok",
+  "w25580487": "ok",
+  "w17277823": "ok",
+  "w28094815": "ok",
+  "w26952043": "ok",
+  "w20002195": "ok: #2 removes the left brass plaque and #3 recolours the right one. The right plaque was already there in A, so this does not read as a move.",
+  "w45024588": "ok",
+  "w69520084": "ok",
+  "w23133119": "ok",
+  "w51610325": "ok",
+  "w70268123": "ok",
+  "w82157030": "ok",
+  "w152654470": "ok (note): #4 removes the big plant on the left grass, and #5 adds a copy of a different plant (the one below #4, which stays in both pictures) on the right grass. That is allowed, but the plants look alike, so some players may read it as 'the plant moved'. They are far apart and both can be found, so it is acceptable.",
+  "w73745961": "ok",
+  "w69344105": "ok",
+  "w63805436": "ok",
+  "w52071480": "ok",
+  "w37767781": "ok",
+  "w28891946": "ok: #5 (front boat hull blue to red) and #6 (red sail cover to blue) are on two different boats, one behind the other. #10 removes the left gull. #11 copies the gull at ~380,1345, which stays in both pictures, so it is not a move.",
+  "w62851708": "ok (borderline): #4 (dome turned green) and #11 (clock removed) are two parts of the same bell tower, about 150 px apart. They read as two clearly separate changes (dome colour vs missing clock), not one. #2/#3 are now independent.",
+  "w38102138": "ok",
+  "w42187197": "ok: #4 (green door) and #2 (red skirting in the room behind it) are separate objects, but they are close (~53 px at 2400, under the 60 px spacing rule). Check the spacing.",
+  "w33241094": "ok: the #3 lantern, #6 orange hanging sign and #7 chimney are three separate objects, checked in a close-up.",
+  "w31614364": "ok: #2 (small lime removed) and #3 (big yellow fruit turned green) are separate fruits, ~66 px apart.",
+  "w23819693": "ok",
+  "w62881727": "ok. Side note: this is the same Corfu view as w62851708, and both turn the red dome of the same bell tower green. Players who get both pairs will see the same change twice; consider changing one of them."
+ },
+ "content": {
+  "w73745961": "Suitable. The dark green bottle has no label and sits in the background of a museum kitchen display; nothing shows it is alcohol. Its shape is a typical wine/champagne bottle, though, so for a conservative family audience the editor may still remove it (it could even become one of the differences). It is not a blocker.",
+  "w69344105": "Suitable. The real business name 'Willie's' appears on the chalk 'WILLIES Entrance' sign in the door glass and on the menu board ('WILLIE'S BREAKFAST / WILLIE'S LUNCH'). Picture A also shows the hanging sign 'Willie's since 1887, 537 Johnson St.' (removed in B as #4). It is an incidental shop name in a street photo, not advertising and nothing unsuitable. The game does not add it, so it is fine. Only a strict no-real-business-names policy would need another picture, because the text cannot be edited.",
+  "w52071480": "NOT suitable as is. The crop did not remove the toy stall on the right edge. It still shows realistic-looking toy revolvers in blister packs (~2290-2400, 600-880), a boxed toy blaster/water gun with a cartoon hero on the card (~2130-2310, 280-760), and a pink 'Ba...' fashion-doll box ('BEAUTIFUL YOUNG GIRL / MY FASHION', ~2350-2400, 350-760) that looks Barbie-branded. A white plush hangs top right (~2240-2400, 150-400). The toys start at about x 2130. Crop the right edge to about x<=2110 (#10 at 2048-2084 would then sit ~26-30 px from the edge, so check the edge margin) or choose another picture. Nothing else unsuitable: the people are an ordinary market scene."
+ }
+}

@@ -1822,7 +1822,7 @@ const Spot = {
   index:null, indexAt:0, shards:{}, hidden:new Set(), remote:false,
   norm(e){ // catalog entry -> pair used by the game
     return {id:e.id, level:e.l, w:e.w, h:e.h, a:SPOT_CDN + "pairs/" + e.id + "a.webp", b:SPOT_CDN + "pairs/" + e.id + "b.webp",
-      title:e.t || THEME_AR[e.th] || "صورة", diffs:e.d.map(([x, y, rx, ry, m]) => m ? {x, y, rx, ry, m} : {x, y, rx, ry}), credit:e.c || null, kind:e.k || "photo"};
+      title:e.t || THEME_AR[e.th] || "صورة", diffs:e.d.map(([x, y, rx, ry, m]) => m ? {x, y, rx, ry, m} : {x, y, rx, ry}), credit:e.c || null, kind:e.k || "photo", crop:!!e.cr, clean:!!e.cl};
   },
   local(p){ return {id:p.id, level:p.level, w:p.w, h:p.h, a:"spot/" + p.a, b:"spot/" + p.b, title:p.title, diffs:p.diffs, credit:p.credit || null}; },
   async j(url){ const r = await fetch(url, {cache:"no-cache"}); if (!r.ok) throw new Error(r.status); return r.json(); },
@@ -2096,7 +2096,7 @@ const Diff = {
     if (r.done){ s.ph = "done"; pushHost(); return; }   // this room has played every pair of this level
     const p = r.pair;
     H.priv.dfs = p.diffs.map(d => d.m ? [d.x, d.y, d.rx, d.ry, d.m] : [d.x, d.y, d.rx, d.ry]);                              // the answer stays on this device
-    s.pair = {id:p.id, level:p.level, w:p.w, h:p.h, a:p.a, b:p.b, title:p.title, credit:p.credit, kind:p.kind};
+    s.pair = {id:p.id, level:p.level, w:p.w, h:p.h, a:p.a, b:p.b, title:p.title, credit:p.credit, kind:p.kind, ...(p.crop ? {crop:1} : {}), ...(p.clean ? {clean:1} : {})};
     s.nd = p.diffs.length; s.lv = p.level; s.fresh = r.fresh; H.priv.total = r.total;
     Spot.markSeen(p.id, devs); played.add(p.id); (H.priv.playedLv = H.priv.playedLv || {})[p.id] = p.level;
     pushHost();
@@ -2530,7 +2530,7 @@ const Diff = {
       const [who, page, lic, licUrl] = c, sa = /SA/i.test(lic || "");
       rows = `<tr><th>${p.kind === "art" ? "الفنان" : "المصوّر"}</th><td>${esc(who)}</td></tr><tr><th>المصدر</th><td>${link(page, "صفحة الصورة على Wikimedia Commons")}</td></tr>
         <tr><th>الترخيص</th><td>${/^(public domain|cc0)$/i.test(lic || "") ? `<bdi dir="ltr">${esc(lic)}</bdi> (ملكية عامة)` : link(licUrl, `<bdi dir="ltr">${esc(lic)}</bdi>`)}</td></tr>
-        <tr><th>التعديلات</th><td>صُغّرت الصورة، وعُدّلت النسخة الثانية لصنع الاختلافات.${sa ? " النسختان المعدّلتان بالترخيص نفسه." : ""}</td></tr>`;
+        <tr><th>التعديلات</th><td>${p.crop ? "قُصّت أطراف الصورة وصُغّرت" : "صُغّرت الصورة"}${p.clean ? "، وأُزيل منها عنصر في النسختين" : ""}، وعُدّلت النسخة الثانية لصنع الاختلافات.${sa ? " النسختان المعدّلتان بالترخيص نفسه." : ""}</td></tr>`;
     } else rows = `<tr><th>المصدر</th><td>${esc(String(c[0] || ""))}</td></tr>`;
     return `<details class="panel dfcredit-box"><summary>حقوق الصورة${host ? " وتفاصيل الجولة" : ""}</summary><table class="htable info">${rows}</table>${host ? `<div class="row">${reportBtn('data-h="dfreport"')}</div><p class="muted dfnote">البلاغ يصل للمراجعة فقط، ولا يُخفي الصورة تلقائيًا.</p>` : ""}</details>`;
   },

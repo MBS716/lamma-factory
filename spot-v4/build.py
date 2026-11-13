@@ -46,7 +46,7 @@ def spot_catalog():
             im = Image.open(os.path.join(ROOT, LIB, p['a'])).convert('RGB'); im.thumbnail((320, 320), Image.LANCZOS); im.save(cache, 'WEBP', quality=70, method=6)
         shutil.copy(cache, os.path.join(out, 'thumbs', p['id'] + '.webp'))
         ents.append({'id': p['id'], 'l': p['level'], 'w': p['w'], 'h': p['h'], 't': p.get('title', ''), 'k': p.get('kind', 'photo'),
-                     'd': [[d['x'], d['y'], d['rx'], d['ry']] + ([d['m']] if d.get('m') else []) for d in p['diffs']], 'c': p.get('credit')})
+                     'd': [[d['x'], d['y'], d['rx'], d['ry']] + ([d['m']] if d.get('m') else []) for d in p['diffs']], 'c': p.get('credit'), **({'cr': 1} if p.get('crop') else {}), **({'cl': 1} if p.get('clean') else {})})
     for f in ('thumb_a.webp', 'thumb_b.webp'): shutil.copy(os.path.join(ROOT, LIB, f), os.path.join(out, f))
     SH = 400; shards = []
     for i in range(0, len(ents), SH):
