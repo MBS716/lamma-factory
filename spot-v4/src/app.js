@@ -1935,7 +1935,7 @@ function mountBoard(el, pair, onTap){
   panes.forEach(pane => {
     pane.addEventListener("pointerdown", e => {
       try { pane.setPointerCapture(e.pointerId); } catch(_){} pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
-      if (pts.size === 1){ start = {x:e.clientX, y:e.clientY, tx, ty, t:Date.now(), pane, moved:false}; multi = false; }
+      if (pts.size === 1){ start = {x:e.clientX, y:e.clientY, tx, ty, t:Date.now(), ts:e.timeStamp, pane, moved:false}; multi = false; }
       else { multi = true; const [p1, p2] = [...pts.values()], r = pane.getBoundingClientRect(); pinch0 = {d:Math.hypot(p1.x - p2.x, p1.y - p2.y), sc, mx:(p1.x + p2.x) / 2 - r.left, my:(p1.y + p2.y) / 2 - r.top, tx, ty}; }
     });
     pane.addEventListener("pointermove", e => {
@@ -1953,7 +1953,7 @@ function mountBoard(el, pair, onTap){
     const end = e => {
       if (!pts.has(e.pointerId)) return; pts.delete(e.pointerId);
       if (pts.size === 0){
-        if (start && !multi && !start.moved && Date.now() - start.t < 700 && e.type === "pointerup") tap(start.pane, e.clientX, e.clientY);
+        if (start && !multi && !start.moved && (start.ts != null && e.timeStamp ? e.timeStamp - start.ts : Date.now() - start.t) < 700 && e.type === "pointerup") tap(start.pane, e.clientX, e.clientY);   // the touch's length from the events' own times (a busy phone still counts a quick tap)
         start = null; pinch0 = null;
       } else if (pts.size === 1){ const [p] = [...pts.values()]; start = {x:p.x, y:p.y, tx, ty, t:Date.now(), pane, moved:true}; pinch0 = null; }
     };
@@ -1999,6 +1999,7 @@ const DF_WIN = 300;       // ms: players who complete within this time of the fi
      t = the server's time, which the PROPOSED rule enforces (t === now); without that rule a phone could write any t.
      Built only with LAMMA_SRVTIME=1, and only for use with the proposed rules. */
 const DF_SRV = /*@@SRVTIME@@*/false;
+const DF_Q = 24;          // taps a phone resends until the host has answered them (a connection that keeps only the latest message loses none)
 const DF_MAX_W = 5, DF_PTS = {find:10, all:50, clean:30, miss:5};
 const dfZero = n => ({n, f:0, w:0, p:0, out:0, done:0, ft:0, dt:0, da:0, b:0});
 // a player's round record is kept under their name (one seat per name in a game), so leaving and joining again,
@@ -2401,7 +2402,7 @@ const Diff = {
     finally { if (H) H.priv.unsealing = Math.max(0, (H.priv.unsealing || 1) - 1); }
     if (!H || H.g !== "diff" || H.s.rd !== rd || H.s.ph !== "play" || !m) return;
     const seen = H.priv.seen || (H.priv.seen = {}), sn = seen[k] || (seen[k] = []), q = H.priv.dfq || (H.priv.dfq = []), qd = H.priv.qd || (H.priv.qd = new Set());
-    for (const t of Array.isArray(m.q) ? m.q.slice(-8) : []){
+    for (const t of Array.isArray(m.q) ? m.q.slice(-DF_Q) : []){
       if (!Array.isArray(t) || typeof t[0] !== "string" || t[0].length > 16 || sn.includes(t[0]) || qd.has(k + "|" + t[0])) continue;
       qd.add(k + "|" + t[0]);
       q.push({k, id:t[0], x:+t[1], y:+t[2], tol:+t[3], at:arr});             // the phone's own time is not used for the order
@@ -2651,7 +2652,7 @@ const Diff = {
           const h = findHost(), hs = h && h.presence.s, mine = hs && hs.pl && hs.pl[dfKey(P.name)];
           if (!hs || hs.ph !== "play" || hs.rd !== rd || (mine && (mine.out || mine.done))) return;
           const id = Math.random().toString(36).slice(2, 9);
-          P.view.dfq = [...P.view.dfq, [id, x, y, tol]].slice(-8);
+          P.view.dfq = [...P.view.dfq, [id, x, y, tol]].slice(-DF_Q);
           P.view.dfPend = [...P.view.dfPend, {id, x, y, t:Date.now()}];
           P.view.dfm.set({pend:P.view.dfPend});
           Diff.psend(rd);
@@ -2677,6 +2678,7 @@ const Diff = {
         if (!over) Diff.feedback(P.view.dfm, lr);
         const at = (P.view.dfPend || []).findIndex(p => p.id === lr[0]); if (at >= 0) P.view.dfPend = P.view.dfPend.slice(at + 1);   // taps are answered in order
       }
+      if ((P.view.dfq || []).some(t => P.view.dfLr[t[0]])) P.view.dfq = P.view.dfq.filter(t => !P.view.dfLr[t[0]]);   // answered: no need to send them again
       P.view.dfPend = (P.view.dfPend || []).filter(p => Date.now() - p.t < 6000 && !over);
       const v = over ? Diff.review(s, sel) : {found:(bx.f || []).map(f => f.slice(1)), rev:null};
       P.view.dfm.set({found:v.found, rev:v.rev, pend:P.view.dfPend});

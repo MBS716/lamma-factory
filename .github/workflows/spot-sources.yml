@@ -12,7 +12,7 @@ permissions:
 jobs:
   get:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 170
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,6 +27,8 @@ jobs:
           r=$(tr -d ' \r\n' < .github/spot-sources-request)
           case "$r" in
             sheets) python scripts/spot_candidates.py sheets ../src/cand ;;
+            sheets2:*) python scripts/spot_sources2.py sheets ../src/cand2 "scripts/${r#sheets2:}" 12 ;;
+            fetch2:*) python scripts/spot_sources2.py fetch ../src/cand2 "${r#fetch2:}" ;;
             fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
             *) echo "nothing to do" ;;
           esac

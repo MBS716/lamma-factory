@@ -23,6 +23,7 @@ run spotjudge python3 t_spot_judge.py &
 run spotcomp python3 t_spot_comp.py &
 run spotpick python3 t_spot_pick.py &
 run spothost python3 t_spot_host.py &
+run spottaps python3 t_spot_taps.py &
 run akml python3 t_akml.py &
 run akmlkey python3 t_akml_key.py &
 run akmlfull python3 t_akml_full.py &
