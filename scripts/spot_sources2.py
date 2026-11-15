@@ -45,6 +45,7 @@ def dhash(im):
     return "%016x" % sum(1 << i for i in range(64) if px[(i // 8) * 9 + i % 8] > px[(i // 8) * 9 + i % 8 + 1])
 ham = lambda a, b: bin(int(a, 16) ^ int(b, 16)).count("1")
 
+CATS, DEEP = ["Quality images"], False
 def sheets(out, themes_file, per=12):
     os.makedirs(out, exist_ok=True)
     old = json.load(open(f"{out}/candidates.json")) if os.path.exists(f"{out}/candidates.json") else []
@@ -55,8 +56,11 @@ def sheets(out, themes_file, per=12):
     themes = [l.strip() for l in open(themes_file, encoding="utf-8") if l.strip() and not l.startswith("#")]
     for t in themes:
         got = 0
-        try: res = search(f'incategory:"Quality images" filetype:bitmap {t}', 50)
-        except Exception as e: print("search failed", t, e); continue
+        res = []
+        for cat in CATS:   # sheets3: also Valued/Featured, and Quality images past the first 50 results already searched
+            for off in ((0, 50) if cat == "Quality images" and DEEP else (0,)):
+                try: res += search(f'incategory:"{cat}" filetype:bitmap {t}', 50, off)
+                except Exception as e: print("search failed", t, cat, e)
         for p in res:
             c = keep(p)
             if not c or c["id"] in seen or norm(c["page"]) in pages: continue
@@ -97,5 +101,7 @@ def fetch(out, ids, width=2400):
         except Exception as e: print("failed", i, e)
 
 if __name__ == "__main__":
+    if sys.argv[1] == "sheets3":   # wider: Quality images (results 1-100), Valued images, Featured pictures
+        CATS[:] = ["Quality images", "Valued images", "Featured pictures on Wikimedia Commons"]; DEEP = True; sys.argv[1] = "sheets"
     if sys.argv[1] == "sheets": sheets(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 12)
     else: fetch(sys.argv[2], [x for x in sys.argv[3].split(",") if x])

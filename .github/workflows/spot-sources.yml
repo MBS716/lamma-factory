@@ -28,6 +28,7 @@ jobs:
           case "$r" in
             sheets) python scripts/spot_candidates.py sheets ../src/cand ;;
             sheets2:*) python scripts/spot_sources2.py sheets ../src/cand2 "scripts/${r#sheets2:}" 12 ;;
+            sheets3:*) python scripts/spot_sources2.py sheets3 ../src/cand2 "scripts/${r#sheets3:}" 12 ;;
             fetch2:*) python scripts/spot_sources2.py fetch ../src/cand2 "${r#fetch2:}" ;;
             fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
             *) echo "nothing to do" ;;
