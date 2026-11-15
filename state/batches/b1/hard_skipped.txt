@@ -15,3 +15,5 @@ w26501395 window/rooftop removals regenerate ghost windows or smear; only ~7 cle
 w118183337 wall of packaged gadgets covered in printed text/brand labels and price tags; removals would erase text, overlapping packages
 w71313786 dusk city panorama: rooftop details tiny and low-contrast, few separable objects; would need building-facade edits
 w32414696 only 11 clean diffs; remaining candidates too small (distant boats) or too close to other diffs
+w187538781 wall of patterned plates: only pattern recolours possible, no clean small removals (foliage/plates behind)
+w58300507 piled fruit and handwritten price signs; removals inside piles smear, few isolated objects
