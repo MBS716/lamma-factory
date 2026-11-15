@@ -13,3 +13,4 @@ w28777076 ivy wall: no separable large objects besides two flower boxes; ivy add
 w175863812 heritage wall: only door/tree are large safe targets; other objects are carved (possibly religious) relief panels, windows <30 px
 w40688818 iron ball is chained (removal leaves chain, gravel fill blurry); other objects small; only 3 clean diffs
 w62748842 boathouses mirrored in water: every edit needs a matching reflection edit; sheds touch each other
+w82742033 half-timbered house: few large separable targets (haystack touches bottom edge, tree in front of facade, shutter pairs); only ~3 clean big diffs; also near-duplicate style of accepted barn w73157073
