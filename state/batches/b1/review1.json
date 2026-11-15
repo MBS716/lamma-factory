@@ -334,5 +334,152 @@
   "level_ok": true,
   "independent": "ok",
   "content": ""
+ },
+ "w62071597": {
+  "verdict": "accept",
+  "notes": "All 12 clean. #3 price-tag recolour keeps handwriting crisp; #7 carton hole and #9 pumpkin stem are small but clear when zoomed. #3/#9 boxes ~42 px apart at 2400 but they are different objects (tag vs pumpkin), acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26767729": {
+  "verdict": "accept",
+  "notes": "All 12 clean and natural. Minor: #4 buoy turned yellow but its water reflection stays orange-red; #6 fender recolour slightly flat. #10 name-plate removed entirely (allowed).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w76929437": {
+  "verdict": "accept",
+  "notes": "Clean overall. #12 purple-flower removal leaves a slightly soft green patch in dark foliage (barely visible, acceptable). #4 sign removed entirely (allowed). #1/#2 boxes ~45 px apart but distinct pots.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w15550467": {
+  "verdict": "fix",
+  "notes": "#3 pink-laundry removal leaves a smeared grey-green blob over the tree and wall - redo with clean fill or replace with another object. #9 repeats #1 exactly (blue pediment -> green); change #9 to a different difference type (removal/flip/add) or at least a different object. Note: #7/#11/#12 are all window removals - variety is thin.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w50619072": {
+  "verdict": "fix",
+  "notes": "#12 added white buoy (scaled x1.5) looks pasted: hard dark top edge and a blocky rectangular reflection - redo without scaling or pick another add. #3 (outboard motor recolour) and #4 (steering wheel removal) are on the same small boat only ~44 px apart - move #4 to another object elsewhere in the picture.",
+  "level_ok": true,
+  "independent": "#3 and #4 are two parts of one boat, ~44 px apart",
+  "content": ""
+ },
+ "w138365717": {
+  "verdict": "fix",
+  "notes": "Quay area edits are poor: #4 boat flip mangles the neighbouring dinghy's outboard and leaves a white leftover and dark smear; #6 boat removal leaves a dark smear streak on the quay edge (and #4/#6 are ~43 px apart); #11 added boat looks pasted with a detached dark shadow blob; #12 window removal leaves a ghost outline of the sill; #8 notice removal is a blurry patch. Replace #4, #6, #11 with differences elsewhere (e.g. in the houses/hillside), redo #12 with larger dilation, check #8.",
+  "level_ok": true,
+  "independent": "#4 and #6 adjacent on the quay (~43 px)",
+  "content": ""
+ },
+ "w71171498": {
+  "verdict": "fix",
+  "notes": "#6 leaf removal leaves a grey smeared blob at the sack corner - redo (keep the sack corner, fill only the floor) or replace. Others clean. Note #3/#4 boxes only ~37 px apart in the pink-items row; acceptable but moving one would help.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w8689364": {
+  "verdict": "fix",
+  "notes": "#9 jar removal leaves a dark green-grey blocky rectangle instead of the light wall behind - redo with proper fill or choose another object. Note: 5 of 12 are jar removals on shelves; fine but repetitive.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w198708138": {
+  "verdict": "fix",
+  "notes": "#7 red book -> blue leaves red remnants on the metal bookend corner - include the whole book or exclude the bookend cleanly. #8 (Shakespeare print removal) is only ~37 px from #7 and leaves a smeary perspex holder - replace #8 with an object elsewhere in the shop.",
+  "level_ok": true,
+  "independent": "#7 and #8 adjacent (~37 px)",
+  "content": ""
+ },
+ "w14961876": {
+  "verdict": "fix",
+  "notes": "Edits are clean, but 9 of 12 differences are the same green reading lamps (#1-#7, #10, #11); once a player finds one they just scan lamps - dull for hard. Replace at least three lamp edits (suggest #3, #7, #10) with other objects: chairs, books on the galleries, radiators, the sign stand, railing items.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w42828251": {
+  "verdict": "fix",
+  "notes": "#2 and #3 dormer removals leave the dark dormer cheeks as ghost black wedges on the roof - redo with a mask covering the whole dormer, or replace one of them (two identical dormers side by side is repetitive anyway). #5 scaled street lamp leaves a glow halo of the old size and is only ~36 px from #7 - replace #5 (or #7) with something else. Keep this pair; w97588402 is the duplicate scene.",
+  "level_ok": true,
+  "independent": "#5/#7 ~36 px apart",
+  "content": ""
+ },
+ "w49626570": {
+  "verdict": "accept",
+  "notes": "All 12 clean: funnel, crane cabin, ferry, radar domes, exit sign, container. Ship name and dock lettering untouched; #9 small sign removed entirely (allowed). People not edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w97588402": {
+  "verdict": "reject",
+  "notes": "Near-duplicate of w42828251 (same Prinzipalmarkt street, same blue-hour view, Appelrath Cuepper facade). Also weaker on its own: #9 and #12 window-box plant removals leave smeared dark bands, #1 lamp removal leaves a dark bracket ghost, #3/#5 are both 'lit window -> dark'.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "near-duplicate of w42828251"
+ },
+ "w72846247": {
+  "verdict": "fix",
+  "notes": "#10 blue bag removal also cut the sleeve of the hanging garment, leaving the white glove floating in the doorway - redo keeping the sleeve, or replace. Minor: #12 door recolour tints the left post green at the bottom.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w146707549": {
+  "verdict": "accept",
+  "notes": "Clean throughout. Variety is modest (4 lamp removals #1/#6/#11/#12, 3 'window light off' #3/#9/#10) but each is clear and spread out. #11/#12 ~38 px apart, distinct lamps. The 'Weinhaus' shop sign at right is incidental background, not edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w93272847": {
+  "verdict": "fix",
+  "notes": "#8 chimney removal leaves a white fragment of the chimney showing through the tree plus a dark smudge - redo with larger mask or choose another chimney. Also 6 of 12 are chimney removals (#5-#8, #10, #12); swap one or two for other objects (dome, tower, scaffold, boat on the river) for variety.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w19324272": {
+  "verdict": "fix",
+  "notes": "#10 basket-stack removal leaves a smeared wall and a half-erased basket - redo or replace. #3 duplicates #1 (identical arched windows on the same tower, one above the other) - replace #3 with a different kind of difference. Note #5/#6 (two stools) and #11/#12 (two roof poles) are also similar pairs.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w89114423": {
+  "verdict": "accept",
+  "notes": "All 12 clean. #8 dress on a hanger (not a person). Lantern-heavy (4 of 12) but fits the scene. Not a duplicate of w89114411 (same town, different building/composition).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w35312340": {
+  "verdict": "fix",
+  "notes": "The boat differences are crowded in the central water band: #4 is ~47-50 px from #2, #3 and #5, and #5/#12 ~50 px. Replace #4 (and ideally one more boat edit) with a difference in the houses/sea wall/left side. 8 of 12 differences are boats.",
+  "level_ok": true,
+  "independent": "#4 crowded with #2/#3/#5",
+  "content": ""
+ },
+ "w176022691": {
+  "verdict": "accept",
+  "notes": "Clean and attractive. Variety note: #1/#2/#4 are all weathervane flags and #7/#11 both gargoyle heads, but they are far apart and clear. #8 dark plaque removed entirely (allowed).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w89114411": {
+  "verdict": "fix",
+  "notes": "#3 'purple lantern vanished' - all purple lanterns are still there; the visible change is a smeared yellow building gable in the background. Redo #3 so the named lantern is really removed cleanly, or replace it with another object. Also 6 of 12 differences are lanterns (#1-#4, #8, #9); make the replacement a non-lantern object.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
  }
 }

@@ -14,3 +14,5 @@ w175863812 heritage wall: only door/tree are large safe targets; other objects a
 w40688818 iron ball is chained (removal leaves chain, gravel fill blurry); other objects small; only 3 clean diffs
 w62748842 boathouses mirrored in water: every edit needs a matching reflection edit; sheds touch each other
 w82742033 half-timbered house: few large separable targets (haystack touches bottom edge, tree in front of facade, shutter pairs); only ~3 clean big diffs; also near-duplicate style of accepted barn w73157073
+w69571432 harbour scene: every big object (ship, orange roof, willow, rowboat) is mirrored in the canal, so removals/recolours leave mismatched reflections; remaining objects (spire, flagpole, dormers) too small for easy
+w187538779 row of six touching vases: only 3 non-adjacent vases can be edited with 60 px spacing and there is no fifth big separate object (rest is a banner, hinge, small flags)
