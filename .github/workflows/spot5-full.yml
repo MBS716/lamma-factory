@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
       - run: npm i --no-save firebase-tools@13
-      - run: pip install -q playwright==1.48.0 pillow numpy && python -m playwright install --with-deps chromium > /dev/null
+      - run: pip install -q playwright==1.48.0 pillow numpy && python -m playwright install --with-deps chromium webkit > /dev/null
       - name: test build (emulators only)
         run: |
           cd spot-v4 && LAMMA_EMULATOR=127.0.0.1 LAMMA_SPOTLIB="$(grep -oE 'spotlib-[a-z0-9-]+' ../.github/spot5-full-request || echo spotlib-v6)" LAMMA_AKML_BANK=data/akml.candidate.json LAMMA_VERSION=v5.0-emu python build.py
