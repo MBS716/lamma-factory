@@ -22,7 +22,7 @@ jobs:
         run: |
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
           git fetch -q origin spot-sources
-          git fetch -q origin spot-batches && git worktree add -q ../out origin/spot-batches -b spot-batches || git worktree add -q --orphan -b spot-batches ../out
+          git fetch -q origin spot-batches && git worktree add -q ../out origin/spot-batches -b spot-batches
           r=$(tr -d ' \r\n' < .github/spot-fetch-request); b=${r%%:*}; ids=${r#*:}
           mkdir -p ../out/$b; git show origin/spot-sources:cand2/candidates.json > ../out/$b/candidates.json
           python scripts/spot_sources2.py fetch ../out/$b "$ids" | tee ../out/$b/fetch-log.txt
