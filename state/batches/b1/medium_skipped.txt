@@ -13,3 +13,5 @@ w94456085 prominent crucifix on the wall, second crucifix in bed alcove and sain
 w52157267 large looms dominate; remaining targets (spotlights, wall samples, cards) are tiny or white-on-white
 w42828203 church and Christmas tree dominate right side; crowded blurred people and overlapping bicycles
 w40445389 large sky/sea with few objects; buoys and harbour details too small for medium
+w29421112 wine shop/salumeria (Enoteca) with hams and wine bottles in window; unsuitable content, text-heavy
+w37160439 main objects are Advent candle wreaths (religious decoration); rest is uniform facade/sky, few clean targets
