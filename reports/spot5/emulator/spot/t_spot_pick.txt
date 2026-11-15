@@ -20,7 +20,7 @@ OK   opening the library during a round does not stop the round
 OK   «رجوع»: back to the same round, pictures shown again
 OK   host reloads with the library open: back to the round, the phones are not left on «يختار»
 OK   new competition: the picture is no longer «used in this competition», it is «seen before»
-OK   «اختيار تلقائي لهذه الجولة» starts a round (p1-w33241094)
+OK   «اختيار تلقائي لهذه الجولة» starts a round (p1-w73745961)
 OK   setting «تلقائي»: the button reads «ابدأ الجولة»
 OK   «تلقائي»: the round starts at once, no library (as before)
 OK   library on a 390 px screen: no horizontal scroll (390)
