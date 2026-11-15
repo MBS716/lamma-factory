@@ -12,3 +12,4 @@ w68597503 only ~6 independent clean changes; hanging pans cast wall shadows so t
 w94456085 prominent crucifix on the wall, second crucifix in bed alcove and saint statue — too much religious imagery
 w52157267 large looms dominate; remaining targets (spotlights, wall samples, cards) are tiny or white-on-white
 w42828203 church and Christmas tree dominate right side; crowded blurred people and overlapping bicycles
+w40445389 large sky/sea with few objects; buoys and harbour details too small for medium

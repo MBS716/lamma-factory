@@ -3,3 +3,5 @@ w150417943 dense distant rooftops, tiny details; mosques/minarets dominate the c
 w160049113 only ~7 clean differences; removals in blurry piled fruit smear, many people
 w56835706 fruit piles only; removals smear inside piles, many branded stickers; not enough clean diffs
 w35624179 monochrome cluttered workshop; only ~9 clean diffs, removals over overlapping tools smear
+w65779378 only ~9-10 diffs pass; remaining candidates too small/low-contrast (spreader, tiny houses) or in water reflections
+w15374420 crowded with people/boats with text; rooftop removals smear railings, church tower off-limits; not enough clean diffs
