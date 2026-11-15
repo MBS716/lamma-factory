@@ -7,3 +7,5 @@ w8925276 only 4 clean large diffs; roof skylight/fence/gable window removals sme
 w153169973 striped green roof can't be recoloured whole; removals in front of log wall leave smears/ghost frames
 w120143 only 3 clean diffs; chimney removal against branches leaves ghost, log-end removals smear
 w86319150 one big loom, few separate objects; hanging strips too close together (<60 px) for more than 2 diffs; text panels
+w8399635 one big tram; other objects small or in front of foliage (pantograph, mirror removals leave ghosts)
+w99666008 large beer-brand banner (alcohol advertising) on the building
