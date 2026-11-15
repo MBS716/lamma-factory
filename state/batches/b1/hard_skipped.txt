@@ -5,3 +5,8 @@ w56835706 fruit piles only; removals smear inside piles, many branded stickers; 
 w35624179 monochrome cluttered workshop; only ~9 clean diffs, removals over overlapping tools smear
 w65779378 only ~9-10 diffs pass; remaining candidates too small/low-contrast (spreader, tiny houses) or in water reflections
 w15374420 crowded with people/boats with text; rooftop removals smear railings, church tower off-limits; not enough clean diffs
+w110532785 aerial with tiny details; beer-branded (Super Bock) umbrellas = alcohol branding
+w8755640 many sunbathers in swimwear (family audience), repetitive overlapping straw umbrellas, loungers with printed logos
+w146242691 dense overlapping toy clutter (branded plush characters), removals would smear; only ~5 clean isolated targets
+w37232528 Christmas market: main targets are Christmas symbols (stars, trees, bows), bottle stand likely mulled wine; large empty pavement, few other targets
+w57279852 tightly packed branded bottles with labels; only cap recolours possible, removals inside rows would smear
