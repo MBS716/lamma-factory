@@ -77,3 +77,13 @@ For each picture give the following, and list skipped pictures with the reason:
 - the qc result line;
 - the list of differences (Arabic names);
 - any concern.
+
+## Large production rules (owner's standards, Nov 2026) — these come first
+- **Variety of difference types:** colour changes (recolor) should be at most about 40% of a pair's differences when the picture allows it (easy 5 → at most 2, medium 8 → at most 3, hard 12 → at most 5). Prefer removals; also use adds (a copy of an object that stays in both pictures, placed somewhere it makes sense), flips of clearly asymmetric objects, and scale changes. Never trade quality for the ratio: a clean recolour beats a smeared removal. `python3 colorshare.py <id>` prints the share.
+- **One change = one difference:** never remove an object in one place and add the same object elsewhere (a "move" would count twice). Never change two parts of the same object as two differences. Never change two objects in one difference. Keep boxes ≥60 px apart at 2400.
+- **Recolours must cover the whole object and nothing else:** use `'pick':'big'`, several `pts`, `neg` points or a hand-drawn `'poly'`; check the crops for half-recoloured objects and for colour leaking onto neighbours.
+- **Removals must leave no smear, ghost, blocky fill or cut-off cable/rope/shadow.** Avoid removing objects in front of busy detail or water reflections unless the fill is clean.
+- **Text:** never erase, change or blur any writing (signs, labels, handwriting). A sign may vanish entirely or change colour only if its text stays crisp.
+- **Easy level:** every changed object about 150 px or more across at 2400, obvious to a child on a phone. Choose easy pictures with a few big, separate objects.
+- **Content for a family Arabic audience:** no alcohol, no branded characters or logos as a subject, no toy or real weapons, no blood, no edits to religious buildings or symbols, no edits to people (faces, skin, clothing on a person).
+- **Mobile:** the picture is seen about 360–400 px wide on a phone (zoom is available). Hard differences must still be clearly visible when zoomed in.
