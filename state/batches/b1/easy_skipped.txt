@@ -1,1 +1,4 @@
 w34493362 big boats overlap every other candidate (poles, fenders); boats carry text; no 5 separated large diffs
+w29341371 few large separable objects; benches overlap planters, lamps small
+w29399925 wide street scene: candidate objects (bins, cabinet, doors, umbrella) mostly under 150 px; signs with text
+w153988576 crowded palms; only two big targets (roofs), other objects (dog, tank, dish, pipes) too small for easy
