@@ -1,0 +1,58 @@
+# «اكتشف الفرق» v5 (branch spot-v5): the SIX games on the official Firebase emulators (Database + Auth) with today's rules.
+# A test build of spot-v4 (LAMMA_EMULATOR) talks only to the local emulators: nothing reaches the real database, nothing in
+# MBS716/lamma (the official site) changes. Results are saved on this branch under reports/spot5/emulator.
+name: spot5-full
+on:
+  workflow_dispatch:
+    inputs:
+      lib: {description: "spot library folder", required: false, default: "spotlib-v6"}
+permissions:
+  contents: write
+concurrency: {group: spot5-full, cancel-in-progress: false}
+jobs:
+  emulator:
+    runs-on: ubuntu-24.04   # pinned: playwright 1.48 needs the 24.04 packages
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - name: an outside photo host that does not answer fails fast (it would hold every page's load event)
+        run: |
+          if ! curl -s -o /dev/null -m 10 https://picsum.photos/seed/lamma-7/32/32; then echo "0.0.0.0 picsum.photos" | sudo tee -a /etc/hosts > /dev/null; fi
+      - uses: actions/setup-java@v4
+        with: {distribution: temurin, java-version: "21"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: npm i --no-save firebase-tools@13
+      - run: pip install -q playwright==1.48.0 pillow numpy && python -m playwright install --with-deps chromium > /dev/null
+      - name: test build (emulators only)
+        run: |
+          cd spot-v4 && LAMMA_EMULATOR=127.0.0.1 LAMMA_SPOTLIB="${{ github.event.inputs.lib || 'spotlib-v6' }}" LAMMA_AKML_BANK=data/akml.candidate.json LAMMA_VERSION=v5.0-emu python build.py
+          rm -rf ../emu5 && cp -r dist ../emu5 && rm -f ../emu5/artifact.html
+      - name: the six games on the emulators
+        run: |
+          echo '{"emulators":{"database":{"port":9000},"auth":{"port":9099},"ui":{"enabled":false}},"database":{"rules":"firebase/database.rules.json"}}' > firebase.json
+          cat > /tmp/run.sh <<'EOS'
+          set -u
+          D=reports/spot5/emulator; rm -rf $D; mkdir -p $D
+          (cd emu5 && python -m http.server 8799 > /dev/null 2>&1 &)
+          sleep 2
+          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.txt 2>&1; r1=$?
+          timeout 1500 python spot-v4/tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.txt 2>&1; r2=$?
+          timeout 1500 python spot-v4/tests/live_akml_full.py http://localhost:8799/ $D/akmlfull > $D/akmlfull.txt 2>&1; r3=$?
+          LIVE_URL=http://localhost:8799/ DIST=emu5 OUT=$D/spot bash spot-v4/tests/run_live.sh; r4=$?
+          echo "other games: $r1  akml: $r2  akml full: $r3  spot: $r4" | tee $D/result.txt
+          exit $(( r1 || r2 || r3 || r4 ))
+          EOS
+          r=0; timeout 9000 npx firebase emulators:exec --only database,auth --project demo-lamma "bash /tmp/run.sh" > /tmp/emu.log 2>&1 || r=$?
+          tail -5 /tmp/emu.log; cat reports/spot5/emulator/result.txt reports/spot5/emulator/spot/result.txt 2>/dev/null; exit $r
+      - name: save on this branch
+        if: always()
+        run: |
+          rm -f firebase.json database-debug.log firebase-debug.log
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git add reports/spot5/emulator || true
+          if git diff --cached | grep -Eq 'github_pat_|ghp_|gho_|x-access-token|AUTHORIZATION'; then echo "refusing to commit"; exit 1; fi
+          git commit -q -m "spot5 emulator test results (six games)" || exit 0
+          for i in 1 2 3 4 5 6; do git pull -q --rebase origin spot-v5 && git push -q origin HEAD:spot-v5 && exit 0; sleep 15; done; exit 1
