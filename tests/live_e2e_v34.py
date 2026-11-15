@@ -507,7 +507,8 @@ async def run(pw):
             check(got.get('ch') == (True, True), f'wheel: challenge visible on iPhone and Android screens {got.get("ch")}')
 
         # ---------------- spot the difference v3.4: one picture for everybody, the host's device is the referee
-        await spot_v34(host, ios, android, cb, pw)
+        if os.environ.get('SKIP_SPOT34'): R['not_tested'].append('spot v3.4 (replaced by spot v5; covered by spot-v4/tests)')
+        else: await spot_v34(host, ios, android, cb, pw)
 
         # ---------------- quiz
         code = await start(host, 'quiz', {'n': 5, 't': 20})

@@ -41,7 +41,7 @@ jobs:
           D=reports/spot5/emulator; rm -rf $D; mkdir -p $D
           (cd emu5 && python -m http.server 8799 > /dev/null 2>&1 &)
           sleep 2
-          EMU=1 RULES_ON=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.txt 2>&1; r1=$?
+          EMU=1 RULES_ON=1 SKIP_SPOT34=1 timeout 2700 python tests/live_e2e_v34.py http://localhost:8799/ $D/site > $D/site.txt 2>&1; r1=$?
           timeout 1500 python spot-v4/tests/live_akml.py http://localhost:8799/ $D/akml > $D/akml.txt 2>&1; r2=$?
           timeout 1500 python spot-v4/tests/live_akml_full.py http://localhost:8799/ $D/akmlfull > $D/akmlfull.txt 2>&1; r3=$?
           LIVE_URL=http://localhost:8799/ DIST=emu5 OUT=$D/spot bash spot-v4/tests/run_live.sh; r4=$?
