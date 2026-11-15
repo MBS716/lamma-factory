@@ -9,3 +9,6 @@ w120143 only 3 clean diffs; chimney removal against branches leaves ghost, log-e
 w86319150 one big loom, few separate objects; hanging strips too close together (<60 px) for more than 2 diffs; text panels
 w8399635 one big tram; other objects small or in front of foliage (pantograph, mirror removals leave ghosts)
 w99666008 large beer-brand banner (alcohol advertising) on the building
+w28777076 ivy wall: no separable large objects besides two flower boxes; ivy adds look pasted, hooks too small
+w175863812 heritage wall: only door/tree are large safe targets; other objects are carved (possibly religious) relief panels, windows <30 px
+w40688818 iron ball is chained (removal leaves chain, gravel fill blurry); other objects small; only 3 clean diffs
