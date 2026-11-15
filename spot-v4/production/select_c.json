@@ -1,0 +1,2739 @@
+[
+ {
+  "idx": 792,
+  "id": "w4156496",
+  "level": "medium",
+  "q": 3,
+  "note": "beach gelateria kiosk with big sign, few objects; logos minor"
+ },
+ {
+  "idx": 793,
+  "id": "w14741774",
+  "level": "none",
+  "q": 2,
+  "note": "mostly sand and sea"
+ },
+ {
+  "idx": 794,
+  "id": "w19299805",
+  "level": "easy",
+  "q": 3,
+  "note": "yellow ice cream kiosk on promenade, simple bg"
+ },
+ {
+  "idx": 795,
+  "id": "w20292253",
+  "level": "easy",
+  "q": 4,
+  "note": "colourful Finnish grill kiosk, big signs/windows"
+ },
+ {
+  "idx": 796,
+  "id": "w41874354",
+  "level": "medium",
+  "q": 3,
+  "note": "park with transformer sculpture and colourful carts"
+ },
+ {
+  "idx": 797,
+  "id": "w59954823",
+  "level": "easy",
+  "q": 3,
+  "note": "orange and yellow buildings with trees, street"
+ },
+ {
+  "idx": 798,
+  "id": "w63225316",
+  "level": "none",
+  "q": 2,
+  "note": "night, Coca-Cola fridges, brand heavy"
+ },
+ {
+  "idx": 799,
+  "id": "w66911353",
+  "level": "medium",
+  "q": 3,
+  "note": "old Dutch square with facades, statue"
+ },
+ {
+  "idx": 800,
+  "id": "w87606825",
+  "level": "medium",
+  "q": 3,
+  "note": "plaza with fountain, palms, building"
+ },
+ {
+  "idx": 801,
+  "id": "w99090200",
+  "level": "medium",
+  "q": 4,
+  "note": "street cafe, church spire, trees; some people small"
+ },
+ {
+  "idx": 802,
+  "id": "w149766280",
+  "level": "none",
+  "q": 2,
+  "note": "aerial plaza, mostly empty pavement"
+ },
+ {
+  "idx": 803,
+  "id": "w172660939",
+  "level": "easy",
+  "q": 3,
+  "note": "Victorian shop building facade"
+ },
+ {
+  "idx": 804,
+  "id": "w36533898",
+  "level": "none",
+  "q": 3,
+  "note": "sunset hill, mostly sky/cloud, person"
+ },
+ {
+  "idx": 805,
+  "id": "w38267544",
+  "level": "none",
+  "q": 2,
+  "note": "aerial beach, mostly water"
+ },
+ {
+  "idx": 806,
+  "id": "w43314723",
+  "level": "none",
+  "q": 2,
+  "note": "rock close-up, few objects"
+ },
+ {
+  "idx": 807,
+  "id": "w45420971",
+  "level": "easy",
+  "q": 4,
+  "note": "safari tent with crates, campfire pot, garden"
+ },
+ {
+  "idx": 808,
+  "id": "w56552272",
+  "level": "hard",
+  "q": 3,
+  "note": "beach cabanas rows, city; repetitive-ish but varied"
+ },
+ {
+  "idx": 809,
+  "id": "w57401838",
+  "level": "none",
+  "q": 2,
+  "note": "park sign, text subject"
+ },
+ {
+  "idx": 810,
+  "id": "w65657802",
+  "level": "none",
+  "q": 3,
+  "note": "turtle close-up, single subject"
+ },
+ {
+  "idx": 811,
+  "id": "w70056433",
+  "level": "easy",
+  "q": 3,
+  "note": "two-three tents on gravel; logo small"
+ },
+ {
+  "idx": 812,
+  "id": "w76307130",
+  "level": "none",
+  "q": 3,
+  "note": "aircraft wreck, children silhouettes, military plane"
+ },
+ {
+  "idx": 813,
+  "id": "w79231955",
+  "level": "easy",
+  "q": 3,
+  "note": "tent in garden with flowers"
+ },
+ {
+  "idx": 814,
+  "id": "w84908420",
+  "level": "none",
+  "q": 2,
+  "note": "tents on sand, mostly sand/sky"
+ },
+ {
+  "idx": 815,
+  "id": "w85292853",
+  "level": "medium",
+  "q": 3,
+  "note": "aerial park with marquees, trees"
+ },
+ {
+  "idx": 816,
+  "id": "w10701593",
+  "level": "easy",
+  "q": 4,
+  "note": "blue and green trolley buses at stop, trees"
+ },
+ {
+  "idx": 817,
+  "id": "w10890441",
+  "level": "none",
+  "q": 3,
+  "note": "medieval tapestry with figures, people-dominated artwork"
+ },
+ {
+  "idx": 818,
+  "id": "w29335259",
+  "level": "none",
+  "q": 2,
+  "note": "sign text subject"
+ },
+ {
+  "idx": 819,
+  "id": "w33648807",
+  "level": "none",
+  "q": 2,
+  "note": "single biplane in sky"
+ },
+ {
+  "idx": 820,
+  "id": "w37305414",
+  "level": "easy",
+  "q": 3,
+  "note": "park with picnic tables, Table Mountain backdrop"
+ },
+ {
+  "idx": 821,
+  "id": "w45961789",
+  "level": "none",
+  "q": 2,
+  "note": "police helicopter in sky"
+ },
+ {
+  "idx": 822,
+  "id": "w46079838",
+  "level": "none",
+  "q": 3,
+  "note": "single picnic table on hillside, few objects"
+ },
+ {
+  "idx": 823,
+  "id": "w60476375",
+  "level": "none",
+  "q": 2,
+  "note": "biplane in sky, similar to 819"
+ },
+ {
+  "idx": 824,
+  "id": "w70334657",
+  "level": "none",
+  "q": 2,
+  "note": "lake with trees, few objects"
+ },
+ {
+  "idx": 825,
+  "id": "w70652451",
+  "level": "none",
+  "q": 2,
+  "note": "mostly sky and grass, tiny objects"
+ },
+ {
+  "idx": 826,
+  "id": "w70652572",
+  "level": "easy",
+  "q": 2,
+  "note": "picnic shelter on lawn, sparse"
+ },
+ {
+  "idx": 827,
+  "id": "w70679596",
+  "level": "none",
+  "q": 2,
+  "note": "pond and trees, mostly water"
+ },
+ {
+  "idx": 828,
+  "id": "w21337271",
+  "level": "easy",
+  "q": 3,
+  "note": "turf-roof hut by fjord, mountains; few objects"
+ },
+ {
+  "idx": 829,
+  "id": "w37685675",
+  "level": "medium",
+  "q": 3,
+  "note": "workshop wall with meters and pipes"
+ },
+ {
+  "idx": 830,
+  "id": "w37685678",
+  "level": "none",
+  "q": 2,
+  "note": "saw blade close-up"
+ },
+ {
+  "idx": 831,
+  "id": "w37741774",
+  "level": "none",
+  "q": 2,
+  "note": "pile of metal pieces, repetitive"
+ },
+ {
+  "idx": 832,
+  "id": "w38134508",
+  "level": "none",
+  "q": 3,
+  "note": "stacked metal discs, repetitive"
+ },
+ {
+  "idx": 833,
+  "id": "w38134511",
+  "level": "none",
+  "q": 2,
+  "note": "gas regulator close-up"
+ },
+ {
+  "idx": 834,
+  "id": "w38134525",
+  "level": "none",
+  "q": 2,
+  "note": "tool bits close-up"
+ },
+ {
+  "idx": 835,
+  "id": "w38134532",
+  "level": "medium",
+  "q": 3,
+  "note": "workshop wall with hanging cables, pipes, sign"
+ },
+ {
+  "idx": 836,
+  "id": "w38863662",
+  "level": "none",
+  "q": 1,
+  "note": "wood texture B/W"
+ },
+ {
+  "idx": 837,
+  "id": "w38896197",
+  "level": "none",
+  "q": 2,
+  "note": "hooks with discs close-up"
+ },
+ {
+  "idx": 838,
+  "id": "w38896202",
+  "level": "none",
+  "q": 2,
+  "note": "red pipes close-up"
+ },
+ {
+  "idx": 839,
+  "id": "w38896205",
+  "level": "none",
+  "q": 1,
+  "note": "pipe close-up dark"
+ },
+ {
+  "idx": 840,
+  "id": "w11460910",
+  "level": "none",
+  "q": 2,
+  "note": "single leaf plant"
+ },
+ {
+  "idx": 841,
+  "id": "w32225557",
+  "level": "easy",
+  "q": 4,
+  "note": "garden path with greenhouse, house, benches"
+ },
+ {
+  "idx": 842,
+  "id": "w38267508",
+  "level": "medium",
+  "q": 3,
+  "note": "aerial nursery farm, fields, buildings"
+ },
+ {
+  "idx": 843,
+  "id": "w39257828",
+  "level": "medium",
+  "q": 3,
+  "note": "aerial greenhouse complex, similar theme to 842"
+ },
+ {
+  "idx": 844,
+  "id": "w39257875",
+  "level": "none",
+  "q": 2,
+  "note": "aerial greenhouses, similar to 842"
+ },
+ {
+  "idx": 845,
+  "id": "w62134626",
+  "level": "easy",
+  "q": 4,
+  "note": "glass greenhouse with vines against green barn"
+ },
+ {
+  "idx": 846,
+  "id": "w104149761",
+  "level": "none",
+  "q": 2,
+  "note": "long greenhouse, repetitive"
+ },
+ {
+  "idx": 847,
+  "id": "w107118465",
+  "level": "none",
+  "q": 2,
+  "note": "aerial plastic greenhouses, repetitive"
+ },
+ {
+  "idx": 848,
+  "id": "w107699569",
+  "level": "medium",
+  "q": 3,
+  "note": "overgrown greenhouses with path"
+ },
+ {
+  "idx": 849,
+  "id": "w107699577",
+  "level": "none",
+  "q": 2,
+  "note": "greenhouse row, repetitive, similar to 848"
+ },
+ {
+  "idx": 850,
+  "id": "w107699581",
+  "level": "none",
+  "q": 1,
+  "note": "mostly sky and grass"
+ },
+ {
+  "idx": 851,
+  "id": "w107699584",
+  "level": "none",
+  "q": 1,
+  "note": "mostly sky and grass"
+ },
+ {
+  "idx": 852,
+  "id": "w6019681",
+  "level": "none",
+  "q": 3,
+  "note": "two barrel cacti close-up, few objects"
+ },
+ {
+  "idx": 853,
+  "id": "w11549081",
+  "level": "none",
+  "q": 3,
+  "note": "single prickly pear on black ground"
+ },
+ {
+  "idx": 854,
+  "id": "w11637582",
+  "level": "medium",
+  "q": 4,
+  "note": "cactus garden path with windmill, many plants"
+ },
+ {
+  "idx": 855,
+  "id": "w16486134",
+  "level": "medium",
+  "q": 4,
+  "note": "cactus garden varied plants, lava rocks"
+ },
+ {
+  "idx": 856,
+  "id": "w30277797",
+  "level": "none",
+  "q": 3,
+  "note": "cactus top close-up"
+ },
+ {
+  "idx": 857,
+  "id": "w30351417",
+  "level": "none",
+  "q": 2,
+  "note": "specimen grid of shells, repetitive"
+ },
+ {
+  "idx": 858,
+  "id": "w34713793",
+  "level": "medium",
+  "q": 3,
+  "note": "golden barrel cacti cluster; somewhat repetitive"
+ },
+ {
+  "idx": 859,
+  "id": "w34713796",
+  "level": "none",
+  "q": 3,
+  "note": "barrel cacti close-up, repetitive"
+ },
+ {
+  "idx": 860,
+  "id": "w48422522",
+  "level": "medium",
+  "q": 3,
+  "note": "white houses with cactus garden; similar area to 863"
+ },
+ {
+  "idx": 861,
+  "id": "w51791597",
+  "level": "none",
+  "q": 2,
+  "note": "single cactus on gravel"
+ },
+ {
+  "idx": 862,
+  "id": "w69113704",
+  "level": "none",
+  "q": 3,
+  "note": "cactus flowers close-up, repetitive"
+ },
+ {
+  "idx": 863,
+  "id": "w70721065",
+  "level": "medium",
+  "q": 4,
+  "note": "white house with bougainvillea and cacti"
+ },
+ {
+  "idx": 864,
+  "id": "w533725",
+  "level": "none",
+  "q": 3,
+  "note": "aquarium tunnel, people, dim"
+ },
+ {
+  "idx": 865,
+  "id": "w7614823",
+  "level": "none",
+  "q": 2,
+  "note": "old illustration of aquarium, low quality"
+ },
+ {
+  "idx": 866,
+  "id": "w30561291",
+  "level": "hard",
+  "q": 3,
+  "note": "aerial mall/city, many small buildings; slightly hazy"
+ },
+ {
+  "idx": 867,
+  "id": "w30881622",
+  "level": "none",
+  "q": 2,
+  "note": "aquarium with crowd silhouettes, dark"
+ },
+ {
+  "idx": 868,
+  "id": "w108259636",
+  "level": "none",
+  "q": 3,
+  "note": "shark close-up, single subject"
+ },
+ {
+  "idx": 869,
+  "id": "w128178235",
+  "level": "none",
+  "q": 3,
+  "note": "sea lion close-up"
+ },
+ {
+  "idx": 870,
+  "id": "w2148663",
+  "level": "none",
+  "q": 3,
+  "note": "bird box close-up, text sign"
+ },
+ {
+  "idx": 871,
+  "id": "w24999242",
+  "level": "none",
+  "q": 2,
+  "note": "bird feeders, few objects"
+ },
+ {
+  "idx": 872,
+  "id": "w38618981",
+  "level": "none",
+  "q": 3,
+  "note": "single bird on feeder"
+ },
+ {
+  "idx": 873,
+  "id": "w96792569",
+  "level": "none",
+  "q": 3,
+  "note": "single bird close-up"
+ },
+ {
+  "idx": 874,
+  "id": "w98027050",
+  "level": "none",
+  "q": 3,
+  "note": "single bird close-up"
+ },
+ {
+  "idx": 875,
+  "id": "w110446995",
+  "level": "none",
+  "q": 3,
+  "note": "squirrel in feeder close-up"
+ },
+ {
+  "idx": 876,
+  "id": "w29214384",
+  "level": "none",
+  "q": 3,
+  "note": "single gull on water"
+ },
+ {
+  "idx": 877,
+  "id": "w52737593",
+  "level": "none",
+  "q": 3,
+  "note": "single duck on water"
+ },
+ {
+  "idx": 878,
+  "id": "w61174412",
+  "level": "none",
+  "q": 1,
+  "note": "mostly water"
+ },
+ {
+  "idx": 879,
+  "id": "w63121448",
+  "level": "none",
+  "q": 3,
+  "note": "ducks resting, few objects"
+ },
+ {
+  "idx": 880,
+  "id": "w65522914",
+  "level": "none",
+  "q": 2,
+  "note": "swans in dark pond"
+ },
+ {
+  "idx": 881,
+  "id": "w76182054",
+  "level": "none",
+  "q": 3,
+  "note": "single duck"
+ },
+ {
+  "idx": 882,
+  "id": "w76182059",
+  "level": "none",
+  "q": 3,
+  "note": "goose head close-up"
+ },
+ {
+  "idx": 883,
+  "id": "w76182061",
+  "level": "none",
+  "q": 2,
+  "note": "duck splashing"
+ },
+ {
+  "idx": 884,
+  "id": "w76182068",
+  "level": "none",
+  "q": 3,
+  "note": "single duck"
+ },
+ {
+  "idx": 885,
+  "id": "w76182078",
+  "level": "none",
+  "q": 3,
+  "note": "single gull"
+ },
+ {
+  "idx": 886,
+  "id": "w76182080",
+  "level": "none",
+  "q": 3,
+  "note": "single gull"
+ },
+ {
+  "idx": 887,
+  "id": "w76182085",
+  "level": "none",
+  "q": 2,
+  "note": "gull in sky"
+ },
+ {
+  "idx": 888,
+  "id": "w17314661",
+  "level": "medium",
+  "q": 4,
+  "note": "castle courtyard with umbrellas, mountains, few small people"
+ },
+ {
+  "idx": 889,
+  "id": "w21781056",
+  "level": "medium",
+  "q": 4,
+  "note": "villa with fountain, stairs, palms, statues"
+ },
+ {
+  "idx": 890,
+  "id": "w27385200",
+  "level": "none",
+  "q": 2,
+  "note": "wide courtyard mostly empty pavement, distorted"
+ },
+ {
+  "idx": 891,
+  "id": "w32193102",
+  "level": "none",
+  "q": 2,
+  "note": "flat facade, repetitive windows"
+ },
+ {
+  "idx": 892,
+  "id": "w45428223",
+  "level": "none",
+  "q": 2,
+  "note": "stone coat of arms close-up"
+ },
+ {
+  "idx": 893,
+  "id": "w45602284",
+  "level": "none",
+  "q": 2,
+  "note": "looking-up courtyard, extreme perspective, mostly sky"
+ },
+ {
+  "idx": 894,
+  "id": "w50693422",
+  "level": "medium",
+  "q": 3,
+  "note": "colonnade courtyard with flower fountain; repetitive columns"
+ },
+ {
+  "idx": 895,
+  "id": "w53454325",
+  "level": "easy",
+  "q": 4,
+  "note": "white Renaissance stair with arches and flower pots"
+ },
+ {
+  "idx": 896,
+  "id": "w59196468",
+  "level": "easy",
+  "q": 3,
+  "note": "castle on hill with green shrubs"
+ },
+ {
+  "idx": 897,
+  "id": "w63861037",
+  "level": "easy",
+  "q": 4,
+  "note": "Tudor half-timbered gatehouse, bench, chimneys"
+ },
+ {
+  "idx": 898,
+  "id": "w64043970",
+  "level": "medium",
+  "q": 4,
+  "note": "palace garden with topiary, obelisk, red gravel"
+ },
+ {
+  "idx": 899,
+  "id": "w73105651",
+  "level": "easy",
+  "q": 3,
+  "note": "yellow colonial building with portico, courtyard"
+ },
+ {
+  "idx": 900,
+  "id": "w8718723",
+  "level": "easy",
+  "q": 3,
+  "note": "red sandstone fort towers, palms; Agra Fort"
+ },
+ {
+  "idx": 901,
+  "id": "w14543921",
+  "level": "none",
+  "q": 2,
+  "note": "monastery wall corner, plain"
+ },
+ {
+  "idx": 902,
+  "id": "w15082779",
+  "level": "none",
+  "q": 3,
+  "note": "view through rock hole, mostly sea"
+ },
+ {
+  "idx": 903,
+  "id": "w17199175",
+  "level": "none",
+  "q": 2,
+  "note": "ruined wall, sparse"
+ },
+ {
+  "idx": 904,
+  "id": "w32496037",
+  "level": "none",
+  "q": 2,
+  "note": "night fortress tower, dark"
+ },
+ {
+  "idx": 905,
+  "id": "w41987054",
+  "level": "none",
+  "q": 2,
+  "note": "brick wall texture"
+ },
+ {
+  "idx": 906,
+  "id": "w56490093",
+  "level": "none",
+  "q": 2,
+  "note": "winter tower, low contrast, sparse"
+ },
+ {
+  "idx": 907,
+  "id": "w58191541",
+  "level": "medium",
+  "q": 3,
+  "note": "wall path with valley and bridge view"
+ },
+ {
+  "idx": 908,
+  "id": "w61475235",
+  "level": "none",
+  "q": 3,
+  "note": "yellow manor but cannons on lawn (weapons)"
+ },
+ {
+  "idx": 909,
+  "id": "w73155628",
+  "level": "none",
+  "q": 2,
+  "note": "wooden fortress wall, sparse"
+ },
+ {
+  "idx": 910,
+  "id": "w73175465",
+  "level": "none",
+  "q": 2,
+  "note": "ruins in grass, unattractive"
+ },
+ {
+  "idx": 911,
+  "id": "w73190900",
+  "level": "none",
+  "q": 2,
+  "note": "stone wall with window, texture"
+ },
+ {
+  "idx": 912,
+  "id": "w7060589",
+  "level": "none",
+  "q": 3,
+  "note": "night skyline, mostly water and dark"
+ },
+ {
+  "idx": 913,
+  "id": "w28182083",
+  "level": "none",
+  "q": 2,
+  "note": "distant skyline, mostly water/sky"
+ },
+ {
+  "idx": 914,
+  "id": "w60396591",
+  "level": "medium",
+  "q": 3,
+  "note": "Charles Bridge Prague panorama; small objects distant"
+ },
+ {
+  "idx": 915,
+  "id": "w60396592",
+  "level": "none",
+  "q": 2,
+  "note": "similar to 914"
+ },
+ {
+  "idx": 916,
+  "id": "w67114152",
+  "level": "medium",
+  "q": 4,
+  "note": "Charles Bridge tower and domes at golden hour"
+ },
+ {
+  "idx": 917,
+  "id": "w73632228",
+  "level": "none",
+  "q": 3,
+  "note": "pier over clear water, mostly water"
+ },
+ {
+  "idx": 918,
+  "id": "w82144328",
+  "level": "medium",
+  "q": 3,
+  "note": "colourful wooden warehouses on river, Trondheim"
+ },
+ {
+  "idx": 919,
+  "id": "w82144330",
+  "level": "easy",
+  "q": 4,
+  "note": "red-brown wharf houses on stilts, Trondheim close"
+ },
+ {
+  "idx": 920,
+  "id": "w82144336",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 918/919"
+ },
+ {
+  "idx": 921,
+  "id": "w82144339",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 918/919"
+ },
+ {
+  "idx": 922,
+  "id": "w93272847",
+  "level": "hard",
+  "q": 4,
+  "note": "Prague rooftops panorama, many red roofs"
+ },
+ {
+  "idx": 923,
+  "id": "w94678714",
+  "level": "medium",
+  "q": 3,
+  "note": "Stockholm with train, church spire, rail tracks"
+ },
+ {
+  "idx": 924,
+  "id": "w938328",
+  "level": "none",
+  "q": 3,
+  "note": "bridge interior, repetitive beams, perspective"
+ },
+ {
+  "idx": 925,
+  "id": "w1020608",
+  "level": "none",
+  "q": 2,
+  "note": "beams close-up"
+ },
+ {
+  "idx": 926,
+  "id": "w1107380",
+  "level": "none",
+  "q": 2,
+  "note": "beams with graffiti close-up"
+ },
+ {
+  "idx": 927,
+  "id": "w1144281",
+  "level": "easy",
+  "q": 4,
+  "note": "red covered bridge on green lawn, stone abutment"
+ },
+ {
+  "idx": 928,
+  "id": "w4250698",
+  "level": "easy",
+  "q": 4,
+  "note": "covered bridge over river with trees"
+ },
+ {
+  "idx": 929,
+  "id": "w5244834",
+  "level": "medium",
+  "q": 3,
+  "note": "long covered bridge with town and church; similar theme"
+ },
+ {
+  "idx": 930,
+  "id": "w37824329",
+  "level": "none",
+  "q": 2,
+  "note": "snowy bridge, sparse, mostly snow"
+ },
+ {
+  "idx": 931,
+  "id": "w37824428",
+  "level": "easy",
+  "q": 3,
+  "note": "decorated covered bridge entrance; flags, signs"
+ },
+ {
+  "idx": 932,
+  "id": "w43447732",
+  "level": "none",
+  "q": 2,
+  "note": "repetitive striped walkway"
+ },
+ {
+  "idx": 933,
+  "id": "w62714706",
+  "level": "none",
+  "q": 3,
+  "note": "sunset bridge, dark, mostly sky/water"
+ },
+ {
+  "idx": 934,
+  "id": "w63883305",
+  "level": "none",
+  "q": 2,
+  "note": "grey covered bridge, dull, similar to 927"
+ },
+ {
+  "idx": 935,
+  "id": "w67458115",
+  "level": "medium",
+  "q": 4,
+  "note": "Bassano bridge with town on river"
+ },
+ {
+  "idx": 936,
+  "id": "w16223788",
+  "level": "none",
+  "q": 2,
+  "note": "small hut in big green, sparse"
+ },
+ {
+  "idx": 937,
+  "id": "w25945798",
+  "level": "easy",
+  "q": 4,
+  "note": "stone mill with water wheel, greenhouse annex"
+ },
+ {
+  "idx": 938,
+  "id": "w33529195",
+  "level": "easy",
+  "q": 4,
+  "note": "brick water mill with wheel, picnic tables"
+ },
+ {
+  "idx": 939,
+  "id": "w35075297",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 938 area, mill by river"
+ },
+ {
+  "idx": 940,
+  "id": "w39477515",
+  "level": "medium",
+  "q": 3,
+  "note": "half-timbered farmhouses on road"
+ },
+ {
+  "idx": 941,
+  "id": "w39477517",
+  "level": "easy",
+  "q": 4,
+  "note": "half-timbered facade with striped shutters, door, window box"
+ },
+ {
+  "idx": 942,
+  "id": "w39663463",
+  "level": "none",
+  "q": 2,
+  "note": "railing by pond, sparse"
+ },
+ {
+  "idx": 943,
+  "id": "w40306009",
+  "level": "none",
+  "q": 2,
+  "note": "mill behind trees, sparse"
+ },
+ {
+  "idx": 944,
+  "id": "w40306017",
+  "level": "none",
+  "q": 2,
+  "note": "similar to 943"
+ },
+ {
+  "idx": 945,
+  "id": "w49046120",
+  "level": "medium",
+  "q": 3,
+  "note": "brick mill buildings over stream"
+ },
+ {
+  "idx": 946,
+  "id": "w61266801",
+  "level": "none",
+  "q": 2,
+  "note": "ruin wheel in park, sparse"
+ },
+ {
+  "idx": 947,
+  "id": "w81760623",
+  "level": "medium",
+  "q": 4,
+  "note": "stone mill with water wheel, red geraniums, weir"
+ },
+ {
+  "idx": 948,
+  "id": "w15663203",
+  "level": "easy",
+  "q": 4,
+  "note": "wrought gate in stone wall with flowers; some text sign"
+ },
+ {
+  "idx": 949,
+  "id": "w29872094",
+  "level": "none",
+  "q": 3,
+  "note": "stone lion statue close-up, temple-like"
+ },
+ {
+  "idx": 950,
+  "id": "w82212115",
+  "level": "easy",
+  "q": 4,
+  "note": "stone and clapboard cottage with chimney, lawn"
+ },
+ {
+  "idx": 951,
+  "id": "w88700826",
+  "level": "easy",
+  "q": 3,
+  "note": "stone cottage with veranda and tin roof"
+ },
+ {
+  "idx": 952,
+  "id": "w110478717",
+  "level": "none",
+  "q": 2,
+  "note": "old fireplace stone, dull"
+ },
+ {
+  "idx": 953,
+  "id": "w110781154",
+  "level": "easy",
+  "q": 3,
+  "note": "two houses with green arched gate, shutters"
+ },
+ {
+  "idx": 954,
+  "id": "w4032536",
+  "level": "medium",
+  "q": 4,
+  "note": "pioneer log cabins in park, trees, path"
+ },
+ {
+  "idx": 955,
+  "id": "w4571218",
+  "level": "easy",
+  "q": 4,
+  "note": "two log cabins on grass"
+ },
+ {
+  "idx": 956,
+  "id": "w7743664",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 957"
+ },
+ {
+  "idx": 957,
+  "id": "w9431075",
+  "level": "easy",
+  "q": 4,
+  "note": "whitewashed log cabin with barrel, blue sky"
+ },
+ {
+  "idx": 958,
+  "id": "w9431084",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 957"
+ },
+ {
+  "idx": 959,
+  "id": "w10072774",
+  "level": "none",
+  "q": 2,
+  "note": "snowy cabin, snowmobile, mostly snow"
+ },
+ {
+  "idx": 960,
+  "id": "w10072784",
+  "level": "easy",
+  "q": 3,
+  "note": "log cabin in snowy pine forest"
+ },
+ {
+  "idx": 961,
+  "id": "w11636586",
+  "level": "none",
+  "q": 2,
+  "note": "lodge in fog, low contrast"
+ },
+ {
+  "idx": 962,
+  "id": "w37976739",
+  "level": "none",
+  "q": 2,
+  "note": "foggy forest, dull"
+ },
+ {
+  "idx": 963,
+  "id": "w37976751",
+  "level": "none",
+  "q": 2,
+  "note": "text sign"
+ },
+ {
+  "idx": 964,
+  "id": "w38377828",
+  "level": "medium",
+  "q": 3,
+  "note": "alpine huts in snowy valley with firs"
+ },
+ {
+  "idx": 965,
+  "id": "w38414583",
+  "level": "easy",
+  "q": 3,
+  "note": "two snowy huts with fence; similar series to 964"
+ },
+ {
+  "idx": 966,
+  "id": "w28541870",
+  "level": "medium",
+  "q": 3,
+  "note": "Joshua Tree rocks and shrubs desert"
+ },
+ {
+  "idx": 967,
+  "id": "w28553938",
+  "level": "none",
+  "q": 2,
+  "note": "rock and dark sky, sparse"
+ },
+ {
+  "idx": 968,
+  "id": "w44750555",
+  "level": "none",
+  "q": 2,
+  "note": "autumn leaves, texture"
+ },
+ {
+  "idx": 969,
+  "id": "w54082186",
+  "level": "none",
+  "q": 3,
+  "note": "lions in tree, wildlife, hard to edit"
+ },
+ {
+  "idx": 970,
+  "id": "w63482070",
+  "level": "none",
+  "q": 2,
+  "note": "forest dead wood, cluttered/unclear"
+ },
+ {
+  "idx": 971,
+  "id": "w64542989",
+  "level": "none",
+  "q": 2,
+  "note": "dark park, dull"
+ },
+ {
+  "idx": 972,
+  "id": "w65175346",
+  "level": "none",
+  "q": 3,
+  "note": "single tree in water, sparse"
+ },
+ {
+  "idx": 973,
+  "id": "w71525171",
+  "level": "none",
+  "q": 3,
+  "note": "blossom close-up"
+ },
+ {
+  "idx": 974,
+  "id": "w75155520",
+  "level": "medium",
+  "q": 4,
+  "note": "palm and stilt bungalows on Mekong at sunset"
+ },
+ {
+  "idx": 975,
+  "id": "w76252576",
+  "level": "none",
+  "q": 3,
+  "note": "bird close-up"
+ },
+ {
+  "idx": 976,
+  "id": "w77850840",
+  "level": "easy",
+  "q": 4,
+  "note": "Mediterranean white house with yellow shutters, palm, alley"
+ },
+ {
+  "idx": 977,
+  "id": "w77858152",
+  "level": "none",
+  "q": 3,
+  "note": "lizard on bark close-up"
+ },
+ {
+  "idx": 978,
+  "id": "w11237246",
+  "level": "easy",
+  "q": 3,
+  "note": "red fire station with doors; text"
+ },
+ {
+  "idx": 979,
+  "id": "w11237264",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 978"
+ },
+ {
+  "idx": 980,
+  "id": "w25020797",
+  "level": "medium",
+  "q": 3,
+  "note": "half-timbered fire station with mural, door"
+ },
+ {
+  "idx": 981,
+  "id": "w26668109",
+  "level": "none",
+  "q": 2,
+  "note": "airport fire station, sparse"
+ },
+ {
+  "idx": 982,
+  "id": "w28118600",
+  "level": "easy",
+  "q": 3,
+  "note": "stepped gable fire station red doors"
+ },
+ {
+  "idx": 983,
+  "id": "w28121700",
+  "level": "easy",
+  "q": 4,
+  "note": "stone fire station with red doors, fire truck"
+ },
+ {
+  "idx": 984,
+  "id": "w28970939",
+  "level": "hard",
+  "q": 3,
+  "note": "palace with car park full of cars, many windows"
+ },
+ {
+  "idx": 985,
+  "id": "w32710178",
+  "level": "medium",
+  "q": 3,
+  "note": "Alpine fire station with mountains; text signs"
+ },
+ {
+  "idx": 986,
+  "id": "w32895295",
+  "level": "easy",
+  "q": 4,
+  "note": "white house with tower and red roof, bins"
+ },
+ {
+  "idx": 987,
+  "id": "w44863963",
+  "level": "none",
+  "q": 2,
+  "note": "mostly grass, distant buildings"
+ },
+ {
+  "idx": 988,
+  "id": "w50179794",
+  "level": "none",
+  "q": 2,
+  "note": "facade close, sparse"
+ },
+ {
+  "idx": 989,
+  "id": "w59594517",
+  "level": "easy",
+  "q": 4,
+  "note": "yellow fire station with tower, blue sky"
+ },
+ {
+  "idx": 990,
+  "id": "w2130979",
+  "level": "hard",
+  "q": 3,
+  "note": "arcade hall with Christmas decorations; logos small"
+ },
+ {
+  "idx": 991,
+  "id": "w3227542",
+  "level": "none",
+  "q": 2,
+  "note": "religious ceiling fresco"
+ },
+ {
+  "idx": 992,
+  "id": "w15176450",
+  "level": "none",
+  "q": 2,
+  "note": "grey building, dull"
+ },
+ {
+  "idx": 993,
+  "id": "w17362430",
+  "level": "medium",
+  "q": 3,
+  "note": "old town street with houses, Bulgaria"
+ },
+ {
+  "idx": 994,
+  "id": "w18062544",
+  "level": "medium",
+  "q": 3,
+  "note": "square with clock tower, autumn trees, fountain"
+ },
+ {
+  "idx": 995,
+  "id": "w19483786",
+  "level": "easy",
+  "q": 3,
+  "note": "yellow post office facade, flat; text Postamt"
+ },
+ {
+  "idx": 996,
+  "id": "w22119531",
+  "level": "none",
+  "q": 2,
+  "note": "flagpoles on empty plaza, flags dominate"
+ },
+ {
+  "idx": 997,
+  "id": "w25692327",
+  "level": "medium",
+  "q": 3,
+  "note": "old curved post office building with roofs"
+ },
+ {
+  "idx": 998,
+  "id": "w29335697",
+  "level": "medium",
+  "q": 3,
+  "note": "Manila post office with river and tugboat"
+ },
+ {
+  "idx": 999,
+  "id": "w29336658",
+  "level": "medium",
+  "q": 3,
+  "note": "river with barge, city; similar area to 998"
+ },
+ {
+  "idx": 1000,
+  "id": "w38281907",
+  "level": "easy",
+  "q": 4,
+  "note": "grey stone Romanesque post office with turrets"
+ },
+ {
+  "idx": 1001,
+  "id": "w40875715",
+  "level": "easy",
+  "q": 4,
+  "note": "yellow house with green roof on street"
+ },
+ {
+  "idx": 1002,
+  "id": "w27644195",
+  "level": "none",
+  "q": 2,
+  "note": "crowd of people, brand logos"
+ },
+ {
+  "idx": 1003,
+  "id": "w28103396",
+  "level": "medium",
+  "q": 3,
+  "note": "square with clock tower, poplars, houses"
+ },
+ {
+  "idx": 1004,
+  "id": "w35793290",
+  "level": "none",
+  "q": 2,
+  "note": "mosque and equestrian statue prominent, flags"
+ },
+ {
+  "idx": 1005,
+  "id": "w43799597",
+  "level": "medium",
+  "q": 3,
+  "note": "A Coruna city hall facade, symmetric"
+ },
+ {
+  "idx": 1006,
+  "id": "w43799598",
+  "level": "none",
+  "q": 3,
+  "note": "night version, similar to 1005"
+ },
+ {
+  "idx": 1007,
+  "id": "w71171505",
+  "level": "medium",
+  "q": 3,
+  "note": "Bhutan town square with buildings, cars, tents"
+ },
+ {
+  "idx": 1008,
+  "id": "w71171565",
+  "level": "medium",
+  "q": 4,
+  "note": "Thimphu square, red buildings, buses, mountains"
+ },
+ {
+  "idx": 1009,
+  "id": "w71171572",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1008"
+ },
+ {
+  "idx": 1010,
+  "id": "w122688252",
+  "level": "none",
+  "q": 2,
+  "note": "church spires against sky, religious"
+ },
+ {
+  "idx": 1011,
+  "id": "w129827509",
+  "level": "none",
+  "q": 2,
+  "note": "clock tower close-up"
+ },
+ {
+  "idx": 1012,
+  "id": "w145381221",
+  "level": "none",
+  "q": 2,
+  "note": "statue with raised sabre (weapon)"
+ },
+ {
+  "idx": 1013,
+  "id": "w146816645",
+  "level": "none",
+  "q": 1,
+  "note": "plaque on wall, text"
+ },
+ {
+  "idx": 1014,
+  "id": "w22641055",
+  "level": "hard",
+  "q": 3,
+  "note": "market hall with stalls; people present but not dominant"
+ },
+ {
+  "idx": 1015,
+  "id": "w26955402",
+  "level": "none",
+  "q": 1,
+  "note": "meat carcasses"
+ },
+ {
+  "idx": 1016,
+  "id": "w28157418",
+  "level": "hard",
+  "q": 3,
+  "note": "market hall gallery with clothes stalls, many items"
+ },
+ {
+  "idx": 1017,
+  "id": "w28157432",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1016"
+ },
+ {
+  "idx": 1018,
+  "id": "w34930546",
+  "level": "none",
+  "q": 2,
+  "note": "fisheye ceiling vault"
+ },
+ {
+  "idx": 1019,
+  "id": "w112748233",
+  "level": "hard",
+  "q": 4,
+  "note": "Helsinki market hall with fruit/veg stalls"
+ },
+ {
+  "idx": 1020,
+  "id": "w145173947",
+  "level": "none",
+  "q": 2,
+  "note": "butcher meat counter, meat dominated"
+ },
+ {
+  "idx": 1021,
+  "id": "w145200534",
+  "level": "hard",
+  "q": 3,
+  "note": "chili and fruit stall with hanging peppers; text sign"
+ },
+ {
+  "idx": 1022,
+  "id": "w179641265",
+  "level": "none",
+  "q": 2,
+  "note": "repetitive azulejo pattern"
+ },
+ {
+  "idx": 1023,
+  "id": "w179641267",
+  "level": "none",
+  "q": 2,
+  "note": "similar to 1022"
+ },
+ {
+  "idx": 1024,
+  "id": "w350965",
+  "level": "easy",
+  "q": 3,
+  "note": "retro Amiga computer on white, few objects"
+ },
+ {
+  "idx": 1025,
+  "id": "w4111813",
+  "level": "none",
+  "q": 3,
+  "note": "moth close-up"
+ },
+ {
+  "idx": 1026,
+  "id": "w7185913",
+  "level": "none",
+  "q": 2,
+  "note": "wind turbines in sea, mostly water/sky"
+ },
+ {
+  "idx": 1027,
+  "id": "w27369908",
+  "level": "none",
+  "q": 3,
+  "note": "insect macro"
+ },
+ {
+  "idx": 1028,
+  "id": "w27755914",
+  "level": "medium",
+  "q": 3,
+  "note": "Nymphenburg palace with pond reflection"
+ },
+ {
+  "idx": 1029,
+  "id": "w37242831",
+  "level": "none",
+  "q": 3,
+  "note": "butterfly on moss"
+ },
+ {
+  "idx": 1030,
+  "id": "w37280197",
+  "level": "none",
+  "q": 2,
+  "note": "rocky canyon, sparse"
+ },
+ {
+  "idx": 1031,
+  "id": "w37280199",
+  "level": "none",
+  "q": 2,
+  "note": "rocky landscape, no objects"
+ },
+ {
+  "idx": 1032,
+  "id": "w40231553",
+  "level": "none",
+  "q": 3,
+  "note": "church as main subject in snow"
+ },
+ {
+  "idx": 1033,
+  "id": "w44123584",
+  "level": "none",
+  "q": 3,
+  "note": "ducks close-up"
+ },
+ {
+  "idx": 1034,
+  "id": "w44848518",
+  "level": "none",
+  "q": 3,
+  "note": "single duck"
+ },
+ {
+  "idx": 1035,
+  "id": "w49674295",
+  "level": "none",
+  "q": 3,
+  "note": "single bird"
+ },
+ {
+  "idx": 1036,
+  "id": "w41180241",
+  "level": "medium",
+  "q": 4,
+  "note": "glasshouse interior with cacti and plants"
+ },
+ {
+  "idx": 1037,
+  "id": "w154960546",
+  "level": "medium",
+  "q": 5,
+  "note": "conservatory with pool, hanging baskets, potted plants"
+ },
+ {
+  "idx": 1038,
+  "id": "w12208733",
+  "level": "medium",
+  "q": 3,
+  "note": "floating dry dock with cranes; hazy"
+ },
+ {
+  "idx": 1039,
+  "id": "w19922095",
+  "level": "medium",
+  "q": 3,
+  "note": "ruined arcade arches on grass"
+ },
+ {
+  "idx": 1040,
+  "id": "w19939845",
+  "level": "none",
+  "q": 2,
+  "note": "ruins in field, sparse, similar to 1039"
+ },
+ {
+  "idx": 1041,
+  "id": "w20632881",
+  "level": "none",
+  "q": 2,
+  "note": "dry dock, mostly water/sky"
+ },
+ {
+  "idx": 1042,
+  "id": "w24356934",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1039"
+ },
+ {
+  "idx": 1043,
+  "id": "w24356941",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1039"
+ },
+ {
+  "idx": 1044,
+  "id": "w30663704",
+  "level": "medium",
+  "q": 3,
+  "note": "historic warship in harbour with small boats; mostly water"
+ },
+ {
+  "idx": 1045,
+  "id": "w31122502",
+  "level": "none",
+  "q": 2,
+  "note": "hull close-up, cannon ports"
+ },
+ {
+  "idx": 1046,
+  "id": "w31122505",
+  "level": "none",
+  "q": 2,
+  "note": "ship name close-up, text"
+ },
+ {
+  "idx": 1047,
+  "id": "w31122506",
+  "level": "none",
+  "q": 2,
+  "note": "hull close-up"
+ },
+ {
+  "idx": 1048,
+  "id": "w31122514",
+  "level": "none",
+  "q": 2,
+  "note": "warship (military)"
+ },
+ {
+  "idx": 1049,
+  "id": "w31122519",
+  "level": "none",
+  "q": 2,
+  "note": "warship, similar to 1048"
+ },
+ {
+  "idx": 1050,
+  "id": "w37806111",
+  "level": "none",
+  "q": 2,
+  "note": "mostly sparkling water"
+ },
+ {
+  "idx": 1051,
+  "id": "w82623286",
+  "level": "easy",
+  "q": 3,
+  "note": "brick warehouse reflected in dock; mostly water"
+ },
+ {
+  "idx": 1052,
+  "id": "w138191362",
+  "level": "easy",
+  "q": 3,
+  "note": "stone warehouse with trees and fence"
+ },
+ {
+  "idx": 1053,
+  "id": "w146235945",
+  "level": "none",
+  "q": 2,
+  "note": "chain close-up"
+ },
+ {
+  "idx": 1054,
+  "id": "w146235948",
+  "level": "none",
+  "q": 1,
+  "note": "abstract wall"
+ },
+ {
+  "idx": 1055,
+  "id": "w146235949",
+  "level": "none",
+  "q": 1,
+  "note": "pole and sky"
+ },
+ {
+  "idx": 1056,
+  "id": "w146235951",
+  "level": "none",
+  "q": 2,
+  "note": "window in wall, sparse"
+ },
+ {
+  "idx": 1057,
+  "id": "w146371169",
+  "level": "none",
+  "q": 3,
+  "note": "seals on jetty, mostly water"
+ },
+ {
+  "idx": 1058,
+  "id": "w146371174",
+  "level": "medium",
+  "q": 4,
+  "note": "tugboats in Cape Town harbour with Table Mountain"
+ },
+ {
+  "idx": 1059,
+  "id": "w146371175",
+  "level": "none",
+  "q": 2,
+  "note": "gable facade close, sparse"
+ },
+ {
+  "idx": 1060,
+  "id": "w146371185",
+  "level": "none",
+  "q": 2,
+  "note": "tilted building, distortion"
+ },
+ {
+  "idx": 1061,
+  "id": "w146371191",
+  "level": "medium",
+  "q": 3,
+  "note": "waterfront marina with bridge and apartments"
+ },
+ {
+  "idx": 1062,
+  "id": "w13290311",
+  "level": "none",
+  "q": 2,
+  "note": "ro-ro ship close, sparse"
+ },
+ {
+  "idx": 1063,
+  "id": "w13290563",
+  "level": "none",
+  "q": 2,
+  "note": "single ship"
+ },
+ {
+  "idx": 1064,
+  "id": "w13290998",
+  "level": "none",
+  "q": 2,
+  "note": "single ship, similar to 1063"
+ },
+ {
+  "idx": 1065,
+  "id": "w13510900",
+  "level": "none",
+  "q": 2,
+  "note": "single cargo ship, mostly water/sky"
+ },
+ {
+  "idx": 1066,
+  "id": "w24439909",
+  "level": "medium",
+  "q": 3,
+  "note": "container ship with colourful containers; mostly sea"
+ },
+ {
+  "idx": 1067,
+  "id": "w44780279",
+  "level": "easy",
+  "q": 3,
+  "note": "crane lifting bag onto truck, mountains, houses"
+ },
+ {
+  "idx": 1068,
+  "id": "w49712271",
+  "level": "medium",
+  "q": 3,
+  "note": "harbour barges, green sheds, pilings"
+ },
+ {
+  "idx": 1069,
+  "id": "w71275428",
+  "level": "none",
+  "q": 2,
+  "note": "river barges, mostly water"
+ },
+ {
+  "idx": 1070,
+  "id": "w79964648",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 914/916 Charles Bridge, small boat"
+ },
+ {
+  "idx": 1071,
+  "id": "w103537704",
+  "level": "none",
+  "q": 2,
+  "note": "cargo ship with big CMA CGM logo"
+ },
+ {
+  "idx": 1072,
+  "id": "w112336639",
+  "level": "medium",
+  "q": 3,
+  "note": "blue cargo ship in port with town hills"
+ },
+ {
+  "idx": 1073,
+  "id": "w113063838",
+  "level": "none",
+  "q": 2,
+  "note": "long cargo ship, mostly sky/water"
+ },
+ {
+  "idx": 1074,
+  "id": "w33079952",
+  "level": "none",
+  "q": 1,
+  "note": "rigging against sky"
+ },
+ {
+  "idx": 1075,
+  "id": "w41855693",
+  "level": "none",
+  "q": 2,
+  "note": "chain close-up"
+ },
+ {
+  "idx": 1076,
+  "id": "w49577005",
+  "level": "medium",
+  "q": 3,
+  "note": "old ship deck with rigging blocks, harbour"
+ },
+ {
+  "idx": 1077,
+  "id": "w61354608",
+  "level": "none",
+  "q": 2,
+  "note": "mast from below, sky"
+ },
+ {
+  "idx": 1078,
+  "id": "w71394465",
+  "level": "none",
+  "q": 2,
+  "note": "single sailboat, mostly water"
+ },
+ {
+  "idx": 1079,
+  "id": "w134747091",
+  "level": "medium",
+  "q": 4,
+  "note": "colourful wooden ship hull with rigging, anchor"
+ },
+ {
+  "idx": 1080,
+  "id": "w200505203",
+  "level": "none",
+  "q": 2,
+  "note": "rigging against sky, repetitive lines"
+ },
+ {
+  "idx": 1081,
+  "id": "w23198817",
+  "level": "medium",
+  "q": 4,
+  "note": "Grand Canal with gondola, boats, domes (church in background)"
+ },
+ {
+  "idx": 1082,
+  "id": "w26501395",
+  "level": "hard",
+  "q": 4,
+  "note": "Rialto area with gondolas, cafe, palaces"
+ },
+ {
+  "idx": 1083,
+  "id": "w32939041",
+  "level": "medium",
+  "q": 3,
+  "note": "Grand Canal palaces with gondolas"
+ },
+ {
+  "idx": 1084,
+  "id": "w33394977",
+  "level": "none",
+  "q": 3,
+  "note": "similar Grand Canal, mostly water"
+ },
+ {
+  "idx": 1085,
+  "id": "w42346940",
+  "level": "none",
+  "q": 3,
+  "note": "gondola close, people; similar Venice series"
+ },
+ {
+  "idx": 1086,
+  "id": "w43648984",
+  "level": "medium",
+  "q": 4,
+  "note": "Venetian palaces with moored boats and poles"
+ },
+ {
+  "idx": 1087,
+  "id": "w43660189",
+  "level": "none",
+  "q": 3,
+  "note": "similar Venice series"
+ },
+ {
+  "idx": 1088,
+  "id": "w47780010",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1082"
+ },
+ {
+  "idx": 1089,
+  "id": "w48338562",
+  "level": "none",
+  "q": 3,
+  "note": "similar Venice series, mostly water"
+ },
+ {
+  "idx": 1090,
+  "id": "w48367065",
+  "level": "medium",
+  "q": 4,
+  "note": "Venetian palazzo with gondolas and poles"
+ },
+ {
+  "idx": 1091,
+  "id": "w48367497",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1090"
+ },
+ {
+  "idx": 1092,
+  "id": "w48683597",
+  "level": "none",
+  "q": 3,
+  "note": "similar Venice series"
+ },
+ {
+  "idx": 1093,
+  "id": "w3596014",
+  "level": "none",
+  "q": 3,
+  "note": "night canal, dark"
+ },
+ {
+  "idx": 1094,
+  "id": "w41243324",
+  "level": "none",
+  "q": 3,
+  "note": "canal street with crowd of people"
+ },
+ {
+  "idx": 1095,
+  "id": "w41243336",
+  "level": "medium",
+  "q": 4,
+  "note": "Amsterdam canal with trees, boats, cars"
+ },
+ {
+  "idx": 1096,
+  "id": "w41345775",
+  "level": "medium",
+  "q": 4,
+  "note": "Amsterdam gabled houses on canal, cars, boats"
+ },
+ {
+  "idx": 1097,
+  "id": "w54554457",
+  "level": "easy",
+  "q": 4,
+  "note": "red canal tour boat, bridges, houses; text on boat"
+ },
+ {
+  "idx": 1098,
+  "id": "w62854440",
+  "level": "medium",
+  "q": 3,
+  "note": "row of gabled houses, bare trees; repetitive windows"
+ },
+ {
+  "idx": 1099,
+  "id": "w148696967",
+  "level": "none",
+  "q": 3,
+  "note": "evening facades, repetitive windows"
+ },
+ {
+  "idx": 1100,
+  "id": "w148725050",
+  "level": "none",
+  "q": 3,
+  "note": "evening, repetitive lit windows"
+ },
+ {
+  "idx": 1101,
+  "id": "w154417024",
+  "level": "medium",
+  "q": 4,
+  "note": "Amsterdam bridge with boat, trees, houses"
+ },
+ {
+  "idx": 1102,
+  "id": "w7695830",
+  "level": "medium",
+  "q": 4,
+  "note": "Bruges canal bridge with gabled houses"
+ },
+ {
+  "idx": 1103,
+  "id": "w7712963",
+  "level": "easy",
+  "q": 4,
+  "note": "Bruges stone bridge with tree and houses"
+ },
+ {
+  "idx": 1104,
+  "id": "w14815821",
+  "level": "medium",
+  "q": 3,
+  "note": "canal with moored barges and buildings"
+ },
+ {
+  "idx": 1105,
+  "id": "w14955998",
+  "level": "easy",
+  "q": 3,
+  "note": "dredger ship on canal, green banks"
+ },
+ {
+  "idx": 1106,
+  "id": "w14964882",
+  "level": "none",
+  "q": 2,
+  "note": "canal path, sparse"
+ },
+ {
+  "idx": 1107,
+  "id": "w14974814",
+  "level": "none",
+  "q": 2,
+  "note": "lift bridge with ship, sparse"
+ },
+ {
+  "idx": 1108,
+  "id": "w14994330",
+  "level": "none",
+  "q": 2,
+  "note": "canal and trees, few objects"
+ },
+ {
+  "idx": 1109,
+  "id": "w15421489",
+  "level": "none",
+  "q": 2,
+  "note": "single barge on water"
+ },
+ {
+  "idx": 1110,
+  "id": "w15531771",
+  "level": "none",
+  "q": 2,
+  "note": "ditch with algae, sparse"
+ },
+ {
+  "idx": 1111,
+  "id": "w15586086",
+  "level": "none",
+  "q": 3,
+  "note": "single boat, similar to 1109"
+ },
+ {
+  "idx": 1112,
+  "id": "w15586496",
+  "level": "none",
+  "q": 2,
+  "note": "wind turbines and water, sparse"
+ },
+ {
+  "idx": 1113,
+  "id": "w15685517",
+  "level": "medium",
+  "q": 4,
+  "note": "Bruges canal with brick houses and tour boat"
+ },
+ {
+  "idx": 1114,
+  "id": "w21810512",
+  "level": "medium",
+  "q": 3,
+  "note": "Lisbon street with yellow building, lamps"
+ },
+ {
+  "idx": 1115,
+  "id": "w21810515",
+  "level": "easy",
+  "q": 4,
+  "note": "yellow Lisbon tram close, lamp, sign"
+ },
+ {
+  "idx": 1116,
+  "id": "w31758471",
+  "level": "medium",
+  "q": 4,
+  "note": "Nerja beach with boats, umbrellas, cliffs, sea"
+ },
+ {
+  "idx": 1117,
+  "id": "w53809813",
+  "level": "none",
+  "q": 2,
+  "note": "cartoon mural, people/characters dominate"
+ },
+ {
+  "idx": 1118,
+  "id": "w58642223",
+  "level": "medium",
+  "q": 4,
+  "note": "Lisbon tram in street with parked cars, shops"
+ },
+ {
+  "idx": 1119,
+  "id": "w62891762",
+  "level": "none",
+  "q": 3,
+  "note": "cave with pavilion, mostly rock"
+ },
+ {
+  "idx": 1120,
+  "id": "w77816531",
+  "level": "medium",
+  "q": 3,
+  "note": "tram, tuk-tuk, cyclist in square; ads"
+ },
+ {
+  "idx": 1121,
+  "id": "w77846981",
+  "level": "none",
+  "q": 2,
+  "note": "trams with big Coca-Cola ads"
+ },
+ {
+  "idx": 1122,
+  "id": "w80863515",
+  "level": "none",
+  "q": 2,
+  "note": "tram with liquor advert"
+ },
+ {
+  "idx": 1123,
+  "id": "w80863524",
+  "level": "none",
+  "q": 2,
+  "note": "tram with liquor advert, similar to 1122"
+ },
+ {
+  "idx": 1124,
+  "id": "w80885731",
+  "level": "medium",
+  "q": 3,
+  "note": "green tour tram in square, kids"
+ },
+ {
+  "idx": 1125,
+  "id": "w115375675",
+  "level": "easy",
+  "q": 3,
+  "note": "Rua Augusta arch with small tram, symmetric"
+ },
+ {
+  "idx": 1126,
+  "id": "w20526273",
+  "level": "none",
+  "q": 2,
+  "note": "pergola in empty plaza, sparse"
+ },
+ {
+  "idx": 1127,
+  "id": "w21907314",
+  "level": "none",
+  "q": 3,
+  "note": "church bell tower and dome as subject"
+ },
+ {
+  "idx": 1128,
+  "id": "w22142707",
+  "level": "medium",
+  "q": 3,
+  "note": "white Santorini houses on caldera cliff"
+ },
+ {
+  "idx": 1129,
+  "id": "w22142708",
+  "level": "easy",
+  "q": 4,
+  "note": "white Santorini restaurant buildings, cars; similar to 1128"
+ },
+ {
+  "idx": 1130,
+  "id": "w22142711",
+  "level": "none",
+  "q": 2,
+  "note": "ruined windmill stump"
+ },
+ {
+  "idx": 1131,
+  "id": "w22142713",
+  "level": "none",
+  "q": 2,
+  "note": "similar to 1130"
+ },
+ {
+  "idx": 1132,
+  "id": "w22142716",
+  "level": "none",
+  "q": 2,
+  "note": "similar to 1130"
+ },
+ {
+  "idx": 1133,
+  "id": "w22142725",
+  "level": "easy",
+  "q": 4,
+  "note": "white Cycladic villa with pool above sea"
+ },
+ {
+  "idx": 1134,
+  "id": "w22142726",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1133"
+ },
+ {
+  "idx": 1135,
+  "id": "w26828360",
+  "level": "none",
+  "q": 2,
+  "note": "cliffs and sea, sparse"
+ },
+ {
+  "idx": 1136,
+  "id": "w36274966",
+  "level": "none",
+  "q": 3,
+  "note": "ancient fresco, faded"
+ },
+ {
+  "idx": 1137,
+  "id": "w36275062",
+  "level": "none",
+  "q": 3,
+  "note": "ancient fresco, faded"
+ },
+ {
+  "idx": 1138,
+  "id": "w55887145",
+  "level": "none",
+  "q": 2,
+  "note": "sea and cliffs, stormy"
+ },
+ {
+  "idx": 1139,
+  "id": "w55887193",
+  "level": "none",
+  "q": 2,
+  "note": "sea and hills, sparse"
+ },
+ {
+  "idx": 1140,
+  "id": "w137700594",
+  "level": "medium",
+  "q": 3,
+  "note": "Ligurian village with olive trees, bell tower"
+ },
+ {
+  "idx": 1141,
+  "id": "w137724747",
+  "level": "medium",
+  "q": 4,
+  "note": "colourful Cinque Terre houses with stairs, balconies"
+ },
+ {
+  "idx": 1142,
+  "id": "w137724748",
+  "level": "hard",
+  "q": 4,
+  "note": "Manarola houses cascade with sea and palms"
+ },
+ {
+  "idx": 1143,
+  "id": "w138311126",
+  "level": "none",
+  "q": 2,
+  "note": "coastline, mostly sea"
+ },
+ {
+  "idx": 1144,
+  "id": "w138365056",
+  "level": "hard",
+  "q": 4,
+  "note": "Manarola on cliff with boats, harbour"
+ },
+ {
+  "idx": 1145,
+  "id": "w138365059",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1144"
+ },
+ {
+  "idx": 1146,
+  "id": "w138365717",
+  "level": "hard",
+  "q": 5,
+  "note": "Riomaggiore colourful houses, harbour, boats"
+ },
+ {
+  "idx": 1147,
+  "id": "w138932109",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1146, distant"
+ },
+ {
+  "idx": 1148,
+  "id": "w139673544",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1144"
+ },
+ {
+  "idx": 1149,
+  "id": "w139950554",
+  "level": "none",
+  "q": 2,
+  "note": "coast with terraces, mostly sea"
+ },
+ {
+  "idx": 1150,
+  "id": "w66556547",
+  "level": "none",
+  "q": 2,
+  "note": "church altar, religious"
+ },
+ {
+  "idx": 1151,
+  "id": "w66556549",
+  "level": "none",
+  "q": 2,
+  "note": "church altar, religious"
+ },
+ {
+  "idx": 1152,
+  "id": "w66556550",
+  "level": "none",
+  "q": 2,
+  "note": "church altar, religious"
+ },
+ {
+  "idx": 1153,
+  "id": "w66679399",
+  "level": "none",
+  "q": 2,
+  "note": "crucifix, religious"
+ },
+ {
+  "idx": 1154,
+  "id": "w66679400",
+  "level": "none",
+  "q": 2,
+  "note": "crucifix, religious"
+ },
+ {
+  "idx": 1155,
+  "id": "w67347770",
+  "level": "none",
+  "q": 3,
+  "note": "lake with swan, mostly water"
+ },
+ {
+  "idx": 1156,
+  "id": "w77189315",
+  "level": "none",
+  "q": 1,
+  "note": "skulls, ossuary"
+ },
+ {
+  "idx": 1157,
+  "id": "w77189316",
+  "level": "none",
+  "q": 1,
+  "note": "skulls, ossuary"
+ },
+ {
+  "idx": 1158,
+  "id": "w77189317",
+  "level": "none",
+  "q": 1,
+  "note": "ossuary with crucifix"
+ },
+ {
+  "idx": 1159,
+  "id": "w77351129",
+  "level": "none",
+  "q": 2,
+  "note": "religious altarpiece"
+ },
+ {
+  "idx": 1160,
+  "id": "w77546187",
+  "level": "easy",
+  "q": 3,
+  "note": "Hallstatt villa with bridge and mountains"
+ },
+ {
+  "idx": 1161,
+  "id": "w80117844",
+  "level": "medium",
+  "q": 5,
+  "note": "Hallstatt lakeside houses, mountains (church spire background)"
+ },
+ {
+  "idx": 1162,
+  "id": "w56941175",
+  "level": "medium",
+  "q": 4,
+  "note": "Chefchaouen blue street with cat, bucket; one woman walking"
+ },
+ {
+  "idx": 1163,
+  "id": "w66006858",
+  "level": "easy",
+  "q": 4,
+  "note": "Chefchaouen blue alley with stairs and doors"
+ },
+ {
+  "idx": 1164,
+  "id": "w8618578",
+  "level": "none",
+  "q": 2,
+  "note": "Petra rock chamber, sparse"
+ },
+ {
+  "idx": 1165,
+  "id": "w13267512",
+  "level": "none",
+  "q": 3,
+  "note": "Petra facade detail close-up"
+ },
+ {
+  "idx": 1166,
+  "id": "w8632977",
+  "level": "easy",
+  "q": 3,
+  "note": "Wadi Rum bedouin camp tents, jeep, cliffs"
+ },
+ {
+  "idx": 1167,
+  "id": "w39086370",
+  "level": "none",
+  "q": 2,
+  "note": "minaret prominent, hazy"
+ },
+ {
+  "idx": 1168,
+  "id": "w151778580",
+  "level": "medium",
+  "q": 3,
+  "note": "Muscat fort on rocky hill with palms, trees"
+ },
+ {
+  "idx": 1169,
+  "id": "w151778581",
+  "level": "none",
+  "q": 2,
+  "note": "mostly water, small fort"
+ },
+ {
+  "idx": 1170,
+  "id": "w151778585",
+  "level": "medium",
+  "q": 4,
+  "note": "Muscat cove with Mirani/Jalali forts, palace, breakwater"
+ },
+ {
+  "idx": 1171,
+  "id": "w151778586",
+  "level": "easy",
+  "q": 3,
+  "note": "mud fort on rock"
+ },
+ {
+  "idx": 1172,
+  "id": "w151778591",
+  "level": "easy",
+  "q": 4,
+  "note": "Omani fort courtyard, round tower, pots, plants"
+ },
+ {
+  "idx": 1173,
+  "id": "w151778593",
+  "level": "medium",
+  "q": 4,
+  "note": "fort courtyard with towers and stairs"
+ },
+ {
+  "idx": 1174,
+  "id": "w151778597",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1173, mostly sea"
+ },
+ {
+  "idx": 1175,
+  "id": "w151778599",
+  "level": "medium",
+  "q": 3,
+  "note": "fort with towers and bay view"
+ },
+ {
+  "idx": 1176,
+  "id": "w151778606",
+  "level": "none",
+  "q": 2,
+  "note": "inscribed arch close-up, text"
+ },
+ {
+  "idx": 1177,
+  "id": "w151778611",
+  "level": "none",
+  "q": 3,
+  "note": "fort terrace but cannon visible, flag"
+ },
+ {
+  "idx": 1178,
+  "id": "w151778612",
+  "level": "easy",
+  "q": 3,
+  "note": "round fort tower over corniche"
+ },
+ {
+  "idx": 1179,
+  "id": "w39086375",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1181"
+ },
+ {
+  "idx": 1180,
+  "id": "w151773537",
+  "level": "medium",
+  "q": 3,
+  "note": "Bahrain fort ruins with excavation, orange plants"
+ },
+ {
+  "idx": 1181,
+  "id": "w151773548",
+  "level": "easy",
+  "q": 3,
+  "note": "Bahrain fort walls, sand, blue sky"
+ },
+ {
+  "idx": 1182,
+  "id": "w151773551",
+  "level": "none",
+  "q": 3,
+  "note": "similar to 1181"
+ }
+]

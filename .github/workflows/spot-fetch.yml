@@ -1,0 +1,31 @@
+# «اكتشف الفرق» v5 production: full-size source pictures for one batch (Wikimedia Commons, licence checked again at
+# download). Started by .github/spot-fetch-request on branch spot-v5 ("<batch>:id,id,..."). The pictures go to branch
+# spot-batches (<batch>/full), never to the site or main. No secret is used.
+name: spot-fetch
+on:
+  push:
+    branches: [spot-v5]
+    paths: [".github/spot-fetch-request"]
+permissions:
+  contents: write
+concurrency: {group: spot-fetch, cancel-in-progress: false}
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -q pillow
+      - name: run
+        run: |
+          git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
+          git fetch -q origin spot-sources
+          git fetch -q origin spot-batches && git worktree add -q ../out origin/spot-batches -b spot-batches || git worktree add -q --orphan -b spot-batches ../out
+          r=$(tr -d ' \r\n' < .github/spot-fetch-request); b=${r%%:*}; ids=${r#*:}
+          mkdir -p ../out/$b; git show origin/spot-sources:cand2/candidates.json > ../out/$b/candidates.json
+          python scripts/spot_sources2.py fetch ../out/$b "$ids" | tee ../out/$b/fetch-log.txt
+          rm ../out/$b/candidates.json
+          cd ../out && git add -A && (git commit -q -m "sources for $b" || exit 0)
+          for i in 1 2 3 4 5 6; do git pull -q --rebase origin spot-batches 2>/dev/null; git push -q origin spot-batches && exit 0; sleep 10; done; exit 1

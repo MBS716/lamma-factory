@@ -1,0 +1,2774 @@
+[
+{
+"idx": 0,
+"id": "w19324272",
+"level": "hard",
+"q": 3,
+"note": "Aswan souq street, stalls with goods, some pedestrians"
+},
+{
+"idx": 1,
+"id": "w27714873",
+"level": "medium",
+"q": 4,
+"note": "Souq Waqif square, stall with boxes, tree, buildings"
+},
+{
+"idx": 2,
+"id": "w29341276",
+"level": "medium",
+"q": 4,
+"note": "Colourful umbrella canopy over souq lane, pots, doors"
+},
+{
+"idx": 3,
+"id": "w29341278",
+"level": "medium",
+"q": 4,
+"note": "Courtyard cafe with chairs, tables, plants"
+},
+{
+"idx": 4,
+"id": "w29341299",
+"level": "none",
+"q": 3,
+"note": "similar to 2"
+},
+{
+"idx": 5,
+"id": "w29341349",
+"level": "none",
+"q": 3,
+"note": "similar to 2"
+},
+{
+"idx": 6,
+"id": "w29341364",
+"level": "none",
+"q": 2,
+"note": "grey band, pigeons, plain arcade"
+},
+{
+"idx": 7,
+"id": "w29341371",
+"level": "easy",
+"q": 4,
+"note": "Arched corridor with benches and plant pots"
+},
+{
+"idx": 8,
+"id": "w29341383",
+"level": "medium",
+"q": 4,
+"note": "Dusk cafe under umbrellas, lit lamps, tables"
+},
+{
+"idx": 9,
+"id": "w29341419",
+"level": "easy",
+"q": 3,
+"note": "Blue-hour souq buildings, big shapes"
+},
+{
+"idx": 10,
+"id": "w29341533",
+"level": "medium",
+"q": 3,
+"note": "Balconied souq building, repetitive arches"
+},
+{
+"idx": 11,
+"id": "w29399941",
+"level": "medium",
+"q": 4,
+"note": "Antique shop corridor, chests, lanterns"
+},
+{
+"idx": 12,
+"id": "w29341285",
+"level": "none",
+"q": 3,
+"note": "similar to 2"
+},
+{
+"idx": 13,
+"id": "w29341305",
+"level": "medium",
+"q": 4,
+"note": "Souq Waqif with flag, benches, stalls, rugs"
+},
+{
+"idx": 14,
+"id": "w29341327",
+"level": "none",
+"q": 2,
+"note": "mostly facade and empty pavement"
+},
+{
+"idx": 15,
+"id": "w29341398",
+"level": "medium",
+"q": 4,
+"note": "Lit souq building at dusk with umbrellas"
+},
+{
+"idx": 16,
+"id": "w29341435",
+"level": "none",
+"q": 2,
+"note": "empty street at dusk"
+},
+{
+"idx": 17,
+"id": "w29399925",
+"level": "easy",
+"q": 4,
+"note": "Souq buildings, tree, stall, arches"
+},
+{
+"idx": 18,
+"id": "w29399996",
+"level": "none",
+"q": 2,
+"note": "repetitive stone alley"
+},
+{
+"idx": 19,
+"id": "w29400032",
+"level": "none",
+"q": 2,
+"note": "washed-out grey building"
+},
+{
+"idx": 20,
+"id": "w29936360",
+"level": "easy",
+"q": 3,
+"note": "Night symmetric lit facade"
+},
+{
+"idx": 21,
+"id": "w29936374",
+"level": "medium",
+"q": 3,
+"note": "Night courtyard cafe, some people"
+},
+{
+"idx": 22,
+"id": "w30905330",
+"level": "none",
+"q": 3,
+"note": "repetitive slippers pattern"
+},
+{
+"idx": 23,
+"id": "w153958715",
+"level": "hard",
+"q": 4,
+"note": "Hanging metal lanterns, many shapes"
+},
+{
+"idx": 24,
+"id": "w104318569",
+"level": "medium",
+"q": 3,
+"note": "Fes rooftops with satellite dishes"
+},
+{
+"idx": 25,
+"id": "w150417943",
+"level": "hard",
+"q": 4,
+"note": "Fes medina panorama, many rooftops"
+},
+{
+"idx": 26,
+"id": "w15872935",
+"level": "none",
+"q": 2,
+"note": "repetitive plates, religious images"
+},
+{
+"idx": 27,
+"id": "w52078820",
+"level": "none",
+"q": 2,
+"note": "mosque dome ceiling"
+},
+{
+"idx": 28,
+"id": "w52079371",
+"level": "none",
+"q": 2,
+"note": "crowded bazaar"
+},
+{
+"idx": 29,
+"id": "w52079372",
+"level": "none",
+"q": 2,
+"note": "religious muqarnas"
+},
+{
+"idx": 30,
+"id": "w52079373",
+"level": "none",
+"q": 2,
+"note": "crowd"
+},
+{
+"idx": 31,
+"id": "w82562802",
+"level": "none",
+"q": 2,
+"note": "repetitive ceiling pattern"
+},
+{
+"idx": 32,
+"id": "w93981980",
+"level": "none",
+"q": 2,
+"note": "repetitive ceiling pattern"
+},
+{
+"idx": 33,
+"id": "w155052315",
+"level": "none",
+"q": 2,
+"note": "single gate facade with emblem"
+},
+{
+"idx": 34,
+"id": "w153948506",
+"level": "none",
+"q": 2,
+"note": "mountain landscape, no objects"
+},
+{
+"idx": 35,
+"id": "w25529125",
+"level": "none",
+"q": 2,
+"note": "rocky canyon, no objects"
+},
+{
+"idx": 36,
+"id": "w25529187",
+"level": "none",
+"q": 2,
+"note": "plant close-up"
+},
+{
+"idx": 37,
+"id": "w25529288",
+"level": "none",
+"q": 2,
+"note": "plant close-up on rocks"
+},
+{
+"idx": 38,
+"id": "w25529359",
+"level": "none",
+"q": 2,
+"note": "cactus close-up"
+},
+{
+"idx": 39,
+"id": "w25529457",
+"level": "none",
+"q": 2,
+"note": "lichen texture"
+},
+{
+"idx": 40,
+"id": "w32121636",
+"level": "medium",
+"q": 3,
+"note": "Palm oasis canyon with rocks and fan palms"
+},
+{
+"idx": 41,
+"id": "w48490116",
+"level": "none",
+"q": 3,
+"note": "mostly sky and sand dune"
+},
+{
+"idx": 42,
+"id": "w147986019",
+"level": "easy",
+"q": 3,
+"note": "Desert barber shop front, chairs, sign"
+},
+{
+"idx": 43,
+"id": "w162752288",
+"level": "none",
+"q": 2,
+"note": "mostly sky and rocks"
+},
+{
+"idx": 44,
+"id": "w63362067",
+"level": "medium",
+"q": 3,
+"note": "Camel market with hay bales, minaret in background"
+},
+{
+"idx": 45,
+"id": "w63362070",
+"level": "none",
+"q": 2,
+"note": "people as subject"
+},
+{
+"idx": 46,
+"id": "w63362077",
+"level": "medium",
+"q": 4,
+"note": "Resting camels in market, hay, poles"
+},
+{
+"idx": 47,
+"id": "w63362079",
+"level": "easy",
+"q": 3,
+"note": "Camels resting by yellow building, sacks on roof"
+},
+{
+"idx": 48,
+"id": "w63379876",
+"level": "none",
+"q": 2,
+"note": "similar to 46, mostly sand"
+},
+{
+"idx": 49,
+"id": "w63381389",
+"level": "none",
+"q": 3,
+"note": "similar to 46"
+},
+{
+"idx": 50,
+"id": "w63381392",
+"level": "none",
+"q": 3,
+"note": "similar to 46, camel close-up"
+},
+{
+"idx": 51,
+"id": "w63381700",
+"level": "none",
+"q": 3,
+"note": "similar to 46"
+},
+{
+"idx": 52,
+"id": "w63381716",
+"level": "medium",
+"q": 4,
+"note": "Camels with pickup truck, market behind"
+},
+{
+"idx": 53,
+"id": "w63381728",
+"level": "none",
+"q": 3,
+"note": "similar to 52"
+},
+{
+"idx": 54,
+"id": "w63382000",
+"level": "none",
+"q": 3,
+"note": "similar to 46"
+},
+{
+"idx": 55,
+"id": "w63382006",
+"level": "none",
+"q": 2,
+"note": "children faces as subject"
+},
+{
+"idx": 56,
+"id": "w153988576",
+"level": "easy",
+"q": 4,
+"note": "Rural hut and houses with palms, dirt road"
+},
+{
+"idx": 57,
+"id": "w154960188",
+"level": "none",
+"q": 2,
+"note": "repetitive palm forest"
+},
+{
+"idx": 58,
+"id": "w11084459",
+"level": "medium",
+"q": 3,
+"note": "Fruit shop at night, crates, bananas"
+},
+{
+"idx": 59,
+"id": "w19159081",
+"level": "none",
+"q": 2,
+"note": "repetitive mangoes"
+},
+{
+"idx": 60,
+"id": "w25152402",
+"level": "none",
+"q": 2,
+"note": "repetitive peppers"
+},
+{
+"idx": 61,
+"id": "w41508633",
+"level": "medium",
+"q": 4,
+"note": "Dried fruit platters on stall with price tags"
+},
+{
+"idx": 62,
+"id": "w41508674",
+"level": "easy",
+"q": 4,
+"note": "Pineapple table at outdoor market"
+},
+{
+"idx": 63,
+"id": "w46011159",
+"level": "none",
+"q": 2,
+"note": "repetitive tomatoes"
+},
+{
+"idx": 64,
+"id": "w50797396",
+"level": "none",
+"q": 2,
+"note": "repetitive oranges"
+},
+{
+"idx": 65,
+"id": "w57222793",
+"level": "hard",
+"q": 4,
+"note": "Fruit pyramids stall, colourful"
+},
+{
+"idx": 66,
+"id": "w62071597",
+"level": "hard",
+"q": 5,
+"note": "Vegetable crates: leeks, pumpkins, ginger, tomatoes"
+},
+{
+"idx": 67,
+"id": "w62071618",
+"level": "none",
+"q": 4,
+"note": "similar to 66"
+},
+{
+"idx": 68,
+"id": "w62071684",
+"level": "none",
+"q": 3,
+"note": "repetitive peppers"
+},
+{
+"idx": 69,
+"id": "w62071721",
+"level": "none",
+"q": 3,
+"note": "mostly carrots"
+},
+{
+"idx": 70,
+"id": "w160049113",
+"level": "hard",
+"q": 4,
+"note": "Outdoor fruit market crates, small people behind"
+},
+{
+"idx": 71,
+"id": "w172950046",
+"level": "medium",
+"q": 4,
+"note": "Baskets of potatoes, tomatoes, beans"
+},
+{
+"idx": 72,
+"id": "w172950060",
+"level": "none",
+"q": 3,
+"note": "repetitive onion pile"
+},
+{
+"idx": 73,
+"id": "w45843403",
+"level": "none",
+"q": 3,
+"note": "people dominate stall view"
+},
+{
+"idx": 74,
+"id": "w50797393",
+"level": "none",
+"q": 3,
+"note": "repetitive sunflowers"
+},
+{
+"idx": 75,
+"id": "w62071563",
+"level": "none",
+"q": 3,
+"note": "repetitive sunflowers"
+},
+{
+"idx": 76,
+"id": "w62071586",
+"level": "none",
+"q": 3,
+"note": "repetitive dahlias"
+},
+{
+"idx": 77,
+"id": "w62071756",
+"level": "none",
+"q": 3,
+"note": "flowers with signs, repetitive"
+},
+{
+"idx": 78,
+"id": "w62071788",
+"level": "none",
+"q": 3,
+"note": "close-up few objects"
+},
+{
+"idx": 79,
+"id": "w62071805",
+"level": "none",
+"q": 2,
+"note": "close-up flowers"
+},
+{
+"idx": 80,
+"id": "w62071853",
+"level": "none",
+"q": 3,
+"note": "repetitive flowers with price sign"
+},
+{
+"idx": 81,
+"id": "w75975292",
+"level": "none",
+"q": 2,
+"note": "close-up tulips with sign"
+},
+{
+"idx": 82,
+"id": "w75975293",
+"level": "none",
+"q": 2,
+"note": "blurry tulips close-up"
+},
+{
+"idx": 83,
+"id": "w75975297",
+"level": "none",
+"q": 2,
+"note": "repetitive pots with labels"
+},
+{
+"idx": 84,
+"id": "w77696183",
+"level": "none",
+"q": 3,
+"note": "single building facade, plaza"
+},
+{
+"idx": 85,
+"id": "w1597037",
+"level": "none",
+"q": 3,
+"note": "sunflower close-up"
+},
+{
+"idx": 86,
+"id": "w7928103",
+"level": "none",
+"q": 3,
+"note": "repetitive pumpkins"
+},
+{
+"idx": 87,
+"id": "w11579796",
+"level": "none",
+"q": 2,
+"note": "garlic close-up"
+},
+{
+"idx": 88,
+"id": "w30492997",
+"level": "none",
+"q": 2,
+"note": "beet pile"
+},
+{
+"idx": 89,
+"id": "w44448375",
+"level": "medium",
+"q": 4,
+"note": "Glasshouse with red and white paper lanterns, plants"
+},
+{
+"idx": 90,
+"id": "w58906308",
+"level": "none",
+"q": 2,
+"note": "repetitive tomatoes"
+},
+{
+"idx": 91,
+"id": "w69021699",
+"level": "none",
+"q": 2,
+"note": "dog close-up subject"
+},
+{
+"idx": 92,
+"id": "w71171498",
+"level": "hard",
+"q": 4,
+"note": "Market with sacks of grains, crates, goods"
+},
+{
+"idx": 93,
+"id": "w102492896",
+"level": "none",
+"q": 2,
+"note": "statues of people"
+},
+{
+"idx": 94,
+"id": "w120392966",
+"level": "none",
+"q": 2,
+"note": "skyscrapers, sky"
+},
+{
+"idx": 95,
+"id": "w120392969",
+"level": "none",
+"q": 2,
+"note": "city skyline"
+},
+{
+"idx": 96,
+"id": "w132397186",
+"level": "none",
+"q": 2,
+"note": "big text sign"
+},
+{
+"idx": 97,
+"id": "w599858",
+"level": "medium",
+"q": 4,
+"note": "Victorian covered market arcade, ornate"
+},
+{
+"idx": 98,
+"id": "w50437828",
+"level": "none",
+"q": 2,
+"note": "repetitive facade"
+},
+{
+"idx": 99,
+"id": "w56265374",
+"level": "none",
+"q": 2,
+"note": "repetitive balconies"
+},
+{
+"idx": 100,
+"id": "w56340109",
+"level": "none",
+"q": 2,
+"note": "city view, distant"
+},
+{
+"idx": 101,
+"id": "w56340132",
+"level": "none",
+"q": 2,
+"note": "aerial crosswalk, mostly road"
+},
+{
+"idx": 102,
+"id": "w56835705",
+"level": "medium",
+"q": 4,
+"note": "Pineapples and papayas stall with paper signs"
+},
+{
+"idx": 103,
+"id": "w56835706",
+"level": "hard",
+"q": 4,
+"note": "Fruit stall shelves with many kinds of fruit"
+},
+{
+"idx": 104,
+"id": "w56835711",
+"level": "medium",
+"q": 4,
+"note": "Potato stall with scale, jars, bowls"
+},
+{
+"idx": 105,
+"id": "w58267753",
+"level": "hard",
+"q": 4,
+"note": "Colourful bowls of chillies and peppers"
+},
+{
+"idx": 106,
+"id": "w58312836",
+"level": "none",
+"q": 3,
+"note": "heavy text labels on spice bins"
+},
+{
+"idx": 107,
+"id": "w60506015",
+"level": "hard",
+"q": 4,
+"note": "Lubeck old town rooftops from above"
+},
+{
+"idx": 108,
+"id": "w60595604",
+"level": "none",
+"q": 3,
+"note": "similar to 104, vendor as subject"
+},
+{
+"idx": 109,
+"id": "w172053892",
+"level": "medium",
+"q": 4,
+"note": "Bakery display of bread loaves in case and shelves"
+},
+{
+"idx": 110,
+"id": "w172835666",
+"level": "none",
+"q": 2,
+"note": "repetitive pastry close-up"
+},
+{
+"idx": 111,
+"id": "w8689364",
+"level": "hard",
+"q": 4,
+"note": "Candy shop counter and shelves full of sweets"
+},
+{
+"idx": 112,
+"id": "w9024516",
+"level": "none",
+"q": 2,
+"note": "close-up candy stand"
+},
+{
+"idx": 113,
+"id": "w11934764",
+"level": "none",
+"q": 1,
+"note": "isolated branded product"
+},
+{
+"idx": 114,
+"id": "w12859976",
+"level": "none",
+"q": 1,
+"note": "isolated branded product"
+},
+{
+"idx": 115,
+"id": "w14459754",
+"level": "none",
+"q": 1,
+"note": "isolated branded camera"
+},
+{
+"idx": 116,
+"id": "w17236149",
+"level": "none",
+"q": 1,
+"note": "isolated food"
+},
+{
+"idx": 117,
+"id": "w18273359",
+"level": "none",
+"q": 1,
+"note": "isolated branded product"
+},
+{
+"idx": 118,
+"id": "w34197902",
+"level": "none",
+"q": 2,
+"note": "single flower close-up"
+},
+{
+"idx": 119,
+"id": "w35027266",
+"level": "none",
+"q": 1,
+"note": "isolated food"
+},
+{
+"idx": 120,
+"id": "w49245457",
+"level": "easy",
+"q": 4,
+"note": "Red house cafe front with tables, lamp, shutters"
+},
+{
+"idx": 121,
+"id": "w52444842",
+"level": "medium",
+"q": 4,
+"note": "Corner sweet shop front, boxes, blue wall (small logos)"
+},
+{
+"idx": 122,
+"id": "w61648855",
+"level": "none",
+"q": 1,
+"note": "isolated branded product"
+},
+{
+"idx": 123,
+"id": "w34410443",
+"level": "none",
+"q": 2,
+"note": "wide distortion, people"
+},
+{
+"idx": 124,
+"id": "w58942384",
+"level": "none",
+"q": 2,
+"note": "crowd of people"
+},
+{
+"idx": 125,
+"id": "w198708138",
+"level": "hard",
+"q": 4,
+"note": "Bookshop in station hall, book stacks, clock, trolley"
+},
+{
+"idx": 126,
+"id": "w11330458",
+"level": "medium",
+"q": 3,
+"note": "Modern library with blue shelves, desk, chairs"
+},
+{
+"idx": 127,
+"id": "w14961876",
+"level": "hard",
+"q": 4,
+"note": "Grand reading room with tables, lamps, arches"
+},
+{
+"idx": 128,
+"id": "w14962047",
+"level": "none",
+"q": 3,
+"note": "similar to 127"
+},
+{
+"idx": 129,
+"id": "w14962420",
+"level": "none",
+"q": 3,
+"note": "repetitive arches"
+},
+{
+"idx": 130,
+"id": "w14962461",
+"level": "none",
+"q": 3,
+"note": "repetitive arches"
+},
+{
+"idx": 131,
+"id": "w57718187",
+"level": "medium",
+"q": 3,
+"note": "Library atrium with reading tables"
+},
+{
+"idx": 132,
+"id": "w57718188",
+"level": "none",
+"q": 3,
+"note": "similar to 131"
+},
+{
+"idx": 133,
+"id": "w62986358",
+"level": "none",
+"q": 2,
+"note": "fisheye dome"
+},
+{
+"idx": 134,
+"id": "w68707104",
+"level": "hard",
+"q": 3,
+"note": "Aerial city square with buildings and gardens"
+},
+{
+"idx": 135,
+"id": "w72842348",
+"level": "medium",
+"q": 3,
+"note": "Columned library hall, desks"
+},
+{
+"idx": 136,
+"id": "w83822211",
+"level": "easy",
+"q": 5,
+"note": "Library room: round table, chairs, bookcases, bust"
+},
+{
+"idx": 137,
+"id": "w84976060",
+"level": "easy",
+"q": 4,
+"note": "Two-storey house with garden and trees"
+},
+{
+"idx": 138,
+"id": "w7816152",
+"level": "none",
+"q": 2,
+"note": "modern building, sky"
+},
+{
+"idx": 139,
+"id": "w21600556",
+"level": "none",
+"q": 2,
+"note": "pigeons in sky, palace"
+},
+{
+"idx": 140,
+"id": "w29905335",
+"level": "medium",
+"q": 3,
+"note": "Museum hall with arches and stairs"
+},
+{
+"idx": 141,
+"id": "w34989855",
+"level": "none",
+"q": 2,
+"note": "religious painting"
+},
+{
+"idx": 142,
+"id": "w36309958",
+"level": "none",
+"q": 2,
+"note": "facade and lawn"
+},
+{
+"idx": 143,
+"id": "w36771940",
+"level": "none",
+"q": 2,
+"note": "dark relief, religious/busy"
+},
+{
+"idx": 144,
+"id": "w41521904",
+"level": "none",
+"q": 3,
+"note": "people in hall, empty floor"
+},
+{
+"idx": 145,
+"id": "w42187169",
+"level": "medium",
+"q": 4,
+"note": "Palace gallery with chandeliers, red chairs, paintings (avoid clergy portraits)"
+},
+{
+"idx": 146,
+"id": "w51216286",
+"level": "none",
+"q": 3,
+"note": "single palace facade at night"
+},
+{
+"idx": 147,
+"id": "w55501382",
+"level": "none",
+"q": 2,
+"note": "modern building, empty plaza"
+},
+{
+"idx": 148,
+"id": "w57785253",
+"level": "none",
+"q": 2,
+"note": "facade with symbolic emblems"
+},
+{
+"idx": 149,
+"id": "w73026237",
+"level": "none",
+"q": 2,
+"note": "religious (synagogue) interior"
+},
+{
+"idx": 150,
+"id": "w25579759",
+"level": "easy",
+"q": 4,
+"note": "Blue vintage electric locomotive on display"
+},
+{
+"idx": 151,
+"id": "w30734813",
+"level": "medium",
+"q": 3,
+"note": "Museum room with glass display cases"
+},
+{
+"idx": 152,
+"id": "w40965976",
+"level": "medium",
+"q": 5,
+"note": "Red cupboard with shelves of household objects"
+},
+{
+"idx": 153,
+"id": "w48995034",
+"level": "none",
+"q": 2,
+"note": "predator attack taxidermy"
+},
+{
+"idx": 154,
+"id": "w53751758",
+"level": "none",
+"q": 2,
+"note": "people/riders as subject"
+},
+{
+"idx": 155,
+"id": "w53834291",
+"level": "none",
+"q": 1,
+"note": "face close-up"
+},
+{
+"idx": 156,
+"id": "w53834310",
+"level": "none",
+"q": 1,
+"note": "weapons, people"
+},
+{
+"idx": 157,
+"id": "w54948190",
+"level": "none",
+"q": 1,
+"note": "faces close-up"
+},
+{
+"idx": 158,
+"id": "w110542664",
+"level": "easy",
+"q": 4,
+"note": "Stone cottage with smoking chimney, garden"
+},
+{
+"idx": 159,
+"id": "w113833442",
+"level": "none",
+"q": 1,
+"note": "relief with text label"
+},
+{
+"idx": 160,
+"id": "w120203563",
+"level": "none",
+"q": 2,
+"note": "abstract architecture"
+},
+{
+"idx": 161,
+"id": "w120203573",
+"level": "none",
+"q": 2,
+"note": "abstract architecture"
+},
+{
+"idx": 162,
+"id": "w116026596",
+"level": "easy",
+"q": 3,
+"note": "Small-town hardware store street, lamp post"
+},
+{
+"idx": 163,
+"id": "w152395120",
+"level": "easy",
+"q": 4,
+"note": "Old western hardware store front with porch"
+},
+{
+"idx": 164,
+"id": "w198561804",
+"level": "none",
+"q": 1,
+"note": "big brand logo"
+},
+{
+"idx": 165,
+"id": "w70642868",
+"level": "none",
+"q": 1,
+"note": "branded cans"
+},
+{
+"idx": 166,
+"id": "w5773167",
+"level": "medium",
+"q": 3,
+"note": "Snow-covered terrace chairs and tables, valley view"
+},
+{
+"idx": 167,
+"id": "w21415742",
+"level": "medium",
+"q": 4,
+"note": "Old town kiosk with flower boxes, buildings"
+},
+{
+"idx": 168,
+"id": "w36601776",
+"level": "easy",
+"q": 3,
+"note": "Seaside promenade with benches, lamps, cafe"
+},
+{
+"idx": 169,
+"id": "w39100728",
+"level": "medium",
+"q": 4,
+"note": "Old town square, houses, cafe tables, statue"
+},
+{
+"idx": 170,
+"id": "w56961513",
+"level": "easy",
+"q": 3,
+"note": "Lake deck with closed parasols and pots"
+},
+{
+"idx": 171,
+"id": "w63996877",
+"level": "none",
+"q": 3,
+"note": "similar to 170"
+},
+{
+"idx": 172,
+"id": "w67130155",
+"level": "medium",
+"q": 5,
+"note": "Vintage orange tram by cafe tables and houses"
+},
+{
+"idx": 173,
+"id": "w71338075",
+"level": "medium",
+"q": 4,
+"note": "White house with red roof, village and hills"
+},
+{
+"idx": 174,
+"id": "w92022896",
+"level": "easy",
+"q": 4,
+"note": "Sunset deck over river with potted plants"
+},
+{
+"idx": 175,
+"id": "w100771006",
+"level": "none",
+"q": 3,
+"note": "similar to 170"
+},
+{
+"idx": 176,
+"id": "w114251950",
+"level": "none",
+"q": 2,
+"note": "mostly water and sky"
+},
+{
+"idx": 177,
+"id": "w114283506",
+"level": "none",
+"q": 2,
+"note": "mostly water and sky"
+},
+{
+"idx": 178,
+"id": "w106025822",
+"level": "none",
+"q": 1,
+"note": "single stained glass window"
+},
+{
+"idx": 179,
+"id": "w124524178",
+"level": "none",
+"q": 1,
+"note": "door panel close-up"
+},
+{
+"idx": 180,
+"id": "w124524228",
+"level": "medium",
+"q": 5,
+"note": "Tea house room: chairs, set table, rug, red arched windows, coats"
+},
+{
+"idx": 181,
+"id": "w137389134",
+"level": "none",
+"q": 2,
+"note": "door close-up"
+},
+{
+"idx": 182,
+"id": "w137389150",
+"level": "none",
+"q": 1,
+"note": "ceiling corner"
+},
+{
+"idx": 183,
+"id": "w137389408",
+"level": "easy",
+"q": 4,
+"note": "Set dining table under red arched windows, vineyard view"
+},
+{
+"idx": 184,
+"id": "w38344531",
+"level": "easy",
+"q": 3,
+"note": "Chalet in snow with trees (small gable cross)"
+},
+{
+"idx": 185,
+"id": "w61865136",
+"level": "none",
+"q": 1,
+"note": "wall lettering, plain"
+},
+{
+"idx": 186,
+"id": "w65977770",
+"level": "easy",
+"q": 4,
+"note": "Old stone house among trees, lamp, steps"
+},
+{
+"idx": 187,
+"id": "w71612993",
+"level": "medium",
+"q": 4,
+"note": "Seaside terrace with blue pergola and white chairs"
+},
+{
+"idx": 188,
+"id": "w75292977",
+"level": "easy",
+"q": 4,
+"note": "Boat under cover by mural wall and houses"
+},
+{
+"idx": 189,
+"id": "w75763664",
+"level": "none",
+"q": 1,
+"note": "railing and mountain haze"
+},
+{
+"idx": 190,
+"id": "w82614714",
+"level": "easy",
+"q": 3,
+"note": "White restaurant house with orange roof, small logos"
+},
+{
+"idx": 191,
+"id": "w82614718",
+"level": "easy",
+"q": 3,
+"note": "Tudor-style white house with trees"
+},
+{
+"idx": 192,
+"id": "w94478968",
+"level": "easy",
+"q": 3,
+"note": "Yellow mansion with autumn trees"
+},
+{
+"idx": 193,
+"id": "w138211251",
+"level": "easy",
+"q": 4,
+"note": "Restaurant room: round table, wicker chairs, pictures, sconces"
+},
+{
+"idx": 194,
+"id": "w138251211",
+"level": "none",
+"q": 4,
+"note": "similar to 193"
+},
+{
+"idx": 195,
+"id": "w167414632",
+"level": "none",
+"q": 3,
+"note": "people at terrace as subject"
+},
+{
+"idx": 196,
+"id": "w92667138",
+"level": "medium",
+"q": 4,
+"note": "Outdoor kitchen with hanging pots, baskets, buckets"
+},
+{
+"idx": 197,
+"id": "w118183337",
+"level": "hard",
+"q": 3,
+"note": "Wall of kitchen gadgets in packages"
+},
+{
+"idx": 198,
+"id": "w138264632",
+"level": "none",
+"q": 2,
+"note": "empty room"
+},
+{
+"idx": 199,
+"id": "w138264640",
+"level": "none",
+"q": 2,
+"note": "empty room"
+},
+{
+"idx": 200,
+"id": "w182944854",
+"level": "none",
+"q": 2,
+"note": "heavy text banners"
+},
+{
+"idx": 201,
+"id": "w4311984",
+"level": "easy",
+"q": 3,
+"note": "White cottage with chimney and trees"
+},
+{
+"idx": 202,
+"id": "w20644742",
+"level": "none",
+"q": 2,
+"note": "religious painting"
+},
+{
+"idx": 203,
+"id": "w23733536",
+"level": "none",
+"q": 2,
+"note": "dark, fisheye"
+},
+{
+"idx": 204,
+"id": "w43337153",
+"level": "none",
+"q": 1,
+"note": "caricature with alcohol bottle"
+},
+{
+"idx": 205,
+"id": "w43337222",
+"level": "none",
+"q": 1,
+"note": "caricature with alcohol bottle"
+},
+{
+"idx": 206,
+"id": "w68597503",
+"level": "medium",
+"q": 4,
+"note": "Copper pots, pans and white kettle on old stove"
+},
+{
+"idx": 207,
+"id": "w68597505",
+"level": "none",
+"q": 2,
+"note": "repetitive labelled jars"
+},
+{
+"idx": 208,
+"id": "w73569456",
+"level": "none",
+"q": 1,
+"note": "plain wall"
+},
+{
+"idx": 209,
+"id": "w137406058",
+"level": "none",
+"q": 2,
+"note": "repetitive wooden spatulas"
+},
+{
+"idx": 210,
+"id": "w183685175",
+"level": "medium",
+"q": 4,
+"note": "Blue dresser with plates, jugs, jam jars"
+},
+{
+"idx": 211,
+"id": "w183685207",
+"level": "none",
+"q": 3,
+"note": "close-up of scales, few objects"
+},
+{
+"idx": 212,
+"id": "w10797079",
+"level": "none",
+"q": 1,
+"note": "graffiti tunnel"
+},
+{
+"idx": 213,
+"id": "w21923163",
+"level": "easy",
+"q": 3,
+"note": "Simple dorm bedroom, bed, desk, curtain"
+},
+{
+"idx": 214,
+"id": "w25818828",
+"level": "easy",
+"q": 3,
+"note": "Bedroom with lamps, dresser, picture"
+},
+{
+"idx": 215,
+"id": "w45667652",
+"level": "easy",
+"q": 4,
+"note": "Hotel bedroom: bed, nightstands, mirror, lamp"
+},
+{
+"idx": 216,
+"id": "w47703825",
+"level": "easy",
+"q": 4,
+"note": "Luxury hotel bedroom with desk, lamps, flowers"
+},
+{
+"idx": 217,
+"id": "w51266361",
+"level": "easy",
+"q": 4,
+"note": "Old iron beds with knitted blanket and wooden toys"
+},
+{
+"idx": 218,
+"id": "w59132703",
+"level": "easy",
+"q": 3,
+"note": "Sparse green bedroom, bed and lamp"
+},
+{
+"idx": 219,
+"id": "w71823126",
+"level": "none",
+"q": 2,
+"note": "hospital room, unattractive"
+},
+{
+"idx": 220,
+"id": "w94456085",
+"level": "medium",
+"q": 4,
+"note": "Period bedroom with canopy bed, chest, mirror (small crucifix to avoid)"
+},
+{
+"idx": 221,
+"id": "w108740559",
+"level": "easy",
+"q": 4,
+"note": "Bedroom with sofa, chandelier, fireplace mirror"
+},
+{
+"idx": 222,
+"id": "w115520650",
+"level": "easy",
+"q": 3,
+"note": "Modern bedroom with table and chairs"
+},
+{
+"idx": 223,
+"id": "w125639185",
+"level": "none",
+"q": 2,
+"note": "ceiling painting"
+},
+{
+"idx": 224,
+"id": "w18540651",
+"level": "medium",
+"q": 4,
+"note": "Children's room with rocking horse, small table, toys"
+},
+{
+"idx": 225,
+"id": "w125639191",
+"level": "none",
+"q": 2,
+"note": "ceiling painting"
+},
+{
+"idx": 226,
+"id": "w8925276",
+"level": "easy",
+"q": 4,
+"note": "Half-timbered house with trees"
+},
+{
+"idx": 227,
+"id": "w10605026",
+"level": "none",
+"q": 2,
+"note": "single building, sky"
+},
+{
+"idx": 228,
+"id": "w10677706",
+"level": "none",
+"q": 2,
+"note": "single building, sky"
+},
+{
+"idx": 229,
+"id": "w11336048",
+"level": "medium",
+"q": 3,
+"note": "Glass-roofed hall with tables and chairs"
+},
+{
+"idx": 230,
+"id": "w19792555",
+"level": "easy",
+"q": 4,
+"note": "Old classroom with benches and blackboard"
+},
+{
+"idx": 231,
+"id": "w36228108",
+"level": "medium",
+"q": 3,
+"note": "Colourful school building with balconies, palms, pots"
+},
+{
+"idx": 232,
+"id": "w40379612",
+"level": "easy",
+"q": 4,
+"note": "Brick half-timbered cottage in garden"
+},
+{
+"idx": 233,
+"id": "w44260851",
+"level": "none",
+"q": 2,
+"note": "modern building"
+},
+{
+"idx": 234,
+"id": "w44783277",
+"level": "none",
+"q": 2,
+"note": "church as main subject"
+},
+{
+"idx": 235,
+"id": "w45332219",
+"level": "none",
+"q": 2,
+"note": "plain building, road"
+},
+{
+"idx": 236,
+"id": "w45473363",
+"level": "none",
+"q": 2,
+"note": "office with people at computers"
+},
+{
+"idx": 237,
+"id": "w68597517",
+"level": "easy",
+"q": 4,
+"note": "Old classroom with map, desk, abacus"
+},
+{
+"idx": 238,
+"id": "w106207343",
+"level": "none",
+"q": 2,
+"note": "modern building entrance, empty paving"
+},
+{
+"idx": 239,
+"id": "w170909927",
+"level": "none",
+"q": 2,
+"note": "sculpture stage, odd"
+},
+{
+"idx": 240,
+"id": "w184420325",
+"level": "none",
+"q": 2,
+"note": "painting with armour, people"
+},
+{
+"idx": 241,
+"id": "w10024325",
+"level": "none",
+"q": 1,
+"note": "branded motorbike isolated"
+},
+{
+"idx": 242,
+"id": "w14909083",
+"level": "none",
+"q": 1,
+"note": "branded motorbike isolated"
+},
+{
+"idx": 243,
+"id": "w30175435",
+"level": "none",
+"q": 1,
+"note": "bust relief with text"
+},
+{
+"idx": 244,
+"id": "w34873678",
+"level": "none",
+"q": 1,
+"note": "big brand logo"
+},
+{
+"idx": 245,
+"id": "w37043418",
+"level": "none",
+"q": 1,
+"note": "stencil rulers with text"
+},
+{
+"idx": 246,
+"id": "w52886791",
+"level": "none",
+"q": 1,
+"note": "plaque with text"
+},
+{
+"idx": 247,
+"id": "w74675779",
+"level": "none",
+"q": 2,
+"note": "religious stupa"
+},
+{
+"idx": 248,
+"id": "w74897233",
+"level": "none",
+"q": 2,
+"note": "hands close-up, motion blur"
+},
+{
+"idx": 249,
+"id": "w81843747",
+"level": "medium",
+"q": 4,
+"note": "Brick craft studio with yard props, sign, path"
+},
+{
+"idx": 250,
+"id": "w143903367",
+"level": "none",
+"q": 1,
+"note": "face close-up"
+},
+{
+"idx": 251,
+"id": "w153169973",
+"level": "easy",
+"q": 4,
+"note": "Log house in snow with trees"
+},
+{
+"idx": 252,
+"id": "w162660003",
+"level": "none",
+"q": 3,
+"note": "repetitive parasols, person"
+},
+{
+"idx": 253,
+"id": "w40390334",
+"level": "none",
+"q": 2,
+"note": "derelict gloomy room"
+},
+{
+"idx": 254,
+"id": "w42826286",
+"level": "none",
+"q": 2,
+"note": "church interior"
+},
+{
+"idx": 255,
+"id": "w42826291",
+"level": "none",
+"q": 2,
+"note": "church interior"
+},
+{
+"idx": 256,
+"id": "w42826359",
+"level": "none",
+"q": 2,
+"note": "ironwork close-up"
+},
+{
+"idx": 257,
+"id": "w42826502",
+"level": "none",
+"q": 2,
+"note": "church interior"
+},
+{
+"idx": 258,
+"id": "w42826506",
+"level": "none",
+"q": 1,
+"note": "coat of arms relief"
+},
+{
+"idx": 259,
+"id": "w42826539",
+"level": "none",
+"q": 2,
+"note": "church altar"
+},
+{
+"idx": 260,
+"id": "w82181582",
+"level": "none",
+"q": 2,
+"note": "dark factory"
+},
+{
+"idx": 261,
+"id": "w122608670",
+"level": "none",
+"q": 2,
+"note": "church interior"
+},
+{
+"idx": 262,
+"id": "w123411190",
+"level": "none",
+"q": 1,
+"note": "abstract black and white"
+},
+{
+"idx": 263,
+"id": "w150317405",
+"level": "none",
+"q": 1,
+"note": "empty tunnel"
+},
+{
+"idx": 264,
+"id": "w35624179",
+"level": "hard",
+"q": 4,
+"note": "Wooden carpenter workshop full of tools"
+},
+{
+"idx": 265,
+"id": "w39299904",
+"level": "none",
+"q": 2,
+"note": "black and white, person"
+},
+{
+"idx": 266,
+"id": "w44334587",
+"level": "hard",
+"q": 4,
+"note": "Cluttered old carpenter workshop with tools and workbench"
+},
+{
+"idx": 267,
+"id": "w120143",
+"level": "easy",
+"q": 4,
+"note": "Log cabin on grass"
+},
+{
+"idx": 268,
+"id": "w16813618",
+"level": "easy",
+"q": 3,
+"note": "Dead tree and stone manor in park"
+},
+{
+"idx": 269,
+"id": "w16814005",
+"level": "easy",
+"q": 4,
+"note": "Stone hut with chimney in trees"
+},
+{
+"idx": 270,
+"id": "w18570724",
+"level": "none",
+"q": 2,
+"note": "sunset over lake"
+},
+{
+"idx": 271,
+"id": "w19023217",
+"level": "easy",
+"q": 4,
+"note": "Canal lock house with path and tree"
+},
+{
+"idx": 272,
+"id": "w19023643",
+"level": "none",
+"q": 2,
+"note": "mostly water and hills"
+},
+{
+"idx": 273,
+"id": "w33948057",
+"level": "none",
+"q": 1,
+"note": "abstract machinery close-up"
+},
+{
+"idx": 274,
+"id": "w39202448",
+"level": "easy",
+"q": 4,
+"note": "Brick cottages with chimneys and shutters"
+},
+{
+"idx": 275,
+"id": "w40379622",
+"level": "medium",
+"q": 4,
+"note": "Old blacksmith barn with tools, wheel, logs"
+},
+{
+"idx": 276,
+"id": "w44016379",
+"level": "none",
+"q": 2,
+"note": "busy fresco with figures"
+},
+{
+"idx": 277,
+"id": "w50784841",
+"level": "easy",
+"q": 3,
+"note": "Old ruined house with wooden fence"
+},
+{
+"idx": 278,
+"id": "w50784842",
+"level": "none",
+"q": 2,
+"note": "ruin, unattractive"
+},
+{
+"idx": 279,
+"id": "w28890602",
+"level": "none",
+"q": 1,
+"note": "hands close-up"
+},
+{
+"idx": 280,
+"id": "w28890957",
+"level": "none",
+"q": 1,
+"note": "hands close-up"
+},
+{
+"idx": 281,
+"id": "w14837796",
+"level": "easy",
+"q": 3,
+"note": "Wooden loom in white room, textiles on wall"
+},
+{
+"idx": 282,
+"id": "w31796257",
+"level": "none",
+"q": 2,
+"note": "snowy mountains"
+},
+{
+"idx": 283,
+"id": "w36829354",
+"level": "medium",
+"q": 3,
+"note": "Carpet loom with yarn bundles"
+},
+{
+"idx": 284,
+"id": "w52148449",
+"level": "medium",
+"q": 3,
+"note": "Industrial weaving machine in hall"
+},
+{
+"idx": 285,
+"id": "w52157267",
+"level": "medium",
+"q": 4,
+"note": "Wooden looms in bright museum hall"
+},
+{
+"idx": 286,
+"id": "w71313786",
+"level": "hard",
+"q": 3,
+"note": "Cape Town city under Table Mountain"
+},
+{
+"idx": 287,
+"id": "w74579521",
+"level": "none",
+"q": 2,
+"note": "church interior"
+},
+{
+"idx": 288,
+"id": "w86319150",
+"level": "easy",
+"q": 4,
+"note": "Wooden loom in log-walled museum room"
+},
+{
+"idx": 289,
+"id": "w86319155",
+"level": "none",
+"q": 2,
+"note": "loom close-up"
+},
+{
+"idx": 290,
+"id": "w102690959",
+"level": "none",
+"q": 1,
+"note": "tapestry beast close-up"
+},
+{
+"idx": 291,
+"id": "w113928173",
+"level": "none",
+"q": 1,
+"note": "isolated tool"
+},
+{
+"idx": 292,
+"id": "w118236807",
+"level": "easy",
+"q": 3,
+"note": "Brick row house with garden, road"
+},
+{
+"idx": 293,
+"id": "w12368431",
+"level": "medium",
+"q": 3,
+"note": "Night street with festive lights and bicycles"
+},
+{
+"idx": 294,
+"id": "w37414297",
+"level": "none",
+"q": 1,
+"note": "branded car as subject"
+},
+{
+"idx": 295,
+"id": "w38180385",
+"level": "none",
+"q": 1,
+"note": "big shop logos"
+},
+{
+"idx": 296,
+"id": "w38489533",
+"level": "medium",
+"q": 3,
+"note": "Night shopping arcade, wet pavement, bike"
+},
+{
+"idx": 297,
+"id": "w38969107",
+"level": "easy",
+"q": 4,
+"note": "Red and white bicycles by shop door and blackboard"
+},
+{
+"idx": 298,
+"id": "w42828196",
+"level": "none",
+"q": 2,
+"note": "church as main subject"
+},
+{
+"idx": 299,
+"id": "w42828203",
+"level": "medium",
+"q": 4,
+"note": "Gabled square with Christmas tree and bicycles"
+},
+{
+"idx": 300,
+"id": "w42828220",
+"level": "none",
+"q": 3,
+"note": "similar to 301, blurred people"
+},
+{
+"idx": 301,
+"id": "w42828251",
+"level": "hard",
+"q": 4,
+"note": "Blue-hour gabled arcade street with many parked bikes"
+},
+{
+"idx": 302,
+"id": "w51053829",
+"level": "medium",
+"q": 3,
+"note": "Street with flags, gabled houses, cyclists"
+},
+{
+"idx": 303,
+"id": "w51445254",
+"level": "medium",
+"q": 3,
+"note": "Rainy street with umbrellas overhead, bikes, parasols"
+},
+{
+"idx": 304,
+"id": "w53051565",
+"level": "easy",
+"q": 3,
+"note": "White corner shop with balcony, bike"
+},
+{
+"idx": 305,
+"id": "w38359369",
+"level": "easy",
+"q": 4,
+"note": "Brick fire station with yellow ambulances"
+},
+{
+"idx": 306,
+"id": "w42827874",
+"level": "easy",
+"q": 4,
+"note": "Half-timbered brick houses with hedges"
+},
+{
+"idx": 307,
+"id": "w42827888",
+"level": "none",
+"q": 3,
+"note": "similar to 306"
+},
+{
+"idx": 308,
+"id": "w49046255",
+"level": "easy",
+"q": 3,
+"note": "Gate pillars with lion statues on wooded lane"
+},
+{
+"idx": 309,
+"id": "w49537452",
+"level": "none",
+"q": 1,
+"note": "repetitive facade"
+},
+{
+"idx": 310,
+"id": "w51051786",
+"level": "none",
+"q": 3,
+"note": "similar to 308"
+},
+{
+"idx": 311,
+"id": "w59311031",
+"level": "none",
+"q": 2,
+"note": "plain garages, empty"
+},
+{
+"idx": 312,
+"id": "w67237778",
+"level": "none",
+"q": 1,
+"note": "branded car"
+},
+{
+"idx": 313,
+"id": "w67237796",
+"level": "none",
+"q": 1,
+"note": "car close-up"
+},
+{
+"idx": 314,
+"id": "w67237826",
+"level": "none",
+"q": 1,
+"note": "car logo"
+},
+{
+"idx": 315,
+"id": "w81549524",
+"level": "none",
+"q": 1,
+"note": "car badge"
+},
+{
+"idx": 316,
+"id": "w81549526",
+"level": "none",
+"q": 1,
+"note": "tail-light close-up"
+},
+{
+"idx": 317,
+"id": "w26130340",
+"level": "easy",
+"q": 4,
+"note": "Fishing boat with yellow nets in harbour"
+},
+{
+"idx": 318,
+"id": "w26130341",
+"level": "medium",
+"q": 4,
+"note": "Fishing boats with nets at quay, mountain"
+},
+{
+"idx": 319,
+"id": "w26171906",
+"level": "medium",
+"q": 4,
+"note": "Harbour with blue boats and yellow net piles"
+},
+{
+"idx": 320,
+"id": "w26382436",
+"level": "hard",
+"q": 4,
+"note": "Marina with fishing boats and many masts"
+},
+{
+"idx": 321,
+"id": "w26466169",
+"level": "hard",
+"q": 4,
+"note": "Hillside white village above harbour with boats"
+},
+{
+"idx": 322,
+"id": "w26466170",
+"level": "easy",
+"q": 3,
+"note": "Rock, mountain and small boats on water"
+},
+{
+"idx": 323,
+"id": "w26577726",
+"level": "none",
+"q": 4,
+"note": "similar to 325 (same harbour, fortress, blue boats)"
+},
+{
+"idx": 324,
+"id": "w26577727",
+"level": "medium",
+"q": 4,
+"note": "Close fishing boats moored at quay, ropes, buoys"
+},
+{
+"idx": 325,
+"id": "w26767729",
+"level": "hard",
+"q": 5,
+"note": "Harbour with blue fishing boats, fortress, yachts, gear"
+},
+{
+"idx": 326,
+"id": "w26788783",
+"level": "easy",
+"q": 3,
+"note": "Single blue-white boat in harbour water"
+},
+{
+"idx": 327,
+"id": "w29525193",
+"level": "hard",
+"q": 4,
+"note": "Marina below hillside villas"
+},
+{
+"idx": 328,
+"id": "w33985815",
+"level": "medium",
+"q": 4,
+"note": "Fishing boat deck with blue baskets, crates (fisherman from behind)"
+},
+{
+"idx": 329,
+"id": "w10890079",
+"level": "medium",
+"q": 4,
+"note": "Rocky harbour with boats and red pickup"
+},
+{
+"idx": 330,
+"id": "w11965230",
+"level": "none",
+"q": 2,
+"note": "mostly water and cliffs"
+},
+{
+"idx": 331,
+"id": "w23534578",
+"level": "none",
+"q": 2,
+"note": "single boat, mostly water"
+},
+{
+"idx": 332,
+"id": "w24899629",
+"level": "medium",
+"q": 3,
+"note": "Small marina with motorboats and trees"
+},
+{
+"idx": 333,
+"id": "w31456388",
+"level": "none",
+"q": 2,
+"note": "dusk, mostly reflections"
+},
+{
+"idx": 334,
+"id": "w31595924",
+"level": "none",
+"q": 2,
+"note": "sunset sky, buildings far"
+},
+{
+"idx": 335,
+"id": "w39541867",
+"level": "easy",
+"q": 3,
+"note": "Old wooden river ferry boat"
+},
+{
+"idx": 336,
+"id": "w39541897",
+"level": "none",
+"q": 2,
+"note": "festival characters, busy"
+},
+{
+"idx": 337,
+"id": "w45420067",
+"level": "medium",
+"q": 3,
+"note": "Floating houses under grey sky"
+},
+{
+"idx": 338,
+"id": "w50296850",
+"level": "none",
+"q": 2,
+"note": "repetitive masts"
+},
+{
+"idx": 339,
+"id": "w65779378",
+"level": "hard",
+"q": 4,
+"note": "Lake marina with motorboats, mountains, town"
+},
+{
+"idx": 340,
+"id": "w71052281",
+"level": "medium",
+"q": 3,
+"note": "Two trawlers at marina dock"
+},
+{
+"idx": 341,
+"id": "w6043940",
+"level": "easy",
+"q": 4,
+"note": "Motor cruiser on canal under green bridge"
+},
+{
+"idx": 342,
+"id": "w10699685",
+"level": "easy",
+"q": 4,
+"note": "Narrowboats on park canal with trees"
+},
+{
+"idx": 343,
+"id": "w15374420",
+"level": "hard",
+"q": 4,
+"note": "Venice Grand Canal with gondolas, Rialto, palaces (bell tower background)"
+},
+{
+"idx": 344,
+"id": "w19343002",
+"level": "easy",
+"q": 4,
+"note": "Blue narrowboat on canal, village behind"
+},
+{
+"idx": 345,
+"id": "w25956666",
+"level": "none",
+"q": 2,
+"note": "mostly trees and water"
+},
+{
+"idx": 346,
+"id": "w25982910",
+"level": "none",
+"q": 2,
+"note": "mostly trees and grass"
+},
+{
+"idx": 347,
+"id": "w27502741",
+"level": "medium",
+"q": 4,
+"note": "Sete quay with painted boats and facades"
+},
+{
+"idx": 348,
+"id": "w31064383",
+"level": "easy",
+"q": 4,
+"note": "Green barge under plane trees"
+},
+{
+"idx": 349,
+"id": "w34017214",
+"level": "none",
+"q": 2,
+"note": "mostly river and trees"
+},
+{
+"idx": 350,
+"id": "w34493362",
+"level": "easy",
+"q": 5,
+"note": "Painted jousting boats in front of Sete quay houses"
+},
+{
+"idx": 351,
+"id": "w34600327",
+"level": "none",
+"q": 2,
+"note": "mostly trees"
+},
+{
+"idx": 352,
+"id": "w34777819",
+"level": "none",
+"q": 2,
+"note": "mostly water and sky"
+},
+{
+"idx": 353,
+"id": "w7700345",
+"level": "none",
+"q": 2,
+"note": "repetitive punts"
+},
+{
+"idx": 354,
+"id": "w15497742",
+"level": "easy",
+"q": 3,
+"note": "Wooden boat on river shore, mountains"
+},
+{
+"idx": 355,
+"id": "w20380543",
+"level": "none",
+"q": 2,
+"note": "mostly water and sky"
+},
+{
+"idx": 356,
+"id": "w23573147",
+"level": "easy",
+"q": 3,
+"note": "Coracle boat and jetty by river"
+},
+{
+"idx": 357,
+"id": "w27766090",
+"level": "none",
+"q": 3,
+"note": "similar to 356"
+},
+{
+"idx": 358,
+"id": "w37002349",
+"level": "none",
+"q": 2,
+"note": "mostly water, single boat"
+},
+{
+"idx": 359,
+"id": "w46211011",
+"level": "easy",
+"q": 3,
+"note": "Old ship among bushes"
+},
+{
+"idx": 360,
+"id": "w58791515",
+"level": "none",
+"q": 3,
+"note": "mostly sky and water"
+},
+{
+"idx": 361,
+"id": "w61270187",
+"level": "none",
+"q": 2,
+"note": "police boat, mostly water"
+},
+{
+"idx": 362,
+"id": "w61341561",
+"level": "none",
+"q": 2,
+"note": "mostly water"
+},
+{
+"idx": 363,
+"id": "w64670169",
+"level": "easy",
+"q": 3,
+"note": "Wooden river boat among reeds and tree (boy on board)"
+},
+{
+"idx": 364,
+"id": "w66475518",
+"level": "none",
+"q": 2,
+"note": "mostly sand and water"
+},
+{
+"idx": 365,
+"id": "w22863945",
+"level": "easy",
+"q": 4,
+"note": "Two fishing trawlers beached on sand"
+},
+{
+"idx": 366,
+"id": "w32414696",
+"level": "hard",
+"q": 3,
+"note": "Bay with many small boats, town and mountains"
+},
+{
+"idx": 367,
+"id": "w32493569",
+"level": "none",
+"q": 2,
+"note": "mostly sand and sky"
+},
+{
+"idx": 368,
+"id": "w32838945",
+"level": "none",
+"q": 2,
+"note": "children swimming, mostly water/sand"
+},
+{
+"idx": 369,
+"id": "w37333752",
+"level": "easy",
+"q": 3,
+"note": "Wooden fishing boat with flag at sea"
+},
+{
+"idx": 370,
+"id": "w39274000",
+"level": "none",
+"q": 2,
+"note": "mostly water"
+},
+{
+"idx": 371,
+"id": "w41091889",
+"level": "easy",
+"q": 4,
+"note": "Green wooden boat on beach"
+},
+{
+"idx": 372,
+"id": "w45847310",
+"level": "none",
+"q": 2,
+"note": "mostly sea"
+},
+{
+"idx": 373,
+"id": "w45847325",
+"level": "medium",
+"q": 4,
+"note": "Painted outrigger fishing boats on sand under trees"
+},
+{
+"idx": 374,
+"id": "w45847331",
+"level": "none",
+"q": 3,
+"note": "similar to 373"
+},
+{
+"idx": 375,
+"id": "w45847344",
+"level": "none",
+"q": 3,
+"note": "similar to 373"
+},
+{
+"idx": 376,
+"id": "w47353944",
+"level": "none",
+"q": 3,
+"note": "similar to 365 (same beach and boats)"
+},
+{
+"idx": 377,
+"id": "w3073268",
+"level": "none",
+"q": 2,
+"note": "mostly sea and sky"
+},
+{
+"idx": 378,
+"id": "w15080425",
+"level": "none",
+"q": 2,
+"note": "dark night"
+},
+{
+"idx": 379,
+"id": "w27669783",
+"level": "none",
+"q": 1,
+"note": "sunset silhouette"
+},
+{
+"idx": 380,
+"id": "w28917763",
+"level": "none",
+"q": 2,
+"note": "mostly sea"
+},
+{
+"idx": 381,
+"id": "w37233404",
+"level": "none",
+"q": 1,
+"note": "silhouette"
+},
+{
+"idx": 382,
+"id": "w37251083",
+"level": "none",
+"q": 2,
+"note": "mostly sky and sea"
+},
+{
+"idx": 383,
+"id": "w37286052",
+"level": "none",
+"q": 2,
+"note": "mostly grass and sky"
+},
+{
+"idx": 384,
+"id": "w40445389",
+"level": "medium",
+"q": 4,
+"note": "Venetian lighthouse and harbour with town and mountains"
+},
+{
+"idx": 385,
+"id": "w50619072",
+"level": "hard",
+"q": 5,
+"note": "Harbour packed with small boats below old town (church in background)"
+},
+{
+"idx": 386,
+"id": "w50771528",
+"level": "none",
+"q": 2,
+"note": "mostly sea and sky"
+},
+{
+"idx": 387,
+"id": "w56414212",
+"level": "medium",
+"q": 3,
+"note": "Lighthouse with marina of sailboats"
+},
+{
+"idx": 388,
+"id": "w58605874",
+"level": "medium",
+"q": 3,
+"note": "Industrial port with tanks, crane, buildings"
+},
+{
+"idx": 389,
+"id": "w29824700",
+"level": "none",
+"q": 2,
+"note": "cranes only, dull sky"
+},
+{
+"idx": 390,
+"id": "w36897682",
+"level": "none",
+"q": 2,
+"note": "sparse cranes, pale sky"
+},
+{
+"idx": 391,
+"id": "w43943048",
+"level": "none",
+"q": 2,
+"note": "sunset, mostly water"
+},
+{
+"idx": 392,
+"id": "w49626570",
+"level": "hard",
+"q": 4,
+"note": "Cruise ship in dry dock with cranes, promenade"
+},
+{
+"idx": 393,
+"id": "w49626580",
+"level": "none",
+"q": 3,
+"note": "similar to 392"
+},
+{
+"idx": 394,
+"id": "w53113522",
+"level": "none",
+"q": 2,
+"note": "dark dusk harbour"
+},
+{
+"idx": 395,
+"id": "w58620561",
+"level": "easy",
+"q": 3,
+"note": "Red tanker ship with cranes and port"
+}
+]
