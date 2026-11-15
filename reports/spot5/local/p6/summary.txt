@@ -1,0 +1,14 @@
+spotpick exit=0 28/28 passed
+spotcomp exit=0 32/32 passed
+spot4 exit=0 65/65 passed
+spottaps exit=0 7/7 passed
+spothost exit=0 28/28 passed
+spotjudge exit=0 
+vswitchspot exit=0 10/10 passed
+vswitch exit=0 20/20 passed
+akmlkey exit=0 42/42 passed
+akml exit=0 97/97 passed
+akmltimer exit=0 42/42 passed
+akmlux exit=0 
+akmlfull exit=0 52/52 passed
+ALLDONE

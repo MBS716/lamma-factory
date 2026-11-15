@@ -1,0 +1,12 @@
+OK   before the publish: the room on the old version (2f9a266539)
+OK   a phone opening the site now gets v5 (c433848a22) and plays the round of the old host
+OK   the old pages are not reloaded in the middle of the round
+OK   round 2 counted by the old host with the new phone in it
+OK   the host page moved to v5 and is the host of room 1988 again
+OK   the points and the results are kept; the room is competition 1 of v5
+OK   the old phone moved to v5: same room, same player, results on screen
+OK   the first v5 round adds to the points of before, competition 1 now has 3 rounds (صالح 90 → 220)
+OK   a new competition keeps competition 1 with the points of both versions
+OK   no page errors 
+
+10/10 passed

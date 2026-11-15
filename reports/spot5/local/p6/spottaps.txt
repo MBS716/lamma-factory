@@ -1,0 +1,9 @@
+OK   three phones tap the same 6 differences at the same moments: each has all 6 ([6, 6, 6])
+OK   and no mistake was counted for anybody
+OK   B on a slow connection taps the other 6 fast: all 12 counted, B wins, no mistake (12)
+OK   C taps 12 differences in 2 s and only its last message arrives: all 12 counted (12)
+OK   a slow phone (busy 0.9 s during the tap): the tap still counts (1)
+OK   a finger held down 1.2 s is not counted as a tap
+OK   no page errors 
+
+7/7 passed
