@@ -21,3 +21,17 @@ w179388262 piled fruit baskets with handwritten price tags; removals inside pile
 w44107331 umbrella street: almost only umbrella recolours possible; many people and statues of people occupy the rest
 w70364462 dense flower stall: removals inside bouquets smear, price tags are handwritten text; recolour-only picture
 w145237115 piled produce, text signs and labels everywhere, vendors; too few clean isolated targets
+w48820124 shop signs with text everywhere, people in centre, branded cans/sacks; few text-free clean targets
+w187538783 overlapping plate stacks only; removals would cut stacks, patterns hard to recolour cleanly
+w57222789 packed branded pepper bottles with labels and price signs; no clean removals
+w57313067 sausage/cured meat counter (likely pork, unsuitable), price tags with text, people
+w57313068 grocery shelves of branded labelled products; every target carries brand text
+w182872904 densely packed overlapping brushes with price stickers; removals would smear, boxes with text
+w66446614 only ~7 clean diffs; window/flag removals smeared, lamp leaves long shadow, rigging clutter elsewhere
+w93170561 courtyard removals leave cut poles, window/bench removals smear on brick/paving; only ~6 clean
+w30764307 overlapping boats over water reflections, buoys too small, large empty sky; not enough clean diffs
+w32302999 window/skylight removals smear or ghost, crosses/church on skyline, most remaining targets <20px; only ~7 clean
+w36985962 distant hillside panorama, details tiny; half the frame is sky and water
+w88114953 wine bottle displayed in window (alcohol), most objects carry handwritten text signs
+w145489190 Italian butcher/deli display (raw and cured meats, likely pork), notice text
+w2011716 Leadenhall Market: pub/wine-bar signage (alcohol), many text signs and people
