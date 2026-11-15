@@ -12,3 +12,5 @@ w37232528 Christmas market: main targets are Christmas symbols (stars, trees, bo
 w57279852 tightly packed branded bottles with labels; only cap recolours possible, removals inside rows would smear
 w112748233 cluttered stalls: only ~8 clean diffs (sign/paper-roll removals smeared or left ghosts, others too close together)
 w26501395 window/rooftop removals regenerate ghost windows or smear; only ~7 clean diffs, many people
+w118183337 wall of packaged gadgets covered in printed text/brand labels and price tags; removals would erase text, overlapping packages
+w71313786 dusk city panorama: rooftop details tiny and low-contrast, few separable objects; would need building-facade edits

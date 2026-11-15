@@ -15,3 +15,5 @@ w42828203 church and Christmas tree dominate right side; crowded blurred people 
 w40445389 large sky/sea with few objects; buoys and harbour details too small for medium
 w29421112 wine shop/salumeria (Enoteca) with hams and wine bottles in window; unsuitable content, text-heavy
 w37160439 main objects are Advent candle wreaths (religious decoration); rest is uniform facade/sky, few clean targets
+w97588395 church (St. Lamberti) at left edge and spire in distance, blurred crowds, Advent wreaths, many text signs; few clean independent targets
+w37054075 close-up dominated by two patterned tajines; most targets are pattern parts of the same object, background clutter blurred
