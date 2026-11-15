@@ -6,3 +6,7 @@ w30501150 dense plants and railing; besides recolours only thin wires and tiny i
 w23134366 kiosk with minaret-like spire (reads as religious building), people; few clean targets besides shrubs
 w90096250 Buddha statue in niche, stone lantern; most targets are stepping stones in reflective water
 w42187169 right wall dominated by bishop/clergy portraits with crosses; church model on left
+w71612993 removals over sea and bushes leave smears; too few clean independent targets
+w92667138 whisky bottle (Scottish Leader) on the shelf; flood water reflections
+w68597503 only ~6 independent clean changes; hanging pans cast wall shadows so they cannot be removed
+w94456085 prominent crucifix on the wall, second crucifix in bed alcove and saint statue — too much religious imagery
