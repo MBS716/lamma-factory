@@ -40,7 +40,7 @@ for i in ids:
     hist = [{'round': n + 1, 'verdict': R[i]['verdict'], 'notes': R[i].get('notes', ''), 'level_ok': R[i].get('level_ok')} for n, R in enumerate(ROUNDS) if i in R]
     last = next((R[i] for R in reversed(ROUNDS) if i in R), {})
     ops = [d['op'] for d in S['diffs']]
-    page.append({'id': i, 'batch': B, 'level': S['level'], 'title': S['title'], 'kind': S.get('kind', 'photo'), 'credit': cr, 'crop': i in crop,
+    page.append({'id': f'{B}-{i}', 'src': i, 'batch': B, 'level': S['level'], 'title': S['title'], 'kind': S.get('kind', 'photo'), 'credit': cr, 'crop': i in crop,
                  'diffs': [d['name'] for d in S['diffs']], 'circles': [[round(d['x'] * sc), round(d['y'] * sc), round(d['rx'] * sc), round(d['ry'] * sc)] for d in e['diffs']],
                  'colour_share': round(sum(o == 'recolor' for o in ops) / len(ops), 2), 'ops': {o: ops.count(o) for o in sorted(set(ops))},
                  'qc': qc(i), 'review': {**last, 'ar': AR.get(i, '')}, 'rounds': len(hist), 'history': hist, 'fixes': FIX.get(i, []),
