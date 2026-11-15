@@ -1,0 +1,338 @@
+{
+ "w83822211": {
+  "verdict": "accept",
+  "notes": "All 5 clean and large; lectern and lamp fills good.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w94660748": {
+  "verdict": "fix",
+  "notes": "#2 added flower box floats ~20 px below the window sill and has a hard dark rectangular edge; attach it directly under the sill and clean the mask. Others fine.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w41508674": {
+  "verdict": "fix",
+  "notes": "#4 thin chain between the table legs is in shadow and far too subtle for easy; replace with a larger object. Others clean (#2/#5 boards vanish whole, fine).",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w49245457": {
+  "verdict": "fix",
+  "notes": "#3 chalkboard on the shutter is only 65 px wide, too small for easy; replace with a larger object. #2 flip of the open door reads only moderately; acceptable.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w25579759": {
+  "verdict": "fix",
+  "notes": "#2 rusty clamp under the rail is one of a row of identical clamps, in shadow; too subtle for easy, replace. #4 lamp post at the far right edge is thin but acceptable.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w152395120": {
+  "verdict": "fix",
+  "notes": "#5 white pole at the left edge is ~50 px wide, low-contrast; not obvious for easy. Replace. Others clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w137389408": {
+  "verdict": "reject",
+  "notes": "Near-duplicate of w124524228 (same restaurant room, same red stained-glass arched windows, same red→blue glass edit). Also #2/#5 chair backs hidden behind the table and #3 distant train are too subtle for easy.",
+  "level_ok": false,
+  "independent": "near-duplicate of w124524228 (same room and same glass recolour)",
+  "content": ""
+ },
+ "w65977770": {
+  "verdict": "fix",
+  "notes": "#4 small lamp post (46 px) is too small for easy; #5 snow patch touches the left image edge and is low-salience. Replace both with larger objects away from the edge.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w45667652": {
+  "verdict": "fix",
+  "notes": "#3 and #5 lamp removals leave the lamps' bright glow on the wall (light with no lamp); #3 also leaves a pale base remnant on the table. #5 is 67 px, small for easy. Replace #5 and clean/replace #3.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38969107": {
+  "verdict": "fix",
+  "notes": "#1 display-box removal leaves a soft grey rectangular smudge on the wall; #2 added wall lamp has a ragged dark edge at its left base. Tighten masks / redo fill.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38359369": {
+  "verdict": "fix",
+  "notes": "#2 window removal leaves a darker smudged brick patch and is only 86 px (small for easy); #5 thin drainpipe is not obvious for easy. Replace both.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26130340": {
+  "verdict": "fix",
+  "notes": "#5 masthead light is 30x138 px, far too small for easy; replace with a big object. #4 white fenders 103 px borderline but ok.",
+  "level_ok": false,
+  "independent": "same harbour/boats as w26130341 (different view, different level) - acceptable but avoid publishing back-to-back",
+  "content": ""
+ },
+ "w22863945": {
+  "verdict": "fix",
+  "notes": "#4 lifebuoy is 65x90 px, too small for easy; replace. #5 sign removal fades out the red hull stripe under it (stripe ends abruptly) - continue the stripe. #3 chimney narrow but visible.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w8066195": {
+  "verdict": "fix",
+  "notes": "#1 antenna is a thin line (~3 px at 2400), not obvious to a child on a phone; replace. #2 ornament removal leaves a faint dark ridge; acceptable.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38086627": {
+  "verdict": "fix",
+  "notes": "#4 open bus door removal leaves a smeared blurry fill right next to the walking people (and partly around them); replace with another object away from people.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w4528558": {
+  "verdict": "fix",
+  "notes": "#5 small tree removal leaves a green blurry smear and the tree is small for easy; replace.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w145887916": {
+  "verdict": "accept",
+  "notes": "All clean. #3 recolour reads more lilac than blue - consider name 'صار بنفسجيًا فاتحًا' or push hue to blue. #4 sign 82 px but very salient.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w33523280": {
+  "verdict": "accept",
+  "notes": "All clean and obvious. Optional: #5 name could be 'إشارة ممنوع الدخول صارت زرقاء'.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w22579283": {
+  "verdict": "reject",
+  "notes": "Edits are clean, but the subject of the picture is a fountain with two semi-nude reclining classical figures (bare torsos) - unsuitable for a conservative Arabic family audience.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "fountain with semi-nude classical figures as the main subject"
+ },
+ "w61214541": {
+  "verdict": "accept",
+  "notes": "All clean. #4/#5 pots ~125 px are on the small side for easy but bright and isolated.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w34437320": {
+  "verdict": "accept",
+  "notes": "All clean. #1 chimney 94 px borderline but against sky, visible.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w67705089": {
+  "verdict": "accept",
+  "notes": "All fine; #1 stone fill on plinth slightly blotchy but natural enough.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w73157073": {
+  "verdict": "fix",
+  "notes": "#3 signpost pole is 57 px wide, thin and not obvious for easy; replace with a larger object. Others fine.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w84968705": {
+  "verdict": "fix",
+  "notes": "#2 blue little house removal leaves a dark blurry green smear over trees/sky; redo fill or pick another object.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40965976": {
+  "verdict": "accept",
+  "notes": "All 8 clean. #7 vase 65 px and #4 bottle 55 px are at the low end but findable. Bottles are vinegar, not a subject issue.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w67130155": {
+  "verdict": "fix",
+  "notes": "#6, #7, #8 are three drain-cover removals (repetitive); #6 and #8 are only 24-25 px tall slivers, barely visible on a phone, and #6 leaves a dark smudge. Replace #6 and #8 with other objects.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w124524228": {
+  "verdict": "fix",
+  "notes": "#8 wall sensor is 44x70 px, too small for medium; replace. #5 glass 54 px borderline. Note w137389408 (easy) is the same room and was rejected as duplicate.",
+  "level_ok": false,
+  "independent": "ok (w137389408 rejected as its duplicate)",
+  "content": ""
+ },
+ "w70636827": {
+  "verdict": "fix",
+  "notes": "#8 added white hen looks ghostly/blurred with soft transparent edges; redo or replace. #2/#3 are hen removals done as rectangular patch copies (op 'add') - check seams. #7 post 38 px is thin.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w154960546": {
+  "verdict": "fix",
+  "notes": "#4 and #8 drain covers (82x30, 73x27) are thin slivers, hard to find; #5/#6 two tap spouts are tiny (50 px); #7 hanging pot removal leaves a blurry patch. Replace #4 and #8 and clean #7.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w27714873": {
+  "verdict": "accept",
+  "notes": "All clean. #4 sign recolour keeps text crisp; #7 small sign vanishes whole (allowed). #2 cart 65 px but bright.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w63362077": {
+  "verdict": "fix",
+  "notes": "#3 adds and #5 removes painted letter marks on camels (adding a letter = inventing writing; also two edits of the same kind); replace both. Three cloud edits (#1, #2, #4) are repetitive. #7 paper 85x28 px is small.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w172950046": {
+  "verdict": "fix",
+  "notes": "#4 single tomato recoloured green looks flat/plastic lime; use a darker natural green (val/sat) or another object.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w44448375": {
+  "verdict": "accept",
+  "notes": "Clean; 6 of 8 diffs are lanterns but each is a distinct object. #1 added lantern slightly soft-edged but acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w172053892": {
+  "verdict": "fix",
+  "notes": "#5 and #6 flips of almost symmetric loaves are barely visible, and the names 'صار مقلوباً' (upside-down) are wrong for a mirror. Replace both. #1-#4 are four edits of price cards (repetitive).",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w52444842": {
+  "verdict": "accept",
+  "notes": "All clean; #2/#5 posters vanish entirely (text not altered), #8 sign text crisp. #4 wrapper 80x31 is small but findable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w18540651": {
+  "verdict": "accept",
+  "notes": "All clean. #3 tray thin but colour contrast helps.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w81843747": {
+  "verdict": "fix",
+  "notes": "#2 flipped gull has a white halo/ghost edge around the tail and its bill now overlaps the door frame; tighten mask/fill. Others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40379622": {
+  "verdict": "accept",
+  "notes": "All 8 clean removals and recolour.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26130341": {
+  "verdict": "fix",
+  "notes": "#2 adds a copy of the green fender whose original is recoloured red in #3, so it reads as a moved/duplicated object; also #2 has hard cut edges. Copy a different object for #2.",
+  "level_ok": true,
+  "independent": "same harbour as w26130340 (easy) - different view; acceptable",
+  "content": ""
+ },
+ "w10890079": {
+  "verdict": "accept",
+  "notes": "All clean. #8 tyre 65x50 is small but dark on pale concrete.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w27502741": {
+  "verdict": "fix",
+  "notes": "#1 plank removal leaves a blocky pixelated smear, a stub of the plank at the left end and its shadow; redo with full plank and shadow masked, or replace.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w45847325": {
+  "verdict": "fix",
+  "notes": "#1 adds a copy of the yellow float that #8 recolours red (same source object - reads as moved); copy another object. #2 sandal 60x30 is too small for medium.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w21968891": {
+  "verdict": "accept",
+  "notes": "All clean; signs vanish whole.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w63275343": {
+  "verdict": "fix",
+  "notes": "#2 ladder removal leaves a dark smoky smudge in the sky; #3 red umbrella is 38x78 px, too small for medium. Fix #2 fill, replace #3.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w67812120": {
+  "verdict": "accept",
+  "notes": "All clean and natural.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w117028491": {
+  "verdict": "accept",
+  "notes": "All clean; fills on stone ground natural.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w39570575": {
+  "verdict": "accept",
+  "notes": "Clean. #6 added white rose slightly pasted-looking but acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w85563673": {
+  "verdict": "accept",
+  "notes": "All clean, large and varied.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ }
+}

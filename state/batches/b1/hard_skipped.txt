@@ -17,3 +17,7 @@ w71313786 dusk city panorama: rooftop details tiny and low-contrast, few separab
 w32414696 only 11 clean diffs; remaining candidates too small (distant boats) or too close to other diffs
 w187538781 wall of patterned plates: only pattern recolours possible, no clean small removals (foliage/plates behind)
 w58300507 piled fruit and handwritten price signs; removals inside piles smear, few isolated objects
+w179388262 piled fruit baskets with handwritten price tags; removals inside piles smear, recolour-only picture
+w44107331 umbrella street: almost only umbrella recolours possible; many people and statues of people occupy the rest
+w70364462 dense flower stall: removals inside bouquets smear, price tags are handwritten text; recolour-only picture
+w145237115 piled produce, text signs and labels everywhere, vendors; too few clean isolated targets
