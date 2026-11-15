@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py", line 573, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py", line 566, in main
+    async with async_playwright() as pw: await run(pw)
+                                         ^^^^^^^^^^^^^
+  File "/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py", line 399, in run
+    cb, wb = await pw.chromium.launch(), await pw.webkit.launch()
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14398, in launch
+    await self._impl_obj.launch(
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 95, in launch
+    Browser, from_channel(await self._channel.send("launch", params))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/webkit-2083/pw_run.sh
+╔════════════════════════════════════════════════════════════╗
+║ Looks like Playwright was just installed or updated.       ║
+║ Please run the following command to download new browsers: ║
+║                                                            ║
+║     playwright install                                     ║
+║                                                            ║
+║ <3 Playwright Team                                         ║
+╚════════════════════════════════════════════════════════════╝
