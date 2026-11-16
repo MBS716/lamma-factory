@@ -25,3 +25,5 @@ w59671533 tangled overlapping bicycles (removals would cut wheels), big text sig
 w49279042 people dominate; cows large and overlapping, few small distinct objects
 w145200534 big shop sign with text over the stall, hanging peppers dense, many people walking
 w45307095 piled fruit (removals smear) with vendors and text price/brand boxes; similar to b1-skipped fruit stalls
+w29525193 water objects (buoys, lifebuoy) below the 250 px gate; distinct targets are almost all hillside villas (too many of one type)
+w163269143 hookah (shisha) on display and Coca-Cola branded fridge; large man in centre; sweets piled (removals smear)
