@@ -16,3 +16,23 @@ w62748842 boathouses mirrored in water: every edit needs a matching reflection e
 w82742033 half-timbered house: few large separable targets (haystack touches bottom edge, tree in front of facade, shutter pairs); only ~3 clean big diffs; also near-duplicate style of accepted barn w73157073
 w69571432 harbour scene: every big object (ship, orange roof, willow, rowboat) is mirrored in the canal, so removals/recolours leave mismatched reflections; remaining objects (spire, flagpole, dormers) too small for easy
 w187538779 row of six touching vases: only 3 non-adjacent vases can be edited with 60 px spacing and there is no fifth big separate object (rest is a banner, hinge, small flags)
+w110542664 only 4 clean big differences (bench, info pillar, shutters, gable door); the roof recolour's box would touch both windows, the left-window removal smears/shows seams on the sandstone wall, the bush and chimney are tied to wall/smoke, the firewood pile sits against the pillar
+w75292977 only 2 clean big changes (boat tarp and window shutters recolours); chimney removal smears into the sky, the street lamp is tangled with floodlight, cables and its wall shadow, the drain-cover removal smudges the cobbles and the mural may not be edited
+w138211251 the big objects sit on plain white walls where removals fill with dark/grey smears (framed picture, back window), sconces leave their glow; only 2 recolours + a picture flip are clean
+w47703825 hotel bedroom - scene already in batch 1 (w45667652 غرفة نوم الفندق)
+w51266361 dark room: pillow removal warps the headboard bars and bed, doll removal smears the blue cart and its sticker, engine removal leaves a dark smooth band on the floor; only the blanket/nightstand recolours are clean
+w19792555 classroom has only 3 big editable objects (lamp bar, curtain, door); the plaques are war memorials with text, the chairs/box/lamp are small
+w16814005 bare stone hut: only door, chimney and two roofs; removals over the rubble wall/tree canopy would smear, not 5 big separate objects
+w19023217 objects are small and the lock house is mirrored in the canal (edits would break the reflection); no 5 big clean changes
+w42827874 only 3 clean big changes (car/tree recolours, gable window removal); dormer removal smears the roof tiles, the manhole sits 18 px from the bottom edge, the door carries a driving-school sign, the ivy/hedges hide the facade
+w6043940 one boat with people aboard and small fittings (fenders, lamp, posts ~60-80 px); only the canopy and bridge recolours are big
+w10699685 boats are mirrored in the canal and people sit around; big objects are the two boats only
+w41091889 single boat: only the hull recolour and the left flag are big clean changes; the right flag overlaps the painted number/stripe, seat/buoy/engine/stone are small or tied to the hull
+w19165258 tram full of passengers and covered with numbers/ads; the facade has no big separate objects
+w28182182 tram with driver/passengers, numbers and a church tower behind; only the tram/lamp are big
+w61803764 bus covered with text/ads and passengers; few other big objects (palm, milestone)
+w153669561 only 4 clean big changes (vent removal, right lantern, roof and door-frame recolours); the rest are lanterns again, a 75 px dish, plants in shadowed recesses
+w146415387 another Bo-Kaap facade (scene close to w146415391 in batch 1); aloe trees and their shadows overlap the windows/door, only lamp removal plus recolours are clean
+w48612290 only 3 clean big changes (pump flip, bench recolours); bench removals smear the paving/leave the bollard ball floating, the bikes are thin and in front of a drainpipe, the yellow/blue benches touch the pump
+w34545102 brewery inn (Hausbrauerei sign) - alcohol content, not family-suitable
+w77767350 removals of the bins (text labels) and the electric cabinet smear; only the dish removal is clean besides recolours

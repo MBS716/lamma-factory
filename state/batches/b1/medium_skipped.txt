@@ -17,3 +17,9 @@ w29421112 wine shop/salumeria (Enoteca) with hams and wine bottles in window; un
 w37160439 main objects are Advent candle wreaths (religious decoration); rest is uniform facade/sky, few clean targets
 w97588395 church (St. Lamberti) at left edge and spire in distance, blurred crowds, Advent wreaths, many text signs; few clean independent targets
 w37054075 close-up dominated by two patterned tajines; most targets are pattern parts of the same object, background clutter blurred
+w29341276 Souq Waqif umbrella lane - same souq as w27714873 already in batch 1
+w29341278 Souq Waqif cafe - same souq as w27714873 already in batch 1
+w29341398 Souq Waqif at dusk - same souq as w27714873 already in batch 1
+w63381716 camels market - scene already in batch 1 (w63362077 سوق الجمال)
+w56835705 pineapple/papaya stall with paper price signs - scene close to w41508674 (pineapple market table) in batch 1
+w56835711 only ~5 clean changes; tub and hook removals smear, bowl flip smears the bag/burlap, signs/labels/scale display carry text

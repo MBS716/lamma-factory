@@ -1,0 +1,184 @@
+{
+ "w94660748": {
+  "verdict": "accept",
+  "notes": "Round-1 fix done: #2 flower box now sits directly under the sill (slightly soft box edge, fine at phone size). #1 window, #3 antenna, #4 curtain, #5 house recolour all clean; people next to #5 untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w41508674": {
+  "verdict": "accept",
+  "notes": "Former #4 chain replaced by green cloth -> blue (212x325, clean, whole object). #1 added pineapple sits naturally on the table edge; #2/#5 chalkboards vanish whole with clean fills; #3 crate recolour clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w49245457": {
+  "verdict": "accept",
+  "notes": "Former #3 replaced by white candy rack removal (190x226, bright on dark window, clean fill). #2 door flip is the weakest but readable; others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w25579759": {
+  "verdict": "accept",
+  "notes": "#2 now the fence section with red-white chain (clean fill, rail ends naturally at a post). #4 lamp post is thin but tall against sky; acceptable. #5 building recolour plausible.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w152395120": {
+  "verdict": "fix",
+  "notes": "#5 window removal leaves a ghost: a bluish glass/frame remnant left of the post (x~1665-1720, y~850-955) and a soft blurred band at y~925-955; refill so the planks run cleanly (or pick another object). #1-#4 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w65977770": {
+  "verdict": "fix",
+  "notes": "#5 added arched window is only ~70 px wide at 2400 (too narrow for easy) and the 1.6x upscale is visibly soft and flat-pale against the sharp stone; replace with a larger, cleaner difference (e.g. a bigger object away from the edge). #1-#4 fine.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w45667652": {
+  "verdict": "fix",
+  "notes": "#3 enlarged lampshade swallows the wall socket with its plug and cable (a second, unlisted change) and cuts the socket plate in half; it also leaves a pale rectangular halo at its top-left and under the rim. Anchor the scale at the lamp base with a smaller factor that keeps the socket whole, or pick another object. #1, #2, #4, #5 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38969107": {
+  "verdict": "fix",
+  "notes": "#1 display-box fill is still a darker grey rectangle (mean ~136 vs ~170 on the surrounding wall, x 1460-1640, y 175-450); refill/brighten to match the wall. #2 lamp copy now fine (ragged rim matches the original lamp). #3-#5 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38359369": {
+  "verdict": "accept",
+  "notes": "Former #2/#5 replaced by added skylight and added window - both clean and obvious. #1 antenna mast is thin (~8 px) but tall and high-contrast against the sky; acceptable. #4 garage door is narrow but red vs pale blue is obvious.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26130340": {
+  "verdict": "accept",
+  "notes": "Former #5 replaced by door-window removal (clean, obvious). #2 added bundle on nets plausible; #4 fender removal clean.",
+  "level_ok": true,
+  "independent": "same harbour as w26130341 (different view/level) - avoid publishing back-to-back",
+  "content": ""
+ },
+ "w8066195": {
+  "verdict": "accept",
+  "notes": "Former #1 antenna replaced by chrome side mirror removal (clean). #2 ornament, #3 whitewall->black, #4 grille, #5 chrome strip all clean; plate text untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38086627": {
+  "verdict": "accept",
+  "notes": "Former #4 replaced by louvre recolour away from people (clean). #5 horse plaque is ~108 px, smallish for easy but a bright red disc; acceptable. All fills clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w4528558": {
+  "verdict": "accept",
+  "notes": "Former #5 replaced by a second added window; both added windows (#2, #5) are clean and separate objects (~74 px apart). #3 shop sign vanishes whole; #4 red door obvious. Note: two similar window adds side by side.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w84968705": {
+  "verdict": "accept",
+  "notes": "Former #2 replaced by flipping the blue house (readable: chimney and gable swap sides). The flip also mirrors the garland under the house with slight ornament ghosting, only visible when zoomed. #3 pole is narrow but tall and colour change is obvious.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w146415391": {
+  "verdict": "fix",
+  "notes": "#4 yellow house -> turquoise is only partly recoloured: a yellow strip stays at the right edge (x~1785-1810, y~680-860), the lower yellow wall stays yellow, and yellow fringes remain along the white cornice. Recolour the whole house (keeping the \"Rose Lodge\" lettering crisp) or choose another object. #1 sign pole, #2/#3 window removals (wall paste), #5 car clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w84976060": {
+  "verdict": "fix",
+  "notes": "#2 metal ladder is ~56 px wide, silver on cream siding - too low-contrast for easy; replace with a bigger, more obvious object. Minor: #1 chimney fill leaves a faint dark blotch on the roof (x~1420-1480, y~380-430). #3-#5 fine.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w67130155": {
+  "verdict": "accept",
+  "notes": "Former #6/#8 drain slivers replaced by lamp-head removal and shop-sign removal; both clean. Note #6 box starts 14 px from the left edge (lamp at the edge) - tap still works. Others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w124524228": {
+  "verdict": "fix",
+  "notes": "#8 wall sensor (44x70) was not replaced as round 1 asked - still too small for medium; replace. #5 glass (54x66) among many glasses is also below the medium size and hard to find - replace too. #1-#4, #6, #7 fine.",
+  "level_ok": false,
+  "independent": "ok (w137389408 rejected as its duplicate)",
+  "content": ""
+ },
+ "w70636827": {
+  "verdict": "accept",
+  "notes": "#8 new goat is now solid and clean; #2/#3 hen removals have no visible seams; #7 now a log removal. #4 dark stone (60x72) is smallish but high contrast on white wall.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w154960546": {
+  "verdict": "fix",
+  "notes": "#5 tap spout (52x66) is still too small for medium (round 1 asked to replace it); #7 hanging white vessel removal still leaves a blurry green patch (x~1340-1400, y~735-800) and is small (42x73) - replace both. #4 scaled flower bowl is soft but acceptable; #8 added pot fine.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w172950046": {
+  "verdict": "accept",
+  "notes": "#4 is now a natural yellow tomato. Others clean; #7 fill is slightly soft in shadow, invisible at phone size. #1 copied tomato source is untouched by #2.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w81843747": {
+  "verdict": "accept",
+  "notes": "#1 flipped gull now clean (no halo); #2 removal fill slightly soft on the bricks, fine at phone size. #4/#6 are near the medium minimum but colour/contrast makes them findable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26130341": {
+  "verdict": "accept",
+  "notes": "#2 now copies the round white fender (source untouched); edges acceptable. Other differences clean; boxes #3/#5 close but distinct objects.",
+  "level_ok": true,
+  "independent": "same harbour as w26130340 (different view/level) - avoid publishing back-to-back",
+  "content": ""
+ },
+ "w27502741": {
+  "verdict": "fix",
+  "notes": "#1 plank now removed cleanly. But #8 \"for sale\" sign is ~70x28 px (about 11x4 px on a phone) and #5 grey fender is ~25x80 px grey on a grey hull - both too small/subtle for medium; replace both.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w45847325": {
+  "verdict": "fix",
+  "notes": "#8 float recolour leaks red onto the blue boat rim (x~1260-1295, y~690-705), the stripe to its right and the blue rope below - restrict the mask to the float. #6 blue rope removal leaves a smooth blurry sand patch and blue remnants at the plant edge (x~330-380, y~1140-1195) - clean it. Other differences fine.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w63275343": {
+  "verdict": "accept",
+  "notes": "#2 ladder fill now has only a very faint haze, acceptable; #3 is now the long banner (narrow but strong yellow->blue change, text intact); #5 added bollard matches the originals. Others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ }
+}

@@ -1,0 +1,25 @@
+w57222793 piled fruit pyramids (same shoot as b1-skipped w57222789/w160049113): removals inside piles smear, handwritten price cards; recolour-only
+w60506015 Lubeck panorama dominated by church spires; rooftop/window edits tiny and smear-prone
+w44334587 crucifix on wall and glass bottles on shelf (content); monochrome overlapping tools
+w26466169 half sky and water; village houses tiny, only small boats as clean targets
+w182239819 Munster aerial with cathedral and church towers prominent in the skyline
+w40586715 half the frame sky, houses tiny and dense, church tower in centre
+w50201632 blue-domed church large and prominent in the upper left of the village
+w137724748 more than half the frame is sky and sea; houses dense and small
+w138365056 Manarola again (b1 has w138365717 Manarola-type village); half sky/sea
+w51053817 gabled facades: mostly windows (removals smear), shop text everywhere, many people, statue in gable
+w8281938 repetitive overlapping wicker chairs and tables; truss/sky clutter; only ~8 isolated targets
+w62824804 museum hall: most objects behind glass/reflections, cherub statues and portrait off-limits, central birds and bones overlap; ~9 clean targets
+w29162146 half sky and water; canoes all carry people; few other targets
+w32427129 half the frame cloud/mountain; shop signs with text, people; few small targets
+w30561291 hazy aerial: candidate objects (containers, boats, kiosks) too small for the 250 px gate; only building-sized edits left
+w56552272 repetitive cabanas and umbrellas, many people incl. beachgoers in swimwear; few distinct non-repetitive targets
+w28970939 Vatican palace facade (religious site); only cars are editable, too many same-type diffs
+w2130979 Christmas ornaments dominate, shop brand signs everywhere
+w22641055 people dominate the foreground; stalls covered in text price cards; few clean targets
+w28157418 dark hall, clothes on mannequins and text signs; steel truss clutter, removals would smear
+w38939731 only one object type (overlapping clay vessels); every diff would be a pot, removals would expose half-pots
+w28425373 crowd of people dominates the market; stalls packed with tiny overlapping goods
+w54874516 butcher counter with hanging sausages (likely pork) and price tags
+w59671533 tangled overlapping bicycles (removals would cut wheels), big text sign; trees/sky elsewhere
+w49279042 people dominate; cows large and overlapping, few small distinct objects
