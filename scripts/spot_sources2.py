@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 API = "https://commons.wikimedia.org/w/api.php"
 UA = "LammaFactory/1.0 (https://github.com/MBS716/lamma-factory) python-urllib"
 FREE = re.compile(r"^(cc0|public domain|pd|cc by(-sa)? [1-4]\.[05]( [a-z]{2,})?)$", re.I)
+BADCAT = re.compile(r"church|kirche|église|iglesia|chiesa|cathedral|chapel|kapelle|abbey|monastery|kloster|mosque|temple|synagog|crucifix|wayside cross|pubs|bars\b|breweries|brauerei|wine|wein|beer|bier|vineyard|cemeter|friedhof|graves|nude|nudity|swimwear|weapons|military|cannons|tanks|night photograph|reflections", re.I)
 plain = lambda h: html.unescape(re.sub(r"<[^>]+>", "", h or "")).strip()
 norm = lambda u: urllib.parse.unquote(u or "").split("File:")[-1].replace(" ", "_").lower()
 
@@ -35,6 +36,7 @@ def keep(p, min_w=2400):
     if ii.get("mime") not in ("image/jpeg", "image/png", "image/webp"): return None
     if w < min_w or not (1.2 <= w / max(1, h) <= 1.9): return None          # landscape, fits a phone held sideways or two pictures stacked
     if not FREE.match(lic) or "personality" in plain(m.get("Restrictions", {}).get("value")).lower(): return None
+    if BADCAT.search(plain(m.get("Categories", {}).get("value")) + " " + p.get("title", "")): return None   # unsuitable subjects (family game)
     artist = plain(m.get("Artist", {}).get("value"))[:80]
     if not artist: return None
     return {"id": "w" + str(p["pageid"]), "title": p["title"], "w": w, "h": h, "thumb": ii.get("thumburl"), "url": ii.get("url"),
