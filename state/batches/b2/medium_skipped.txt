@@ -1,0 +1,23 @@
+w26171906 busy boat clutter: removals smear (chest, rings, bow post), few clean free objects; only 3 clean diffs
+w26577727 crowded boats: only ~5 clean diffs (net/towel removals smear, other items grouped, text on hulls)
+w11990768 tram + crowd + wires dominate; few free medium objects (signs carry text, statues, thin wires)
+w49019684 vans covered in writing; few free medium objects (bottle, rust patch, line) - not 8 clean diffs
+w20088802 only 7 clean diffs: wall-hole, pot and meter-box removals smear (dark LaMa fill), bag flip smears the sunglasses rack
+w72846210 facade covered with signs/text and intricate carving; lamp column blocks the middle; left canopy touches edge; <8 clean diffs
+w88532623 only 5 clean diffs: window/ornament/chimney removals on palace leave ghosts or orphan pediments, statues/religious monument off-limits, rest are pigeons
+w30708715 beer-brand sign (Tiger) and massage sign with bare-chested man in view - content
+w146415397 same Bo-Kaap neighbourhood as b1 w146415391 (coloured houses), plus mosque dome/minaret and Palestine flag in view
+w22203159 monochrome lion fountain; only thin columns/posts/water jets and overlapping lion statues - no 8 clean medium diffs
+w30797194 night shot dominated by fountain rim and thin water jets; few medium objects, removals over lit water would smear
+w30501178 loggia: only ~5 separable medium objects (chimney, brick patch, two pots, spout); rest is tangled plants behind railing, thin pipes, window at edge
+w73625299 busy balcony: orchid/pot/branch removals smear or leave stubs; only ~4 clean diffs without exceeding colour limit
+w51055524 only 7 clean diffs: bin/bracket removals smear, shields sit <60 px from the balcony fascia, rest is thin/edge/text
+w26000963 wide garden view: most objects distant/small or overlapping trees; removals of trees/glasshouse risky, not 8 clean medium diffs
+w28988780 monastery cloister: church with cross-topped spire dominates (religious building), few separable objects
+w89806035 Japanese garden: pagoda/gate are religious-style structures, the rest is dense foliage; too few separable objects
+w10567393 soft cluttered greenhouse: lamps hang over roof grid (removal would smear), plants overlap; only ~4 clean diffs
+w19519088 removals (chimney, palm, bush) smear on striped wall/tree backdrop; dome carries crescent finial; not 8 clean diffs
+w88967689 police tape with text across the foreground; slide/ramp/box removals smear on sand and tower, hut flip seams; not 8 clean diffs
+w191866414 shopfronts are BAR / BRASSERIE / TABAC / LOTO signs (alcohol, tobacco, gambling) - content
+w12844142 monochrome sandstone balcony: only 2 lanterns, a grille window and a heraldic shield (with crown/cross) - cannot carry 8 diffs
+w38535362 canal scene: most objects mirrored in water reflections (edits would mismatch reflections), sign carries text; few free objects

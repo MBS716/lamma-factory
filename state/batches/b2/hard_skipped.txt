@@ -27,3 +27,22 @@ w145200534 big shop sign with text over the stall, hanging peppers dense, many p
 w45307095 piled fruit (removals smear) with vendors and text price/brand boxes; similar to b1-skipped fruit stalls
 w29525193 water objects (buoys, lifebuoy) below the 250 px gate; distinct targets are almost all hillside villas (too many of one type)
 w163269143 hookah (shisha) on display and Coca-Cola branded fridge; large man in centre; sweets piled (removals smear)
+w49756918 one object type (rows of near-identical boats) over reflections; foreground only weeds and rocks
+w61514453 Nyhavn: crowds of people along the quay, tour boat with text, half sky and water
+w115585325 white church prominent in the centre foreground of the village
+w117574064 village roofs tiny and dense in a narrow band; most of the frame mountains and sky
+w29741631 Chinese text signs on most shopfronts, deep shade; few clean text-free targets
+w198875333 ornate library with religious frescoes on the vault (biblical figures); b1 already has a similar ornate library pair
+w567773 every difference would be the same kind (glowing rock); fluorescent colours make recolours look fake
+w69502690 skull decorations and pirate flag among the prizes; dense overlapping stems
+w69502695 single object type (balloons only); every difference would be a balloon
+w29341383 umbrella street (b1 skipped an umbrella street as recolour-only); repetitive chairs, cafe brand sign
+w29399941 many Arabic text signs and a portrait photo on display; dim corridor
+w71338075 one large house dominates, few small distinct objects; people at tea-house tables, brand sign
+w201543611 large wayside crucifix in the centre of the scene; people on bench
+w43621456 more than half the frame mountains and sky; few small distinct objects
+w48258048 garden/courtyard removals (bench, pot tree, shrubs, sign) smear over hedges and stone; only ~6 clean diffs
+w76929387 dense planting: shrub/pot removals smear, pergola-post recolour unnatural; only ~8 clean diffs
+w30270179 Christmas market stall with Christmas decorations (red bows, garlands) dominating; dark night scene
+w30271209 Christmas market stalls at night, people, decorations; same market as w30270179
+w99090200 church spire prominent, many cafe guests (people) fill the street
