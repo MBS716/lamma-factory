@@ -10,3 +10,6 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - easy sources 23 of 34 consumed by b1 replacements (see easy_taken_by_b1.txt); medium 7 consumed.
 ## Rules for running
 - At most 2 agents at a time (usage limit hit twice). Back up (spot3/backup.sh) after each finished task.
+## Update 2026-11-16 06:54 — weekly usage limit hit (resets 09:00 Riyadh)
+- b2: hard 13 accepted / 48 skipped (worker stopped; resume via message); medium 4 accepted (27 sources done; 30 word-filtered extras in medium_sources_extra.json); easy 0 accepted (worker had just started).
+- Resume order: b2 hard (resume) + b2 easy (resume), then b2 medium on medium_sources_extra.json, then independent review of b2.
