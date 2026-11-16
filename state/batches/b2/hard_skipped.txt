@@ -23,3 +23,5 @@ w28425373 crowd of people dominates the market; stalls packed with tiny overlapp
 w54874516 butcher counter with hanging sausages (likely pork) and price tags
 w59671533 tangled overlapping bicycles (removals would cut wheels), big text sign; trees/sky elsewhere
 w49279042 people dominate; cows large and overlapping, few small distinct objects
+w145200534 big shop sign with text over the stall, hanging peppers dense, many people walking
+w45307095 piled fruit (removals smear) with vendors and text price/brand boxes; similar to b1-skipped fruit stalls

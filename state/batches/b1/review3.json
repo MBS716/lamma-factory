@@ -1,0 +1,135 @@
+{
+ "w152395120": {
+  "verdict": "accept",
+  "notes": "All 5 clear and easy. #5 window removal (wall paste) is now clean: planks and shadow line continue, with only a tiny dark speck beside the paper on the post. #2: the tan stack left of the removed salt bags has a slightly ragged right edge, but the plastic wrap hides it. #1, #3, #4 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w45667652": {
+  "verdict": "accept",
+  "notes": "#3 lampshade scale x1.3 now keeps the socket and plug whole, with no halo; the change is moderate but visible as an easy difference. #4 white mirror frame keeps a thin orange fringe on its inner edges (minor). #1 added picture, #2 blue blanket, #5 headboard crosses removed: all clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w38969107": {
+  "verdict": "accept",
+  "notes": "#1 is now a flip of the display box, clear and with no grey patch. #2 copied lamp is fine. #5 lantern removal fill is dark and a bit soft over the trunk, but it reads naturally at phone size. #3 and #4 (bike and the other bike's basket) are close, but they are distinct objects.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w146415391": {
+  "verdict": "accept",
+  "notes": "#4 is now the whole turquoise house turned orange: clean, with no turquoise left on the house (the lower blue house and the low turquoise wall are separate buildings). #1 sign and pole removal, #2/#3 window removals (wall paste), #5 car: all clean. No text edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w152888800": {
+  "verdict": "accept",
+  "notes": "New pair, good easy picture. #1 the onion dome is clearly bigger, with a faint pale rim (the source has it too) and tiny vane remnants beside the stem that only show zoomed. #2 red roof, #3 green door: clean. #4 bench removal: clean. #5 copied flower pot (about 113 px, slightly soft) sits naturally in the row of pots. No duplicate of w145887916 (a different town hall).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w45847325": {
+  "verdict": "accept",
+  "notes": "#8 float recolour no longer leaks. #6 rope removal is clean sand, but the patch meets the plant base along a smooth arc that trims a few dry twigs (only visible zoomed). #2 copied log on the far boat's nets is plausible. #1, #3, #4, #5, #7 clean. Mix of 3 recolours, 3 removals, 2 adds.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w15550467": {
+  "verdict": "accept",
+  "notes": "The laundry is now a recolour and the repeat is gone. #8 heater fill is soft foliage over the wall top, and #9 tank fill leaves a small grey haze at the white wall edge; both are minor at hard zoom. Two pediment recolours (#1 green, #4 red) and three window removals: variety is acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w50619072": {
+  "verdict": "accept",
+  "notes": "The buoy add (#12) is now a natural copy from another boat, and #3/#4 are separated. #7 awning blue to red: a 2-3 px pink fringe touches the wall strip above the awning and the white stripe turned salmon, but it reads as the awning's edge (minor). #6 rowboat flip has a faint water seam on its right side. Others clean; the church is not edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w138365717": {
+  "verdict": "accept",
+  "notes": "The quay edits were replaced with hillside and house objects; all 12 are separated and clean. #12 window paste shows a very faint rectangle, and #8 notice (27x21 px) is small but white on a dark wall. Good variety.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w71171498": {
+  "verdict": "accept",
+  "notes": "#6 is now a clean removal of the cardboard box. #4 bag removal leaves a soft dark blur between the sack and the cardboard, and #1 glove removal slightly blurs the ledge edge. Both are mild at hard zoom. The other differences are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w8689364": {
+  "verdict": "accept",
+  "notes": "#9 is now the ceiling lamp, removed cleanly; the blocky jar fill is gone. Five jar removals is repetitive but acceptable; the other differences (lollipop, sweets recolours, adapter, tap) add variety. All fills clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w198708138": {
+  "verdict": "accept",
+  "notes": "#7 red book is now fully blue, with no bookend remnant. #8 box removal leaves the lower cubby as a uniform dark block with no shelf floor; it passes as an empty compartment but is the weakest fill. #2 and #3 (two heaters, one removed and one shrunk) are acceptable. The clock and the left heater are about 38 px apart, but they are clearly different objects.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w14961876": {
+  "verdict": "accept",
+  "notes": "Lamps cut from 9 to 6 of 12 (#1, #2, #4, #5, #6, #11). Still lamp-heavy, but now mixed with a magazine rack, a white box, a fire extinguisher add, a bin, a corbel and a bookcase. #10 corbel removal leaves a small pale smudge on the dark background (minor). #9 bin fill repeats railing spikes plausibly.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w42828251": {
+  "verdict": "accept",
+  "notes": "The dormer ghosts are gone (only #2 is a dormer now), and the street-lamp scale was replaced. #5 pram removal fill is a soft blur at the pillar base, consistent with this long-exposure photo. Sign recolours (#6, #10) keep their text and symbols crisp. Five window-related edits, mixed with lamps, bike parts and signs.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w72846247": {
+  "verdict": "accept",
+  "notes": "#10 is now the oval gable opening, removed cleanly; the garment sleeve is untouched. #12 door recolour no longer tints the post. All 12 clean; the LETTER BOX text is intact.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w93272847": {
+  "verdict": "accept",
+  "notes": "The chimney fragment is fixed, and chimneys are down to 4 (#5, #6, #7, #10), with skyline, roof windows, a house recolour and a scaffold net added. #11 recolours one scaffold bay; the separate bay to its right stays green, which reads as a different net. All clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w19324272": {
+  "verdict": "accept",
+  "notes": "The basket-stack and window repeat are gone. #10 stone removal leaves a small soft dark blot on the pavement (minor). Similar pairs remain (two stools #5/#6, two sky poles #11/#12) but are acceptable. #9 removes the whole sign, so no text is edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w35312340": {
+  "verdict": "accept",
+  "notes": "The water band is no longer crowded, and boats are down to 6 of 12. Added window, buoy, car removal, house recolours and rock removal give variety. #9 copied buoy is soft with no reflection, but it is plausible. The church tower is not edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w89114411": {
+  "verdict": "accept",
+  "notes": "The purple-lantern problem is gone; lanterns are now 5 of 12 (#1, #2, #4, #8, #9), with a flipped motorbike, a dog removal, a hydrant, a helmet, a sign, a bowl and a box. All clean; #12 leaves the wall cable hanging, which is natural.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ }
+}
