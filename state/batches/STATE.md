@@ -56,3 +56,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 
 ## Update 2026-11-17 ~23:xx — usage limit hit (5-hour limit, resets 00:10 Riyadh)
 - Fixer stopped mid fix round 2. Progress = lines in batches/b2/fixes2.txt. Resume: SendMessage the fixer (continue; skip ids already in fixes2.txt; then the 6 medium).
+
+## Update 2026-11-18 (fix round 2 done)
+- fixes2.txt 17 lines: 15 fixed, 2 still → rejected.txt (w35074595, w11958525). b2 rejected total 4.
+- Running: final review round 3 for 15 ids (work/review2_b2/r3_ids.txt) → review3.json.
