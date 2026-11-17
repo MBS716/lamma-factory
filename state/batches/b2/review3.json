@@ -1,0 +1,107 @@
+{
+ "w45420971": {
+  "verdict": "fix",
+  "notes": "#4 new crate on the ground is big and obvious, but its right side ends in a straight vertical cut (x≈1648, slats stop with no corner post) and it casts no shadow while everything else in the sunny scene has hard shadows - it looks pasted. Quick fix: turn #4 into a removal of that same top crate on the right chest (op remove, rect 1600,636,1832,800, sam, dil ~10) and rename it 'اختفاء الصندوق الخشبي فوق الصندوق الكبير'; if that fill is not clean, keep the current #4 (it is still readable at play size). #1 green tent, #2 bigger white pot, #3 red pot, #5 rock removal are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40379612": {
+  "verdict": "accept",
+  "notes": "#1 roof now clearly turned from grey-brown to red over the whole roof; overlapping leaves stay green, wet grey highlights remain (natural). Name says 'أحمر فاقعًا' but the result is a terracotta red - 'صار أحمر' would be more exact (optional). #2 green door, #3 bench removal, #4 new window, #5 new shrub by the downpipe are clean and obvious.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w75418346": {
+  "verdict": "accept",
+  "notes": "#5 new pine top now has clean, natural edges against the sky (no cut strip); it stands out as a new spire between the trees - the least obvious of the five for easy, but findable. #1 red rear roof, #2 blue bench, #3 wheelbarrow gone, #4 carved-log seat gone (faint soft fence ghost, fine at play size) are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w68707104": {
+  "verdict": "accept",
+  "notes": "#3 small silver dome now turns verdigris green - clean, whole dome covered, no leak, and no longer duplicates #1 (glass dome gold). All 12 visible zoomed and clean: #2 flag, #4 van, #6/#8 benches, #7 light shrub removed; #1 gold dome, #5 blue car, #9 yellow bus, #11 blossom tree white; #10 new dark shrub; #12 smaller pine.",
+  "level_ok": true,
+  "independent": "#6 and #8 are both bench removals (different benches) - acceptable",
+  "content": "#9 bus side lettering recoloured with the bus but crisp (not edited)."
+ },
+ "w49540619": {
+  "verdict": "accept",
+  "notes": "#6 orange lifebuoy/cover on the boat deck is now fully blue, no leak onto the post (the thin ropes crossing it take a slight blue tint - natural). All 12 visible zoomed and clean: #1 lantern, #4 antenna, #9 black laundry removed; #2 yellow buoy, #11 extra fender added; #3 bigger dish, #7 bigger rooftop shrub; #5 green shutter, #8 red mast with boom, #10 yellow box, #12 red crate.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Greek flags and shop signs untouched; #9 laundry is not on a person."
+ },
+ "w48932868": {
+  "verdict": "accept",
+  "notes": "#2 window removal now uses a wall-texture patch: no square ghost, the wall reads naturally (a copied anchor hole at x≈2315, y≈1120 repeats one beside it - fine). All 12 visible zoomed and clean: #1 bigger parasol, #3 heater gone, #4 bigger heater, #5 chimney, #6 orange board, #8 ladder removed; #7 green door, #9 blue door, #10 orange cloth, #11 green railing, #12 red awning.",
+  "level_ok": true,
+  "independent": "#7 door and #11 railing are both blue-to-green recolours (different objects - acceptable); #3/#4 are two different water heaters (remove vs scale)",
+  "content": "Minaret in view, not edited - acceptable."
+ },
+ "w139237183": {
+  "verdict": "accept",
+  "notes": "#1 slide removal now blends into the red mulch: no light rectangle; only a soft darker patch at its top (x≈1050-1100, y≈260-300) that reads as tree shade. #4 fountain removal leaves an empty dark basin (soft left rim, acceptable). All 12 visible zoomed: removals #1-#4, #7, #9-#12 clean; #5 yellow tree, #6 red shade sail, #8 blue car. Removal-heavy (9 of 12) but acceptable for an aerial park scene.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Small people in the park are not edited."
+ },
+ "w20905114": {
+  "verdict": "fix",
+  "notes": "Round-2 issue solved: #4 is now the glass wall cabinet turned blue (clean, whole frame; a tiny unrecoloured strip by the knobs at x≈1920-1930, y≈680-720 is negligible), so nothing moves any more. Quick fix: four of the 12 are 'turned blue' (#4, #5, #10, #11) - change two hues for variety, e.g. #4 cabinet set_hue 130 (green, name 'خزانة الحائط الزجاجية صارت خضراء') and #11 ribbon set_hue 50 (yellow, name 'الشريط الوردي في زينة القش صار أصفر'). Everything else clean: #1 ram head, #3 lantern, #6 rope coil, #7 painting, #9 dark painting removed; #2 bigger sugar jar, #12 smaller lamp; #8 sill rock flipped. Accept once hues are varied.",
+  "level_ok": true,
+  "independent": "Four recolours all go to the same blue (#4 cabinet, #5 pot, #10 heart, #11 ribbon)",
+  "content": "Mounted trophy heads acceptable; #7 is a mountain landscape painting."
+ },
+ "w146242698": {
+  "verdict": "accept",
+  "notes": "Round-2 issues resolved: #7 is now a removal of a shrub ball in front of the fountain (no pasted bollard; the basin fill is soft but matches the blurred background), and #2 chimney is enlarged with f=1.22 - its step and left lobe are the chimney's real shape (same in A), cap sits on the body. All 12 visible zoomed: #1 extra chimney, #3 spire mast, #4/#6 dormers, #11 flower box removed; #5 red umbrella, #8 blue beach-chair stripes, #9 yellow flowers; #10 bigger bollard, #12 bigger shrub ball.",
+  "level_ok": true,
+  "independent": "#1/#2 both chimneys and #4/#6 both roof dormers (different objects and, for the chimneys, different kinds); #7/#12 both shrub balls (remove vs scale)",
+  "content": "'GRAND HOTEL' text untouched."
+ },
+ "w183685175": {
+  "verdict": "accept",
+  "notes": "#5 is now the white wall switch removed between the first two jars - big (136x148) and obvious; the fill is a smooth wall shade and the dangling end of the first jar's cord loop was trimmed with it (x≈400-450, y≈1340-1390) - tiny, invisible at play size. Variety now good (2 recolours, 2 flips, 3 removals, 1 knob removal). #1 brown jug flipped, #2 blue jug, #3 red jar cloth, #4 drawer knob gone, #6 tongs flipped, #7 pan gone, #8 wooden tool gone - all clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Jar labels untouched and crisp. #6 tongs flip mirrors tiny embossed lettering on the metal - illegible at play size, acceptable."
+ },
+ "w31695201": {
+  "verdict": "accept",
+  "notes": "#4 is now the cable-car station on the mountain removed, covered with a rock-face patch from just above it - convincing; only a tiny faint slanted line where the station's roof corner was (x≈505-515, y≈563-580), visible only zoomed. Variety now good (2 recolours, 2 scales, 4 removals). #1 weather vane, #2 chimney cap, #6 long table removed; #3 bigger white box, #5 bigger snow-covered rock (small hard step at its right foot, minor); #7 red shutter, #8 green barrel - all clean and findable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#1 weather vane vanishes with its painted date - allowed (whole object gone, no text altered). Person on the steps untouched."
+ },
+ "w40799729": {
+  "verdict": "accept",
+  "notes": "Round-2 issues resolved: #5 is now the left light bollard removed (clean paving, no smear; the low stone wall is untouched), and #6 is now the tall pine behind the umbrellas made bigger (sharp, natural; its lower branches overlap a small grey roof corner at x≈1110-1130, y≈330-360 a little more - reads as the tree in front). Only one bollard edit remains. #1 yellow globe, #2 extra rose, #3 wall screen gone, #4 table plant gone (small, 46x76, but its white pot reads), #7 red planter, #8 golden tree crown - all clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Umbrella logos untouched; the two people in the background untouched."
+ },
+ "w17314661": {
+  "verdict": "accept",
+  "notes": "#8 is now the small white chimney on the left roof removed - the ridge line is rebuilt cleanly against the sky, no ghost (76x56 px, smallish but white on blue, findable). Only one shutter recolour remains (#6). Others clean: #1 tall chimney, #2 guide sign, #5 chalkboard, #7 red-white box removed; #3 new dormer; #4 red umbrella.",
+  "level_ok": true,
+  "independent": "#1 and #8 are both chimney removals, but on different buildings and very different chimneys (tall stone stack vs small white parapet chimney) - acceptable",
+  "content": "Flag with the Salzburg coat of arms untouched; people untouched. #2 guide sign with text vanishes entirely - allowed."
+ },
+ "w81760623": {
+  "verdict": "accept",
+  "notes": "#6 is now a new window (copy of the neighbouring one, without its balcony railing) in the blank brick wall left of it - big, obvious and well aligned with lintel and sill height; only a faint seam where the stone lintel ends (x≈478, y≈470-500), invisible at play size. Others clean: #1 sluice post, #3 floodlight with shadow, #5 satellite dish (small but white on brick) removed; #4 bigger chimney; #2 green window frame, #7 yellow flowers, #8 blue door.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Title distinct from hard w25945798."
+ },
+ "w71171565": {
+  "verdict": "accept",
+  "notes": "#5 is now the dark shrub in the middle bed made bigger (190x95 box) - clearly findable; it now hides more of the red basin wall behind it (natural occlusion). Its upper outline carries some light speckles from the paving (x≈1225-1420, y≈1200-1290), a slight fringe visible only zoomed - acceptable. Others clean: #1 roof turret, #2 double lamp, #3 grey step, #4 metal stand removed; #6 new red pot on the steps; #7 light-blue building; #8 blue pot (small, slight bleed at its feet).",
+  "level_ok": true,
+  "independent": "#6 (new red pot) and #8 (red pot turned blue) both concern planter pots - different kinds of change, acceptable",
+  "content": "Religious painting on the facade and the clock tower untouched; person at right untouched; banner text at the bottom untouched."
+ }
+}

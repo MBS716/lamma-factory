@@ -1,0 +1,1 @@
+w20905114 fixed (r3, by me): #4 cabinet blue→green, #11 ribbon blue→yellow (fewer blues); w45420971: crate-removal tried, overlaps tent box #1 → kept round-2 #4 as reviewer allowed

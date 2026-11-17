@@ -61,3 +61,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - fixes2.txt 17 lines: 15 fixed, 2 still → rejected.txt (w35074595, w11958525). b2 rejected total 4.
 - Running: final review round 3 for 15 ids (work/review2_b2/r3_ids.txt) → review3.json.
 - Started 4th source search (easy/medium simple scenes): scripts/spot_themes4.txt (64 themes) on spot-v5; spot-sources run 44180826227 → spot-sources:cand2. Next after it: selectors for b3 (easy+medium first).
+
+## Update 2026-11-18 (review3 b2 done)
+- review3: 13 accept + 2 small fixes (done by me, fixes3.txt). b2 FINAL: easy 9, medium 12, hard 19 = 40 pairs. rejected 4.
+- flags.json added (Heraklion / Hoi An same-location notes). Building: batch_build.py b2 → build/b2. Next: upload page imgs to asset store (blobmap), batches.json + b2.json, publish, report.
