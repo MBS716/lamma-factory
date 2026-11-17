@@ -52,3 +52,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - fixes1.txt 30/30 (incl. 6 medium), no "still".
 - Running: fixer on 11 review2 fixes → fixes2.txt; reviewer (round-2 agent) on 6 medium fixes → adds keys to review2.json.
 - Next: final review round 3 for the 11 (+ any medium fixes from round 2) → review3.json; then build/page/report.
+- review2 medium: 0 accept / 6 fix (one difference each). Queued to fixer after the 11 → fixes2.txt. Then review3 (final) for 17 ids.

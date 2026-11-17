@@ -166,5 +166,47 @@
   "level_ok": true,
   "independent": "ok",
   "content": "#6 bollard (with a number) and #10 painted oval sign vanish entirely with their text - allowed; no text altered. Store signs untouched."
+ },
+ "w183685175": {
+  "verdict": "fix",
+  "notes": "#3 (last jar cloth red) and #5 (first jar cloth green) are two recolours of the same kind of object - repetitive for medium; replace one of them with a non-recolour change elsewhere (e.g. remove one of the plates' neighbour items, scale a jug on the top shelf, or remove the white wall switch at left). Round-1 #8 pitcher issue gone (replaced by removing the long wooden tool on the bottom shelf - clean). Others clean and findable: #1 brown jug flipped, #2 blue jug, #4 drawer knob gone, #6 tongs flipped, #7 black pan gone.",
+  "level_ok": true,
+  "independent": "#3 and #5 are the same change on the same type of object (a jar's cloth cover recoloured)",
+  "content": "Jar labels untouched and crisp. #6 tongs flip mirrors tiny embossed lettering on the metal - illegible at play size, acceptable."
+ },
+ "w31695201": {
+  "verdict": "fix",
+  "notes": "#4 green planter box -> red is thin (131x38 px at 2400, ~6 px tall on a phone) and tucked under the porch eave, and it repeats #7's green-to-red; replace #4 with a findable non-recolour change (e.g. remove the lamp on the porch beam or the wooden sign by the door). Round-1 #5 broom ghost is gone (now an enlarged snow-covered rock - reads; small hard step in the snow mound at its right foot x≈270-300, y≈1210, minor). Others clean: #1 weather vane, #2 chimney cap, #6 long table removed; #3 bigger white box; #7 red shutter; #8 green barrel.",
+  "level_ok": true,
+  "independent": "#4 and #7 are both green-to-red recolours (planter box, shutter) - different objects but the same change",
+  "content": "#1 weather vane vanishes with its painted date - allowed (whole object gone, no text altered). Person on the steps untouched."
+ },
+ "w40799729": {
+  "verdict": "fix",
+  "notes": "#6 (right bollard 'taller and wider', f=1.22) is thin (~48 px) and subtle, and it is the second edit on the same kind of bollard as #5; replace #6 with a different, findable change (flip/add/scale of another object, e.g. add a second round shrub on the low wall, or remove the dark planter at far right). #5 (middle bollard removed) leaves a smeared, blurry stone blob at the left end of the low wall (x≈1800-1850, y≈940-1010); refill so the wall end keeps its stone texture. #4 table plant is small for medium (46x76) but its white pot reads on the dark chairs. Others clean: #1 yellow globe lamp, #2 extra rose on the left branch, #3 wall screen gone, #7 red planter, #8 golden-yellow tree crown.",
+  "level_ok": true,
+  "independent": "#5 and #6 both change the same type of object (the two thin grey light bollards)",
+  "content": "Umbrella logos untouched; the two people in the background untouched."
+ },
+ "w17314661": {
+  "verdict": "fix",
+  "notes": "#6 (shutter by the window turned green) and #8 (shutter on the left building turned green) repeat the same change on the same kind of object; replace #8 with a non-recolour change (e.g. remove one of the white chimneys on the left roof or the small dormer). #6 itself is thin (48 px) but bright and tall, findable. Round-1 issues fixed: #3 added dormer is clean (its sweeping roof matches the source dormer), #4 is now a red umbrella instead of the lantern/window blur, only two shutter recolours remain. Others clean: #1 chimney, #2 guide sign, #5 chalkboard, #7 red-white box removed.",
+  "level_ok": true,
+  "independent": "#6 and #8 are the same change on the same type of object (a red-white shutter turned green-white)",
+  "content": "Flag with the Salzburg coat of arms untouched; people untouched (#7 box beside a visitor removed cleanly, the visitor intact). #2 guide sign with text vanishes entirely - allowed."
+ },
+ "w81760623": {
+  "verdict": "fix",
+  "notes": "#6 (neighbour's chimney removed) is small for medium (45x86 px, ~7 px wide on a phone) and leaves a reddish brick smudge at its foot on the gable ridge (x≈2205-2225, y≈425-440); replace #6 with a bigger findable change (e.g. remove the TV antenna-free gable window, or a larger object on the right building) or at least clean the remnant. #5 white satellite dish is also under 70 px (52x64) but white on dark brick - acceptable. Round-1 #4 floodlight replaced by an enlarged main chimney (clean, not warped, covers nothing). Others clean: #1 sluice post gone (tall, its iron base box stays - reads as a stub), #2 green window frame, #3 left floodlight gone with its shadow, #7 yellow balcony flowers, #8 blue door.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Title 'مطحنة الطوب الأحمر عند السدّ' is now distinct from hard w25945798."
+ },
+ "w71171565": {
+  "verdict": "fix",
+  "notes": "#5 (grey tarp on the basin rim removed) is a thin, low-contrast strip (158x34 px, grey on grey stone, ~5 px tall on a phone) - not findable without zoom for medium; replace #5 with a bigger, contrasting change (e.g. remove the white tent cone by the pavilion or the blue equipment cases on the stage). Round-1 #3 skylight and #6 bus stripe were replaced: #3 grey step removed (clean, findable) and #6 new red pot on the steps (sits well, slightly soft). #6 and #8 pots are ~60 px - small but contrasty; #8 blue recolour bleeds slightly onto the ground at its feet (minor). Others clean: #1 roof turret, #2 double street lamp, #4 metal stand removed; #7 building light blue.",
+  "level_ok": true,
+  "independent": "#6 (new red pot on the steps) and #8 (red pot turned blue) both concern planter pots - different kinds of change, acceptable",
+  "content": "Religious painting on the facade and the clock tower untouched; person at right untouched; banner text at the bottom untouched."
  }
 }
