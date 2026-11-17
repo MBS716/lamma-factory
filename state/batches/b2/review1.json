@@ -1,0 +1,212 @@
+{
+ "w45420971": {
+  "verdict": "fix",
+  "notes": "#4 added white pot carries a dark halo of its source background (dark band and green leaves on its left and right edges) and has no contact shadow, so it looks pasted; re-cut with a tight SAM mask and add a soft ground shadow (or replace with another difference). #2 metal bucket is only ~130x118 px (≈20 px on a phone) - small for easy; consider a bigger target. #1 tent green, #3 red pot, #5 rock removal are clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w39202448": {
+  "verdict": "fix",
+  "notes": "#5 iron wall anchor is only ~75 px wide (≈11 px on a phone), dark on a busy brick wall - not obvious for easy; also the brick patch has a visible vertical seam at x≈1600. Replace #5 with a bigger object. #3 white shutter (85 px wide) is borderline small but reads well as blue. #1 and #2 chimney shortenings are clean but the cut tops are flat with no cap - acceptable. #4 green door clean.",
+  "level_ok": false,
+  "independent": "ok (two chimney-shortenings are separate chimneys)",
+  "content": ""
+ },
+ "w1226206": {
+  "verdict": "fix",
+  "notes": "#3 woodpile is ~112x66 px (≈17 px on a phone), tiny in a wide landscape - too small for easy; replace with a bigger change (e.g. another chalet roof or a whole tree). #2 added pine (105x147) is borderline but reads. #1 green house, #4 blue roof, #5 shrub removal are clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w35074595": {
+  "verdict": "fix",
+  "notes": "#3 'window became bigger' is a 72x52 px window enlarged slightly - far too subtle for easy; replace. #4 brown door removed from brown brick wall (78x156) is low-contrast and small on a phone; consider replacing or choosing a larger target. #1 dark roof patch removal, #2 blue cart, #5 red gable are clear and clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w63861037": {
+  "verdict": "fix",
+  "notes": "#5 added window is a hard-edged rectangle pasted across the timber stripes with no frame/sill alignment - looks like a sticker when enlarged; place it inside a panel aligned with the timbers or feather the edges. #1 chimney shortened with a flat blunt cut (acceptable). #2 green door, #3 bench copy, #4 red gate door are good.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w11958525": {
+  "verdict": "fix",
+  "notes": "#4 and #5 are both added rocks on the grass - same kind twice, both look pasted (no contact shadow, no grass over their bases, #5 has a dark halo on its upper edge); replace one with a different difference and blend the other. #3 filled opening leaves a dark strip along its bottom edge; extend the fill. #1 green roof and #2 blue door are clean.",
+  "level_ok": true,
+  "independent": "#4 and #5 are two copies of the same type of wall stone placed side by side",
+  "content": ""
+ },
+ "w35074356": {
+  "verdict": "fix",
+  "notes": "#1 blue door recolour leaks light blue onto the stone lintel above the door (x≈580-760, y≈1265-1290); tighten the mask. #4 fence recolour is messy: neon green, left pickets stay brown, brown blotches remain, green spills onto the brick between pickets and onto the hedge at right; redo with a poly mask and natural green (val/sat lower). #2 arched window removal (77 px wide) is small for easy but reads. #3, #5 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40379612": {
+  "verdict": "fix",
+  "notes": "#1 roof box (whole roof) reaches down to within ~40 px of #2 door and #4 window boxes - taps on the windows/door top could hit the roof; tighten #1 box to the roof. #5 grey outhouse removal sits in dark foliage and is low contrast on a phone; #3 bench removal is also in shade - both weak for easy, consider a brighter target for one. #2 green door and #4 added window are clean. Dim, leafy scene overall.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w75418346": {
+  "verdict": "fix",
+  "notes": "#5 removing the X-shaped trestle leaves the long fence log floating in mid-air, and the thin white rope that crossed the area is erased (cut-off cable); choose another target or keep the rope. #3 wheelbarrow (155x65) is small but readable. #1 red rear roof, #2 blue bench, #4 log bench removal are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w32225557": {
+  "verdict": "fix",
+  "notes": "#2 white-blossom shrub removal leaves an obvious blurry smear of green streaks over the tree/fence area; choose a cleaner removal (or recolour the blossoms). #1 chimney removal, #3 hedge ball removal, #4 red bench, #5 added shrub ball are clean. A person stands next to #2 (not edited - fine).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w25945798": {
+  "verdict": "fix",
+  "notes": "#5 removing flowers from the stone trough destroys the trough itself: its basin and rim are smeared into a grey blur; redo or replace. #3 satellite-dish removal leaves a smooth blurry patch without mortar lines on the stone wall, visible on a phone at easy; redo with a texture patch. #4 added window is only ~94x86 px (≈14 px on a phone) - small for easy. #1 orange willow and #2 flowerpot removal are good.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w58267753": {
+  "verdict": "fix",
+  "notes": "#12 upscaled orange pepper is visibly softer than its neighbours and its edge spills over the green bowl rim with a dark fringe at top-right; use a smaller factor or re-mask. All other 11 are clean and readable (#5, #7 small but fine when zoomed). Bottles with brand labels appear but are not the subject; #2 changes only a cap colour, #4/#11 remove whole bottles (no text edited).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26382436": {
+  "verdict": "fix",
+  "notes": "#4 enlarged yellow buoy carries a blurred rectangle of water around it and a smeared doubled reflection - visible halo when zoomed; redo with tight mask or replace. #2 searchlight removal leaves a faint grey ghost smudge on the white cabin roof edge (x≈1160-1190, y≈700-750); clean it. Others (#1 ring, #3 bag, #5 fender, #6 green reel, #7 red cloth, #8 extra tyre, #9-#11 small removals, #12 blue bucket) are good. Boat-name text untouched. Scene note: same Heraklion harbour (Koules fortress at left) as batch-1 hard w26767729 - different boats and framing, not a duplicate pair, but avoid showing them close together.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w38896266": {
+  "verdict": "fix",
+  "notes": "#12 big buoy orange->yellow is incomplete: a red/orange fringe remains along the outline where the blue frame bars cross it and the bottom tip under the frame stays red/pink; extend the mask (pick big, more pts). Also #12 and #3 (blue barrel right of it) are only ~65 px apart - acceptable but close. Other ten differences are clean and well varied.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w68707104": {
+  "verdict": "fix",
+  "notes": "#7 'white cabin smaller' sits in the softest, blurriest strip at the top edge (y≈67-93) and the shrink is barely perceptible even zoomed; replace with a clearer change. #10 added white truck is only 24x33 px among dense traffic - below the 35 px hard minimum and lost in noise; enlarge target or replace. Others (#1 gold glass dome, #2 flag, #3 small dome, #4 truck, #5 car, #6/#8 benches, #9 yellow bus, #11 white blossom tree, #12 smaller pine) are fine for hard. 5/12 recolours (at the limit).",
+  "level_ok": true,
+  "independent": "ok (#4 removes one truck, #10 copies a different one)",
+  "content": ""
+ },
+ "w31296618": {
+  "verdict": "accept",
+  "notes": "All 12 clean and readable when zoomed: car/cabinet/boat/cover removals fill naturally on water and pavement; #8 flipped cabin boat is clearly asymmetric; #11 smaller boat natural; recolours (#3 truck, #4 door, #5 gate, #6 funnel, #12 van) are complete with no leak. 5/12 recolours (limit). Signs (Portsmouth Historic Dockyard, HMS Warrior) untouched. Historic ship shows no weapons as subject.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w15054262": {
+  "verdict": "fix",
+  "notes": "#12 hanging pulley 'became smaller' - the size change is tiny and hard to see even zoomed (≈615 px changed); use a stronger factor or replace. #1 small pot on dark top shelf (306 px changed) is weak but readable in crops - consider a brighter target. Others (#2 light-blue box, #3 weight, #4 bigger pulley, #5 red paint, #6 blue chisel, #7 hook, #8 latch, #9 ladder, #10 bigger lantern, #11 peg) are clean. Signs AMRUM/MEROVEE/HAMBURG untouched. Dark but atmospheric scene.",
+  "level_ok": true,
+  "independent": "ok (#2 white box and #5 green-painted board are separate objects)",
+  "content": ""
+ },
+ "w158854745": {
+  "verdict": "accept",
+  "notes": "All 12 good for hard: removals of van, skylights, planter, solar panel and chimney fill naturally (solar-panel area slightly smoother than surrounding roof but plausible); recolours (#3 awning, #5 car, #7 barrel, #10 portable toilet, #11 bin) are complete; #4 taller chimney natural. 5/12 recolours (limit). Tiny people untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w49540619": {
+  "verdict": "fix",
+  "notes": "#8 blue mast->red: only the vertical pole is red, the cross-boom stays blue (half an object), and red blotches leak onto the pale-blue band of the building behind (x≈270-330, y≈785-800); include the boom and tighten the mask, or drop. #5 green shutter has a soft green halo bleeding onto the pink wall; tighten. Others fine (#2 added buoy lacks reflection but reads; #9 laundry is not on a person). 5/12 recolours. Greek flags and shop signs untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w89106661": {
+  "verdict": "accept",
+  "notes": "All 12 clean and readable: lantern removal, two flower-pot recolours (#2 red, #11 white), drain removals (#3, #6), larger motorbike (#4), larger lamps (#7, #10), added silk lantern (#9), blue pot/jar recolours, red lantern (#12). Minor: some repetition of type (two drains, two chrysanthemum pots). 5/12 recolours (limit). Shop sign text untouched; people and mannequins untouched. Note: same Hoi An yellow-shopfront-with-lanterns look as batch-1 w89114423 (different building) - owner may want to space them apart.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w48932868": {
+  "verdict": "fix",
+  "notes": "#2 'small white house on the hill disappeared' does not match the edit: the white/blue house is still there; only a tiny shrub/trunk above it vanished and the change is lost in noise - replace. #9 red door->blue leaves a red strip on the door's left edge (half-recoloured); extend mask. Others fine. Picture is soft (low-res). A minaret is visible at right but not edited.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Minaret in view (not edited) - acceptable"
+ },
+ "w139237183": {
+  "verdict": "fix",
+  "notes": "#10 blue-car removal leaves a blurry smear (tree canopy and pavement smudged) where the car was; redo or replace. #6 shade-sail blue->red also turns the blue climbing toy at upper right of the playground partly red (leak onto another object); add neg points. #1 slide removal leaves a soft blurry patch on the mulch - acceptable but improve if possible. Others fine.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w20905114": {
+  "verdict": "fix",
+  "notes": "#7 removed small framed picture may be a devotional/religious image (typical in Alpine rooms; content unclear when zoomed) - safer to replace with another object. #3 lantern and #8 figurine on the window sills are ~57 px apart (slightly under 60). Others clean: ram head removal, chamois flip, bigger sugar jar, blue pot, rope, painting, blue heart, blue ribbon, smaller ceiling lamp. Mounted animal heads are hunting trophies - acceptable for family.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#7 small picture possibly religious - replace to be safe"
+ },
+ "w146242698": {
+  "verdict": "fix",
+  "notes": "#5 umbrella white->red also turns the white chair in front of it red (leak onto a second object); add neg points on the chair. #6 roof-dormer removal leaves a dark ghost streak at its left end (x≈400-420, y≈620-630); widen dil. #2 enlarged chimney is a bit soft/warped and #10 enlarged bollard is soft - acceptable. #4 and #6 are both dormer removals (different dormers). 'GRAND HOTEL' text untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w11637582": {
+  "verdict": "fix",
+  "notes": "#6 orange-rock removal smears the edge of the stone path into the gravel (path texture lost, soft blurry border x≈880-960, y≈1380-1500); redo with smaller mask or replace. #2 small red cactus removal leaves a soft dark blur patch on the gravel; acceptable but improve. #4 enlarged lantern head is blurry. Others (#1 blue windmill cap, #3 bigger cactus, #5 prickly-pear removal, #7, #8 bigger aloe, #9 green plants, #10 added barrel cactus, #11 stone, #12 yellow cactus) are good. Visitors near the windmill untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w43648984": {
+  "verdict": "accept",
+  "notes": "All 12 readable and clean when zoomed: chimney removal, boat-cover recolours (#2, #3, #4), curtain, lantern, mooring pole, iron X anchor, taller chimney, flag, small lantern, bigger lamp head. Minor: #6 leaves a small bracket stub (reads as a wall hook); #12 enlarged globe slightly soft. 5/12 recolours (limit). The mosaic and 'SALVIATI' lettering on the central palazzo are untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w170221395": {
+  "verdict": "accept",
+  "notes": "All 12 clean: white dish, two TV-antenna removals (#2, #8 - same type twice, acceptable), blue/red/brown doors, bigger red buoy, added white buoy, small window, roof post, bigger fender, fender removal (rope ends at rail, no stub). 4/12 recolours. Good harbour scene.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w19251402": {
+  "verdict": "accept",
+  "notes": "All 12 work for hard. Minor: #1 red lifebuoy is flat and has a faint orange halo on the white roof above; #9 enlarged notice board also enlarges its posters (no text altered). Scale-heavy (4 scales) but each reads clearly; 5/12 recolours (limit).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w150610310": {
+  "verdict": "fix",
+  "notes": "#9 red meander panel ->blue failed: the bricks stay red with only scattered dark-blue blotches (patchy, half-done); redo with a poly mask covering the red tiles, or replace. #5 garage stripe yellow->red leaves short yellow stubs at both ends (x≈2090 and x≈2395); extend. #3 (left ridge ornament removed) and #4 (right ridge ornament enlarged) are the two end-pieces of the same roof ridge - borderline 'two parts of one object'; consider replacing one. #2 and #12 boxes ~54 px apart. Others clean.",
+  "level_ok": true,
+  "independent": "#3 and #4 change the two ridge-end ornaments of the same roof",
+  "content": ""
+ },
+ "w62788972": {
+  "verdict": "fix",
+  "notes": "#5 antler flip leaves ghosts of the original: a dark tip fragment at upper left next to the 'ANTIQUES' sign (x≈1925, y≈1030) and the original shadow at right (x≈2010, y≈1110); clean the background before flipping. #2 removes two crows as one difference (reads as one pair - acceptable). #6 bollard and #10 painted oval sign are removed entirely (text vanished with its object - allowed). Others clean. 5/12 recolours (limit).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ }
+}
