@@ -1,0 +1,170 @@
+{
+ "w45420971": {
+  "verdict": "fix",
+  "notes": "#4 added white rock (copy of the fire-ring rock, ~112x68 px) is soft/blurry with a brown halo ring and no shadow - reads as a pasted blob, and is below the ~150 px easy size; replace #4 with another big clean change (e.g. remove the wooden barrel or the small crate on top of the right chest). #1 tent green, #2 enlarged white pot (215 px), #3 red pot, #5 rock removal at fire are clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w39202448": {
+  "verdict": "accept",
+  "notes": "All 5 read well. #1/#2 chimney shortenings: tops clean, only a slight soft line at extreme zoom. #3 blue shutter (85x180) and #4 green door clean recolours. #5 new box shrub at wall foot (copy of the door shrub) sits naturally on the grass and is big. Two chimney shortenings is a little repetitive but they are separate objects.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w1226206": {
+  "verdict": "accept",
+  "notes": "Fixed #3 (tree right of the green-shutter chalet removed) is a clean, large change; fence and slope rebuilt well. #1 green walls (bright but plausible paint), #4 blue roof, #5 round shrub removal clean. #2 added pine (105x147) is on the small side for easy but dark on bright grass, easy to spot.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w35074595": {
+  "verdict": "fix",
+  "notes": "#3 (small shed left of the barn removed) is only ~85 px wide, sits in deep shade at the left edge, and the fill is a muddy brown-green smear - not fair or clean for easy; replace #3 with a large, bright, non-recolour change (e.g. remove the big white window of the right building or the board pile at the barn foot, ≥150 px). #4 door removal (78x156) is clean but small/low-contrast - acceptable only because the door is tall; enlarge the box target if a better one exists. #1 dark roof patch gone, #2 blue cart, #5 red gable are clear and clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w63861037": {
+  "verdict": "accept",
+  "notes": "Fixed #5 window now sits inside a timber panel with frame and sill - natural. #3 bench copy reads well (tiny bit of copied yellow under the seat, not noticeable at play size). #1 chimney shortened (flat top, acceptable), #2 green door, #4 red gate door clean. All big and obvious.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w11958525": {
+  "verdict": "fix",
+  "notes": "#5 (lower part of the big upper opening walled up) repeats the kind of #3 and its patch reads as a pasted rectangle: straight vertical seam at x≈690 and a hard horizontal top edge at y≈570 with no sill; replace #5 with a different kind of change (e.g. remove the rusty iron bar across that opening, or remove the small dark window at the top middle). #1 green roof, #2 blue door, #3 lower opening filled (clean now), #4 new rock on the grass (has a contact shadow, ~142 px) are fine.",
+  "level_ok": true,
+  "independent": "#3 and #5 are the same kind (an opening walled up with stones)",
+  "content": ""
+ },
+ "w35074356": {
+  "verdict": "accept",
+  "notes": "Round-1 issues largely fixed: #1 blue door no longer leaks on the lintel (a few brown specks remain along the very top edge, invisible at play size); #4 fence now fully, naturally green - only tiny green specks on mortar above it and a light-green stake behind it at x≈1420, visible only zoomed. #2 arched window gone, #3 square window gone, #5 plant pots gone (135x87 but white pots on dark ground, reads) are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40379612": {
+  "verdict": "fix",
+  "notes": "#1 roof 'became grey' is weak for easy: the old tiles were already dull grey-brown, so the change is only a loss of the reddish tint; orange tiles remain along the gutter (x≈1150-1300, y≈480-500) and the tree leaves overlapping the roof (x≈1000-1060, y≈150-220) were greyed too. Make #1 a clearly visible change over the whole roof (stronger slate-blue/charcoal, cover the gutter rows, neg points on the leaves) or replace it. #2 green door, #3 bench removal (now clean), #4 new small window, #5 new shrub by the downpipe read well.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w75418346": {
+  "verdict": "fix",
+  "notes": "#5 added pine top carries a dark, straight vertical strip down its right side (x≈1215-1230, y≈370-440 at 2400) - a cut edge from the source tree that makes it look pasted; re-cut the copy (tighter SAM mask / feather the right edge). Minor: #4 log removal leaves faint ghost fence posts and an invented plank continuation at x≈2160-2260, y≈950-1000 (soft, acceptable at play size); #2 blue bench also turned the flower box on it blue (minor). #1 red rear roof and #3 wheelbarrow removal are clean. Round-1 trestle issue is gone (replaced).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w32225557": {
+  "verdict": "accept",
+  "notes": "Fixed #2 is now a clean blossom recolour (white to pink) - natural, no smear; the person beside it is untouched. #1 chimney removal clean at play size (rebuilt hip edge lacks the ridge-cap tiles and has a small white nub at x≈1445,y≈365 - only visible zoomed). #3 hedge ball removal, #4 red bench, #5 new shrub ball before the greenhouse are clean and obvious.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w25945798": {
+  "verdict": "accept",
+  "notes": "Fixed #3 satellite dishes now gone under a real stone-texture patch with mortar (it repeats the stones just below it - only noticeable zoomed); cable removed with them, no cut ends. #4 new window is now tall (74x206) with a stone surround - reads. #1 orange willow, #2 flowerpot removal (bright pot, clean fill), #5 yellow neighbouring house wall are clean and obvious. Trough edit from round 1 is gone.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w58267753": {
+  "verdict": "accept",
+  "notes": "Fixed #12 (orange pepper at green bowl rim now green instead of upscaled) - no spill or fringe; it is a bit flat/plasticky when fully zoomed but reads as a green pepper. All other 11 clean and visible zoomed: #1 glove gone, #2 green cap, #3/#6/#9 peppers turned red, #4 and #11 bottles gone, #5 and #7 small peppers gone, #8 jar smaller, #10 leaf gone. Note: 4 of the 5 recolours are peppers (three to red) - repetitive but acceptable for a pepper scene.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Brand-labelled bottles are background only; no label text edited (#8 scales a jar whole)."
+ },
+ "w26382436": {
+  "verdict": "accept",
+  "notes": "Fixed #4 is now a clean removal of the yellow buoy (no halo); #2 searchlight removal clean (no ghost on roof edge). All 12 visible when zoomed and clean: #1 lifebuoy, #3 bag, #9 wind-turbine head (its thin pole stays - fine), #10 blue sticker, #11 green light removed; #5 orange fender, #6 green reel, #7 red cloth, #12 blue bucket; #8 extra tyre with rope looks natural.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Boat-name text untouched. Same Heraklion harbour as batch-1 hard w26767729 (different boats) - avoid scheduling close together."
+ },
+ "w38896266": {
+  "verdict": "accept",
+  "notes": "Fixed #12 buoy now fully yellow including under the frame bars; only a tiny pale strip remains at the very bottom tip (x≈1120-1180, y≈1285) - negligible. #3 barrel removal reads as a natural dark corner (soft fill, no ghost). Others clean and well varied: #1 white helmet, #2 blue bin, #4 smaller bucket, #5 blue box and #6 orange motor gone, #7 bigger red motor, #8 chalk circle gone, #9 black bucket gone, #10 oil stain gone, #11 green box. #3/#12 boxes ~65 px apart - acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w68707104": {
+  "verdict": "fix",
+  "notes": "Round-1 fixes are good: #7 (light shrub by the path removed) and #10 (new dark round shrub on the lawn) are clean and clearly visible zoomed. Remaining issue: #3 small silver dome turned gold duplicates #1 (glass dome turned gold) - same kind and same colour; change #3 to a different colour (e.g. verdigris green or dark grey) or another kind of change. Minor: #6 and #8 are both bench removals (acceptable). #2 flag, #4 van, #5 blue car, #9 yellow bus, #11 blossom tree white, #12 smaller pine are clean.",
+  "level_ok": true,
+  "independent": "#1 and #3 are the same change (a dome turned gold); #6 and #8 are both bench removals",
+  "content": "#9 bus side lettering is recoloured with the bus but stays crisp (not edited)."
+ },
+ "w15054262": {
+  "verdict": "accept",
+  "notes": "Round-1 weak #1 and #12 were replaced: #1 white rope coil gone from the bench (bright, clear; a faint shadow remnant at x≈1350-1380, y≈885 only zoomed) and #12 wooden door latch gone (plank fill a little soft but natural). All 12 visible zoomed and clean, good variety: #2 light-blue box, #5 red paint, #6 blue chisel handle; #3 weight, #7 hook, #8 latch, #9 model-ship ladder, #11 peg removed; #4 bigger pulley, #10 bigger lantern. Dark scene but every change is lit.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Signs AMRUM/MEROVEE/HAMBURG/CESINA untouched."
+ },
+ "w49540619": {
+  "verdict": "fix",
+  "notes": "#6 orange cover -> blue is half-done: only its left third (x≈1950-1965, y≈1185-1205) turned blue, the rest stays orange, and blue leaks onto the wooden post at x≈1933-1940, y≈1170-1205; recolour the whole cover (pick big, more pts along x≈1965-2000) with a neg point on the post, or drop/replace #6. Round-1 #8 fixed (mast and boom both red; only a tiny red bulge at x≈300, y≈790) and #5 green shutter now clean. Others fine: #1 lantern, #4 antenna, #9 black laundry removed; #2 yellow buoy and #11 extra fender added; #3 bigger dish, #7 bigger rooftop shrub; #10 yellow box, #12 red crate.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Greek flags and shop signs untouched; #9 laundry is not on a person."
+ },
+ "w48932868": {
+  "verdict": "fix",
+  "notes": "#2 (small window in the brown wall at right removed) leaves a ghost: a smooth darker-brown square where the window was (x≈2295-2340, y≈1085-1130), visibly blurrier than the dotted wall around it; redo the fill with larger dil / a texture patch from the wall above so no square remains. Round-1 #9 fixed (whole door blue now). Others clean: #1 bigger blue parasol, #3 water heater gone, #4 bigger heater, #5 chimney, #6 orange board, #8 ladder gone, #7 green door, #10 orange cloth, #11 green railing, #12 red awning.",
+  "level_ok": true,
+  "independent": "#7 door and #11 railing are both blue-to-green recolours (different objects - acceptable); #3/#4 are two different water heaters (remove vs scale)",
+  "content": "Minaret in view, not edited - acceptable."
+ },
+ "w139237183": {
+  "verdict": "fix",
+  "notes": "#1 slide removal leaves a ghost: a smooth, lighter olive rectangle with clear edges where the slide stood (x≈1040-1110, y≈260-330) on the red mulch; refill with larger dil / mulch texture so no shape remains. Minor: #4 fountain removal leaves a soft dark disc whose left rim is smeared (x≈600-620, y≈770-820) - acceptable as an empty basin. Round-1 #6 leak and #10 smear are fixed (#6 shade sail red, toy stays blue; #10 now a clean empty parking spot). Others clean. Variety is removal-heavy (9 of 12, three car edits) but acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Small people visible near #11 and in the park are not edited."
+ },
+ "w20905114": {
+  "verdict": "fix",
+  "notes": "#4 chamois flip mirrors the whole box, so the small framed picture hanging behind its horns moves from the left side (x≈1915-1950, y≈430-530) to the right side (x≈2070-2100) - an extra moved object inside one difference; restrict the flip mask to the head and its wooden plaque (keep the picture in place) or replace #4. Others clean and well varied: #1 ram head gone, #2 bigger sugar jar, #3 lantern gone, #5 blue pot, #6 rope coil gone, #7 framed painting gone, #8 sill rock flipped, #9 dark painting gone, #10 blue heart, #11 blue ribbon, #12 smaller ceiling lamp.",
+  "level_ok": true,
+  "independent": "#4 flip also moves a second object: the small dark framed picture behind the chamois horns jumps from x≈1920 to x≈2080",
+  "content": "Round-1 possibly-religious picture replaced by a mountain landscape painting (#7) - fine. Mounted trophy heads acceptable."
+ },
+ "w146242698": {
+  "verdict": "fix",
+  "notes": "#7 added bollard on the path is pasted with a rectangular block of dark hedge from its source behind it (x≈572-598, y≈1410-1450) cutting into the paving - clear sticker; re-cut with a tight SAM mask (no background) or replace #7 with a different kind of change (it is also the third repeated pair). #2 enlarged right chimney is warped: the white body is offset with a step on its right side (x≈1815-1825, y≈440-470) and the cap no longer sits on it; use a smaller factor (~1.2) with a tight mask, or replace. Round-1 fixes OK: #5 red umbrella no longer leaks onto the chair, #6 dormer removal clean. Others fine: #1 extra chimney, #3 spire mast gone, #4 dormer gone, #8 blue beach-chair stripes, #9 yellow flowers, #10 bigger bollard (soft), #11 flower box gone, #12 bigger shrub ball.",
+  "level_ok": true,
+  "independent": "Repetitive pairs: #1/#2 both chimneys, #4/#6 both roof dormers, #7/#10 both bollards (all different objects)",
+  "content": "'GRAND HOTEL' text untouched."
+ },
+ "w11637582": {
+  "verdict": "accept",
+  "notes": "Round-1 #6 smear replaced by a clean enlargement of the orange rock; #2 removal now clean on the gravel. All 12 visible zoomed: #1 blue windmill cap, #4 green lantern, #9 green plants, #12 yellow cactus; #2, #5, #7, #11 removals clean; #3 bigger red cactus (a little soft), #6 bigger rock, #8 bigger aloe; #10 added barrel cactus sits on the gravel (soft rim, no cast shadow - acceptable at play size). Several cactus edits, but varied in kind.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "Visitors near the windmill untouched."
+ },
+ "w150610310": {
+  "verdict": "accept",
+  "notes": "Round-1 issues fixed: #9 meander panel now fully recoloured (reads as dark slate blue-grey, white key pattern crisp), #5 garage stripe fully red with no yellow stubs, #4 is now a separate change (white gutter outlet removed) so no two-ends-of-one-ridge problem. All 12 clean and visible zoomed: #1 lantern, #2 copper downpipe, #3 ridge ornament, #6 iron bracket, #11 scroll, #12 vent pipe removed; #7 red window bars, #10 blue door; #8 bigger round stone. Minor: #9 box touches the left picture edge.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w62788972": {
+  "verdict": "accept",
+  "notes": "Round-1 #5 antler flip replaced by a clean removal of the antlers (no ghost, lamp and sign intact). All 12 clean and visible zoomed: #1 wagon wheel, #2 crow pair, #6 bollard, #9 yellow bag, #10 oval sign removed; #3 red umbrella, #4 green bench, #7 red hydrant, #8 blue SUV, #11 red window frame; #12 bigger lamp head (soft, slightly translucent at its lower right where it crosses the trees - acceptable at play size). 5/12 recolours, at the limit.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#6 bollard (with a number) and #10 painted oval sign vanish entirely with their text - allowed; no text altered. Store signs untouched."
+ }
+}

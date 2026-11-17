@@ -43,3 +43,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - fixes1.txt: 24/24 hard+easy fixed, no "still". Originals in work/fix_b2/<id>.orig.py.
 - Running: same fixer on 6 medium fixes (appends to fixes1.txt); review round 2 of the 24 → batches/b2/review2.json (ids in work/review2_b2/ids.txt).
 - Next: review round 2 of the 6 medium fixes; then build b2, page, report.
+
+## Update 2026-11-17 (review2 hard+easy done)
+- review2.json: easy 6 accept / 5 fix; hard 7 accept / 6 fix; 0 reject.
+- Next: after the fixer finishes the 6 medium fixes, send it the 11 review2 fixes → fixes2.txt. Then review round 3 (last) for those 11 + review round 2 for the 6 medium.
