@@ -53,3 +53,6 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - Running: fixer on 11 review2 fixes → fixes2.txt; reviewer (round-2 agent) on 6 medium fixes → adds keys to review2.json.
 - Next: final review round 3 for the 11 (+ any medium fixes from round 2) → review3.json; then build/page/report.
 - review2 medium: 0 accept / 6 fix (one difference each). Queued to fixer after the 11 → fixes2.txt. Then review3 (final) for 17 ids.
+
+## Update 2026-11-17 ~23:xx — usage limit hit (5-hour limit, resets 00:10 Riyadh)
+- Fixer stopped mid fix round 2. Progress = lines in batches/b2/fixes2.txt. Resume: SendMessage the fixer (continue; skip ids already in fixes2.txt; then the 6 medium).
