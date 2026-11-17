@@ -34,3 +34,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - b2 medium FINISHED: 14 accepted (4 + 10), all 57 sources used. Shortfall 10.
 - b2 totals before review: hard 19, medium 14, easy 11 = 44 of 72.
 - Running: fix round 1 b2 hard+easy (fixes1.txt); review round 1 b2 medium (merging into review1.json).
+
+## Update 2026-11-17 (review1 b2 medium done)
+- medium: 6 accept / 6 fix / 2 reject (rejected.txt). Medium now 12 viable.
+- fix round 1 hard+easy nearly finished (23/24 lines in fixes1.txt). Next: send same fixer the 6 medium fixes; then review round 2.

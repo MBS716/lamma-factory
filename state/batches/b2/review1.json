@@ -208,5 +208,103 @@
   "level_ok": true,
   "independent": "ok",
   "content": ""
+ },
+ "w39100728": {
+  "verdict": "accept",
+  "notes": "Clean pair. #1 roof brown->grey covers whole roof; #3 bicycle removal clean (rack stays, no ghost); #7 wall lantern gone cleanly in front of drainpipe. #2 postbox (66 px) and #4 vent (67 px) are a bit small but high contrast on a plain wall. GOSTILNA text untouched. Types: 6 removals + 2 recolours - mostly removals but acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w183685175": {
+  "verdict": "fix",
+  "notes": "#8 scaled brown pitcher drags a cut piece of the blue shelf bracket with it: a floating blue fragment on the pink wall at ~(2195-2220, 235-260), and the wall hook behind the handle is enlarged/shifted up; clean that fragment (re-mask the scale to the pitcher only). #6 tongs flip also mirrors the tiny embossed lettering (illegible at phone size, acceptable). Others clean: #1 flip, #2 blue jug, #3/#5 jar cloths (labels untouched and crisp), #4 knob, #7 pan removal. Good variety (2 flips, scale, add, removal, 3 recolours).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w89400900": {
+  "verdict": "accept",
+  "notes": "All clean. #3 added folded red parasol is an exact copy of the existing one (stays in both) - fine. #4 white plaque, #5 left lantern, #6 lantern, #7 spotlight, #8 round red window sticker (whole sticker gone, other sticker untouched) are clean. #1 shutter and #2 door recolours cover the whole object. Restaurant name lettering untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w11453618": {
+  "verdict": "accept",
+  "notes": "Good variety (2 scales, flip, 3 removals, 2 recolours). #1 roof urn is thin (44 px wide) but its gap in the row of urns makes it findable. #4 bench flip keeps original ground shadow - acceptable. #2 taller chimney and #8 roof skylight are ~70 px apart; distinct objects, ok.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w33985815": {
+  "verdict": "accept",
+  "notes": "Clean removals (#1 antenna, #2 yellow bucket, #3 yellow ball, #4 orange float, #5 rope coil) and recolours (#6 pipe, #7 big basket, #8 lid). #2 and #4 are ~58 px apart under the same roof but are clearly different objects. Fisherman untouched. Mostly removals + 3 recolours; ok.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w150454718": {
+  "verdict": "accept",
+  "notes": "Attractive. #4 hanging flower cage removed cleanly; #5 added butterfly copies the existing wall butterflies (54 px wide - small but teal on red). #3 gutter outlet (68 px, grey on grey) is the hardest one - acceptable for medium. #6/#8 are two balcony panels on different bays; fine but similar.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w31695201": {
+  "verdict": "fix",
+  "notes": "#5 hanging broom removal leaves a clear smeared dark ghost between the hanging tools at ~(1200-1245, 1240-1340); broom is also thin (40 px). Replace #5 with another difference (e.g. remove/recolour the hanging kettle or a larger object). #3 board removal leaves a slight hazy smear at the door base (~740-790, 1440-1455) - acceptable but could be cleaner. Others clean (#1 weather vane with its date removed entirely, #6 bench, #8 barrel green).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40799729": {
+  "verdict": "fix",
+  "notes": "#2 top rose removal leaves a blurry green/white ghost in the sky over the cable (~200-260, 340-390); redo or replace. #6 right bollard removal leaves its orphan ground shadow (dark oval ~2040-2090, 1050-1060) and a smeared stone wall behind (~2080-2160, 980-1030); fix or replace with a different type. #5 and #6 are the same kind of thin bollard (~50 px wide) - low variety; #7/#8 also two identical pot recolours. #4 table plant is small (46x76). Suggest replacing #6 with a flip/scale/add.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w33788677": {
+  "verdict": "accept",
+  "notes": "#1 rip-currents sign gone (whole sign; faint soft rectangle visible only when zoomed). #2 boarded window fill is a smooth plain panel - plausible. #8 'NO' rules sign removed entirely (fine). #5 and #6 are both yellow parking blocks - similar, low variety but in distinct places. Door number and other signs untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w17314661": {
+  "verdict": "fix",
+  "notes": "#3 added dormer has a ghost tail of roof shingles smeared to its right (~1715-1780, 755-800); re-cut the copy tightly. #4 wall-lantern removal also wiped the window recess behind it into a grey blur (~2055-2100, 900-1040) - the window must stay intact or pick another object. #6/#7/#8 are three shutter recolours (48-60 px wide) - low variety; replace one with a non-colour change. #1 chimney and #3 dormer are only 48 px apart. #2 and #5 remove whole signs/menu board cleanly.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w81760623": {
+  "verdict": "fix",
+  "notes": "#4 right floodlight is tiny (34x36 px) and its shadow remnant stays on the wall/lintel (~985-1000, 480-500); it is also the same kind as #3. Replace #4 with a larger, different-type difference. #6 chimney (45x86) and #5 dish (52x64) are small but contrasty. #1 thin sluice post (48 px) ok. Title is very close to b2 hard w25945798 'الطاحونة الحجرية والدولاب المائي' (different photo) - consider a more distinct title.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w71171565": {
+  "verdict": "fix",
+  "notes": "#3 roof skylight is only 92x22 px and low contrast (pale on red roof) - not findable on a phone; replace. #6 bus green stripe->red is a 106x38 strip (~7 px on phone); replace with a bigger change. #8 pot (60x48) small but contrasty. Others clean (#1 roof turret, #2 double lamp, #4 stand, #5 tarp, #7 building blue). Religious painting on the facade untouched.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w137724747": {
+  "verdict": "reject",
+  "notes": "Wide village view where almost every target is tiny: #1 round sign 48x58, #2 hill pylon 40x64 (leaves green blur), #3 window 52x64, #4 flue 28x114, #7 shutter 38x78, #8 broom stick 22x110. Six of eight are below the ~70 px / thin-object threshold - too hard and not fun on a phone.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w151778593": {
+  "verdict": "reject",
+  "notes": "#3 removes a round wall vent and #4 adds the same vent elsewhere - a move counted as two differences. Most targets are tiny on a picture that is ~40% sky: #1 spout 32x44 (leaves stub), #3 54x44, #4 46x42, #6 50x70, #7 44x58; #7 and #8 only 44 px apart. Nice Omani fort but would need 5+ replacements.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
  }
 }
