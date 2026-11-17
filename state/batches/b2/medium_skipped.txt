@@ -21,3 +21,23 @@ w88967689 police tape with text across the foreground; slide/ramp/box removals s
 w191866414 shopfronts are BAR / BRASSERIE / TABAC / LOTO signs (alcohol, tobacco, gambling) - content
 w12844142 monochrome sandstone balcony: only 2 lanterns, a grille window and a heraldic shield (with crown/cross) - cannot carry 8 diffs
 w38535362 canal scene: most objects mirrored in water reflections (edits would mismatch reflections), sign carries text; few free objects
+w151420175 only one object on plain wall (lantern); pots/plants sit in or behind the railing bars, sun plaques bolted to railing; would need >3 colour changes
+w62733236 dense foliage greenhouse with visitors in the middle; lamps hang over the roof grid, few separable medium objects
+w36915939 wide view: only ~5 clean medium diffs (roofs, one window); bench/table/window removals smear (shadows, fence, plaster), remaining candidates are tiny distant houses/windows
+w146242687 parasols and facade carry beer-brand LECH logos (alcohol) - content
+w27738611 only ~6 clean diffs: roof lantern/chimney removals ghost, beach chairs overlap in pairs, terrace items surrounded by people; rest too small
+w70721065 dense dry shrubs and cacti; only house, dome, rocks and a few tall cacti are separable - not 8 clean diffs
+w21781056 nude statues (bronze figure on balcony, white figures by fountain) prominent in view - content
+w4032536 wide park view: few objects (2 cabins, bench, stump, tree); removals of cabins/trees too large, rest too small - not 8 clean diffs
+w75155520 sunset riverbank: huts small and mirrored in water reflections; sky/palm dominate - not 8 clean medium diffs
+w41180241 dense glasshouse foliage with visitors; roof lamps over glazing grid; too few separable objects
+w154417024 crowded canal-side cafe, bare-chested men on the boat, advertising column with text; few free objects
+w48367065 only 6 clean diffs: chimney/window/planter removals leave ghosts (LaMa recreates them), lamps overlap door arch, flags/Lion of St Mark pole off-limits, poles stand in reflections
+w7695830 church tower with spire dominates the centre (religious building); rest is bridge/water reflections
+w151778585 sparse seascape: forts, palace and breakwaters; few separable medium objects, water reflections
+w15685517 most separable objects are small at this distance (chimney pots, vents, dormer windows ~25-35 px); boat carries people; bollards in reflections
+w89919427 continuous rhododendron beds with no separable objects; flower clumps merge, removals would smear foliage
+w50589752 big tree and hydrangeas dominate; separable objects are small (lanterns, bins, neighbour basket ~25-50 px) and the rain chain sits too close to the flower pots; 8 medium diffs not reachable cleanly
+w41243349 only 7 clean diffs: remaining candidates (roofs, chimney, fence) sit <36 px from other edits, thin rod/wires would leave dangling parts, boat carries people
+w134747091 rigging ropes cross every object; deadeye/block removals would cut ropes, few free objects - not 8 clean diffs
+w31051455 cluttered junk and net behind most objects; removals (barrel, net, sheets) would smear on busy background, big driftwood flip too large for clean fill

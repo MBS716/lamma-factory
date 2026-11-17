@@ -29,3 +29,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - review1.json b2 hard+easy: hard 6 accept / 13 fix; easy 0 accept / 11 fix; 0 reject.
 - Running: b2 medium worker; fix round 1 b2 hard+easy → batches/b2/fixes1.txt (one line per id; resume skips ids already there).
 - Next: review round 2 of fixed pairs + medium review round 1; then build/page/report.
+
+## Update 2026-11-17 (b2 medium production done)
+- b2 medium FINISHED: 14 accepted (4 + 10), all 57 sources used. Shortfall 10.
+- b2 totals before review: hard 19, medium 14, easy 11 = 44 of 72.
+- Running: fix round 1 b2 hard+easy (fixes1.txt); review round 1 b2 medium (merging into review1.json).
