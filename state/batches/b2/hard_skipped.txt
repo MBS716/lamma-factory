@@ -46,3 +46,26 @@ w76929387 dense planting: shrub/pot removals smear, pergola-post recolour unnatu
 w30270179 Christmas market stall with Christmas decorations (red bows, garlands) dominating; dark night scene
 w30271209 Christmas market stalls at night, people, decorations; same market as w30270179
 w99090200 church spire prominent, many cafe guests (people) fill the street
+w16486134 same cactus garden as accepted w11637582 (near-duplicate scene)
+w64043970 large empty gravel and sky; few small objects besides statues (figures off-limits) and topiary
+w67458115 small rooftop/bird targets fall below the 250 px gate; larger objects (bridge, facades) reflected in the river
+w23198817 Santa Maria della Salute basilica domes dominate (religious building)
+w146371174 masts/fittings too small or clustered for 12 spaced diffs; ship names (text), people in wheelhouses, branded barrels; half the frame water
+w41345775 Amsterdam canal again (near-duplicate of w41243336); people sitting on quay, tour boat with text
+w58642223 crowd of people, text signs and branded cafe; cars dominate the rest
+w56941175 woman in the centre dominates; few small objects in the blue alley (cats, bucket)
+w41243336 trees cover most facades; remaining targets are mostly cars and boats (too many of one kind), lantern in front of window
+w31758471 right half is surf and sea; beach objects (loungers, umbrellas) repetitive and tiny
+w89919417 rhododendron bushes and forest fill the frame; only the hut is a distinct object
+w49279732 overlapping patterned carpets (recolour-only), few separable small objects
+w82417908 people in the centre doorway; dense foliage, removals would smear
+w26149731 half the frame water and sky; boats tiny and overlapping; fortress walls plain
+w118047466 single object type (white cups); every difference would be a cup
+w11442535 single object type (copper pans in rows); every difference would be a pan
+w38710508 single object type (shoes on shelves); every difference would be a shoe
+w136512582 shop brand name WEBER and logo dominate the facade; shop window full of products
+w31796998 single object type (carved doors in a row); repetitive
+w68389088 one big vehicle with brand logo and lettering; rest is building facade and cobbles
+w26492776 repetitive pergola pillars and dense rose beds; removals inside planting would smear
+w12453167 near-duplicate of an earlier pair and church tower in view (selector note)
+w10559810 book stalls full of printed covers and posters (text everywhere); people on the quay

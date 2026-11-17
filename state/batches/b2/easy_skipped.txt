@@ -1,0 +1,30 @@
+w65414987 removals in front of vented wall smear; not enough clean big diffs
+w36343070 umbrellas tied to cast shadows/overlapping; not 5 clean independent big diffs
+w108740559 large removals (mirror) blur; few clean big options
+w45387208 cart covered by big writing, cluttered harbour background
+w40987610 only bench + two touching pots; not 5 independent big diffs
+w20681707 children in scene; roofs partly hidden by tree, removals/cloud add not clean
+w81546750 only flowerbeds + one urn; no separate big objects
+w83467637 single bench on leaves; too few objects
+w33261254 few big separable objects beyond domes/columns; columns thin
+w68597517 dominated by writing (map, alphabet charts)
+w62831076 hut dominated by roof and log wall; few separate big objects
+w1144281 covered bridge with text signs; few other objects
+w19343002 church in background, boat lettering, mirrored water reflection
+w31064383 water reflections; deck objects small and clustered
+w29562134 dominated by writing/ads and people in tram
+w2122447 too few objects (shutter, window, horse)
+w72579509 statues and many small windows/chimneys; no 150px separable objects
+w14037596 only big coloured doors; would be all recolours
+w47676311 railings run in front of every door; removals not clean
+w129335981 Chinese characters on lanterns, big letters sign, people
+w20292253 dominated by signs/writing
+w10701593 buses covered with writing; plates, signs
+w62134626 single greenhouse against wall; too few separate objects
+w53454325 objects (pots, tables) ~100 px; ornate facade mostly
+w82144330 writing on buildings/boat, water reflections
+w4250698 covered bridge over water with reflections; few objects
+w93725810 only 4 clean big diffs; stone-wall removals smear
+w33529195 shutters/doors thin; few big separable objects besides table
+w15663203 gate carries text signs; rest is wall and bushes
+w76929412 sign on building; tree removal smeared; base/flowerbed edits too close; not 5 clean
