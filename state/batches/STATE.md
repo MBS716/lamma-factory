@@ -13,3 +13,9 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-16 06:54 — weekly usage limit hit (resets 09:00 Riyadh)
 - b2: hard 13 accepted / 48 skipped (worker stopped; resume via message); medium 4 accepted (27 sources done; 30 word-filtered extras in medium_sources_extra.json); easy 0 accepted (worker had just started).
 - Resume order: b2 hard (resume) + b2 easy (resume), then b2 medium on medium_sources_extra.json, then independent review of b2.
+
+## Update 2026-11-17 17:10
+- b2 hard FINISHED: 19 accepted / 71 skipped (all 90 sources used). Shortfall 5 → carry to later batches/top-up.
+- b2 easy: running (11 accepted so far).
+- b2 medium: worker started on medium_sources_extra.json (4 accepted before).
+- Next: when both finish → independent review of b2 (hard first, can start once a slot frees).
