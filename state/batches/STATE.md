@@ -60,3 +60,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 (fix round 2 done)
 - fixes2.txt 17 lines: 15 fixed, 2 still → rejected.txt (w35074595, w11958525). b2 rejected total 4.
 - Running: final review round 3 for 15 ids (work/review2_b2/r3_ids.txt) → review3.json.
+- Started 4th source search (easy/medium simple scenes): scripts/spot_themes4.txt (64 themes) on spot-v5; spot-sources run 44180826227 → spot-sources:cand2. Next after it: selectors for b3 (easy+medium first).
