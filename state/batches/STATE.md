@@ -19,3 +19,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - b2 easy: running (11 accepted so far).
 - b2 medium: worker started on medium_sources_extra.json (4 accepted before).
 - Next: when both finish → independent review of b2 (hard first, can start once a slot frees).
+
+## Update 2026-11-17 20:10
+- b2 easy FINISHED: 11 accepted / 30 skipped (all 41 sources used). Shortfall 13 → needs new easy sources (search) for later batches/top-up.
+- Running: b2 medium worker; independent review round 1 of b2 hard+easy → batches/b2/review1.json + notes_ar.json (incremental; resume via message).
+- Next: medium review after the worker ends; fix round; build; page; report. Then new search focused on easy + medium sources before b3.
