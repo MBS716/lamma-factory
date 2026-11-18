@@ -121,3 +121,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 ~22:45 — b4 CLOSED: 7 pairs (easy 5, medium 2, 41 diffs), rejected 1 (w73610227)
 - b4 medium fixes done; lead-checked → review2.json. Built build/b4; 14 imgs uploaded (b4/blobmap.txt); page v8 (b4.json). Cost b4 ≈ 1.1M tokens (~155k/pair).
 - PRODUCTION PAUSED: waiting owner decision on picture source (Commons exhausted for our themes). Pending owner page decisions: b3 (27), b4 (7). Bank 190.
+
+## Update 2026-11-19 ~02:00 — owner approved b3+b4 (34) → bank spotlib-v8 = 224 (easy 77, medium 71, hard 76)
+- decisions db already d:"ok" for all 34. spotlib-v8 committed on spot-v5 (b5.sh/spot5-full default v8, README). Checks: verify 224/224, unique ids/sources/files, credits, masks, coords; scene test 10/10; local spot tests 65/32/28/28/7 + judge 1865/0.
+- preview-spot5 rebuilt (factory main db760e0). spot5-full emulator run 44409668798 running.
+- Production of new pairs from Commons STOPPED (owner). Trial: Openverse (scripts/spot_openverse.py, themes spot_themes_ov1.txt, out spot-sources:candov), run 44409671879.
