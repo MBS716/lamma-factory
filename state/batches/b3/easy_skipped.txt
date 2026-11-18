@@ -51,3 +51,35 @@ w34223662 toy sails carry numbers/flags; overlapping
 w34489292 apricots: objects overlap; removals smear, spacing between fruits too tight for 5 clean diffs
 w32895295 white fire house: signs with text, bins small; few big separable objects
 w32016386 temple-like pavilion (possible religious site) with dragon pot; avoid
+w34314878 crop: terrace full of people and restaurant text; objects small/entangled
+w33761598 crop: one Ford tractor dominates (brand text); changes would be parts of one vehicle
+w31604717 crop: Alhambra court — symmetric, many people, Islamic palace with inscriptions; few separable objects
+w28999944 crop: only ~3 big clean diffs (bins, kayak rack, door); life ring/buoys ~100 px, window overlapped by boat, boat has name text
+w28664714 crop: barn objects small (cupolas, louvres, horse <100 px) or need big fills (silo); fence thin
+w24274029 crop: pots overlap in piles; removals would need hidden pots, flips invisible (symmetric)
+w201954493 crop: piles of identical overlapping mangoes, person hand at top; no separate objects
+w179388255 crop: fruits and spoons touch/overlap; no 5 boxes 60 px apart, spoons same type
+w179388249 crop: piles of stuffed dates touching, handwritten price label; no separable objects
+w176022701 crop: Hotel-Dieu roof — repeated dormers/chimneys (same type), thin spires, people in the lower part
+w166091649 crop: national flag, iron fence around pillar, palms/bushes in front of yachts; no clean big separable objects
+w153962465 crop: distant ksar and palms; no big separate objects even cropped
+w151778556 crop: distant corniche, objects (cars, lamps) tiny; mosque with minaret in scene
+w130047349 crop: big lanterns carry Chinese characters (text), people at fence; few clean objects
+w126921797 crop: dolls touch/overlap each other, price tags and plastic bags; no 5 separated objects
+w125362729 crop: storefront full of text (restaurant sign, menus); remaining objects are repeated shutters/windows
+w123927936 crop: only 4 clean big diffs (bench, vine, flower box, grate); bin cut by bottom edge, beer-brand sign above, rest small/text
+w121637766 crop: distant city skyline, church spires; near objects are trees/wall with no clean separable items
+w112494618 crop: shop facades with brand names/text everywhere; repetitive windows, arches
+w110588022 crop: only 4 clean diffs; window removals on vertical planks smear/patch (2 tries), other objects small or tangled with vine
+w25547967 crop: barn wall objects (small door, window, ladder, birdhouse) small or on vertical planks where removals smear
+w25374233 crop: log cabin windows on vertical planks (removals smear), few separable objects; snow field
+w21810515 crop: tram full of people and text; people dominant
+w174133597 crop: gable with coat of arms + inscription (text) as centre; remaining windows on brick (removals smear), anchors thin
+w180043218 crop: facade items (windows, door, sign) packed <45 px apart; only ~4 spaced diffs (bench reaches bottom edge, bromeliad tangled)
+w179933798 crop: repetitive identical windows/bells/flower boxes; any 5 would repeat object types
+w175801447 crop: single tractor; candidate changes are parts of one vehicle
+w174133583 crop: building carries big text; buoys/boat small; reeds/water
+w174133636 crop: only mills (each one object), cottage roof and trees; sails thin, ~3-4 separable diffs
+w21370356 crop: train carries company text/logo; single vehicle, platform/tracks thin
+w201678913 crop: one crate dominates in dappled shade; apples overlap
+w153869698 crop: kasbah facade with KASBAH AMRIDIL text signs; windows small and repetitive

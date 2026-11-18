@@ -1,0 +1,7 @@
+w176041318 same fruit stall as accepted w176041324/w172230132 (too similar scene)
+w172230130 same fruit stall as accepted w172230132 (too similar scene)
+w65574551 detail only in a thin band (half sky, half empty paving); 12 small diffs would cluster
+w61379327 another harbour, dense crowds, alcohol brand sign (Heering) on facade
+w59341058 almost every object carries text/labels and overlaps others: removals expose packaging, flips mirror text; possible spirits bottles
+w4421008 another fishing-boat harbour scene (bank already has many)
+w197848634 parasols carry a beer brand (Kozel); facade medallions with saint images
