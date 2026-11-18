@@ -34,3 +34,12 @@ w47367259 veranda: child near right planter, painting has text; only ~5 clean ed
 w42584462 ivy-covered house: shutters all alike, ivy busy; edits would be repeats
 w4139063 gassho farmhouse: wooden facade busy, few medium separate objects (car, small items)
 w41202973 pergola: foliage-dominated, people on path, few separate objects
+w40379640 tractor is one object (only one edit allowed on it); other objects thin (ladder, rope) or few
+w3968170 village far away with church as focal point; houses tiny
+w3963158 village with church as focal point; houses tiny, trees repetitive
+w4057852 removals on plain grey leave dark ghost blobs (dish, tube, brush tip); paint add looks pasted
+w39090380 one big machine (edits would be parts of one object); logs repetitive
+w36067624 night fair: neon text signs, blurred crowd
+w36067478 lit fair ride with people; neon detail, no clean objects
+w35366924 aerial station: thin catenary/tracks, big station-name text
+w3450500 distant lakeside: boats packed (no spacing), houses' details <50px

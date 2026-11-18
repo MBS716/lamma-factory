@@ -88,3 +88,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 ~13:50
 - b3 easy FINISHED: 7 accepted / 53 skipped (60 sources). Hard worker started (40 sources). Medium running.
 - Easy plan B: crops. 40 sources (batches/b3/easy_crop_sources.json, medium/easy-rated, native ≥4800) fetched at 4800 as "b3c" (spot-fetch supports "<batch>@<width>:ids"). Tool /home/claude/spot3/crop.py (show / crop → src/<id>.png + batches/b3/crop.txt). Put hires jpgs in /home/claude/spot3/hires/. Start easy-crop worker when a slot frees.
+
+## Update 2026-11-18 ~14:10
+- b3 medium FINISHED: 5 accepted / 45 skipped (stricter lessons → lower yield). Easy 7. Hard worker running.
+- hires/ has 40 crop sources (max width 3840 = Commons thumb cap → crop ×1.6). Easy-crop worker running (target 17 more; crop.txt records crops).
