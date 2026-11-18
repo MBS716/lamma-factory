@@ -30,6 +30,8 @@ jobs:
             sheets2:*) python scripts/spot_sources2.py sheets ../src/cand2 "scripts/${r#sheets2:}" 12 ;;
             sheets3:*) python scripts/spot_sources2.py sheets3 ../src/cand2 "scripts/${r#sheets3:}" 12 ;;
             sheets4:*) python scripts/spot_sources2.py sheets4 ../src/cand2 "scripts/${r#sheets4:}" 12 ;;
+            ov:*) python scripts/spot_openverse.py sheets ../src/candov "scripts/${r#ov:}" 6 ;;
+            ovfetch:*) python scripts/spot_openverse.py fetch ../src/candov "${r#ovfetch:}" ;;
             fetch2:*) python scripts/spot_sources2.py fetch ../src/cand2 "${r#fetch2:}" ;;
             fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
             *) echo "nothing to do" ;;
