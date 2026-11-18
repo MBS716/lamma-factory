@@ -10,6 +10,9 @@ def check(ok, msg): R.append((bool(ok), msg)); print(('OK   ' if ok else 'FAIL '
 S = lambda pg: pg.evaluate('JSON.parse(JSON.stringify(H.s))')
 SHOTS = os.environ.get('SHOTS', '/tmp/claude-0/-home-claude/a7cbada7-322f-55e5-8221-30cda24e9f18/scratchpad/shots')
 
+IDX = json.load(open(os.path.join(DIST, 'spot', 'catalog', 'index.json')))
+TOTAL, PER = IDX['total'], IDX['levels']
+
 def thumbs_from_original():
     """every small copy is made from picture a (the original), never from b (the changed one)"""
     from PIL import Image, ImageChops, ImageStat
@@ -37,7 +40,7 @@ async def over_or_dump(host, t=20000):
 async def main():
     os.makedirs(SHOTS, exist_ok=True)
     n, bad = thumbs_from_original()
-    check(n == 60 and not bad, f'{n} small copies, each made from the original picture, not the changed one {bad[:2]}')
+    check(n == TOTAL and not bad, f'{n} small copies, each made from the original picture, not the changed one {bad[:2]}')
     async with Env(8812) as E:
         host = await E.page('host', 1280, 900)
         A = await E.page('A', 390, 844); B = await E.page('B', 360, 740); C = await E.page('C', 1280, 860)
@@ -55,16 +58,16 @@ async def main():
             await pg.wait_for_function('document.querySelector("#playerMain").innerText.includes("المقدّم يختار صورة الجولة")', timeout=5000)
         check(True, 'the phones show «المقدّم يختار صورة الجولة…»')
         cards = await host.evaluate('[...document.querySelectorAll(".dfpk-c")].map(c => ({id:c.dataset.id, t:c.querySelector(".dfpk-t").textContent, m:c.querySelector(".dfpk-m").textContent, s:c.querySelector(".dfpk-s").textContent, img:c.querySelector("img").getAttribute("src")}))')
-        check(len(cards) == 60 and all(c['img'] == f'spot/thumbs/{c["id"]}.webp' for c in cards), f'«الكل»: 60 cards, each with its small copy ({len(cards)})')
+        check(len(cards) == TOTAL and all(c['img'] == f'spot/thumbs/{c["id"]}.webp' for c in cards), f'«الكل»: {TOTAL} cards, each with its small copy ({len(cards)})')
         check(all(c['t'] and ('سهل · 5 اختلافات' in c['m'] or 'متوسط · 8 اختلافات' in c['m'] or 'صعب · 12 اختلافًا' in c['m']) for c in cards), 'each card: scene name, level and number of differences')
         st = {c['id']: c['s'] for c in cards}
-        check(st[seen_id] == 'شوهدت سابقًا على أجهزة الغرفة' and sum(v == 'جديدة' for v in st.values()) == 59, 'states: the picture played before on this device «شوهدت سابقًا على أجهزة الغرفة», the rest «جديدة»')
+        check(st[seen_id] == 'شوهدت سابقًا على أجهزة الغرفة' and sum(v == 'جديدة' for v in st.values()) == TOTAL - 1, 'states: the picture played before on this device «شوهدت سابقًا على أجهزة الغرفة», the rest «جديدة»')
         html = await host.inner_html('#hostMain')
         check('b.webp' not in html and 'pairs/' not in html and await host.locator('#hostMain .dfm').count() == 0, 'the library never shows the changed picture or any mark of a difference')
         await host.screenshot(path=f'{SHOTS}/v5_host_picker.png', full_page=False)
         # level filter and search
         await host.click('[data-h=pklv][data-lv="0"]'); await host.wait_for_timeout(300)
-        check(await host.locator('.dfpk-c').count() == 20, 'level «سهل»: 20 cards')
+        check(await host.locator('.dfpk-c').count() == PER[0], f'level «سهل»: {PER[0]} cards')
         await host.fill('#dfq', 'قوارب'); await host.wait_for_timeout(300)
         vis = await host.evaluate('[...document.querySelectorAll(".dfpk-c")].filter(c => !c.hidden).map(c => c.querySelector(".dfpk-t").textContent)')
         check(vis and all('قوارب' in v for v in vis), f'search by the scene\'s name: {vis}')
