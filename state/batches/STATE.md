@@ -74,3 +74,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - spotlib-v7 (190: easy 60, medium 61, hard 69) assembled in wt5/spot-v4/spotlib-v7 (not yet committed); scene groups g via library-tools/scene_groups.py; app.js pick avoids similar scenes (H.priv.rg); tests/t_spot_scene.js 10/10; verify_spot 190/190.
 - Local spot tests running. Next: commit spot-v5 + spot5-full emulator run (six games); preview-spot5 on factory main (PREV build) + spot5-test.
 - b3: candidates pulled (2869, new idx 2435-2868); selectors h (2435-2650) and i (2651-2868) running on sonnet. WORKER_BRIEF has a lessons section now.
+
+## Update 2026-11-18 ~12:45
+- Committed spot-v5 7365c36 (spotlib-v7, scene groups, test). Preview: factory main b08cab1 preview-spot5 (190) + _config.yml (Pages excludes reports/, tests/; site would pass 1 GB). Preview test fixed (stale fixed-60 counts) and rerunning; spot5-full emulator running (44275060383).
+- b3: sources chosen (easy 60 / medium 50 / hard 40 [5 hard + 35 busy medium]) fetched + converted. Workers easy + medium running (resume via message; progress in *_done/_skipped.txt). Hard worker after one finishes.
+- 5th search (spot_themes5.txt, hard) done on spot-sources: pull candidates + selectors later.
