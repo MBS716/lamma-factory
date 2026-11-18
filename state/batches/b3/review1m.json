@@ -1,0 +1,79 @@
+{
+ "w79890722": {
+  "verdict": "fix",
+  "notes": "#2 ground-floor window removal leaves blurred brick and a brick rectangle set into the concrete plinth where the window reached down (clearly visible); redo the fill or pick another object. #7 drain-cover removal leaves smeared pavers with a faint outline of the cover; redo or replace. #5 shutter fill slightly soft but acceptable. #1, #3, #4, #6, #8 clean. Shop sign text untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (generic shop-name sign, not edited)"
+ },
+ "w7764212": {
+  "verdict": "fix",
+  "notes": "#4 pillow flip is hard to see: a near-symmetric white pillow on a white bedspread, only the corners change - replace with a clearer difference. #8 carved swag removal leaves a ghost of the left tassel and a smeary patch on the drawer front - redo the fill. #1 stuffed bird removal is soft but passes. #2 duck flip, #3, #5, #6 blue seat, #7 red lamp shade clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "hanging stuffed duck (hunting trophy) is mild but acceptable"
+ },
+ "w72327414": {
+  "verdict": "fix",
+  "notes": "#5 removed flag carries a Häagen-Dazs logo, so a brand becomes the subject of a difference (and stays visible in picture A); the fill also smears the porch gable. Replace #5 with a non-branded object. #7 added flower pot has no contact shadow and sits ~30 px from the right edge, reads pasted; add a soft shadow and move it inward, or replace. #1-#4, #6, #8 acceptable.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "brand logo (ice-cream flag) used as a difference target"
+ },
+ "w59595950": {
+  "verdict": "accept",
+  "notes": "All 8 clean. #1 green roof strip is thin but long and reads clearly as red. #6 added tyre has a slightly soft base with no shadow, but it sits in shade and passes. #8 door is small (58 px) but clear. Colour 3/8.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w42312031": {
+  "verdict": "fix",
+  "notes": "#1 chimney scale leaves a lighter rectangular block of sky above the chimney, visible even on the full picture - redo with a soft blended fill. #6 dormer box starts at x=0 (touches the frame edge) and is a second 'turned blue' with #4; use another hue or another difference away from the edge. #2-#5, #7, #8 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (cathedral at right edge is not edited)"
+ },
+ "w28999944": {
+  "verdict": "fix",
+  "notes": "Colour share 4/8 (50%) is over the limit. #1 small green box is 72x40 px (~7 px on a phone), too small for medium. #3 orange buoy removed plus #4 orange buoy added elsewhere reads as a moved buoy, and #6 is a third buoy edit. Replace #1 and #4 with bigger, different objects, and change #6 (or another recolour) to a non-colour change. #2, #5, #7, #8 clean.",
+  "level_ok": false,
+  "independent": "#3/#4 read as one moved buoy",
+  "content": "ok"
+ },
+ "w28585268": {
+  "verdict": "fix",
+  "notes": "#3 window, #5 vent and #7 window are three 'became bigger' changes on the same type of object (openings in the same barn wall); #5 also shares the vent row with #2. Replace two of them (e.g. #5 and #7) with a removal or add of another object (lamp, fence section, post, tree). #1 stone, #4 blue door, #6 green door, #8 roof clean.",
+  "level_ok": true,
+  "independent": "#3/#5/#7 same kind of change on the same object type",
+  "content": "ok"
+ },
+ "w24852516": {
+  "verdict": "fix",
+  "notes": "#1 and #2 are both removals of a black roof vent (same kind, same object type); replace #2 with another kind of change. #3: the whole window with its frame vanished, so the name should be 'اختفاء النافذة اليمنى في البيت' rather than 'صارت مسدودة'. #4-#8 clean; #8 green lantern light is a nice change.",
+  "level_ok": true,
+  "independent": "#1/#2 duplicate type",
+  "content": "ok"
+ },
+ "w22703789": {
+  "verdict": "fix",
+  "notes": "#6 thatched-roof scale leaves blocky, pixelated foliage around the roof and a ghost trunk to its left - redo the fill or replace. #8 woven-panel removal leaves a blurry smeared foliage patch between the posts - redo or replace. #5 box starts 20 px from the left edge (keep at least 30). #1, #2, #3, #4, #7 clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w10687551": {
+  "verdict": "reject",
+  "notes": "The source is the courtyard of Kapsa Monastery (Moni Kapsa), so a religious building is being edited. Several differences are also too small for medium in a busy, shaded scene: #7 pot 56 px, #5 watering can 68 px, #8 bin 50 px wide, and #2 cat 72 px in shade.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": "religious building (monastery courtyard)"
+ },
+ "w110758248": {
+  "verdict": "fix",
+  "notes": "#6 mortar scale is broken: the mortar is shifted with its handle lost, a blocky copied drawer patch fills the gap, and the 'REGINA' press beside it is cut, damaging its lettering; the mortar is not visibly bigger. Replace #6. #1 red canister, #2 sensor, #3 phone flip, #4 trivet flip, #5 crocodile flip, #7 blue jar and #8 sign removal are clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (apothecary bottles, not alcohol)"
+ }
+}
