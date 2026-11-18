@@ -75,3 +75,7 @@ w125362729 street facades: shop text signs, look-alike shutters/windows; few sep
 w121637766 city view: buildings far/tiny, foreground mostly trees and wall
 w112494618 arcade facades: repetitive windows/arches, shop text signs
 w126921797 gnome dolls overlap each other; clean edits mostly recolours (hats, fabrics), tags carry handwriting
+w123927936 beer brand signs (Weissmainer Pils) on cafe; also lamp/topiary/bin edits failed
+w110451006 aerial hilltop town: houses tiny, mostly forest
+w108291272 playground is one big wooden structure (edits = parts of it), people climbing
+w91763377 tools overlap; only ~6 clean diffs (watch removal damages chisel tip, adds on white look pasted, ratchet flip leaves shadow ghost)

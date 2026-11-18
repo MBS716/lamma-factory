@@ -1,0 +1,163 @@
+{
+ "w176041324": {
+  "verdict": "fix",
+  "notes": "Variety: three produce recolours (#1 red peppers->yellow, #2 lemons->green, #10 red apples->green), two of them turned green; replace #2 or #10 with a removal/add elsewhere (e.g. a crate, a box lid, a tag) so recolours are not all fruit. #5 added red tag floats next to the rib rather than hanging from it and is a copy of a printed (logo) tag - acceptable at hard but a cleaner add would be better. #6 #7 #8 #11 #12 clean; #3 sign recolour keeps the handwriting crisp. Smallest qc gap 43 (ok).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w172230132": {
+  "verdict": "reject",
+  "notes": "Same vegetable stall, same white kiosk, same wall hook and lamp as w176041324 in this batch (near-duplicate scene; #12 hook and #7 lamp are even the same objects as w176041324 #6/#12). Keep only one. Independently: #3 adds a copy of a yellow label that carries printed text (sticker-like on the rail); #8 enlarges the blue parking sign with its '1591 P' text (a sign may only vanish or change colour). Other diffs clean.",
+  "level_ok": true,
+  "independent": "near-duplicate of w176041324 (same stall)",
+  "content": "#3 copies a text label; #8 rescales a sign with text"
+ },
+ "w117233465": {
+  "verdict": "fix",
+  "notes": "#12 'white post disappeared' is wrong: only the top ~60% of the white pole is removed, the lower half (y~690-760) still stands as a stub, and the orange pennant on its top went too; remove the whole post down to the people or pick another object. #2 enlarges the yellow road sign full of text ('i.v.m. corona ... markt') with a visible light halo around it - signs may only vanish or change colour; replace #2 with a non-text object. Others (#1 pennant, #3 bracket, #4 rail, #5 label, #6 flowers, #7 mailbox, #8 cap, #9 logo sign removed whole, #10 box, #11 pot) look clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#2 rescales a text sign"
+ },
+ "w4344848": {
+  "verdict": "fix",
+  "notes": "#5 terracotta pot->blue and #10 round stone tree planter->red are two recolours of the same type of object (planters); replace #10 (a large, very obvious stone recolour for hard) with a removal/add/flip. Recolours are 5/12 at the limit, so this also improves the ratio. #1 finial removal leaves the thin rod - acceptable. #12 removes a small heraldic cartouche (looks like a coat of arms, not clearly religious) - ok. All fills clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w186698652": {
+  "verdict": "fix",
+  "notes": "#3 shutters->green: faint green streaks leak onto the yellow wall above the right shutter (~575-585,630-650) and below both shutters (~515-525,735-750 and ~575-585,750-760); tighten the mask. Everything else is clean and well spread (#1 finial, #2 oval window scale, #4 lamp scale, #5 added post, #6 chimney, #7 attic window, #8 bin, #9 kiosk stripes, #10 flowers, #11 shrub, #12 frame).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w65950649": {
+  "verdict": "fix",
+  "notes": "Variety: three lamp removals - #7 small wall lantern, #10 right lantern of the pair and #11 neon tube - plus #3 a lamp scale; #7 and #10 are the same kind of change on the same type of object. Replace #7 or #10 (better both #7 and #11 -> one of them) with a different object/type (e.g. an add or flip of a car, bollard, chair). Fills are clean everywhere; #2 removes the whole no-parking sign incl. 'SAUF' plate cleanly; #12 sign recolour keeps text crisp. Person at the cafe table not touched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w25238204": {
+  "verdict": "fix",
+  "notes": "#10 green umbrella->red: only the darker valance/side panels turned red, the pale sun-faded top panels stay light green (half-recoloured umbrella, two-tone look); recolour the whole canopy or choose another object. Boxes #4/#12 and #9/#11 are ~52 px apart at 2400 (just under 60) - acceptable but watch when fixing. Recolours are 5/12 at the limit. Other diffs clean (#3 bag, #5 street lamp, #6 pipe behind legs - legs untouched, #8 shoe, #9 cloth, #11 handwritten sign keeps text crisp, #12 added fruit sits on the edge).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w178817161": {
+  "verdict": "fix",
+  "notes": "#12 brass price plate removal leaves a smooth orange smear on the shelf lip with a visible notch/step in the lower edge (~480-560,1195-1220); redo with more context or pick another object. Note: four of the five recolours are glass ornaments (#1 heart, #4 ball, #5 pumpkin, #11 apple) - acceptable given the subject (different objects/shapes), but if #12 is replaced, prefer a non-glass removal/add. #6 added pumpkin is copied from the red pumpkin, not from the recoloured #5 - ok. Others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w9431075": {
+  "verdict": "accept",
+  "notes": "Five big, clear changes on a log cabin: #1 red brick chimney removed (fill of foliage slightly soft when zoomed but natural at phone size), #2 barrel removed (in shade but large and obvious), #3 wooden step board removed, #4 door frame -> blue, #5 added window (copy of an unchanged window, sits naturally on the logs). Good variety, 1 recolour.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w84017871": {
+  "verdict": "fix",
+  "notes": "#4 round drain/manhole cover in the grass is a flat, low-contrast ellipse (~25x5 px on a 360 px phone) - too small/subtle for easy; replace with a bigger object (e.g. the hollow-log planter or one of the benches/tables on the right, or the wall lamp). #1 chimney, #2 bench -> blue, #3 log flower trough, #5 window frame+shutters -> green are big and clean. Facade text 'Ustaria Alvetern' untouched.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w73607964": {
+  "verdict": "accept",
+  "notes": "Fun, colourful picture. #1 ice-cream drawing removed cleanly, #2 vent grille removed (rivets remain naturally), #3 green hub cap -> red, #4 added blue flower decal (copy of an unchanged flower), #5 bee decal enlarged (clearly bigger). All big and obvious; VW logo/hub cap and 'Soft Serve' lettering are not edited; people untouched.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w69784977": {
+  "verdict": "fix",
+  "notes": "#3 'long white cloud' is a faint thin contrail in an empty blue sky - barely visible on a phone and not obvious for easy; replace with a big object (e.g. remove/recolour a whole kayak hull stripe item, an added rock on the grass, or the red bag on the front kayak). #1 sail red->yellow-green, #2 blue paddle blade->green, #4 yellow bag, #5 rock pile are fine and clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w4571218": {
+  "verdict": "accept",
+  "notes": "#1 stone chimney removed (roof fill clean), #2 left roof -> red (large, natural), #3 door -> blue, #4 bench/table removed (base fill fine), #5 added stone slab on the grass (copy of the doorstep slab, lies flat naturally). All big; 2 recolours.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w40875715": {
+  "verdict": "fix",
+  "notes": "#4 added window on the side wall is sticker-like: hard straight rectangular edges, a dark strip at its bottom and a light block of copied background at its top-right corner, ignores the diagonal wall shadow, and is small for easy (~130 px wide); replace it or redo with a soft-edged copy of a whole window incl. its sill. #2 dormer removal: the roof seam lines in the fill bend and break (wavy seams ~1450-1800,450-700), visible when zoomed; redo with more context. #1 chimney -> red, #3 blue railing removed, #5 porch roof -> red are good (note #1 and #5 both turn red - acceptable).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w33489661": {
+  "verdict": "fix",
+  "notes": "#4 removing the stones under the barn corner leaves the barn hovering over a dark smudgy gap with blurred grass and a grey ghost of a stone (~330-560,1270-1330); the building loses its support - choose another object. #1 big door -> blue (clean), #2 window removed from white house (clean), #3 small spruce removed (green on green but clear enough), #5 grey crossbar removed from the green-framed door (clean).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w21854427": {
+  "verdict": "fix",
+  "notes": "#4 (lemon tree in an orange pot added left, next to the blue door) and #5 (a potted tree removed near the greenhouse) together read as one potted tree moved along the same ledge - one change counted twice. Replace #4 or #5 with a different kind of object (e.g. remove/recolour one of the greenhouse panes, the small olive tree, a wall lamp). #1 upper window enlarged, #2 bench -> red, #3 door -> blue are clean. Crop framing natural (house cut at the right edge but continues naturally).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w170611523": {
+  "verdict": "accept",
+  "notes": "#1 hanging lantern removed (empty iron hanger stays, natural), #2 white shutter right of the window removed (tall, clear), #3 stone bollard enlarged, #4 red tablecloth -> blue (big), #5 hanging shop sign green -> maroon with its text crisp. Charming picture; crop framing natural (rose bush runs off the right edge naturally). 2 recolours.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w160269082": {
+  "verdict": "accept",
+  "notes": "#1 wall lantern removed (wire stays, clean), #2 garage door panel -> blue, #3 top straw basket enlarged, #4 dark manhole cover removed from the sunlit street (small-ish, ~170x60 px, but high contrast - ok), #5 bamboo door blind -> green. Lovely lane with a cat (untouched). Crop framing natural; basket stack running off the bottom edge looks intentional. Gaps wide.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w129722807": {
+  "verdict": "accept",
+  "notes": "#1 added glowing peach lantern on the grass (copy of an unchanged peach; soft edge reads as lantern glow, no hard outline), #2 white IBC tank removed from behind the trees (clean), #3 blue cloud lantern -> purple (whole object), #4 peach -> yellow, #5 peach removed from the cluster (fill of the green lantern slightly soft but natural). #1 and #5 are different peaches in different places (not a move of the same object). Monkey-king lanterns are folklore, not a branded character. Fun and colourful.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w123933333": {
+  "verdict": "fix",
+  "notes": "#5 hanging-basket flowers -> yellow: many red flowers remain, the leaves turned yellow-green and a yellow fringe/halo surrounds the basket (~1990-2170,700-860); recolour only the flowers, fully, or choose another object. #4 white mailbox removal rebuilds the porch railing wrongly: a diagonal beam ends abruptly and a smooth grey blob sits where the box was (~900-1000,1100-1200); the mailbox is also only ~140x70 px, small for easy - replace. #1 shrub pink -> blue, #2 dormer window enlarged, #3 leaf pile removed from the roof are good. Note #1's box touches the left/bottom picture edges (the shrub is cut by the crop) - fine as a photo, but keep the box 30 px inside.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": ""
+ },
+ "w113144950": {
+  "verdict": "accept",
+  "notes": "#1 red door -> green, #2 roof window removed from the thatch (clean), #3 chimney removed from the ridge (fill natural), #4 arched window removed - bricks fill well, a faint recess outline remains which reads as a bricked-up window (acceptable), #5 topiary made smaller (big, obvious). Composition is dominated by the thatched roof but still pleasant; crop framing natural.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w26952041": {
+  "verdict": "accept",
+  "notes": "#1 green door -> blue, #2 dormer roof -> red, #3 black 'Gamla Ladugården' sign removed whole and cleanly (text not altered), #4 wall lamp enlarged, #5 left window (with its flower box) enlarged. Clean, big, well spaced; nice Swedish barn.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w157381813": {
+  "verdict": "fix",
+  "notes": "#3 brass buckle enlarged: the original buckle frame is still visible inside the bigger one (double frame / ghost, ~150-370,830-1040) - remove the original before pasting the scaled copy or use another change. #2 white thread -> blue looks flat and the loose thread ends on the lower flange stay white - acceptable but could be tighter. #1 added spool, #4 awl removed, #5 knife handle -> green are clean. Content note: the half-moon leather head knife is a craft tool, not a weapon - acceptable, but its big blade is the most prominent object; owner may prefer to avoid.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "large leather knife blade prominent (craft tool; borderline, owner's call)"
+ }
+}
