@@ -98,3 +98,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - 5th search pulled: candidates.json 2997 (new idx 2869-2996), sheets 239-249. Sonnet selector j running → cand2/select_j.json.
 - Next: medium worker on select_j (q>=4) + b3_avail leftovers; then review round 1.
 - ~15:40 fetched b3m (44 medium sources, sbw/b3m) → src/*.png; medium worker round 2 running on batches/b3/medium_sources2.json (target 19 more). Hard worker still running.
+- ~16:15 hard worker DONE: 8 accepted /32 skipped (alcohol/brands, religious, harbours too similar, repeats). b3 now easy 15, hard 8, medium 5 (+worker running). Independent review round 1 of b3 easy+hard running → batches/b3/review1.json.

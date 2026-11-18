@@ -43,3 +43,35 @@ w36067624 night fair: neon text signs, blurred crowd
 w36067478 lit fair ride with people; neon detail, no clean objects
 w35366924 aerial station: thin catenary/tracks, big station-name text
 w3450500 distant lakeside: boats packed (no spacing), houses' details <50px
+w33761598 tractor is one object (edits would be parts of it); rest is busy scrap/shed
+w32212074 palace facade: repetitive identical windows, crosses on domes; edits would be same-type repeats
+w31635515 garden dominated by hedges/trees; few separate medium objects (look-alike benches)
+w34314878 only ~4 clean diffs; window/drain removals blur on brick, planter scale covers railing, rest people/text/thin
+w30781707 bandstand is one dominant object (columns alike); background items small or text signs
+w28664714 barn far away: identical louvres, tiny cupolas/horse; mostly fence and trees
+w25517423 cafe front: thin bollards, text menu/awning, few separate medium objects (mailbox, lamp only)
+w24927021 cluttered boats: overlapping crates/gear, removals impossible cleanly; would be mostly recolours
+w24274029 pottery piles: look-alike pots, edits read as texture
+w28121698 stone porch: few separate objects (sign/door/planters), window removals on rubble stone blur; ~5 clean diffs
+w28100752 museum: only ~6 clean diffs; basket/rock removals smear, rock add looks pasted, anchor too close to postbox; rest text signs
+w22204352 Alhambra courtyard: symmetric carved facade with inscriptions, few separate objects
+w21178084 Generalife patio: carved inscription facade, people, thin jets; look-alike pots
+w21144297 fountain from above: hedges/trees dominate, few separate objects
+w20524991 park from terrace: objects tiny, many people, mostly lawn/sky
+w201954493 mango piles: look-alike fruit, person at top; edits read as texture
+w201678851 apple branches: leaves dominate, look-alike apples; edits read as texture
+w18952354 tea set: overlapping look-alike cups, hanging red ornaments thin and dense
+w179388255 dragon fruit pile: look-alike fruits, edits read as texture
+w179388249 stuffed dates pile: look-alike items, handwritten price sign
+w176022701 Hospices courtyard: repeated dormers/chimneys/planters, many people; edits would be same-type repeats
+w166091649 marina garden: thin masts/fence/bollards, national flag, people; few clean medium objects
+w153962465 kasbah far away: windows tiny, foreground only palms/bushes
+w151778556 aerial corniche: cars/buildings tiny, mostly sea/mountain
+w15166237 flamingo flock: look-alike birds, one pelican dominates; edits would be repeats
+w128224878 lantern gate is one object with big text; dragons are parts of it
+w129466327 big lanterns carry Chinese text, info sign text; only ~5 clean separate edits
+w130047349 lantern pavilion: only ~5 clean diffs; lantern removals on sky leave blotches after 2 tries, other objects carry text or are look-alike lanterns
+w125362729 street facades: shop text signs, look-alike shutters/windows; few separate medium objects
+w121637766 city view: buildings far/tiny, foreground mostly trees and wall
+w112494618 arcade facades: repetitive windows/arches, shop text signs
+w126921797 gnome dolls overlap each other; clean edits mostly recolours (hats, fabrics), tags carry handwriting

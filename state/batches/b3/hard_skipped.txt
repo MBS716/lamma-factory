@@ -5,3 +5,28 @@ w61379327 another harbour, dense crowds, alcohol brand sign (Heering) on facade
 w59341058 almost every object carries text/labels and overlaps others: removals expose packaging, flips mirror text; possible spirits bottles
 w4421008 another fishing-boat harbour scene (bank already has many)
 w197848634 parasols carry a beer brand (Kozel); facade medallions with saint images
+w97588410 dark night street, church at end of street, shop text signs everywhere, people
+w90862129 third fruit-stall scene in batch (too similar to accepted ones), mostly a pile of identical nuts
+w87777181 repetitive lily pads only; no 12 varied, readable small objects
+w84863576 marina: detail in a thin band, half water/sky; another harbour
+w80183128 single machine: most candidates are parts of one object (bolts, knobs of the engine); sign text
+w71869919 text-heavy stall/menu; only ~10 clean varied candidates, rest thin masts/posts
+w65574941 detail only in a thin band (half sky, half empty paving)
+w63362067 mosque/minaret prominent; people and camels dominate, few editable non-person objects
+w57528321 cluttered allotment: removals in front of busy fence/branches, low-contrast junk; bottom half bare snow
+w54693886 stable: only ~9 clean small objects (rest thin pegs/cables fail size), crucifix on wall
+w49859268 another harbour/boats scene; half water, text signage
+w49712271 another harbour/barge scene; boat name text
+w49577005 ship-deck rigging: repetitive ropes/blocks, mostly parts of one rig; harbour
+w42828187 parasols carry beer brand (Henninger); dense crowd
+w43851889 salon table shows champagne bottle in ice bucket and wine bottles on shelf (alcohol)
+w38134532 tangled overlapping cables/chains (removal cuts others), text posters/signs; few separate objects
+w37685675 meter wall: top third bare wall, most objects joined by cables/pipes (removals leave cut ends); ~8 clean candidates
+w34780065 uniform facade of repeated windows (would force repeated window edits), shop text signs, half plain embankment
+w30734813 museum cases show weapons (pistol, axes, chain mail) and icons
+w31122533 HMS Warrior warship (cannons) in harbour - harbour/weapon theme
+w30663704 warship in harbour, mostly water
+w29163096 half sky/water, large brand lettering (GEVALLA), another waterfront
+w22907498 left murals show religious images (saint/Virgin, procession) plus church spire; person at stall
+w167712849 another harbour; heaps of tangled nets (removals/recolours would cut into neighbouring nets)
+w16514097 beer brand trailer (Koenig Pilsener) on quay; half sky/water; another harbour
