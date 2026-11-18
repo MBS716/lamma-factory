@@ -92,3 +92,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 ~14:10
 - b3 medium FINISHED: 5 accepted / 45 skipped (stricter lessons → lower yield). Easy 7. Hard worker running.
 - hires/ has 40 crop sources (max width 3840 = Commons thumb cap → crop ×1.6). Easy-crop worker running (target 17 more; crop.txt records crops).
+
+## Update 2026-11-18 ~15:20
+- b3 easy-crop worker DONE: easy now 15 (8 from crops; 8/40 crop sources = 20%). Crops help with size, not content (text, overlaps). Medium 5, hard worker running (4 so far).
+- 5th search pulled: candidates.json 2997 (new idx 2869-2996), sheets 239-249. Sonnet selector j running → cand2/select_j.json.
+- Next: medium worker on select_j (q>=4) + b3_avail leftovers; then review round 1.
