@@ -106,4 +106,4 @@ if __name__ == "__main__":
     if sys.argv[1] == "sheets3":   # wider: Quality images (results 1-100), Valued images, Featured pictures
         CATS[:] = ["Quality images", "Valued images", "Featured pictures on Wikimedia Commons"]; DEEP = True; sys.argv[1] = "sheets"
     if sys.argv[1] == "sheets": sheets(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 12)
-    else: fetch(sys.argv[2], [x for x in sys.argv[3].split(",") if x])
+    else: fetch(sys.argv[2], [x for x in sys.argv[3].split(",") if x], int(os.environ.get("FETCH_W", "2400")))   # FETCH_W: larger pictures for crops

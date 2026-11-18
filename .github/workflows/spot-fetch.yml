@@ -24,8 +24,9 @@ jobs:
           git fetch -q origin spot-sources
           git fetch -q origin spot-batches && git worktree add -q ../out origin/spot-batches -b spot-batches
           r=$(tr -d ' \r\n' < .github/spot-fetch-request); b=${r%%:*}; ids=${r#*:}
+          w=2400; case "$b" in *@*) w=${b#*@}; b=${b%@*};; esac   # "<batch>@<width>:ids" fetches wider pictures (for crops)
           mkdir -p ../out/$b; git show origin/spot-sources:cand2/candidates.json > ../out/$b/candidates.json
-          python scripts/spot_sources2.py fetch ../out/$b "$ids" | tee ../out/$b/fetch-log.txt
+          FETCH_W=$w python scripts/spot_sources2.py fetch ../out/$b "$ids" | tee ../out/$b/fetch-log.txt
           rm ../out/$b/candidates.json
           cd ../out && git add -A && (git commit -q -m "sources for $b" || exit 0)
           for i in 1 2 3 4 5 6; do git pull -q --rebase origin spot-batches 2>/dev/null; git push -q origin spot-batches && exit 0; sleep 10; done; exit 1
