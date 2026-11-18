@@ -26,5 +26,19 @@
   "level_ok": true,
   "independent": "ok",
   "content": ""
+ },
+ "w11378980": {
+  "verdict": "accept",
+  "notes": "Lead check after fixes1: review1 items fixed (crops checked). #8 fill smooth when zoomed, fine on a phone.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w168341788": {
+  "verdict": "accept",
+  "notes": "Lead check after fixes1: review1 items fixed (crops checked).",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
  }
 }
