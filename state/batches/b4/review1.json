@@ -40,5 +40,19 @@
   "level_ok": false,
   "independent": true,
   "content": "ok"
+ },
+ "w11378980": {
+  "verdict": "fix",
+  "notes": "Attractive stone courtyard; colour 3/8, gaps OK, no content issues, not a duplicate of b1-b3. Clean and visible: #4 stone trough (fill slightly soft at the wall foot, acceptable on a phone), #5 planter bigger, #7 barrel green. #1 bell is small (~50x110) but dark on light stone and visible; fill around x2110-2170,y790-900 a little smooth - acceptable. FIX #2/#3 (variety): both are 'window removed' (roof window + narrow wall window) - same kind of change on the same type of object. Keep #2 and change #3 to a different kind (e.g. scale the narrow window and its stone frame up ~1.4x), or replace #3 with a non-window change. FIX #8: the pink flower clump at the cart front is only ~60 px among many other flowers; the yellow is blotchy and barely noticeable on a phone - replace with a clearly visible non-colour, non-window change on an object >=90 px (e.g. remove the brown door at the back of the passage, x~1175-1230, y~1010-1230, if the fill is clean); do not copy the barrel (#7). FIX #6: the red tint leaks onto the weed stems in front of the door (x~300-375, y~1225-1295, pink twigs) - add neg points / narrow the poly to the door leaf only.",
+  "level_ok": false,
+  "independent": true,
+  "content": "ok"
+ },
+ "w168341788": {
+  "verdict": "fix",
+  "notes": "Warm log-cabin room, good picture; colour 3/8, gaps OK, not a duplicate (w20905114 is a different dining room). Good: #2 valance red->blue, #3 flowers red->yellow, #5 shoe removed (clean), #6 bedpost finial bigger (clear), #7 carved crest removed (clean, small but light on dark). FIX #8: the flipped chair is almost symmetric from behind - the flip is nearly invisible, and it leaves faint ghosts of the original legs (x~1145-1170 and ~1330-1350, y~1040-1120); replace with a removal/add/scale on an asymmetric object (e.g. remove the second chair behind the table, or the wooden cup/mug on the table if >=80 px). FIX #4: the green recolour leaks onto the floor under the chair seat (x~600-760, y~880-930) - a green patch visible even on a phone; restrict the mask to the blanket (neg points on the floor/seat). Minor #1: shelf fill is clean on a phone, but log seams break at x~525-560 (y~260 and ~330) when zoomed - acceptable, better if redone. Minor name #6: the finial is turned wood, say 'رأس عمود السرير الخشبي صار أكبر' rather than 'الكرة النحاسية'. Borderline variety: #2 (gingham valance) and #4 (plaid blanket) are both checked-cloth recolours; acceptable as different objects, but if #8 is replaced anyway, consider making it the third non-colour change so cloth recolours stand out less.",
+  "level_ok": false,
+  "independent": true,
+  "content": "ok"
  }
 }
