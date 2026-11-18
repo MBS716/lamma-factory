@@ -22,3 +22,13 @@ Before you accept a pair, go through this list difference by difference on the c
 - Names: the Arabic name must say exactly what changed (never "disappeared" for something still there).
 - Content: no religious images or buildings edited or as subject, no alcohol or beer brands, no nudity, no people edited, no text touched (a whole sign may be removed only if it is cleanly gone).
 - Skip early: if a picture clearly cannot carry n differences that meet this list, skip it in the first minutes instead of after many runs.
+
+## More lessons from the b3 reviews (apply before accepting a pair)
+- Brands and logos: never make a logo, brand flag or branded sign a difference (not even "removed"); skip pictures where brands are prominent. Same for alcohol, religious buildings/symbols (check the source file name too: monastery, church, mosque), weapons and knives.
+- Two differences must not be the same kind of change on the same type of object (two windows bigger, two lamps removed, two planters recoloured, two fruit recolours, buoy removed + buoy added = a move).
+- Recolour masks must follow the object exactly: no tint on frames, handles, notices, neighbouring walls; whole object covered (whole canopy, whole door).
+- Removals must take the whole object (no stub, no half post) and leave no ghost, smear, blocky patch or broken line (railings, shelf edges, plank seams). If LaMa redraws a ghost twice, choose another difference.
+- Boxes not on the picture edge (≥30 px in) and ≥60 px apart.
+- Flips: never flip an object that carries lettering or numbers.
+- Easy objects ≥150 px; don't shrink something to under ~100 px for easy. Vary difference types across the batch: avoid more "door turned blue" and "chimney removed".
+- Check names match the result (colour words, "removed" vs "smaller").
