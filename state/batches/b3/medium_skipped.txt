@@ -8,3 +8,29 @@ w82723945 roof-dominated farmhouse; only many identical shutters and ~40px detai
 w75975380 hanging chilli/garlic bunches: repetitive, no separate clean objects; removals would cut strings
 w72724449 rows of identical brass dispensers with text labels; edits would be same-type repeats
 w72686909 castle: few separate medium objects, mostly flint walls and railings
+w72686908 aerial castle view: objects small/far, cars only clear items
+w70589090 white house mostly bougainvillea/wall; few separate objects (stools, cactus)
+w69948353 facades with many text signs, people; objects small at this width
+w69502787 fair ride with pin-up figure art and many text decals
+w67114152 church domes/tower as subject (religious buildings)
+w62788966 only 7 clean diffs; lamp removal leaves cut wires, roof-box removal smears, rest too small/text
+w62071704 artichoke pile: repetitive look-alike objects, edits read as texture
+w62071654 dominated by handwritten price signs (text)
+w62071574 tomato field: repetitive, no distinct separate objects
+w61379439 boat full of people, buildings far; few medium objects outside water
+w52055346 carved stucco facade: only ~6 clean medium diffs (tree removal ghosts, rosettes in busy stucco)
+w52055361 Persian courtyard: pools/beds, few separate medium objects; similar limits as w52055346
+w52055357 same courtyard, symmetric carved facade, few separate objects
+w52047059 carved facade only; no separate objects
+w52047061 muqarnas ceiling only, no separate objects
+w52047056 carved courtyard facade with small visitors; few separate medium objects
+w48570766 village far away; houses/boats tiny at medium size, mountains dominate
+w49574196 boathouses: few clean medium objects (barrels behind railing, buoys with reflections); would need >3 recolours
+w47638894 repetitive facade windows and parked cars, people; no varied medium objects
+w46933011 doughnut close-up: look-alike sugar doughnuts, streamers thin
+w45816798 bandstand with graffiti text on base; few separate medium objects (trees dominate)
+w45366402 boats dense with rigging, thin masts; few clean separate objects
+w47367259 veranda: child near right planter, painting has text; only ~5 clean edits
+w42584462 ivy-covered house: shutters all alike, ivy busy; edits would be repeats
+w4139063 gassho farmhouse: wooden facade busy, few medium separate objects (car, small items)
+w41202973 pergola: foliage-dominated, people on path, few separate objects

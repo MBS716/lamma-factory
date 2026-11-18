@@ -84,3 +84,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - spot5-full (emulator, six games) PASS: other games PASS (letters, wheel, quiz, puzzle), akml 97/97, akml full 52/52, spot 65+32+28+28.
 - Preview (factory main, preview-spot5, 190) real-DB tests PASS 65/32/28/28 after test-timing fixes (tests/spot5: counts from catalog; 15 s waits).
 - Report sent to owner. b3 easy+medium workers running.
+
+## Update 2026-11-18 ~13:50
+- b3 easy FINISHED: 7 accepted / 53 skipped (60 sources). Hard worker started (40 sources). Medium running.
+- Easy plan B: crops. 40 sources (batches/b3/easy_crop_sources.json, medium/easy-rated, native ≥4800) fetched at 4800 as "b3c" (spot-fetch supports "<batch>@<width>:ids"). Tool /home/claude/spot3/crop.py (show / crop → src/<id>.png + batches/b3/crop.txt). Put hires jpgs in /home/claude/spot3/hires/. Start easy-crop worker when a slot frees.

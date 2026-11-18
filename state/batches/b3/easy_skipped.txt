@@ -37,3 +37,17 @@ w44751679 eight identical bikes in a tight row; no separated objects
 w44406806 food truck covered in text; night scene
 w44372182 pavilion with bell turret; no big separable objects besides leaves/wall
 w44172147 station: signs with text, chimneys small, tram with text
+w41804825 tea set objects entangled (whisk ghost, tray recolour leaks around bowl); <5 clean diffs
+w40462817 miniatures: only 4 clean diffs; bush removal blocky with post in front, brick tower tangled with sign/rope
+w39495658 shop facade full of text/signs and flag; few clean objects
+w41188269 summerhouse: besides roof only small or edge objects (heart, lamp, hedge at edge)
+w39495651 house behind thin birch branches; few separate objects in good light
+w39420784 car dominates; windmill/orange car/building small or with text
+w38418802 overlapping boats with text and rubbish in water; reflections
+w39477517 facade: only 4 clean big diffs within colour cap (shutter/step removals smear, door flip too subtle and has sticker text)
+w38281907 large stone building; editable objects small (mailbox, bins) or text/flag/people
+w36653037 market hall: big objects are cars in shade/columns; signs with text
+w34223662 toy sails carry numbers/flags; overlapping
+w34489292 apricots: objects overlap; removals smear, spacing between fruits too tight for 5 clean diffs
+w32895295 white fire house: signs with text, bins small; few big separable objects
+w32016386 temple-like pavilion (possible religious site) with dragon pot; avoid
