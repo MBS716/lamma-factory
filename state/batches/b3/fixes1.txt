@@ -1,0 +1,8 @@
+w176041324 fixed: #10 red apples->green replaced by removal of the black leaning pole in front of the kiosk door (avocado removal tried first, fill not clean); others unchanged
+w117233465 fixed: #2 text sign enlargement replaced by the red-leaf plant on top of the shelf made bigger; #12 white post now removed whole down to the people, pennant above kept; others unchanged
+w4344848 fixed: #10 round stone planter->red replaced by removal of the small green mailbox on the stone wall at the right (TV-antenna removal tried first, too thin for qc); others unchanged
+w186698652 fixed: #3 shutters->green mask redrawn tightly around both shutters, no green on the yellow wall above/below; others unchanged
+w65950649 fixed: #7 small wall lantern removal replaced by removal of a black sidewalk bollard on the right; #11 neon tube removal replaced by removal of the grey rain-water pipe on the facade (2nd try, clean; a short pipe end stays hidden in the leaves at the top); others unchanged
+w25238204 fixed: #10 umbrella->red now recolours the whole canopy (valance red, sun-faded top panels pale red/pink, no green fringe, pole untouched); others unchanged (gaps #4/#12 and #9/#11 as before)
+w178817161 fixed: #12 brass price plate removal redone with a taller mask: shelf lip edge now straight, no smear or notch; others unchanged
+w84017871 fixed: #4 small drain cover replaced by the small wooden window in the lower-left wall niche made bigger (~150 px now; removing the upper-left window was tried twice and left a grey ghost); others unchanged

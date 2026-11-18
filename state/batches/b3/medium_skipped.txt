@@ -79,3 +79,5 @@ w123927936 beer brand signs (Weissmainer Pils) on cafe; also lamp/topiary/bin ed
 w110451006 aerial hilltop town: houses tiny, mostly forest
 w108291272 playground is one big wooden structure (edits = parts of it), people climbing
 w91763377 tools overlap; only ~6 clean diffs (watch removal damages chisel tip, adds on white look pasted, ratchet flip leaves shadow ghost)
+w31604717 Court of Myrtles: carved palace facades, crowds, thin bollards; few separate medium objects
+w110588022 red farmhouse: rows of identical blue shutters; other objects thin (chimneys, pipes) or tiny
