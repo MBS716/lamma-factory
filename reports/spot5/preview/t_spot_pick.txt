@@ -1,12 +1,12 @@
-OK   190 small copies, each made from the original picture, not the changed one []
+OK   224 small copies, each made from the original picture, not the changed one []
 OK   default: «اختيار الصورة: يختارها المقدّم»; the start button reads «اختر الصورة وابدأ»
 OK   the library opens on the host only; the room stays in the lobby
 OK   the phones show «المقدّم يختار صورة الجولة…»
-OK   «الكل»: 190 cards, each with its small copy (190)
+OK   «الكل»: 224 cards, each with its small copy (224)
 OK   each card: scene name, level and number of differences
 OK   states: the picture played before on this device «شوهدت سابقًا على أجهزة الغرفة», the rest «جديدة»
 OK   the library never shows the changed picture or any mark of a difference
-OK   level «سهل»: 60 cards
+OK   level «سهل»: 77 cards
 OK   search by the scene's name: ['رفوف القوارب', 'قوارب على الشاطئ']
 OK   the search stays while the screen updates (a player joined meanwhile)
 OK   the round starts with the chosen picture (s4-e2)
@@ -20,7 +20,7 @@ OK   opening the library during a round does not stop the round
 OK   «رجوع»: back to the same round, pictures shown again
 OK   host reloads with the library open: back to the round, the phones are not left on «يختار»
 OK   new competition: the picture is no longer «used in this competition», it is «seen before»
-OK   «اختيار تلقائي لهذه الجولة» starts a round (b1-w62071597)
+OK   «اختيار تلقائي لهذه الجولة» starts a round (s4-m3)
 OK   setting «تلقائي»: the button reads «ابدأ الجولة»
 OK   «تلقائي»: the round starts at once, no library (as before)
 OK   library on a 390 px screen: no horizontal scroll (390)
