@@ -65,3 +65,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 (review3 b2 done)
 - review3: 13 accept + 2 small fixes (done by me, fixes3.txt). b2 FINAL: easy 9, medium 12, hard 19 = 40 pairs. rejected 4.
 - flags.json added (Heraklion / Hoi An same-location notes). Building: batch_build.py b2 → build/b2. Next: upload page imgs to asset store (blobmap), batches.json + b2.json, publish, report.
+
+## Update 2026-11-18 (b2 published)
+- 80 page images uploaded (batches/b2/blobmap.txt 80 lines); page_b2.json; review page v6 with b2 (40 pairs, 369 differences). Report sent.
+- Next: 4th source search result → selectors for b3 (easy+medium priority).
