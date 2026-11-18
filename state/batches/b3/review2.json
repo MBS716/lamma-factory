@@ -1,0 +1,128 @@
+{
+ "w42312031": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #1 chimney now scaled with no sky block (the brightness step on the chimney is in the original too); #6 is now the dark bench removed from the lawn (grass fill acceptable, a sprig of the neighbouring shrub went with it). New issue: #5 wall-lantern removal leaves a grey-blue smudge on the white wall near the corner where the bracket was (~1610-1640, 800-860), not present in A - redo the fill (larger ctx or poly that includes the bracket shadow). #1 is also wider, so 'صارت أكبر' would be more exact than 'أطول' (optional). #2-#4, #6-#8 clean, colour 2/8, gap 60.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (cathedral at right not edited)"
+ },
+ "w176041324": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: #10 apples recolour replaced by removal of the black leaning pole in front of the kiosk door - clean, frame and window behind rebuilt correctly, no stub. Recolours now 4/12 on four different object types (peppers, lemons, sign, crate). #5 added red tag still sits beside the rib (acceptable at hard, as round 1 said). #7 eggplant, #8 box lid, #9 kiwi, #11 leaf, #12 lamp clean. Smallest qc gap 50.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": ""
+ },
+ "w84017871": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: #4 drain cover replaced by the small wooden window in the lower-left niche made bigger (~115 -> ~150 px), clean scale with no warping and sill intact; noticeably fills more of its niche. #1 chimney, #2 bench blue, #3 log trough, #5 window green are big and clean. Colour 2/5, gap ok.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "facade text untouched"
+ },
+ "w24852516": {
+  "verdict": "accept",
+  "notes": "Round-1 issues solved: #2 is now the lighthouse window sash turned turquoise->yellow (whole sash, no fringe; brown outer frame correctly untouched), so only one vent removal remains (#1); #3 renamed correctly. #5 right picnic table removed and #6 left table smaller are different kinds of change. #7 finial scale, #8 light green clean. Colour 3/8, gap 51.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w79890722": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #2 window refill replaced by the red car behind the bicycles turned blue (whole visible body, no red left); #7 drain smear replaced by a second drain cover added on the pavers (original stays). New issue missed in round 1: #6 dark door -> red leaks onto the white door frame and centre post (now pink), the handles and the paper notice on the door (tinted pink, its dark print turned red) - add an excl/minsat-maxval limit so only the dark door leaves change. Minor: the added cover #7 has a small light-grey copied block at its lower-left end (~1280-1310,1235-1250); soften if touched. #1, #3, #4, #5, #8 clean. Colour 3/8.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (shop sign not edited)"
+ },
+ "w33489661": {
+  "verdict": "fix",
+  "notes": "Round-1 issue (#4 stones) gone, but its replacement is too small for easy: #4 left window of the white house is only ~100 px wide and shrinks to ~70 px in the distant house - not obvious to a child on a phone (easy needs ~150 px); replace #4 with a bigger change away from #2 (e.g. remove the round green bush behind the barn roof at ~1600-1790,530-670). New issue missed in round 1: #1 'big barn door -> blue' recolours the wrong area - the door in A spans x~690-1025 (frame line and hinges end at ~1025), but the blue rectangle runs x 746-1280, leaving the left 55 px of the door red and painting ~250 px of plain wall planks blue with a hard rectangular edge; redraw #1's poly as (690,770)-(1025,770)-(1025,1225)-(690,1225). #2, #3, #5 clean.",
+  "level_ok": false,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w123933333": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #5 basket now has all flowers yellow with green leaves kept (only a thin orange fringe at the outer edge, ~2000-2010,730-770, acceptable); #4 mailbox now made 1.5x bigger, clean, no railing rebuild. Remaining variety problem (missed in round 1): #1 shrub flowers pink->blue and #5 basket flowers red->yellow are the same kind of change on the same type of object (flowers changing colour), 2 of only 5 differences. Replace #5 with a non-flower change, e.g. the dark green porch skirt boards or the porch door recoloured, or a removal/flip of another big object (not the basket flowers). #1 box runs to the left/bottom edges because the shrub is cut by the crop - acceptable. #2 dormer bigger, #3 leaf pile removed clean.",
+  "level_ok": true,
+  "independent": "#1/#5 both flower recolours",
+  "content": "house number 209 untouched"
+ },
+ "w25238204": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: #10 umbrella now recoloured as a whole - valance deep red and the sun-faded top panels pale pink, no green fringe, pole untouched; reads as one red umbrella. Smallest qc gap still 35 (≈52 px at 2400, #4 crate / #12 added plantain and #9 cloth / #11 sign) - slightly under the guide, but the objects are clearly separate, so acceptable. Colour 5/12 at the limit on five different object types. #6 pipe removal leaves the legs untouched; #12 added plantain sits on the cart edge without halo.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "people not edited; sign text crisp"
+ },
+ "w117233465": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #2 text-sign enlargement replaced by the red-leaf plant on top of the shelf made bigger (clean, bunting still passes behind it); #12 white post now removed whole down to the people, building behind rebuilt cleanly (the fill only grazes 2-3 px of the blonde woman's hair edge at ~600-610,705-725, invisible on a phone). Remaining content issue missed in round 1: #10 'red round logo behind the glass' is the 'Petrol' brand logo of the clothing shop - same case as the Häagen-Dazs flag in w72327414, a brand becomes the subject of a difference (and stays readable in A). Replace #10 with a non-branded object elsewhere (e.g. a plant, pot or crate on the stands), keeping 60 px from the other boxes. Others (#1 pennant, #3 lamp, #4 rail, #5 plant tag, #6 flowers, #7 mailbox - sticker text stays crisp, #8 cap, #9 box, #11 pot) clean. Colour 4/12, gap 54.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#10 removes a clothing-brand logo sign ('Petrol') - brand as the subject of a difference"
+ },
+ "w110758248": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: broken mortar scale replaced by the red fire-extinguisher pictogram made bigger (~60 -> ~105 px); mortar and REGINA press now untouched. The scaled sign is a little soft and its tiny maker mark is an unreadable blob (no real writing), acceptable at medium. Three flips (#3 phone, #4 trivet, #5 crocodile) are on three different, clearly asymmetric objects. #1 canister red, #2 sensor removed, #7 jar blue, #8 sign removed whole are clean. Colour 2/8, gap 46.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (apothecary bottles, not alcohol; APOTHEEK sign removed whole)"
+ },
+ "w65950649": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #7 is now a black sidewalk bollard removed (clean) and #11 the grey rain-water pipe removed from the facade, so only one lantern removal (#10) remains next to the #3 lamp scale. New issue in the changed #11: a ~15x35 px grey pipe stub is left hanging below the leaves (~1143-1157, 485-520), ending in mid-wall - a cut-off part. Extend #11's poly up to ~y 480 (under the leaves) so the stub goes too. #1 car red, #2 no-parking sign removed whole, #4 shutter green, #5 bollard bigger, #6 barrier, #8 window, #9 spotlight, #12 sign recolour (text crisp) clean. Colour 3/12, gap 49.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (person at cafe table untouched; shop sign text crisp)"
+ },
+ "w186698652": {
+  "verdict": "fix",
+  "notes": "Round-1 issue solved: #3 shutters -> green now cover both shutters with no green on the yellow wall above/below. New issue (missed in round 1) in #12 window frame brown -> blue: a blue blotch leaks onto the brown eave above the right window (~148-170, 740-750), and a thin dark-red strip of the frame stays at the far left (~18-25, 760-850); add an excl for the eave patch and include the left strip. The #12 box also starts at x=8 (window ~20 px from the left picture edge) - keep the box ≥30 px inside if possible. #1 finial, #2 oval window, #4 lamp, #5 added post, #6 chimney, #7 attic window, #8 bin, #9 kiosk stripes, #10 flowers, #11 tree clean. Colour 4/12, gap 75.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (Café sign and wall plaque untouched)"
+ },
+ "w21854427": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: the potted-tree removal is gone, #5 is now the young tree on the right made bigger (scaled on its own trunk, no ghost of the old crown; a few leaves over the window frame show tiny light gaps, not visible on a phone), and #4 lemon tree add no longer reads as a move. #1 upper window bigger, #2 bench red, #3 narrow but tall door blue on white (very visible). Colour 2/5, gap 80.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w178817161": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: #12 brass price plate removal now leaves a straight, even shelf lip with no smear or notch. Recolours 4/12 (three glass ornaments + pumpkin are different shapes, acceptable for this subject as round 1 said); #6 added pumpkin is copied from the red pumpkin, not from recoloured #5. #2 lamp, #3 ball bigger, #7 hinge, #8 card, #9 flower, #10 scale removal all clean. Gap 71.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok"
+ },
+ "w4344848": {
+  "verdict": "accept",
+  "notes": "Round-1 issue solved: #10 second planter recolour replaced by removal of the small green mailbox on the wall at right - clean fill, so only one pot recolour (#5) remains; recolours now 4/12. #11 attic window frame green is whole except a tiny brown corner at bottom right (~203-210,505-520), not visible even zoomed on a phone. #8 removed exhibition photo leaves a plain board. Smallest qc gap 39 (≈58 px at 2400) - marginal, the objects are clearly separate. Others clean.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (heraldic cartouche, not religious; MUZEUM lettering untouched)"
+ },
+ "w72327414": {
+  "verdict": "accept",
+  "notes": "Round-1 issues solved: #5 branded flag removal replaced by the wall lamp between the windows made bigger (clean, flag untouched in both pictures); #7 pasted flower pot replaced by the wooden base of the middle umbrella made bigger (sits on the ground, no halo). Three scale changes (#5 lamp, #7 umbrella base, #8 tree in tub) are on three different object types. #1 window bricked up (name matches), #2 umbrella red, #3 cushions blue, #4 drain cover, #6 box blue clean. Colour 3/8, gap 45.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (ice-cream brand flag no longer edited; decorative wall bottle not a subject)"
+ },
+ "w22703789": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: #5 box now starts at x=33; #6 roof shrink replaced by removal of the black tyre fender on the big boat's bow (hull edge rebuilt, bow lettering untouched); #8 woven panel replaced by the laundry removed from the line under the gazebo (dark fill, slightly soft but plausible). New issue missed in round 1: #5 small far boat flipped mirrors the white name/number lettering on its bow (~65-110,835-850 in B reads reversed) - text must not be changed - and the flip carries a faint grey ghost post to the left of the boat (~60-100,790-870). Replace #5 with a non-colour change on an object without writing (recolours are already 3/8). #1 shutters blue, #2 cover red, #3 window closed, #4 ladder removed, #7 roof green clean. Gap 46.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "#5 flip mirrors the lettering on the far boat's bow"
+ },
+ "w28999944": {
+  "verdict": "fix",
+  "notes": "Round-1 issues solved: colour now 3/8; #1 tiny box replaced by a recycling bin added on the snow (~65 px wide, borderline for medium but clear in the row); #4 added buoy replaced by the street lamp removed from the pole (clean), so only one buoy edit (#3, clean water fill) remains; #6 buoy recolour replaced by the boat cabin side window removed. New issues: (a) #6 window removal half-erases the boat's handrail - the two horizontal rail bars that crossed the window now fade into smudged stubs (~1180-1215, 965-1010); keep the rail bars out of the mask (or rebuild them across) so only the window goes. (b) #1 name says 'رمادية' but the added bin is dark green with a grey lid like its neighbours - rename to e.g. 'حاوية نفايات خضراء جديدة على الثلج'; its left edge also shows a short straight copied-snow seam at ~700-705, 905-915 - soften if touched. #2 bin blue, #5 lifebuoy blue, #7 notice board removed whole, #8 door green clean. Gap 61.",
+  "level_ok": true,
+  "independent": "ok",
+  "content": "ok (boat name 'Gabriella' untouched; notice board removed whole)"
+ }
+}
