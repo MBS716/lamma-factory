@@ -103,3 +103,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - ~17:00 medium round 2 DONE: +6 (medium 11; w28999944 colour 4/8 over cap, w28585268 two windows scaled). Medium review running → b3/review1m.json. Fix agent round 1 running. 6th search started (scripts/spot_themes6.txt, 78 themes, run 44319434246) for batch 4.
 - ~17:10 review1m: 1 accept (w59595950), 9 fix, 1 reject (w10687551 monastery). Medium fix agent running → fixes1m.txt (9 ids). Easy/hard fix agent still running. Medium now 10.
 - ~17:50 fixes1 done: 11/13 fixed; rejected w69784977, w40875715. easy 12 hard 7 medium 10. Waiting medium fixes, then combined review2.
+- ~19:00 medium fixes done 7/9; rejected w7764212, w28585268. b3 now easy 12 medium 8 hard 7 = 27. Review2 running on 18 fixed ids (review2_ids.txt → review2.json). 6th search: select_k only 5 usable (idx 2997-3008 have no sheet). Sources exhausted → owner decision on new source in b3 report.

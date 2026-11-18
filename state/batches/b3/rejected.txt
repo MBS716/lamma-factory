@@ -3,3 +3,5 @@ w157381813 easy: large knife blade prominent in picture (family content, owner r
 w10687551 medium: Kapsa Monastery courtyard (religious building) + small objects (review1m)
 w69784977 easy: fix failed (island removal blocky; no clean replacement)
 w40875715 easy: fix failed (roof seams wavy after dormer removal)
+w7764212 medium: #8 drawer trim ghost not fixable; no clean replacement
+w28585268 medium: two 'window bigger' on same barn; 5 replacements failed
