@@ -115,3 +115,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - ~21:20 b4 fetched (42 → src). WORKER_BRIEF + 'More lessons from the b3 reviews'. Workers running: b4 easy (19 sources), b4 medium (24). Hard: waiting owner decision on new source.
 - ~21:35 b4 easy DONE: 6 accepted /13 skipped (38 min, 223k). Review1 b4 easy running. Medium worker running.
 - ~21:45 review1 b4 easy: 1 accept, 5 fix; I rejected w73610227 (3 broken diffs). Fix agent on 4 easy ids → b4/fixes1.txt. Medium worker still running.
+- ~21:55 b4 medium DONE: only 2/24 (wide-search sources weak; ~300k tokens). DECISION: after b4 closes (easy ≤5 + medium 2), pause new production until owner decides on source (efficiency). Review b4 medium running; easy fixes running.
