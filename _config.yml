@@ -1,0 +1,5 @@
+# GitHub Pages of this factory repo serves the previews only. Test results (reports/) and test code (tests/) stay in the
+# repository but are not published, so the published site stays well under the 1 GB Pages limit.
+exclude:
+  - reports
+  - tests
