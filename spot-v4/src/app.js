@@ -1822,7 +1822,7 @@ const Spot = {
   index:null, indexAt:0, shards:{}, hidden:new Set(), remote:false,
   norm(e){ // catalog entry -> pair used by the game
     return {id:e.id, level:e.l, w:e.w, h:e.h, a:SPOT_CDN + "pairs/" + e.id + "a.webp", b:SPOT_CDN + "pairs/" + e.id + "b.webp",
-      title:e.t || THEME_AR[e.th] || "صورة", diffs:e.d.map(([x, y, rx, ry, m]) => m ? {x, y, rx, ry, m} : {x, y, rx, ry}), credit:e.c || null, kind:e.k || "photo", crop:!!e.cr, clean:!!e.cl};
+      title:e.t || THEME_AR[e.th] || "صورة", diffs:e.d.map(([x, y, rx, ry, m]) => m ? {x, y, rx, ry, m} : {x, y, rx, ry}), credit:e.c || null, kind:e.k || "photo", crop:!!e.cr, clean:!!e.cl, g:e.g || ""};
   },
   local(p){ return {id:p.id, level:p.level, w:p.w, h:p.h, a:"spot/" + p.a, b:"spot/" + p.b, title:p.title, diffs:p.diffs, credit:p.credit || null}; },
   async j(url){ const r = await fetch(url, {cache:"no-cache"}); if (!r.ok) throw new Error(r.status); return r.json(); },
@@ -1859,8 +1859,12 @@ const Spot = {
      - A pair already played in THIS room is never repeated until the room has played every pair of the level
        (then {done:true}, and the host decides: other level or replay).
      - Among the pairs this room has not played, ones no device in the room has seen before come first; if all of them
-       were seen in earlier games, the one seen longest ago is used. Old history never blocks a round. */
-  async pick(lv, devs, roomPlayed){
+       were seen in earlier games, the one seen longest ago is used. Old history never blocks a round.
+     - A pair whose scene group (g: "kind|place") shares a tag with the last rounds' pairs comes only when nothing else is
+       left, so two similar scenes (two harbours, the same place twice) are never played one after the other. */
+  async pick(lv, devs, roomPlayed, recentG){
+    const near = new Set((recentG || []).flatMap(g => String(g || "").split("|")).filter(Boolean));
+    const isNear = e => String(e.g || "").split("|").some(t => near.has(t));
     const idx = await this.loadIndex();
     if (!idx || !idx.shards || !idx.shards.length) return null;
     const seen = await this.seenBy(devs);
@@ -1870,13 +1874,13 @@ const Spot = {
       const ok = list.filter(e => this.levelOk(lv, e.l) && !this.hidden.has(e.id) && !roomPlayed.has(e.id));
       total += ok.length;
       for (const e of shuffle(ok, rnd())){
-        const t = seen.get(e.id) || 0;
-        if (t < bestT){ best = e; bestT = t; if (!t) break; }
+        const t = seen.get(e.id) || 0, sc = (isNear(e) ? 1e15 : 0) + t;     // a different scene first, then the freshest
+        if (sc < bestT){ best = e; bestT = sc; if (!sc) break; }
       }
-      if (best && !bestT) break;          // a pair nobody here has seen: no need to read more shards
+      if (best && !bestT) break;          // a new pair of another scene: no need to read more shards
     }
     if (!best) return {done:true};
-    return {pair:this.norm(best), fresh:!bestT, total:idx.total};
+    return {pair:this.norm(best), fresh:!(seen.get(best.id) || 0), total:idx.total};
   },
 };
 
@@ -2052,9 +2056,9 @@ const DFC = {
 };
 const fmtMS = ms => fmtT(Math.max(0, Math.round((ms || 0) / 1000)));
 const Diff = {
-  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null, hist:H.priv.hist || [], crounds:H.priv.crounds || [], hpTok:H.priv.hpTok || ""}; },
+  savePriv(){ return {played:[...(H.priv.played || [])], playedLv:H.priv.playedLv || {}, dfs:H.priv.dfs || null, seen:H.priv.seen || {}, pf:H.priv.pf || {}, hkp:H.priv.hkp || null, mb:H.priv.mb || [], own:H.priv.own || {}, winAt:H.priv.winAt || 0, frozen:H.priv.frozen || null, hist:H.priv.hist || [], crounds:H.priv.crounds || [], hpTok:H.priv.hpTok || "", rg:H.priv.rg || []}; },
   async restore(pv){
-    H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; H.priv.dfs = pv.dfs || null; H.priv.seen = pv.seen || {};
+    H.priv.played = new Set(pv.played || []); H.priv.playedLv = pv.playedLv || {}; H.priv.rg = Array.isArray(pv.rg) ? pv.rg.slice(-2) : []; H.priv.dfs = pv.dfs || null; H.priv.seen = pv.seen || {};
     H.priv.pf = pv.pf || {}; H.priv.hkp = pv.hkp || null; H.priv.mb = pv.mb || []; H.priv.own = pv.own || {}; H.priv.winAt = +pv.winAt || 0; H.priv.frozen = pv.frozen || null;
     H.s.pick = 0;                                                  // the picture library is not open after a reload
     H.priv.hpTok = typeof pv.hpTok === "string" ? pv.hpTok : "";
@@ -2090,7 +2094,7 @@ const Diff = {
     let r; H.priv.picking = true;
     const played = H.priv.played || (H.priv.played = new Set());
     if (replay){ for (const id of [...played]) if (Spot.levelOk(s.o.lv, (H.priv.playedLv || {})[id])) played.delete(id); }
-    try { await Diff.hostKey(); r = chosen ? await Spot.get(chosen, devs) : await Spot.pick(s.o.lv, devs, played); } catch(e){ console.warn(e); r = null; }
+    try { await Diff.hostKey(); r = chosen ? await Spot.get(chosen, devs) : await Spot.pick(s.o.lv, devs, played, H.priv.rg || []); } catch(e){ console.warn(e); r = null; }
     if (H) H.priv.picking = false;
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;
     if (!r){ s.ph = "fail"; pushHost(); return; }
@@ -2099,7 +2103,7 @@ const Diff = {
     H.priv.dfs = p.diffs.map(d => d.m ? [d.x, d.y, d.rx, d.ry, d.m] : [d.x, d.y, d.rx, d.ry]);                              // the answer stays on this device
     s.pair = {id:p.id, level:p.level, w:p.w, h:p.h, a:p.a, b:p.b, title:p.title, credit:p.credit, kind:p.kind, ...(p.crop ? {crop:1} : {}), ...(p.clean ? {clean:1} : {})};
     s.nd = p.diffs.length; s.lv = p.level; s.fresh = r.fresh; H.priv.total = r.total;
-    Spot.markSeen(p.id, devs); played.add(p.id); (H.priv.playedLv = H.priv.playedLv || {})[p.id] = p.level;
+    Spot.markSeen(p.id, devs); played.add(p.id); (H.priv.playedLv = H.priv.playedLv || {})[p.id] = p.level; H.priv.rg = [...(H.priv.rg || []), p.g || ""].slice(-2);
     pushHost();
     try { await preloadSpot(p); } catch(e){ console.warn(e); }
     if (!H || H.g !== "diff" || H.s.rd !== rd) return;

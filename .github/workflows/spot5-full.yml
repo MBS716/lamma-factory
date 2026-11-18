@@ -8,7 +8,7 @@ on:
     paths: [".github/spot5-full-request"]
   workflow_dispatch:
     inputs:
-      lib: {description: "spot library folder", required: false, default: "spotlib-v6"}
+      lib: {description: "spot library folder", required: false, default: "spotlib-v7"}
 permissions:
   contents: write
 concurrency: {group: spot5-full, cancel-in-progress: false}
@@ -31,7 +31,7 @@ jobs:
       - run: pip install -q playwright==1.48.0 pillow numpy && python -m playwright install --with-deps chromium webkit > /dev/null
       - name: test build (emulators only)
         run: |
-          cd spot-v4 && LAMMA_EMULATOR=127.0.0.1 LAMMA_SPOTLIB="$(grep -oE 'spotlib-[a-z0-9-]+' ../.github/spot5-full-request || echo spotlib-v6)" LAMMA_AKML_BANK=data/akml.candidate.json LAMMA_VERSION=v5.0-emu python build.py
+          cd spot-v4 && LAMMA_EMULATOR=127.0.0.1 LAMMA_SPOTLIB="$(grep -oE 'spotlib-[a-z0-9-]+' ../.github/spot5-full-request || echo spotlib-v7)" LAMMA_AKML_BANK=data/akml.candidate.json LAMMA_VERSION=v5.0-emu python build.py
           rm -rf ../emu5 && cp -r dist ../emu5 && rm -f ../emu5/artifact.html
       - name: the six games on the emulators
         run: |
