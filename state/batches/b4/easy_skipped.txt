@@ -1,0 +1,13 @@
+w6733940 few big separate objects: baskets/planter/chair ~100 px or behind railings, door already a common kind; cannot carry 5 clean easy diffs
+w7734694 main object (red porch) runs off the bottom edge, basket over drainpipe/at edge, rest are similar windows
+w31511341 busy: pots behind railing posts, branded toolbox, baskets touching each other, rest <150 px; not 5 clean easy diffs
+w123376209 only the sheds and compost bin are big; sunflowers/tray small, leaves amorphous, sheds overlapped by sunflowers; cannot get 5 varied clean diffs
+w155366282 pub with prominent pub sign (alcohol venue) and church tower in view; phone box carries lettering
+w114338411 restaurant signs on the house, fence runs off two edges, only windows left (same-kind edits)
+w117519085 objects packed around the mug (no 5 boxes 60 px apart); juice in champagne flutes could read as cocktails
+w20639628 chairs overlap table and each other; only tray, vent and seats are separable (vent/tray touch), outlet too small
+w186238376 jars overlap each other, labels are handwriting, only the lids are separable (same kind)
+w112236841 key objects are a lettered sign behind a railing and a bike in shade behind the railing; rest are same-kind window edits
+w5409467 signs/lettering on both buildings, roof runs off edge, separable objects small (extinguisher ~70 px) or behind fence
+w44582244 branded fuel pumps and sign (logos prominent)
+w92594970 lying-gnome removal breaks pedestal edge and small-gnome flip ghosts the big gnome's boot after two tries; no other clean 150 px objects

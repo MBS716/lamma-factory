@@ -1,0 +1,20 @@
+w91763377 knives (pocket knife, box cutter) and branded multimeter prominent
+w7168844 religious icon painting prominent on wall; room very dark
+w13299985 cigarette-brand poster and Hindu shrine prominent
+w113911764 brand cards (FIRED EARTH) on every shelf; all objects same pot type, no variety
+w88956948 brand tins prominent (Carey Salt, Monarch, ButterNut, Rolled Oats) and photo portrait
+w17726588 crucifixion picture prominent on wall
+w11105064 OMEGA brand box and portrait photo prominent
+w189236756 Sacred Heart icon prominent on wall
+w189251190 Madonna icon prominent on wall
+w189236744 religious icon on wall (top right); repeated plates only small targets
+w36491912 patterned wallpaper behind every removable object; dolls and calendar text
+w45401372 cluttered stall of repeated candle holders, liquor bottle and beer steins
+w4953898 bowl removal leaves shadow ghost and napkin recolour leaves white fringe after 2 tries; too few other clean targets on crowded table
+w45044999 only small (<50 px) clean targets left after pan/kettle/lid edits failed twice; lantern and box too close
+w131107823 prominent brand/business signs (Gasthof, pharmacy) and election poster with people; shutters only repeat targets
+w178442572 patterned wallpaper/parquet behind every object, portraits of people dominate walls, lower half empty floor
+w42614776 few distinct medium objects: lattice windows (same type), thin antennas/chimneys, busy flower beds and hedges
+w153842643 all objects are overlapping long-handled tools with thin shafts; cannot get 8 varied independent changes (would repeat tool removals)
+w8444899 near-identical overlapping cups/saucers (repeat-type changes only), very dark harsh exposure, museum number tag
+w66933315 only ~5 clean medium targets (one window, plank pile, distant door, bush, barrel); rest are text boards, thin poles, tangled ladders

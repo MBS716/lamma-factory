@@ -113,3 +113,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - Batch 4 sources (select_j/k/l/m q≥4, sheets4 wide search): easy 19, medium 24, hard 0 → batches/b4/*_sources.json; fetch b4 (42) requested. Hard needs a new idea (no q≥4 hard in wide search).
 - Report b3 sent with source decision for owner.
 - ~21:20 b4 fetched (42 → src). WORKER_BRIEF + 'More lessons from the b3 reviews'. Workers running: b4 easy (19 sources), b4 medium (24). Hard: waiting owner decision on new source.
+- ~21:35 b4 easy DONE: 6 accepted /13 skipped (38 min, 223k). Review1 b4 easy running. Medium worker running.
