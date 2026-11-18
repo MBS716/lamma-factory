@@ -69,3 +69,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 ## Update 2026-11-18 (b2 published)
 - 80 page images uploaded (batches/b2/blobmap.txt 80 lines); page_b2.json; review page v6 with b2 (40 pairs, 369 differences). Report sent.
 - Next: 4th source search result → selectors for b3 (easy+medium priority).
+
+## Update 2026-11-18 12:xx — OWNER APPROVED all 100 (b1 60 + b2 40) in chat + page (db decisions all "ok")
+- spotlib-v7 (190: easy 60, medium 61, hard 69) assembled in wt5/spot-v4/spotlib-v7 (not yet committed); scene groups g via library-tools/scene_groups.py; app.js pick avoids similar scenes (H.priv.rg); tests/t_spot_scene.js 10/10; verify_spot 190/190.
+- Local spot tests running. Next: commit spot-v5 + spot5-full emulator run (six games); preview-spot5 on factory main (PREV build) + spot5-test.
+- b3: candidates pulled (2869, new idx 2435-2868); selectors h (2435-2650) and i (2651-2868) running on sonnet. WORKER_BRIEF has a lessons section now.
