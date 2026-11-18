@@ -102,3 +102,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - ~16:30 review1 b3 easy+hard: easy 8 accept/7 fix; hard 0 accept/7 fix/1 reject (w172230132 dup stall). I also rejected w157381813 (prominent knife). batches/b3/rejected.txt. Fix agent round 1 running (13 ids → fixes1.txt). Medium worker still running (medium_done 9 so far).
 - ~17:00 medium round 2 DONE: +6 (medium 11; w28999944 colour 4/8 over cap, w28585268 two windows scaled). Medium review running → b3/review1m.json. Fix agent round 1 running. 6th search started (scripts/spot_themes6.txt, 78 themes, run 44319434246) for batch 4.
 - ~17:10 review1m: 1 accept (w59595950), 9 fix, 1 reject (w10687551 monastery). Medium fix agent running → fixes1m.txt (9 ids). Easy/hard fix agent still running. Medium now 10.
+- ~17:50 fixes1 done: 11/13 fixed; rejected w69784977, w40875715. easy 12 hard 7 medium 10. Waiting medium fixes, then combined review2.
