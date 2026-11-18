@@ -1,4 +1,4 @@
-OK   the host's screen shows a QR code and a one-time link (?v=b684e166e9&hp=7vz39a55#7697)
+OK   the host's screen shows a QR code and a one-time link (?v=b684e166e9&hp=c4o412fp#3066)
 OK   it says: same counting as everybody, no places of differences sent to the phone
 OK   the mark is removed from the phone's address bar once read
 OK   the host's phone joins as «محمد», marked as the host; the link is used up
