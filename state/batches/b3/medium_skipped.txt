@@ -1,0 +1,10 @@
+w9787089 mostly sky/fountain; few separate objects >=70px, banners carry text
+w97588412 night scene, dense detail; flags are emblems, few clean separate objects
+w91104722 single house with few separate objects (two shutters, two doors); cannot carry 8 varied
+w9018802 only ~5 clean diffs; car recolour leaks onto bikes, bush removal leaves haze, pot add looks pasted
+w85066543 flags all carry text and thin poles; many look-alike flags
+w80032307 dense riverside facades, windows ~40px, few separate medium objects
+w82723945 roof-dominated farmhouse; only many identical shutters and ~40px details
+w75975380 hanging chilli/garlic bunches: repetitive, no separate clean objects; removals would cut strings
+w72724449 rows of identical brass dispensers with text labels; edits would be same-type repeats
+w72686909 castle: few separate medium objects, mostly flint walls and railings

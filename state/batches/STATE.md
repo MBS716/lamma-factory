@@ -79,3 +79,8 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - Committed spot-v5 7365c36 (spotlib-v7, scene groups, test). Preview: factory main b08cab1 preview-spot5 (190) + _config.yml (Pages excludes reports/, tests/; site would pass 1 GB). Preview test fixed (stale fixed-60 counts) and rerunning; spot5-full emulator running (44275060383).
 - b3: sources chosen (easy 60 / medium 50 / hard 40 [5 hard + 35 busy medium]) fetched + converted. Workers easy + medium running (resume via message; progress in *_done/_skipped.txt). Hard worker after one finishes.
 - 5th search (spot_themes5.txt, hard) done on spot-sources: pull candidates + selectors later.
+
+## Update 2026-11-18 ~13:30 — bank 190 DONE
+- spot5-full (emulator, six games) PASS: other games PASS (letters, wheel, quiz, puzzle), akml 97/97, akml full 52/52, spot 65+32+28+28.
+- Preview (factory main, preview-spot5, 190) real-DB tests PASS 65/32/28/28 after test-timing fixes (tests/spot5: counts from catalog; 15 s waits).
+- Report sent to owner. b3 easy+medium workers running.

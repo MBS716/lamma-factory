@@ -1,0 +1,39 @@
+w95749092 only 3 big objects (doors, window); pots/manhole/meter under 150 px
+w94660752 objects packed too close (mailbox/plaque/bracket <60 px apart), only ~4 separable big diffs
+w89405519 only 4 clean big diffs (blue railing touches edge, lamp too small)
+w88471030 plain facade, too few separate objects (two doors only)
+w85163395 only boat, ferry and bridge as big objects; boat carries text
+w84071157 objects small for easy (chimney, dish, windows <120 px)
+w84017869 same Engadin inn as w84017871 from another angle; objects small
+w83270249 tugboat: big parts carry text or overlap; too few separable big objects
+w82212115 big candidates (ivy, shutters) overlap; door/dormer windows too narrow; only ~3 clean big diffs
+w81267075 VW logo is the subject (brand), plate text; few separable objects
+w80786388 one big car dominates; other objects (chimney, lamp, baskets) small or thin
+w8040777 tram: signs with text, person, mostly thin parts
+w80343435 lone tree + vineyard; too few separate objects
+w77716523 ferris wheel: repetitive thin structure, no separate big objects
+w77850840 only ~4 big diffs (palm, window, shutter, balcony); rest small or conflicting spacing
+w7712963 tree covers half; remaining objects (chimney, lamp, bollard) small
+w75975387 overlapping loaves, signs with text; no separable big objects
+w69502670 overlapping bumper cars; only recolours possible
+w66479622 barge: flags and hull carry text; remaining parts thin or small
+w66006858 monochrome blue alley; only doors (same type) and a mat as objects
+w63559600 tree, hut and mountains only; no 5 separable objects
+w63379587 bike parts, door and pole overlap; no 5 boxes 60 px apart
+w62133790 long fortress wall with tiny people; no separable big objects
+w62122044 gazebo/sundial/fence intertwined; removals would need fence reconstruction
+w62212829 beyond cheese and sign only small/entangled objects (bikes on railings, flower boxes behind rails)
+w60832110 single bike; basket/seat/rack are parts of one object
+w57150930 boathouse: shutters same type, door over water, in shade; <5 good diffs
+w54554457 main boat covered with text; others small
+w59594517 removals on roof/sky (cupola with wire, dormer) smear; windows too narrow to add
+w53678087 roof spans all upper objects (box overlap); two chimneys same type; shutters repetitive
+w50462915 single van: candidate changes are parts of one object
+w49576347 symmetric gate; only bollard and courtyard door as big separable objects
+w50458057 huts: only ~4 big separable diffs (rest is railings/text/edge objects)
+w48347812 garden: agaves overlap the wall and each other; only door/column objects (thin)
+w48263024 pergola with vines; tangled thin structures
+w44751679 eight identical bikes in a tight row; no separated objects
+w44406806 food truck covered in text; night scene
+w44372182 pavilion with bell turret; no big separable objects besides leaves/wall
+w44172147 station: signs with text, chimneys small, tram with text
