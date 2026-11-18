@@ -106,3 +106,9 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - ~19:00 medium fixes done 7/9; rejected w7764212, w28585268. b3 now easy 12 medium 8 hard 7 = 27. Review2 running on 18 fixed ids (review2_ids.txt → review2.json). 6th search: select_k only 5 usable (idx 2997-3008 have no sheet). Sources exhausted → owner decision on new source in b3 report.
 - ~19:20 review2: 9 accept / 9 fix → fix round 2 agent running (fixes2.txt). Fixed sheet-numbering bug (new sheets overwrote last old sheet; old 249 content = idx 2985-2996, new 2997-3008 viewed by me: 2998 easy q4, 3004 medium q4 added to select_k). Added sheets4 (all Commons, not only QI/VI/FP); run 44333612754 on spot_themes6 for batch 4.
 - ~20:00 fixes2 done 9/9; lead checked crops → review3.json accept (9). review1m/fixes1m merged into review1.json/fixes1.txt (batch_build regex needs digits). flags.json written. batch_build b3 → build/b3 running. b3 FINAL 27 (easy 12, medium 8, hard 7); rejected 7.
+
+## Update 2026-11-18 ~21:00 — b3 CLOSED: 27 pairs (easy 12, medium 8, hard 7, 208 diffs), rejected 7
+- page: 54 imgs uploaded (batches/b3/blobmap.txt), page_b3.json, review page v7 (batches.json + b3.json; local copy reviewpage/). Awaiting owner decisions.
+- Cost b3 ≈ 3.5M agent tokens (~130k/pair; b2 ~90k). Yield easy 20%, medium ~10%, hard 20% (of q4 sources).
+- Batch 4 sources (select_j/k/l/m q≥4, sheets4 wide search): easy 19, medium 24, hard 0 → batches/b4/*_sources.json; fetch b4 (42) requested. Hard needs a new idea (no q≥4 hard in wide search).
+- Report b3 sent with source decision for owner.
