@@ -60,8 +60,9 @@ def sheets(out, themes_file, per=12):
         got = 0
         res = []
         for cat in CATS:   # sheets3: also Valued/Featured, and Quality images past the first 50 results already searched
-            for off in ((0, 50) if cat == "Quality images" and DEEP else (0,)):
-                try: res += search(f'incategory:"{cat}" filetype:bitmap {t}', 50, off)
+            for off in ((0, 50) if cat in ("Quality images", "") and DEEP else (0,)):
+                q = f'incategory:"{cat}" filetype:bitmap {t}' if cat else f'filetype:bitmap {t}'   # sheets4: "" = all of Commons
+                try: res += search(q, 50, off)
                 except Exception as e: print("search failed", t, cat, e)
         for p in res:
             c = keep(p)
@@ -106,5 +107,7 @@ def fetch(out, ids, width=2400):
 if __name__ == "__main__":
     if sys.argv[1] == "sheets3":   # wider: Quality images (results 1-100), Valued images, Featured pictures
         CATS[:] = ["Quality images", "Valued images", "Featured pictures on Wikimedia Commons"]; DEEP = True; sys.argv[1] = "sheets"
+    if sys.argv[1] == "sheets4":   # widest: all Commons photos (not only reviewed categories); selectors filter quality
+        CATS[:] = [""]; DEEP = True; sys.argv[1] = "sheets"
     if sys.argv[1] == "sheets": sheets(sys.argv[2], sys.argv[3], int(sys.argv[4]) if len(sys.argv) > 4 else 12)
     else: fetch(sys.argv[2], [x for x in sys.argv[3].split(",") if x], int(os.environ.get("FETCH_W", "2400")))   # FETCH_W: larger pictures for crops
