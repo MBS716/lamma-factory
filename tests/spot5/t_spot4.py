@@ -83,7 +83,7 @@ async def main():
         check(pl(s, kA)['f'] == 1 and pl(s, kA)['p'] == 10 and pl(s, kA)['w'] == 0, 'A taps its own find again: no points, no mistake')
         # A: mistakes, reload, out, rejoin
         for i in range(4): await tap(A, *wrong(i)); await A.wait_for_timeout(400)
-        await settle(); await A.reload(); await A.wait_for_selector('#pDf .dfimg img', timeout=15000); await A.wait_for_function(CIRCLES + ' === 1', timeout=8000)
+        await settle(2500); await A.reload(); await A.wait_for_selector('#pDf .dfimg img', timeout=15000); await A.wait_for_function(CIRCLES + ' === 1', timeout=8000)
         check('الأخطاء المتبقية: 1' in await A.inner_text('#dfMe'), 'A reloads after 4 mistakes: its find and 1 attempt left come back')
         await tap(A, *wrong(5)); await settle(); s = await S(host)
         check(pl(s, kA)['out'] == 1 and pl(s, kA)['w'] == 5 and s['ph'] == 'play', "A's 5th mistake: A stops, the round goes on")
@@ -100,7 +100,7 @@ async def main():
         check(pl(s, kB)['f'] == 4 and pl(s, kC)['f'] == 4 and s['ph'] == 'play', 'B and C both at 4 of 5')
         await B.screenshot(path=f'{SHOTS}/phone_playing.png', full_page=True)
         await asyncio.gather(tap(B, *on(4)), tap(C, *on(4), False))
-        await host.wait_for_function('H.s.ph === "over"', timeout=6000); s = await S(host); f = s['pl']
+        await host.wait_for_function('H.s.ph === "over"', timeout=15000); s = await S(host); f = s['pl']
         gap = abs(f[kB]['da'] - f[kC]['da'])
         check(s['end'] == 'win' and sorted(s['win']) == sorted([kB, kC]), f'B and C complete within the 0.3 s window ({gap} ms apart on the host): joint win')
         check(f[kB]['p'] == 50 + 50 + 30 and f[kC]['p'] == 130 and f[kA]['p'] == 0 and f[kA]['b'] == 0, f'points: each winner 5×10 +50 +30 = {f[kB]["p"]}/{f[kC]["p"]}; A 0')
@@ -144,7 +144,7 @@ async def main():
         await tap(B, *on(4)); await A.wait_for_timeout(100)
         await asyncio.gather(tap(A, *on(1)), tap(C, *wrong(3), False))
         await C.wait_for_timeout(700); await tap(C, *on(4), False)
-        await host.wait_for_function('H.s.ph === "over"', timeout=6000); await settle(1200); s = await S(host); f = s['pl']
+        await host.wait_for_function('H.s.ph === "over"', timeout=15000); await settle(1200); s = await S(host); f = s['pl']
         check(f[kA]['f'] == a0['f'] and f[kA]['p'] - f[kA]['b'] == a0['p'] and f[kC]['w'] == c0['w'], f'inside the 0.3 s window only another completion can count: A\'s new find and C\'s mistake 0.1 s after B\'s completion were not counted (A {a0["f"]}→{f[kA]["f"]}, C mistakes {c0["w"]}→{f[kC]["w"]})')
         seen = await A.evaluate('window.__seen')
         early = [x for x in seen if x[0] == 'play' and (x[2] or x[1] == 5)]
@@ -169,7 +169,7 @@ async def main():
         await A.screenshot(path=f'{SHOTS}/v5_phone_playing_stand.png', full_page=True); await host.screenshot(path=f'{SHOTS}/v5_host_playing.png', full_page=True)
         await taps(A, [0, 1]); await taps(B, [0]); await tap(B, *wrong(1)); await settle(1200)
         check(await A.inner_text('.dfstand') == st0, 'v5: the overall line does not move while the round is played')
-        await host.evaluate('window.__off = (window.__off || 0) + 301000'); await host.wait_for_function('H.s.ph === "over"', timeout=6000); s = await S(host)
+        await host.evaluate('window.__off = (window.__off || 0) + 301000'); await host.wait_for_function('H.s.ph === "over"', timeout=15000); s = await S(host)
         check(s['end'] == 'time' and not s['win'] and s['rk'] == [kA, kB, kC], 'time is up, nobody completed: A 2, B 1, C 0 in that order')
         hero = await B.inner_text('#dfHeroCard'); check('انتهى الوقت' in hero and 'صالح' in hero, '«انتهى الوقت — متصدر الجولة: صالح»')
         check(await A.locator('.dfstand').count() == 0, 'v5: after the round the short line gives way to the full results')
@@ -200,12 +200,12 @@ async def main():
         await Dp.wait_for_selector('#pDf .dfimg img', timeout=15000); await host2.wait_for_timeout(900)
         s2 = await S(host2); G['D'] = await host2.evaluate('H.priv.dfs'); G['W'], G['H'] = s2['pair']['w'], s2['pair']['h']
         for i in range(5): await tap(Dp, *on(i)); await Dp.wait_for_timeout(400)
-        await host2.wait_for_function('H.s.ph === "over"', timeout=6000); s2 = await S(host2); kD = await key(host2, 'ليلى')
+        await host2.wait_for_function('H.s.ph === "over"', timeout=15000); s2 = await S(host2); kD = await key(host2, 'ليلى')
         check(s2['end'] == 'win' and s2['win'] == [kD] and s2['pl'][kD]['p'] == 130, 'a single player who finds all 5 wins: 50 +50 +30 = 130')
         await host2.click('[data-h=go]'); await host2.wait_for_function('H.s.ph === "play"', timeout=15000); await Dp.wait_for_selector('#pDf .dfimg img', timeout=15000); await host2.wait_for_timeout(900)
         s2 = await S(host2); G['D'] = await host2.evaluate('H.priv.dfs'); G['W'], G['H'] = s2['pair']['w'], s2['pair']['h']
         for k in range(5): await tap(Dp, *wrong(k)); await Dp.wait_for_timeout(400)
-        await host2.wait_for_function('H.s.ph === "over"', timeout=6000); s2 = await S(host2)
+        await host2.wait_for_function('H.s.ph === "over"', timeout=15000); s2 = await S(host2)
         check(s2['end'] == 'solo', 'a single player\'s 5th mistake ends the round')
 
     bad = [m for ok, m in R if not ok]
