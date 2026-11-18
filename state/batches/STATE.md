@@ -126,3 +126,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - decisions db already d:"ok" for all 34. spotlib-v8 committed on spot-v5 (b5.sh/spot5-full default v8, README). Checks: verify 224/224, unique ids/sources/files, credits, masks, coords; scene test 10/10; local spot tests 65/32/28/28/7 + judge 1865/0.
 - preview-spot5 rebuilt (factory main db760e0). spot5-full emulator run 44409668798 running.
 - Production of new pairs from Commons STOPPED (owner). Trial: Openverse (scripts/spot_openverse.py, themes spot_themes_ov1.txt, out spot-sources:candov), run 44409671879.
+- ~03:00 tests: spot5-full PASS (other games 0, akml 0, akml full 0, spot 0); preview real-DB spot5-test 44410081171 tests PASS (save step conflict only). Openverse trial: 63 candidates (all CC0, stocksnap/rawpixel; no Flickr), selector: 2 q≥4 medium (3%) → not better than Commons. Recommendation to owner: Pexels pilot via API key stored by owner as GitHub secret.
