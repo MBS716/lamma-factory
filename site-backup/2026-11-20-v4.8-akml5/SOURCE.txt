@@ -1,0 +1,3 @@
+e1a07423a944e8ae3feced725408ddc598e9c5de Thu Nov 12 18:23:03 2026 +0000
+Copy of MBS716/lamma (main) = the live site v4.8-akml5 (build 2f9a266539), before the spot-the-difference v5.0 update.
+Restore: extract the archive into a checkout of MBS716/lamma and commit it on top of main (no force push), or revert to commit e1a0742.
