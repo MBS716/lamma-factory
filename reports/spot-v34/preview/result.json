@@ -4,8 +4,8 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-spot4/?v=89631ec57e#9808)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-spot4/?v=89631ec57e#9808)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma-factory/preview-spot4/?v=89631ec57e#3280)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma-factory/preview-spot4/?v=89631ec57e#3280)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs another version: its phones get \"not found\" instead of a stuck lobby",
@@ -19,7 +19,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10002 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10001 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -28,7 +28,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: preview rooms are separate (lmp3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (eview-spot4/?v=89631ec57e#7882)",
+  "OK sessions: invite link carries the version (eview-spot4/?v=89631ec57e#4401)",
   "OK sessions: version.json matches the page (89631ec57e = 89631ec57e)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -51,7 +51,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (p 400)",
+  "OK wheel v3: phones receive the same box result as the host (p 150)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -62,88 +62,20 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (486 characters)",
-  "OK spot v4: easy round, 5 differences, 3 players (s5-w35026614)",
-  "OK spot v4: no hint, image-info or report button on the phones while playing, no link to the original",
-  "OK spot v4: three players find the same difference: each +10",
-  "OK spot v4: each phone shows only its own circle (sealed mailboxes) [True, True, True]",
-  "OK spot v4: the room as a phone reads it from the database: no place of a difference, no plain tap",
-  "OK spot v4: the host screen shows no circle during the round",
-  "OK spot v4: the iPhone reloads after 3 mistakes: its find and 2 attempts left come back",
-  "OK spot v4: 5th mistake: the iPhone stops, the round goes on",
-  "OK spot v4: the iPhone leaves and joins again: still out, mistakes not reset",
-  "OK spot v4: the host reloads: same records, no phone shows «the game ended»",
-  "OK spot v4: Android and the third phone at 4 of 5",
-  "OK spot v4: both complete at the same moment: joint win (3 ms apart when they reached the host; the window is 300 ms)",
-  "OK spot v4: each winner 5×10 +50 +30 = 130; no bonus for the player who was out",
-  "OK spot v4: the results announce the winner(s) first",
-  "OK spot v4: results table with «استُبعد — 5 أخطاء» and the overall board",
-  "OK spot v4: after the round: author, source link and licence of the picture",
-  "OK spot v4: report button for the host only, after the round",
-  "OK spot v4: the sealed mailboxes are removed when the round ends",
-  "OK spot v4: the host reloads after the round: nothing is counted again",
-  "OK spot v4: the other phones see no completion before the closing window ends, only the final result (38 readings)",
-  "OK spot v4: the announced result does not change afterwards",
-  "OK spot v4: the third phone completes 1.2 s after Android: Android wins alone, the late tap is not counted (third phone 4 of 5)",
-  "OK spot v4: «توقفت الجولة بفوز المنافس» for the others",
-  "OK spot v4: time is up before anybody completed: «انتهى الوقت — متصدر الجولة: صالح»",
-  "OK spot v4: everybody used their 5 attempts: the round ends",
-  "OK spot v4: overall board over 4 rounds: rounds, wins, finds, points [('صالح', 4, 0, 3, 50), ('تافير', 4, 2, 11, 300), ('نورة', 4, 1, 9, 200)]",
-  "OK spot v4: every player's results are saved in the database",
-  "OK spot v4: a phone cannot read the host's hidden data from the database",
-  "OK spot v4: iPhone: no sideways scrolling (390 <= 390)",
-  "OK spot v4: Android: no sideways scrolling (412 <= 412)",
-  "OK spot v4: 360 px phone: no sideways scrolling (360 <= 360)",
-  "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
-  "OK puzzle: iPhone swaps two pieces by tapping",
-  "OK puzzle: Android drag swaps pieces without scrolling the page",
-  "OK iPhone: no sideways scrolling (390 <= 390)",
-  "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1420 (limit 12000), saved match 1313 (limit 20000), hidden data 1773 (limit 120000), over 5 games",
-  "OK no \"permission denied\" from the database during normal play (0: [])"
+  "OK wheel v3: state sent to phones stays small (486 characters)"
  ],
  "errors": [],
- "not_tested": [
-  "real phones on mobile networks (only browser engines on GitHub servers)",
-  "in-app browsers (WhatsApp/Instagram/camera QR)",
-  "scanning the QR with a camera (the QR content is checked instead)"
- ],
- "sizes": {
-  "letters": [
-   1233,
-   1123,
-   229
-  ],
-  "wheel": [
-   752,
-   644,
-   39
-  ],
-  "diff": [
-   1420,
-   1313,
-   1773
-  ],
-  "quiz": [
-   501,
-   394,
-   334
-  ],
-  "puzzle": [
-   272,
-   163,
-   0
-  ]
- },
+ "not_tested": [],
+ "sizes": {},
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-06T23:18:43.336Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-7882/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-06T23:18:43.425Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-7882/d6e439740279e35c21ecfce8 failed: permission_denied ",
-  "Android: [2026-11-06T23:18:43.513Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-7882 failed: permission_denied "
+  "Android: [2026-11-20T08:05:19.126Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lmp3-4401/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-20T08:05:19.285Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lmp3-4401/43cc4506091973248a29ad38 failed: permission_denied ",
+  "Android: [2026-11-20T08:05:19.433Z]  @firebase/database: FIREBASE WARNING: set at /games/lmp3-4401 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
+ "exception": "Traceback (most recent call last):\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py\", line 540, in run\n    if not os.environ.get('SPOT_V5'): await spot_v34(host, ios, android, cb, pw)   # v5.0: spot is tested by tests/spot5\n                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py\", line 319, in spot_v34\n    code = await start(host, 'diff', {'lv': 0})\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/runner/work/lamma-factory/lamma-factory/tests/live_e2e_v34.py\", line 25, in start\n    await host.click(f'.gact [data-game={game}]'); await host.wait_for_selector('.code', timeout=30000)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py\", line 9851, in click\n    await self._impl_obj.click(\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py\", line 828, in click\n    return await self._main_frame.click(**locals_to_params(locals()))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py\", line 488, in click\n    await self._channel.send(\"click\", locals_to_params(locals()))\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 59, in send\n    return await self._connection.wrap_api_call(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py\", line 520, in wrap_api_call\n    raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nplaywright._impl._errors.TimeoutError: Page.click: Timeout 30000ms exceeded.\nCall log:\nwaiting for locator(\".gact [data-game=diff]\")\n\n",
  "ignored": [],
- "PASS": true
+ "PASS": false
 }
