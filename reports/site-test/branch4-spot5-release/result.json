@@ -4,8 +4,8 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (http://localhost:8799/?v=a64c144e16#1835)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=a64c144e16#1835)",
+  "OK invite link points to this site (http://localhost:8799/?v=a64c144e16#7390)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=a64c144e16#7390)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs the same version: a phone there joins this game normally",
@@ -28,7 +28,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (alhost:8799/?v=a64c144e16#4032)",
+  "OK sessions: invite link carries the version (alhost:8799/?v=a64c144e16#9611)",
   "OK sessions: version.json matches the page (a64c144e16 = a64c144e16)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -51,7 +51,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 50)",
+  "OK wheel v3: phones receive the same box result as the host (m 250)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -62,14 +62,14 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (487 characters)",
+  "OK wheel v3: state sent to phones stays small (486 characters)",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3479], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3480], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "FAIL sizes: the largest host seat 1240 (limit 12000), saved match 1130 (limit 20000), hidden data 333 (limit 120000), over 4 games",
+  "OK sizes: the largest host seat 1240 (limit 12000), saved match 1130 (limit 20000), hidden data 335 (limit 120000), over 4 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -83,17 +83,17 @@
   "letters": [
    1240,
    1130,
-   261
+   240
   ],
   "wheel": [
-   742,
-   634,
-   35
+   755,
+   647,
+   38
   ],
   "quiz": [
-   513,
-   406,
-   333
+   475,
+   368,
+   335
   ],
   "puzzle": [
    272,
@@ -103,12 +103,12 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-20T08:06:28.825Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-4032/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-20T08:06:28.973Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-4032/105acd7831d185d3ae538794 failed: permission_denied ",
-  "Android: [2026-11-20T08:06:29.121Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-4032 failed: permission_denied "
+  "Android: [2026-11-20T08:15:44.294Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-9611/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-20T08:15:44.451Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-9611/c45fcff81580011a88f76564 failed: permission_denied ",
+  "Android: [2026-11-20T08:15:44.608Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-9611 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,
  "ignored": [],
- "PASS": false
+ "PASS": true
 }
