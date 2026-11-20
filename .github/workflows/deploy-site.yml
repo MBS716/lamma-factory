@@ -135,29 +135,32 @@ jobs:
       - name: test the uploaded branch in a real browser (real Firebase, files served from the branch copy)
         if: steps.mode.outputs.mode == 'branch'
         run: |
-          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+          pip install -q playwright==1.48.0 pillow && python -m playwright install --with-deps chromium webkit > /dev/null
           (cd readback && python -m http.server 8799 > /dev/null 2>&1 &) ; sleep 2
           D=reports/site-test/branch4-$(cat .github/deploy-request | tr -d ' \r\n' | sed 's/.*://')
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py http://localhost:8799/ $D https://mbs716.github.io/lamma/
+          AUTH_ON=1 RULES_ON=1 SPOT_V5=1 python tests/live_e2e_v34.py http://localhost:8799/ $D https://mbs716.github.io/lamma/
           python tests/live_spot_library.py http://localhost:8799/ site $D/spot-library.txt
+          LIVE_URL=http://localhost:8799/ DIST=site OUT=$D/spot5 bash tests/spot5/run_live.sh   # spot v5: round, competition, picker, host's phone
           python tests/seo_check.py http://localhost:8799/ reports/site-test/branch-seo https://mbs716.github.io/lamma/
           bash tests/akml_suite.sh http://localhost:8799/ $D
           # the publish itself, played through: the old version (main now) is replaced by this build while people play
           git clone -q --depth 1 https://github.com/MBS716/lamma.git oldmain && rm -rf oldmain/.git
           r=0; (cd tests/local && OLD=$GITHUB_WORKSPACE/oldmain NEW=$GITHUB_WORKSPACE/site SHOTS=$GITHUB_WORKSPACE/$D/version-switch python t_version_switch.py) > $D/version-switch.log 2>&1 || r=$?
-          cat $D/version-switch.log; rm -rf oldmain; [ $r = 0 ]
+          r2=0; (cd tests/local && OLD=$GITHUB_WORKSPACE/oldmain NEW=$GITHUB_WORKSPACE/site SHOTS=$GITHUB_WORKSPACE/$D/version-switch-spot python t_version_switch_spot.py) > $D/version-switch-spot.log 2>&1 || r2=$?
+          cat $D/version-switch.log $D/version-switch-spot.log; rm -rf oldmain; [ $r = 0 ] && [ $r2 = 0 ]
       - name: test the live site
         if: steps.mode.outputs.mode == 'main-approved'
         run: |
-          pip install -q playwright==1.48.0 && python -m playwright install --with-deps chromium webkit > /dev/null
+          pip install -q playwright==1.48.0 pillow && python -m playwright install --with-deps chromium webkit > /dev/null
           want=$(md5sum site/index.html | cut -c1-32)
           for i in $(seq 1 60); do
             got=$(curl -s "https://mbs716.github.io/lamma/index.html?nc=$RANDOM" | md5sum | cut -c1-32)
             [ "$got" = "$want" ] && echo "live after $((i*15))s" && break; sleep 15
           done
           [ "$got" = "$want" ] && echo "live site serves the new index.html: yes" | tee -a reports/site-test/upload-main.txt || { echo "live site serves the new index.html: NO" | tee -a reports/site-test/upload-main.txt; exit 1; }
-          AUTH_ON=1 RULES_ON=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma/ reports/site-test/live    # all games, spot v4, sign-in, rules and permission checks on the live site
-          python tests/live_spot_library.py https://mbs716.github.io/lamma/ site reports/site-test/live/spot-library.txt   # the 60 pairs as the live site serves them
+          AUTH_ON=1 RULES_ON=1 SPOT_V5=1 python tests/live_e2e_v34.py https://mbs716.github.io/lamma/ reports/site-test/live    # all games, sign-in, rules and permission checks on the live site
+          python tests/live_spot_library.py https://mbs716.github.io/lamma/ site reports/site-test/live/spot-library.txt   # every pair as the live site serves it
+          LIVE_URL=https://mbs716.github.io/lamma/ DIST=site OUT=reports/site-test/live/spot5 bash tests/spot5/run_live.sh   # spot v5 on the live site
           bash tests/akml_suite.sh https://mbs716.github.io/lamma/ reports/site-test/live                                   # «أكملها»: bank, matches, host's card, full matches, timer
           GSV=o8q_o6t4nrEWy6LLlxmjjLIJEwBYHqkBRtCZ2v28Cbw python tests/seo_check.py https://mbs716.github.io/lamma/ reports/site-test/live-seo
           python - <<'PY'

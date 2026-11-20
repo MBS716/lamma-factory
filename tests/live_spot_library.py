@@ -1,7 +1,7 @@
 """Check the spot-the-difference library as the live site serves it.
 python tests/live_spot_library.py <site url> <local site dir> <report file>
 
-- the catalog the site serves has exactly the expected pairs (60: 20 easy / 20 medium / 20 hard);
+- the catalog the site serves has exactly the pairs of the tested build (count and levels from its catalog);
 - every pair has 5 / 8 / 12 differences for its level and a source + licence credit;
 - every picture the site serves (both images of every pair) is byte-identical to the tested build.
 Exit 1 on any failure."""
@@ -41,7 +41,8 @@ for p in pairs:
         else: bad.append(f'{f} differs from the tested build')
 lines += [f'site: {URL}', f"pairs served: {len(pairs)} (index total {idx['total']}), per level easy/medium/hard: {lv[0]}/{lv[1]}/{lv[2]}",
           f'differences: {ndiff}', f'pictures served identical to the tested build: {same} of {2 * len(pairs)}']
-if len(pairs) != 60 or [lv[0], lv[1], lv[2]] != [20, 20, 20]: bad.append('expected 60 pairs, 20 per level')
+exp = json.loads(local('spot/catalog/index.json'))
+if len(pairs) != exp['total'] or [lv[0], lv[1], lv[2]] != list(exp['levels']): bad.append(f"expected {exp['total']} pairs, per level {exp['levels']}")
 lines.append('RESULT: ' + ('PASS' if not bad else 'FAIL ' + '; '.join(bad[:20])))
 open(OUT, 'w').write('\n'.join(lines) + '\n'); print('\n'.join(lines))
 sys.exit(1 if bad else 0)
