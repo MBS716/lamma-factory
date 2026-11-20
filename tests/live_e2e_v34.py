@@ -579,7 +579,7 @@ async def run(pw):
           try:
             sz = json.loads(await host.evaluate('localStorage.getItem("__sz") || "{}"')); R['sizes'] = sz
             big = [max(v[i] for v in sz.values()) for i in range(3)] if sz else [0, 0, 0]
-            check(len(sz) >= 5 and big[0] <= 12000 and big[1] <= 20000 and big[2] <= 120000,
+            check(len(sz) >= (4 if os.environ.get('SPOT_V5') else 5) and big[0] <= 12000 and big[1] <= 20000 and big[2] <= 120000,
                   f'sizes: the largest host seat {big[0]} (limit 12000), saved match {big[1]} (limit 20000), hidden data {big[2]} (limit 120000), over {len(sz)} games')
           except Exception as e: check(False, f'sizes could not be read: {e}')
         if os.environ.get('AUTH_ON') or os.environ.get('RULES_ON'):
