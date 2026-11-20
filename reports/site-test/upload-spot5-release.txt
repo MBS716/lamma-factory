@@ -1,0 +1,9 @@
+branch: spot5-release
+commit: fa43521c9fd1b60c85eee3214319b25f77c29c5f
+date (UTC): 2026-11-20 08:03
+index.html: 3c35b4d78aaa58fea64c20759310b59a (expected 3c35b4d78aaa58fea64c20759310b59a)
+spot files: 676 (expected 676)
+build: a64c144e16 (tested a64c144e16)
+files: 692, sha256 of every file identical to the tested build: yes
+main untouched: e1a07423a944
+files identical to site/: yes
