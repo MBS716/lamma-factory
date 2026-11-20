@@ -80,7 +80,7 @@ jobs:
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
           echo "old" > index.html; git add -A; git commit -qm old; git branch -M main; git push -q origin main
           git checkout -q -B "$B"
-          rm -rf index.html spot data tiger.webp; cp -r ../site/. .
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +; cp -r ../site/. .   # the branch becomes exactly site/ (files removed from site/ are removed too)
           git add -A; git commit -qm "update"; git push -q origin "$B"
           cd .. && git clone -q -b "$B" /tmp/fake-lamma.git check
           diff -r --exclude=.git site check && echo "dry run OK: $B would contain exactly site/"
@@ -112,7 +112,7 @@ jobs:
           elif git rev-parse -q --verify "refs/remotes/origin/$B" > /dev/null; then
             git checkout -q -B "$B" "origin/$B"        # an existing preview branch: add a commit on top (history is never rewritten)
           else git checkout -q -B "$B" origin/main; fi
-          rm -rf index.html spot data tiger.webp; cp -r ../site/. .
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +; cp -r ../site/. .   # the branch becomes exactly site/ (files removed from site/ are removed too)
           git add -A; git commit -q -m "$(cat ../.github/deploy-message 2>/dev/null || echo 'Update the Lamma site')" || echo "nothing to commit"
           if [ "$MODE" = "main-approved" ]; then g push -q origin main; else g push -q origin "$B"; fi || { say "push failed"; rm -f "${KF:-/nonexistent}"; exit 1; }
           say "pushed to $B"; rm -f "${KF:-/nonexistent}"
