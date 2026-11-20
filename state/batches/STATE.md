@@ -127,3 +127,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - preview-spot5 rebuilt (factory main db760e0). spot5-full emulator run 44409668798 running.
 - Production of new pairs from Commons STOPPED (owner). Trial: Openverse (scripts/spot_openverse.py, themes spot_themes_ov1.txt, out spot-sources:candov), run 44409671879.
 - ~03:00 tests: spot5-full PASS (other games 0, akml 0, akml full 0, spot 0); preview real-DB spot5-test 44410081171 tests PASS (save step conflict only). Openverse trial: 63 candidates (all CC0, stocksnap/rawpixel; no Flickr), selector: 2 q≥4 medium (3%) → not better than Commons. Recommendation to owner: Pexels pilot via API key stored by owner as GitHub secret.
+
+## Update 2026-11-20 ~08:40 — owner approved limited Pexels trial (30 sources, hard first; no bank changes)
+- Terms checked (pexels.com/terms-of-service §5/§8, API docs): modify + commercial OK; no standalone redistribution; no bulk/systematic copying; no scraping/ML; API 200 req/h; credit photographer + link Pexels. Repo lamma-factory is PUBLIC → Pexels files never committed: workflow artifact 'pexels-trial' (2 days).
+- scripts/spot_pexels.py + spot_themes_px1.txt + spot-sources.yml (px:/pxfetch:, env PX from secret). Run 44678919981: PEXELS_API_KEY not set → waiting for owner to add the repo secret. Then: px search (≤120 previews) → sonnet select → pxfetch 30 → worker/review/fix as usual → trial report.
