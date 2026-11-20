@@ -137,3 +137,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - Pixabay/Pexels need keys or company contact → owner wants easy options without keys/contacts; keep library goal, don't delay v5.
 - RC built: /home/claude/rc50 (v5.0, build a64c144e16, spotlib-v8 224, akml/letters/quiz identical to live). Backup of live site: factory site-backup/2026-11-20-v4.8-akml5 (tar.gz of lamma main e1a0742 + SHA256). Local full run (run_spot.sh + audit_mobile) on RC running; out scratchpad/rc50.
 - ~11:00 RC a64c144e16 tests: spot4 65/65, comp 32/32, pick 28/28, host 28/28, taps 7/7 (1 fail under parallel load; 3/3 alone OK), judge 1865/0, vswitchspot 10/10, vswitch 20/20, akml 97/42/42/52 + ux OK, mobile 144/144. Factory site/ = RC, tested-build a64c144e16, dry-run 44691899104 OK, deploy-request back to none. Report doc: https://claude.ai/artifact/KwNMRcBhAi88EVgPWKX7DB. Waiting owner approval for test-branch upload / publish.
+
+## Update 2026-11-20 ~11:30 — OWNER APPROVED official publish of v5.0 (224 bank) via safe plan
+- factory: deploy-site.yml adapted (SPOT_V5=1 skips v4 spot in live_e2e; spot5 run_live on branch/live; library check uses catalog; version switch spot). deploy-request branch:spot5-release → run 44699243497.
+- next if all pass: verify backup; deploy-request main-approved (workflow makes backup branch backup-main-<date>, publishes, tests live); then deploy-request none; final report with commit.
