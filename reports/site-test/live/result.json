@@ -4,8 +4,8 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=a64c144e16#7898)",
-  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=a64c144e16#7898)",
+  "OK invite link points to this site (https://mbs716.github.io/lamma/?v=a64c144e16#2738)",
+  "OK QR code encodes the invite link (https://mbs716.github.io/lamma/?v=a64c144e16#2738)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK letters: the team pressing on its phone does NOT stop the clock",
@@ -18,7 +18,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10001 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -27,7 +27,7 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (ub.io/lamma/?v=a64c144e16#1510)",
+  "OK sessions: invite link carries the version (ub.io/lamma/?v=a64c144e16#2575)",
   "OK sessions: version.json matches the page (a64c144e16 = a64c144e16)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
@@ -68,7 +68,7 @@
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1240 (limit 12000), saved match 1130 (limit 20000), hidden data 234 (limit 120000), over 4 games",
+  "OK sizes: the largest host seat 1253 (limit 12000), saved match 1143 (limit 20000), hidden data 335 (limit 120000), over 4 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -81,19 +81,19 @@
  ],
  "sizes": {
   "letters": [
-   1240,
-   1130,
-   234
+   1253,
+   1143,
+   244
   ],
   "wheel": [
-   745,
-   637,
-   39
+   764,
+   656,
+   38
   ],
   "quiz": [
-   425,
-   318,
-   223
+   482,
+   375,
+   335
   ],
   "puzzle": [
    272,
@@ -103,9 +103,9 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-20T08:39:45.186Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-1510/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-20T08:39:45.277Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-1510/920fffb65cd0fadf7783afd6 failed: permission_denied ",
-  "Android: [2026-11-20T08:39:45.361Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-1510 failed: permission_denied "
+  "Android: [2026-11-20T09:05:11.758Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-2575/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-20T09:05:11.886Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-2575/39c61fd0b1c4b45750cca0ac failed: permission_denied ",
+  "Android: [2026-11-20T09:05:12.011Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-2575 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,

@@ -1,11 +1,11 @@
 branch: main
-commit: 500c8496e31bc37d433a4c42f77fbefd6c18f494
-date (UTC): 2026-11-20 08:59
-backup of the previous main: backup-main-20261120-0859 (500c8496e31bc37d433a4c42f77fbefd6c18f494)
+commit: 51b348851e90ef79862605566d7e529c4e67b9bd
+date (UTC): 2026-11-20 09:02
+backup of the previous main: backup-main-20261120-0902 (500c8496e31bc37d433a4c42f77fbefd6c18f494)
 index.html: 3c35b4d78aaa58fea64c20759310b59a (expected 3c35b4d78aaa58fea64c20759310b59a)
 spot files: 676 (expected 676)
 build: a64c144e16 (tested a64c144e16)
-files: 692, sha256 of every file identical to the tested build: NO
-main untouched: 500c8496e31b
-Only in readback: artifact.html
-files identical to site/: NO
+files: 691, sha256 of every file identical to the tested build: yes
+main untouched: 51b348851e90
+files identical to site/: yes
+live site serves the new index.html: yes
