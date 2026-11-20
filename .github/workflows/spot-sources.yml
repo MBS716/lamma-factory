@@ -23,6 +23,7 @@ jobs:
           git config user.name "lamma-factory"; git config user.email "factory@users.noreply.github.com"
           git fetch -q origin spot-sources && git worktree add -q ../src origin/spot-sources -b spot-sources || git worktree add -q ../src -b spot-sources
       - name: run
+        env: {PX: "${{ secrets.PEXELS_API_KEY }}"}   # Pexels trial only; never echoed
         run: |
           r=$(tr -d ' \r\n' < .github/spot-sources-request)
           case "$r" in
@@ -31,11 +32,17 @@ jobs:
             sheets3:*) python scripts/spot_sources2.py sheets3 ../src/cand2 "scripts/${r#sheets3:}" 12 ;;
             sheets4:*) python scripts/spot_sources2.py sheets4 ../src/cand2 "scripts/${r#sheets4:}" 12 ;;
             ov:*) python scripts/spot_openverse.py sheets ../src/candov "scripts/${r#ov:}" 6 ;;
+            px:*) PEXELS_API_KEY="$PX" python scripts/spot_pexels.py sheets pxwork "scripts/${r#px:}" 8 120 ;;
+            pxfetch:*) PEXELS_API_KEY="$PX" python scripts/spot_pexels.py fetch pxwork "${r#pxfetch:}" ;;
             ovfetch:*) python scripts/spot_openverse.py fetch ../src/candov "${r#ovfetch:}" ;;
             fetch2:*) python scripts/spot_sources2.py fetch ../src/cand2 "${r#fetch2:}" ;;
             fetch:*) python scripts/spot_candidates.py fetch ../src/cand "${r#fetch:}" ;;
             *) echo "nothing to do" ;;
           esac
+      - name: Pexels trial files (kept out of git; short-lived workflow artifact)
+        if: hashFiles('pxwork/**') != ''
+        uses: actions/upload-artifact@v4
+        with: {name: pexels-trial, path: pxwork, retention-days: 2}
       - name: save on branch spot-sources
         run: |
           cd ../src && git add -A
