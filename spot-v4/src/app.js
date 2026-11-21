@@ -2555,9 +2555,9 @@ const Diff = {
   // only the overall ranking of this competition: names, places and points (no picture, no place of a difference)
   sbHTML(s, me, host){
     const T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), md = ["🥇", "🥈", "🥉"];
-    const rows = ks.map(k => `<li class="dfsb-r ${rn[k] <= 3 ? "top r" + rn[k] : ""} ${k === me ? "me" : ""}"><span class="dfsb-k">${md[rn[k] - 1] ? `<span aria-hidden="true">${md[rn[k] - 1]}</span><span class="vh">${rn[k]}</span>` : rn[k]}</span><span class="dfsb-n">${esc(T[k].n)}${k === me ? ` <small>(أنت)</small>` : ""}</span><span class="dfsb-p"><b>${T[k].p}</b> نقطة</span></li>`).join("");
+    const rows = ks.map(k => `<tr class="${rn[k] <= 3 ? "top r" + rn[k] : ""} ${k === me ? "me" : ""}"><td class="dfsb-k">${md[rn[k] - 1] ? `<span aria-hidden="true">${md[rn[k] - 1]}</span><span class="vh">${rn[k]}</span>` : rn[k]}</td><td class="dfsb-n">${esc(T[k].n)}${k === me ? ` <small>(أنت)</small>` : ""}</td><td class="dfsb-l">${T[k].dp || 0}</td><td class="dfsb-p"><b>${T[k].p}</b></td></tr>`).join("");
     return `<div class="dfsb-in"><p class="dfsb-cap">المنافسة ${s.cn || 1} · ${Diff.rounds(s.cr || 0)}</p><h2 id="dfsbT" class="dfsb-h">الترتيب العام</h2>
-      ${rows ? `<ol class="dfsb-list">${rows}</ol>` : `<p class="bigmsg">لم تُحتسب أي جولة في هذه المنافسة بعد.</p>`}
+      ${rows ? `<table class="dfsb-t"><thead><tr><th scope="col">#</th><th scope="col">اسم اللاعب</th><th scope="col">آخر جولة</th><th scope="col">إجمالي النقاط</th></tr></thead><tbody>${rows}</tbody></table>` : `<p class="bigmsg">لم تُحتسب أي جولة في هذه المنافسة بعد.</p>`}
       ${host ? `<button class="btn big dfsboff" data-sb="off">إخفاء النتائج</button>` : `<p class="muted dfsb-note">المقدّم يعرض النتائج الآن</p>`}</div>`;
   },
   // drawn over the page (host and phones) while s.sb is on; s = null removes it
