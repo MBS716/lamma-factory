@@ -4,8 +4,8 @@
   "OK footer on computer: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on iPhone: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
   "OK footer on Android: TIGER logo shown (180px), ID 10000008, the copy button copies 10000008, the old ID is nowhere on the page (True)",
-  "OK invite link points to this site (http://localhost:8799/?v=4b1bfade4e#8449)",
-  "OK QR code encodes the invite link (http://localhost:8799/?v=4b1bfade4e#8449)",
+  "OK invite link points to this site (http://localhost:8799/?v=97fbb856cf#4125)",
+  "OK QR code encodes the invite link (http://localhost:8799/?v=97fbb856cf#4125)",
   "OK iPhone (WebKit) joined by typing the code; Android joined through the invite link",
   "OK wrong code: the phone gets a clear \"game not found\" message",
   "OK public site runs the same version: a phone there joins this game normally",
@@ -19,7 +19,7 @@
   "OK letters v3.3: reading phase, no clock, options kept on the host",
   "OK letters v3.3: while reading, the options are not in the database rooms",
   "OK letters v3.3: question replaced while reading (1 replacement left)",
-  "OK letters v3.3: the answer time started by itself after 10 s (10000 ms)",
+  "OK letters v3.3: the answer time started by itself after 10 s (10001 ms)",
   "OK letters v3.3: the 4 options appear on iPhone and Android at the start",
   "OK letters v3.3: which option is right is not in the database before the result",
   "OK letters v3.3: after the result the right option is marked on both phones",
@@ -28,8 +28,8 @@
   "OK identity: seats carry the server join time; the host seat carries the host mark",
   "OK rules: host holds the room lock; phones see a host seat verified by the database",
   "OK sessions: official rooms are separate (lm3-) and the invite link stays on this site",
-  "OK sessions: invite link carries the version (alhost:8799/?v=4b1bfade4e#4191)",
-  "OK sessions: version.json matches the page (4b1bfade4e = 4b1bfade4e)",
+  "OK sessions: invite link carries the version (alhost:8799/?v=97fbb856cf#8960)",
+  "OK sessions: version.json matches the page (97fbb856cf = 97fbb856cf)",
   "OK sessions: iPhone reloads, back in the same seat with no form",
   "OK identity: after reloading, the iPhone has the same identity (it can keep writing its own seat)",
   "OK sessions: Android browser closed, its seat is kept as away ['آيفون', 'أندرويد (away)']",
@@ -51,7 +51,7 @@
   "OK wheel v3: speed challenge face-off on both phones",
   "OK wheel v3: cancelled challenge, scores unchanged on every screen",
   "OK wheel v3: the closed box on both phones",
-  "OK wheel v3: phones receive the same box result as the host (m 50)",
+  "OK wheel v3: phones receive the same box result as the host (p 250)",
   "OK wheel v3: host reload during the box: same room, same result, nothing applied twice",
   "OK wheel v3: luck twice, both results on the phones before the choice",
   "OK wheel v3: immunity blocks the deduction, shown on both phones",
@@ -62,14 +62,14 @@
   "OK wheel v3: both phones back in the match without re-joining",
   "OK wheel v3: goal reached, final round, match ends with equal turns [7, 7]",
   "OK wheel v3: winner screen on iPhone and Android",
-  "OK wheel v3: state sent to phones stays small (486 characters)",
+  "OK wheel v3: state sent to phones stays small (485 characters)",
   "OK quiz: the question is on both phone screens",
-  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3479], ['أندرويد', 0]])",
+  "OK quiz: right answers scored, wrong ones not ([['آيفون', 3481], ['أندرويد', 0]])",
   "OK puzzle: iPhone swaps two pieces by tapping",
   "OK puzzle: Android drag swaps pieces without scrolling the page",
   "OK iPhone: no sideways scrolling (390 <= 390)",
   "OK Android: no sideways scrolling (412 <= 412)",
-  "OK sizes: the largest host seat 1238 (limit 12000), saved match 1128 (limit 20000), hidden data 333 (limit 120000), over 4 games",
+  "OK sizes: the largest host seat 1228 (limit 12000), saved match 1118 (limit 20000), hidden data 333 (limit 120000), over 4 games",
   "OK no \"permission denied\" from the database during normal play (0: [])"
  ],
  "errors": [],
@@ -81,18 +81,18 @@
  ],
  "sizes": {
   "letters": [
-   1238,
-   1128,
-   235
+   1228,
+   1118,
+   231
   ],
   "wheel": [
-   725,
-   617,
-   38
+   733,
+   625,
+   39
   ],
   "quiz": [
-   494,
-   387,
+   504,
+   397,
    333
   ],
   "puzzle": [
@@ -103,9 +103,9 @@
  },
  "_attack": false,
  "denied_attack": [
-  "Android: [2026-11-21T12:39:19.630Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-4191/fakehostxx01 failed: permission_denied ",
-  "Android: [2026-11-21T12:39:19.757Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-4191/d80b8cb58f7d706af940a8f9 failed: permission_denied ",
-  "Android: [2026-11-21T12:39:19.890Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-4191 failed: permission_denied "
+  "Android: [2026-11-21T13:02:19.766Z]  @firebase/database: FIREBASE WARNING: set at /rooms/lm3-8960/fakehostxx01 failed: permission_denied ",
+  "Android: [2026-11-21T13:02:19.856Z]  @firebase/database: FIREBASE WARNING: update at /rooms/lm3-8960/5b9eee45d08a1dd2d308f675 failed: permission_denied ",
+  "Android: [2026-11-21T13:02:19.946Z]  @firebase/database: FIREBASE WARNING: set at /games/lm3-8960 failed: permission_denied "
  ],
  "wheel_cloud": true,
  "wheel_auth": true,

@@ -1,9 +1,9 @@
 branch: spot51-release
-commit: 7c8dd5252f3564b693f7802077ea94dde7205dc1
-date (UTC): 2026-11-21 12:36
-index.html: e9ca7c6f46ea66f471d2f55bbcdd59fb (expected e9ca7c6f46ea66f471d2f55bbcdd59fb)
+commit: f67676910c856d754b286b69ccca67da67db8665
+date (UTC): 2026-11-21 12:59
+index.html: 9b70bb000327bf324116cbe6046b04a0 (expected 9b70bb000327bf324116cbe6046b04a0)
 spot files: 676 (expected 676)
-build: 4b1bfade4e (tested 4b1bfade4e)
+build: 97fbb856cf (tested 97fbb856cf)
 files: 691, sha256 of every file identical to the tested build: yes
 main untouched: 51b348851e90
 files identical to site/: yes

@@ -1,0 +1,4 @@
+questions 2445 sections {'gulf': 149, 'arab': 285, 'hikam': 243, 'info': 884, 'lang': 573, 'fun': 311} levels {'0': 848, '1': 1074, '2': 523} modes {'c': 2445, 't': 2253, 'b': 2311}
+matches 1620 checks 7404 repeats across 15 matches on one device 0 distinct 450
+bank file same as commit True
+PASS 7404/7404 passed
