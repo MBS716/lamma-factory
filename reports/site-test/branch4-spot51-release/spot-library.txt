@@ -1,0 +1,5 @@
+site: http://localhost:8799/
+pairs served: 224 (index total 224), per level easy/medium/hard: 77/71/76
+differences: 1865
+pictures served identical to the tested build: 448 of 448
+RESULT: PASS

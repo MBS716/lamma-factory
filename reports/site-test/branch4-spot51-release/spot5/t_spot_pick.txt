@@ -1,0 +1,44 @@
+OK   224 small copies, each made from the original picture, not the changed one []
+OK   default: «اختيار الصورة: يختارها المقدّم»; the start button reads «اختر الصورة وابدأ»
+OK   the library opens on the host only; the room stays in the lobby
+OK   the phones show «المقدّم يختار صورة الجولة…»
+OK   «الكل»: 224 cards, each with its small copy (224)
+OK   each card: scene name, level and number of differences
+OK   states: the picture played before on this device «شوهدت سابقًا على أجهزة الغرفة», the rest «جديدة»
+OK   the library never shows the changed picture or any mark of a difference
+OK   level «سهل»: 77 cards
+OK   search by the scene's name: ['رفوف القوارب', 'قوارب على الشاطئ']
+OK   the search stays while the screen updates (a player joined meanwhile)
+OK   the round starts with the chosen picture (s4-e2)
+DEBUG {"ph":"play","nd":5,"pl":{"n_zhmlup":{"n":"ليلى","f":0,"w":0,"p":0,"out":0,"done":0,"ft":0,"dt":0,"da":0,"b":0},"n_zho357":{"n":"نورة","f":0,"w":0,"p":0,"out":0,"done":0,"ft":0,"dt":0,"da":0,"b":0},"n_zha8he":{"n":"صالح","f":2,"w":3,"p":5,"out":0,"done":0,"ft":2660,"dt":0,"da":0,"b":0},"n_y4ta36":{"n":"تافير","f":0,"w":0,"p":0,"out":0,"done":0,"ft":0,"dt":0,"da":0,"b":0}},"pf":{"n_zhmlup":{"fi":[],"lr":[]},"n_zho357":{"fi":[],"lr":[]},"n_zha8he":{"fi":[0,3],"lr":[["8s29j59","ok",1192,264],["0o59s63","no",856,354],["4igjhqb","no",1096,862],["siy7b38","ok",248,216],["kkwnhyr","no",296,418]]},"n_y4ta36":{"fi":[],"lr":[]}},"q":0,"uns":0,"winAt":0,"now":1795264275265}
+Traceback (most recent call last):
+  File "/tmp/tmp.v0UCjIf2mf/t_spot_pick.py", line 136, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/tmp/tmp.v0UCjIf2mf/t_spot_pick.py", line 90, in main
+    await over_or_dump(host)
+  File "/tmp/tmp.v0UCjIf2mf/t_spot_pick.py", line 36, in over_or_dump
+    try: await host.wait_for_function('H.s.ph === "over"', timeout=t)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 11452, in wait_for_function
+    await self._impl_obj.wait_for_function(
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py", line 1083, in wait_for_function
+    return await self._main_frame.wait_for_function(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 771, in wait_for_function
+    return from_channel(await self._channel.send("waitForFunction", params))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 20000ms exceeded.
