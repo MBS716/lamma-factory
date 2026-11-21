@@ -1,11 +1,11 @@
 branch: main
-commit: 51b348851e90ef79862605566d7e529c4e67b9bd
-date (UTC): 2026-11-20 09:02
-backup of the previous main: backup-main-20261120-0902 (500c8496e31bc37d433a4c42f77fbefd6c18f494)
-index.html: 3c35b4d78aaa58fea64c20759310b59a (expected 3c35b4d78aaa58fea64c20759310b59a)
+commit: b94bfe318d802802475f1dd0e400e6dd4e1f0d6a
+date (UTC): 2026-11-21 13:50
+backup of the previous main: backup-main-20261121-1350 (51b348851e90ef79862605566d7e529c4e67b9bd)
+index.html: 9b70bb000327bf324116cbe6046b04a0 (expected 9b70bb000327bf324116cbe6046b04a0)
 spot files: 676 (expected 676)
-build: a64c144e16 (tested a64c144e16)
+build: 97fbb856cf (tested 97fbb856cf)
 files: 691, sha256 of every file identical to the tested build: yes
-main untouched: 51b348851e90
+main untouched: b94bfe318d80
 files identical to site/: yes
 live site serves the new index.html: yes

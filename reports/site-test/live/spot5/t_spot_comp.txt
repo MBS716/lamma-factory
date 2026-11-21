@@ -1,6 +1,6 @@
 OK   a new room is competition 1
 OK   round 1 counted in competition 1: صالح 130, تافير 50, نورة 0 (130, 50, 0)
-OK   «تنزيل النتائج» gives a spreadsheet file of competition 1 (lamma-spot-competition-1-2026-11-20.csv)
+OK   «تنزيل النتائج» gives a spreadsheet file of competition 1 (lamma-spot-competition-1-2026-11-21.csv)
 OK   the host is asked first: leader, points, rounds, players stay («»)
 OK   «إلغاء»: nothing changes
 OK   a sealed tap message of round 1 kept for the late-delivery test
@@ -24,7 +24,7 @@ OK   a phone reloads: «المنافسة 3», how competition 2 ended
 OK   host reloads in the middle of a round of competition 3: the round counts once, in competition 3 only (نورة 130)
 OK   host reloads after the round: nothing counted twice
 OK   the database copy of the room is already at competition 3 with the result
-OK   40 players with more than 2,000 points and 6 kept competitions of 100 rounds: room 4989/3722 < 12,000, saved game 4882 < 20,000, private copy 63346 < 120,000
+OK   40 players with more than 2,000 points and 6 kept competitions of 100 rounds: room 5021/3756 < 12,000, saved game 4914 < 20,000, private copy 63320 < 120,000
 OK   points above 2,000 ranked correctly (لاعب طويل الاسم 39 2539); the 6 latest competitions kept
 OK   no horizontal scroll at 390 px (390)
 OK   no horizontal scroll at 360 px (360)
