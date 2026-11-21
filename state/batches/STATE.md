@@ -147,3 +147,4 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - app.js: s.sb flag; Diff.sbOk/sbBtn/sbHTML/sbSync; act sbon/sboff + guards (no round/competition start while shown; never during play); overlay #dfSB on body (opaque). style.css .dfsb*. tests/t_spot_sb.py 35/35; full local regression PASS (vswitchspot updated for OLD=v5.0: 10/10).
 - preview-spot5 = v5.1-preview build 7c29048e18 (factory 1876423); tests/spot5 + t_spot_sb (run_live). spot5-test real DB running. No main/site/Firebase change.
 - real-DB preview 44860725000: spot4 65, comp 32, pick 28, host 28, sb 35 — all PASS. Awaiting owner review/approval for publish.
+- 2026-11-21 15:30 v5.1 scoreboard table (# | اسم اللاعب | آخر جولة | إجمالي النقاط). Real DB preview (build 3989619844): sb 42/42 (3 rounds, ties), comp 32, host 28, pick 28; spot4 65/65 on rerun (first run timed out at solo-room wait). Screens sent to owner. Waiting owner approval to publish.
