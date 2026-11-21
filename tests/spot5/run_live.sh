@@ -3,9 +3,9 @@
 # usage: LIVE_URL=https://.../preview-spot5/ DIST=preview-spot5 OUT=reports/spot5/preview bash tests/spot5/run_live.sh
 set -u
 rm -f "$OUT/result.txt" 2>/dev/null; HERE=$(cd "$(dirname "$0")" && pwd); W=$(mktemp -d); mkdir -p "$OUT"
-cp "$HERE"/t_spot4.py "$HERE"/t_spot_comp.py "$HERE"/t_spot_pick.py "$HERE"/t_spot_host.py "$HERE"/t_spot_sb.py "$W"/; cp "$HERE"/live_common.py "$W"/common.py
+cp "$HERE"/t_spot4.py "$HERE"/t_spot_comp.py "$HERE"/t_spot_pick.py "$HERE"/t_spot_host.py "$HERE"/t_spot_sb.py "$HERE"/t_spot_shift.py "$W"/; cp "$HERE"/live_common.py "$W"/common.py
 mkdir -p "$OUT"; r=0
-for t in ${TESTS:-t_spot4 t_spot_comp t_spot_pick t_spot_host t_spot_sb}; do
+for t in ${TESTS:-t_spot4 t_spot_comp t_spot_pick t_spot_host t_spot_sb t_spot_shift}; do
   SHOTS="$OUT/$t" OUT="$OUT/$t" timeout 1800 python "$W/$t.py" > "$OUT/$t.txt" 2>&1; e=$?; mkdir -p "$OUT/$t"
   echo "$t exit=$e $(grep -E '[0-9]+/[0-9]+ passed' "$OUT/$t.txt" | tail -1)" | tee -a "$OUT/result.txt"; [ $e -ne 0 ] && r=1
 done
