@@ -4,6 +4,7 @@
 cd "$(dirname "$0")"; mkdir -p "$OUT"
 run(){ n=$1; shift; timeout 1500 "$@" > "$OUT/$n.txt" 2>&1; echo "$n exit=$? $(grep -E '[0-9]+/[0-9]+ (checks )?passed|PASS|FAIL' "$OUT/$n.txt" | tail -1)"; }
 run spot4 python3 t_spot4.py & run spotcomp python3 t_spot_comp.py & run spotpick python3 t_spot_pick.py & wait
+run spotsb python3 t_spot_sb.py
 run spothost python3 t_spot_host.py & run spottaps python3 t_spot_taps.py & run spotjudge python3 t_spot_judge.py & wait
 run vswitch env OLD="$OLD" NEW="$DIST" python3 t_version_switch.py & run vswitchspot env OLD="$OLD" NEW="$DIST" python3 t_version_switch_spot.py & wait
 run akml python3 t_akml.py & run akmlkey python3 t_akml_key.py & run akmltimer python3 t_akml_timer.py & wait

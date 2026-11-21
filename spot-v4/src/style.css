@@ -806,3 +806,23 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfhp-qr #hpQr{background:#fff;padding:6px;border-radius:10px;line-height:0}
 .dfhp-qr .field{flex:1 1 220px;min-width:0;font-size:.85rem}
 .dfhp-on{justify-content:space-between;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:12px;border:1px solid color-mix(in srgb,var(--gold) 50%,transparent)}
+/* spot the difference: the overall ranking shown to everybody by the host (over the page, never during a round) */
+.dfsb{position:fixed;inset:0;z-index:60;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:max(18px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+body.dfsb-on{overflow:hidden}
+.dfsb-in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.dfsb-cap{margin:0;color:var(--muted);font-size:1rem}
+.dfsb-h{margin:0;font-family:var(--display);font-size:clamp(2rem,7vw,3.2rem);color:var(--gold)}
+.dfsb-list{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:8px}
+.dfsb-r{display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:clamp(1.15rem,4.4vw,1.7rem);text-align:start}
+.dfsb-r.top{border-color:color-mix(in srgb,var(--gold) 55%,var(--line))}
+.dfsb-r.r1{background:color-mix(in srgb,var(--gold) 16%,var(--card));font-size:clamp(1.3rem,5vw,2rem)}
+.dfsb-r.me{outline:3px solid var(--gold);outline-offset:-3px}
+.dfsb-k{font-family:var(--display);text-align:center;font-size:1.25em}
+.dfsb-n{overflow-wrap:anywhere;font-weight:700}
+.dfsb-n small{font-weight:400;color:var(--muted);font-size:.6em}
+.dfsb-p{white-space:nowrap;color:var(--muted);font-size:.8em}
+.dfsb-p b{color:var(--gold);font-family:var(--display);font-size:1.35em}
+.dfsb-note{margin:4px 0 0}
+.dfsboff{margin-top:6px;min-width:min(100%,280px)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

@@ -447,6 +447,7 @@ function resumeBanner(){
   $("#resumeNo").onclick = async () => { const c = x.code, g = x.g; dropSaved(); el.hidden = true; if (cloudGame(g)){ await roomReady; await Promise.race([authReady, sleep(6000)]); dropCloud(c); } };
 }
 async function hostEnd(){
+  Diff.sbSync(null);
   // the match is closed first (a second tap finds nothing to end): no timer, save or lock renewal of this match runs after
   // this point, so the deletion below is the last thing this match sends to the database
   const h = H; if (!h || h.ended) return;
@@ -488,6 +489,7 @@ function renderHost(){
     });
   }
   MOD[H.g].host(players);
+  Diff.sbSync(H.g === "diff" ? H.s : null, true);
 }
 function lobbyHTML(players, extra, startLabel){
   const def = GAMES[H.g], o = H.s.o;
@@ -588,6 +590,7 @@ async function playerJoin(code, opt){
 // «خروج» frees the seat for good (two taps, so an accidental tap does not throw a player out)
 async function playerLeave(force){
   if (!force && P && P.joined && !(P.leaveAsk && Date.now() - P.leaveAsk < 4000)){ P.leaveAsk = Date.now(); const b = $("#playerMain [data-act=leave]"); if (b){ b.textContent = "تأكيد الخروج؟"; b.classList.add("warnbtn"); } setTimeout(() => { if (P && P.leaveAsk){ P.leaveAsk = 0; $("#playerMain").dataset.k = ""; playerRender(); } }, 4000); return; }
+  Diff.sbSync(null);
   joinTok = null; if (P && P.code && (P.joined || force)) seatDrop(P.code);
   tabKey = "";
   if (NR){ try { await (P && (P.joined || P.seat) ? NR.leave() : NR.detach()); } catch(e){} NR = null; }
@@ -651,7 +654,7 @@ function playerRender(){
       msg = `<p class="bigmsg">لم نجد لعبة بهذا الكود</p><p class="muted">تأكد من الكود المعروض على شاشة المقدّم. إن انتهت اللعبة فاطلب كودًا جديدًا.</p><button class="btn" data-act="retry" data-code="${esc(P.code)}">إعادة المحاولة</button>`;
     }
     pSet(`<div class="panel center stack">${msg}<div class="row" style="justify-content:center"><button class="btn ghost sm" data-act="leave">رجوع</button></div></div>`);
-    bindPlayer(); return;
+    bindPlayer(); Diff.sbSync(null); return;
   }
   // the saved seat belongs to this game: come back with the same name, team and place
   const hp = host.presence;
@@ -676,15 +679,16 @@ function playerRender(){
       ${game.teams ? `<span>اختر فريقك</span><div class="teampick"><button class="g ${P.team === "g" ? "on" : ""}" data-team="g">الأخضر</button><button class="o ${P.team === "o" ? "on" : ""}" data-team="o">البرتقالي</button></div>` : ""}
       <p class="err" id="pErr">${P.dupName ? `الاسم «${esc(P.dupName)}» مستخدم في هذه اللعبة من جهاز آخر. اختر اسمًا آخر.` : ""}</p>
       <button class="btn" data-act="enter">دخول</button></div>`);
-    bindPlayer(); return;
+    bindPlayer(); Diff.sbSync(null); return;
   }
   const s = host.presence.s || {};
   if (s.ph === "lobby"){
     P.view = {};
     pSet(phead() + `<div class="panel center stack"><p class="bigmsg">أنت داخل!</p>${MOD[P.g].plobby ? MOD[P.g].plobby(s) : ""}<p class="muted">بانتظار أن يبدأ المقدّم ${esc(game.name)}.</p></div>`);
-    bindPlayer(); return;
+    bindPlayer(); Diff.sbSync(P.g === "diff" ? s : null, false); return;
   }
   MOD[P.g].player(s, host);
+  Diff.sbSync(P.g === "diff" ? s : null, false);
 }
 function bindPlayer(){
   const m = $("#playerMain");
@@ -2083,7 +2087,7 @@ const Diff = {
   },
   pf(k){ const a = H.priv.pf || (H.priv.pf = {}); return a[k] || (a[k] = {fi:[], lr:[]}); },
   async start(replay, chosen){
-    if (H.priv.picking) return;
+    if (H.priv.picking || H.s.sb) return;
     H.priv.pk = null; H.s.pick = 0;                                  // the picture library closes
     const s = H.s, rd = s.rd + 1;
     Diff.clearBoxes(); Diff.tapsClear(); clearTimeout(H.priv.closeT); H.priv.closeT = null;
@@ -2113,6 +2117,10 @@ const Diff = {
   enroll(players){ const s = H.s; let ch = false; for (const p of players){ const k = dfKey(pname(p)); if (p.presence.dv === devId) continue; if (!s.pl[k] && !p.away){ s.pl[k] = dfZero(pname(p)); ch = true; } } return ch; },
   act(a, b){
     const s = H.s;
+    // while the overall ranking is shown to everybody, nothing starts a round or a competition: the host hides it first
+    if (s.sb && ["start", "go", "pkauto", "dfpick", "pkok", "replay", "nc", "ncgo", "end"].includes(a)) return;
+    if (a === "sbon"){ if (Diff.sbOk(s.ph) && !H.priv.picking){ H.priv.pk = null; s.pick = 0; s.sb = 1; Diff.step(s); pushHost(); } return; }
+    if (a === "sboff"){ if (s.sb){ s.sb = 0; Diff.step(s); pushHost(); } return; }
     if (a === "start" || a === "go"){ if (s.o.pk === "auto") Diff.start(); else Diff.openPick(); }
     else if (a === "pkclose"){ H.priv.pk = null; s.pick = 0; H.priv.dfRd = null; $("#hostMain").dataset.k = ""; pushHost(); }
     else if (a === "pklv" && H.priv.pk){ H.priv.pk.lv = +b.dataset.lv; H.priv.pk.ask = ""; renderHost(); }
@@ -2139,7 +2147,7 @@ const Diff = {
   },
   /* ---------- the host's picture library: the host chooses the next picture (the default), or lets the game choose ---------- */
   async openPick(){
-    const s = H.s; if (H.priv.picking) return;
+    const s = H.s; if (H.priv.picking || s.sb) return;
     H.priv.pk = {open:true, lv:s.o.lv, q:"", ask:"", list:null, seen:null, err:false}; s.pick = 1; pushHost();
     const devs = [devId, ...hostPlayers().map(p => p.presence.dv).filter(d => typeof d === "string" && /^[a-z0-9]{10,24}$/.test(d))].slice(0, 40);
     let list = null, seen = null; try { [list, seen] = await Promise.all([Spot.all(), Spot.seenBy(devs)]); } catch(e){ console.warn(e); }
@@ -2227,7 +2235,7 @@ const Diff = {
     const past = hist.length ? `<div class="stack dfpast"><b>المنافسات السابقة في هذه الغرفة</b>${hist.map(c => { const w = c.rank.filter(x => x.rk === 1);
       return `<div class="row dfpast-i"><span>المنافسة ${c.cn} · ${Diff.rounds(c.r)} · الفائز: <b>${w.map(x => esc(x.n)).join(" و ") || "—"}</b>${w[0] ? ` (${w[0].p} نقطة)` : ""}</span><button class="btn ghost sm" data-h="dfcsv" data-cn="${c.cn}">تنزيل</button></div>`; }).join("")}</div>` : "";
     return `<div class="panel stack dfcomp"><div class="row" style="justify-content:space-between"><h3>المنافسة ${s.cn || 1}</h3>${s.cr ? `<span class="muted">${Diff.rounds(s.cr)}</span>` : ""}</div>${table}
-      ${H.priv.ncAsk ? Diff.ncHTML(s) : `<div class="row"><button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${ks.length ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}</div>`}${past}</div>`;
+      ${H.priv.ncAsk ? Diff.ncHTML(s) : `<div class="row">${ks.length ? Diff.sbBtn(s) : ""}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${ks.length ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}</div>`}${past}</div>`;
   },
   // a phone waiting in the lobby: which competition, and how the last one ended
   plobby(s){
@@ -2541,6 +2549,25 @@ const Diff = {
   },
   // the picture after the round: the chosen player's finds in green, the rest in orange
   review(s, sel){ const got = new Set((s.pf && s.pf[sel]) || []), all = s.rev || []; return {found:all.filter((d, i) => got.has(i)), rev:all.filter((d, i) => !got.has(i))}; },
+  /* ---------- the overall ranking on every screen: shown and hidden by the host only (s.sb), never during a round ---------- */
+  sbOk: ph => ["lobby", "over", "done", "fail"].includes(ph),
+  sbBtn: s => `<button class="btn ${s.ph === "over" ? "" : "ghost sm"} dfsbon" data-h="sbon">عرض النتائج للجميع</button>`,
+  // only the overall ranking of this competition: names, places and points (no picture, no place of a difference)
+  sbHTML(s, me, host){
+    const T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), md = ["🥇", "🥈", "🥉"];
+    const rows = ks.map(k => `<li class="dfsb-r ${rn[k] <= 3 ? "top r" + rn[k] : ""} ${k === me ? "me" : ""}"><span class="dfsb-k">${md[rn[k] - 1] ? `<span aria-hidden="true">${md[rn[k] - 1]}</span><span class="vh">${rn[k]}</span>` : rn[k]}</span><span class="dfsb-n">${esc(T[k].n)}${k === me ? ` <small>(أنت)</small>` : ""}</span><span class="dfsb-p"><b>${T[k].p}</b> نقطة</span></li>`).join("");
+    return `<div class="dfsb-in"><p class="dfsb-cap">المنافسة ${s.cn || 1} · ${Diff.rounds(s.cr || 0)}</p><h2 id="dfsbT" class="dfsb-h">الترتيب العام</h2>
+      ${rows ? `<ol class="dfsb-list">${rows}</ol>` : `<p class="bigmsg">لم تُحتسب أي جولة في هذه المنافسة بعد.</p>`}
+      ${host ? `<button class="btn big dfsboff" data-sb="off">إخفاء النتائج</button>` : `<p class="muted dfsb-note">المقدّم يعرض النتائج الآن</p>`}</div>`;
+  },
+  // drawn over the page (host and phones) while s.sb is on; s = null removes it
+  sbSync(s, host){
+    let el = document.getElementById("dfSB");
+    if (!(s && s.sb && Diff.sbOk(s.ph))){ if (el){ el.remove(); document.body.classList.remove("dfsb-on"); } return; }
+    const html = Diff.sbHTML(s, host ? "" : (P ? dfKey(P.name) : ""), host);
+    if (!el){ el = document.createElement("div"); el.id = "dfSB"; el.className = "dfsb"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-labelledby", "dfsbT"); document.body.appendChild(el); document.body.classList.add("dfsb-on"); }
+    if (el.dataset.k !== html){ el.innerHTML = html; el.dataset.k = html; const b = el.querySelector("[data-sb]"); if (b) b.onclick = () => { if (H && H.g === "diff") Diff.act("sboff"); }; }
+  },
   host(players){
     const s = H.s, m = $("#hostMain");
     if (H.priv.pk && H.priv.pk.open){ H.priv.dfRd = null; setMain(Diff.pickHTML(s)); Diff.pickFilter(); return; }
@@ -2555,7 +2582,7 @@ const Diff = {
     }
     if (s.ph === "done" || s.ph === "fail"){ H.priv.dfRd = null; clearInterval(H.priv.tick);
       setMain(`<div class="panel center stack endcard" style="margin-top:18px">${s.ph === "done" ? `<p class="bigmsg endtitle">لُعبت كل صور هذا المستوى في هذه الغرفة</p><p class="muted">يمكنك اختيار مستوى آخر أو إعادة اللعب بالصور نفسها.</p>` : `<p class="bigmsg">تعذّر تجهيز الصور</p><p class="muted">تأكد من الإنترنت ثم أعد المحاولة.</p>`}
-        <div class="row" style="justify-content:center">${s.ph === "done" ? `<button class="btn" data-h="lobby">اختيار مستوى آخر</button><button class="btn ghost" data-h="replay">إعادة اللعب</button>` : `<button class="btn" data-h="go">إعادة المحاولة</button><button class="btn ghost" data-h="lobby">الإعدادات</button>`}</div></div>`); return; }
+        <div class="row" style="justify-content:center">${s.ph === "done" ? `<button class="btn" data-h="lobby">اختيار مستوى آخر</button><button class="btn ghost" data-h="replay">إعادة اللعب</button>` : `<button class="btn" data-h="go">إعادة المحاولة</button><button class="btn ghost" data-h="lobby">الإعدادات</button>`}${Diff.totOrder(s.tot).length ? Diff.sbBtn(s) : ""}</div></div>`); return; }
     const pair = s.pair;
     if (s.ph === "prep" || !pair){ H.priv.dfRd = null; setMain(`<div class="panel center stack" style="margin-top:18px"><div class="spinner"></div><p class="bigmsg">جارٍ تجهيز الصورتين…</p></div>`); return; }
     const solo = !H.code || !players.length || !!s.pl.host;       // nobody joined: the host plays on this screen
@@ -2595,7 +2622,7 @@ const Diff = {
     setEl($("#dfMe"), solo && hp && !over ? Diff.meHTML(hp, s) : solo && !over ? `<div class="row dfmine"><span class="muted">العب من هذه الشاشة، أو اعرض الكود ليشارك الآخرون من جوالاتهم.</span></div>` : "");
     setEl($("#dfSide"), over ? Diff.resultsHTML(s, solo ? "host" : "", sel, "data-h")
       : solo ? `<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>جولتك</h3>${clockChip(s)}</div>${Diff.standHTML(s, "host")}</div>` : Diff.hostPlayHTML(s));
-    setEl($("#dfAct"), H.priv.ncAsk ? Diff.ncHTML(s) : Diff.hpHTML(s) + `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${!s.hp && !H.priv.hpShow && H.code ? `<button class="btn ghost sm" data-h="hpon">العب من جوالك</button>` : ""}${over ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
+    setEl($("#dfAct"), H.priv.ncAsk ? Diff.ncHTML(s) : Diff.hpHTML(s) + `<div class="row dfactions">${over ? `<button class="btn big dfnext" data-h="go">الجولة التالية</button>${Diff.sbBtn(s)}` : `<button class="btn ghost sm" data-h="end">إنهاء الجولة</button><button class="btn ghost sm" data-h="go">صورة جديدة</button>`}<button class="btn ghost sm" data-h="nc">منافسة جديدة</button>${!s.hp && !H.priv.hpShow && H.code ? `<button class="btn ghost sm" data-h="hpon">العب من جوالك</button>` : ""}${over ? `<button class="btn ghost sm" data-h="dfcsv" data-cn="${s.cn || 1}">تنزيل النتائج</button>` : ""}<button class="btn ghost sm" data-h="lobby">الإعدادات</button></div>`);
     Diff.hpQR();
   },
   meHTML(p, s){
