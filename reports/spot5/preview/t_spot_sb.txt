@@ -30,10 +30,15 @@ OK   round 2 counted normally (نورة 130, صالح 130, تافير 50; 2 roun
 OK   after round 2: shown again on request
 OK   the ranking after 2 rounds: ['🥇 1 صالح (أنت) 0 130', '🥇 1 نورة 130 130', '🥉 3 تافير 0 50']
 OK   after round 2: «آخر جولة» shows that round only, «إجمالي النقاط» the sum ([['صالح', '0', 130], ['نورة', '130', 130], ['تافير', '0', 50]])
+OK   a tie (130 = 130): both ranked first, the next one third, the same order as the game's own ranking ([['صالح', '🥇1'], ['نورة', '🥇1'], ['تافير', '🥉3']])
 OK   and hidden
+OK   after round 3: shown on every screen together
+OK   after 3 rounds: «آخر جولة» = this round, «إجمالي النقاط» = before + this round, identical on all 4 screens ([['تافير', 130, 180], ['صالح', 50, 180], ['نورة', 0, 130]])
+OK   the caption says 3 rounds
+OK   hidden on every screen together
 OK   no horizontal scroll at 390 px (390)
 OK   no horizontal scroll at 360 px (360)
 OK   no horizontal scroll at 1280 px (1280)
 OK   no page errors 
 
-37/37 passed
+42/42 passed

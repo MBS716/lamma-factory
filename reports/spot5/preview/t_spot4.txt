@@ -1,8 +1,8 @@
-OK   round 1: 5 differences, 3 players, each with a record (b3-w123933333)
+OK   round 1: 5 differences, 3 players, each with a record (s4-e4)
 OK   phone 390: no hint, image-info or report button while playing
 OK   phone 360: no hint, image-info or report button while playing
 OK   computer: no hint, image-info or report button while playing
-OK   a short credit line under the pictures, no link to the original while playing («تصوير: Wilfredor · CC0 · Wikimedia Commons»)
+OK   a short credit line under the pictures, no link to the original while playing («رسم: David Revoy · CC BY 4.0 · Wikimedia Commons»)
 OK   host screen: no link to the original picture while playing
 OK   zoom and drag are not mistakes
 OK   three players find the same difference: each +10
@@ -17,7 +17,7 @@ OK   A's 5th mistake: A stops, the round goes on
 OK   A leaves and joins again: still out, mistakes not reset
 OK   host reloads: same records, no phone shows «the game ended»
 OK   B and C both at 4 of 5
-OK   B and C complete within the 0.3 s window (28 ms apart on the host): joint win
+OK   B and C complete within the 0.3 s window (38 ms apart on the host): joint win
 OK   points: each winner 5×10 +50 +30 = 130/130; A 0
 OK   both winners ranked 1, A last
 OK   v5: the hero gives the winners' points («130 نقطة لكل منهم»)
@@ -38,7 +38,7 @@ OK   no circle of the last round left on the phone
 OK   no circle of the last round left on the phone
 OK   no circle of the last round left on the phone
 OK   inside the 0.3 s window only another completion can count: A's new find and C's mistake 0.1 s after B's completion were not counted (A 1→1, C mistakes 0→0)
-OK   phones see no completion and no result before the window closes (result seen 693 ms after the winning tap was made)
+OK   phones see no completion and no result before the window closes (result seen 699 ms after the winning tap was made)
 OK   the result does not change after it is announced
 OK   C completes 0.8 s after B (outside the window): B wins alone, C's late tap is not counted (C 4 of 5)
 OK   points: B 130, C 4×10 +30 = 70, A 1×10 +30 = 40
@@ -61,10 +61,35 @@ OK   the overall board shows those totals
 OK   no horizontal scroll at 390 px (390)
 OK   no horizontal scroll at 360 px (360)
 OK   no horizontal scroll at 1280 px (1280)
-OK   host seat under the database limit (1580)
+OK   host seat under the database limit (1560)
 OK   the first to complete ranks first even with fewer points than a player who did not complete (['w', 'l', 'm'])
 OK   data saved by the earlier version (with a hint) restores without errors
-OK   a single player who finds all 5 wins: 50 +50 +30 = 130
-OK   a single player's 5th mistake ends the round
-PAGE ERRORS: none
-65/65 passed
+Traceback (most recent call last):
+  File "/tmp/tmp.d3X9KctQbc/t_spot4.py", line 213, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/tmp/tmp.d3X9KctQbc/t_spot4.py", line 203, in main
+    await host2.wait_for_function('H.s.ph === "over"', timeout=15000); s2 = await S(host2); kD = await key(host2, 'ليلى')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 11452, in wait_for_function
+    await self._impl_obj.wait_for_function(
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py", line 1083, in wait_for_function
+    return await self._main_frame.wait_for_function(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 771, in wait_for_function
+    return from_channel(await self._channel.send("waitForFunction", params))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 15000ms exceeded.
