@@ -1,0 +1,7 @@
+OK   390 px phone: the pictures stay put while the counters change (473 -> [473, 473, 473, 473]; اكتشفت 1 من 5 الأخطاء المتبقية: 5 10 نقطة)
+OK   375 px phone: the pictures stay put while the counters change (473 -> [473, 473, 473, 473]; اكتشفت 1 من 5 الأخطاء المتبقية: 5 10 نقطة)
+OK   360 px phone: the pictures stay put while the counters change (473 -> [473, 473, 473, 473]; اكتشفت 2 من 5 الأخطاء المتبقية: 5 20 نقطة)
+OK   340 px phone: the pictures stay put while the counters change (473 -> [473, 473, 473, 473]; اكتشفت 2 من 5 الأخطاء المتبقية: 5 20 نقطة)
+OK   no page errors
+
+5/5 passed
