@@ -130,7 +130,29 @@ async def main():
         rows2 = await A.evaluate('[...document.querySelectorAll("#dfSB tbody tr")].map(r => [r.querySelector(".dfsb-n").firstChild.textContent.trim(), r.querySelector(".dfsb-l").textContent.trim(), +r.querySelector(".dfsb-p b").textContent])')
         want2 = {'نورة': ('130', 130), 'صالح': ('0', 130), 'تافير': ('0', 50)}
         check(all(want2[n] == (l, p) for n, l, p in rows2), f'after round 2: «آخر جولة» shows that round only, «إجمالي النقاط» the sum ({rows2})')
+        tie = await A.evaluate('[...document.querySelectorAll("#dfSB tbody tr")].map(r => [r.querySelector(".dfsb-n").firstChild.textContent.trim(), r.querySelector(".dfsb-k").textContent.trim()])')
+        hostOrd = await host.evaluate('(() => { const T = H.s.tot, R = Diff.totRanks(T); return Diff.totOrder(T).map(k => [T[k].n, R[k]]); })()')
+        check([n for n, _ in tie] == [n for n, _ in hostOrd] and [t[1] for t in tie][:2] == ['🥇1', '🥇1'] and tie[2][1].endswith('3'),
+              f'a tie (130 = 130): both ranked first, the next one third, the same order as the game\'s own ranking ({tie})')
         await host.click('#dfSB [data-sb=off]'); check(await all_shown(False, (host, A, B, C)), 'and hidden')
+
+        # ================= round 3: تافير completes, صالح finds 2; then the ranking again
+        before = await S(host)
+        await new_round(); await taps(A, [0, 1]); await host.wait_for_timeout(500); await taps(B, [0, 1, 2, 3, 4])
+        await host.wait_for_function('H.s.ph === "over"', timeout=20000); await host.wait_for_timeout(1200)
+        s3 = await S(host)
+        await host.click('#dfAct [data-h=sbon]'); check(await all_shown(True, (host, A, B, C)), 'after round 3: shown on every screen together')
+        rows3 = {}
+        for n, pg in (('host', host), ('A', A), ('B', B), ('C', C)):
+            rows3[n] = await pg.evaluate('[...document.querySelectorAll("#dfSB tbody tr")].map(r => [r.querySelector(".dfsb-n").firstChild.textContent.trim(), +r.querySelector(".dfsb-l").textContent, +r.querySelector(".dfsb-p b").textContent])')
+        T3, T2 = s3['tot'], before['tot']
+        exp = sorted([[T3[k]['n'], T3[k]['dp'], T3[k]['p']] for k in T3], key=lambda r: (-r[2], r[0]))
+        okSum = all(T3[k]['p'] == T2[k]['p'] + T3[k]['dp'] for k in T3)
+        check(okSum and all(sorted(r, key=lambda x: (-x[2], x[0])) == exp and [x[2] for x in r] == sorted([x[2] for x in r], reverse=True) for r in rows3.values()) and len({json.dumps(r) for r in rows3.values()}) == 1,
+              f'after 3 rounds: «آخر جولة» = this round, «إجمالي النقاط» = before + this round, identical on all 4 screens ({rows3["A"]})')
+        check(await A.evaluate(f'document.getElementById("dfSB").innerText.includes(Diff.rounds(3))'), 'the caption says 3 rounds')
+        for n, pg in (('host', host), ('phone390', A), ('phone360', B), ('computer', C)): await pg.screenshot(path=f'{SHOTS}/v51_sb3_{n}.png')
+        await host.click('#dfSB [data-sb=off]'); check(await all_shown(False, (host, A, B, C)), 'hidden on every screen together')
         for pg, w in ((A, 390), (B, 360), (C, 1280)):
             sw = await pg.evaluate('document.documentElement.scrollWidth'); check(sw <= w, f'no horizontal scroll at {w} px ({sw})')
         check(not E.errs, 'no page errors ' + '; '.join(E.errs[:3]))
