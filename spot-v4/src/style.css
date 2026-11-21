@@ -582,6 +582,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfx.ok{color:var(--green);font-size:1.4rem}
 .dfx.info{color:var(--ink);font-size:.9rem;font-weight:700;background:color-mix(in srgb,var(--bg) 85%,transparent);padding:2px 8px;border-radius:8px;white-space:nowrap;line-height:1.5}
 .dfmine{gap:6px;flex-wrap:wrap;align-items:center}
+.dfmine .chip{font-variant-numeric:tabular-nums}.dfmine .chip:last-child{min-width:6.6em;text-align:center}   /* the chips keep their width as the counters grow: the pictures below never jump between two taps */
 .dfmine .chip.gold{color:var(--gold)}
 .dfmine.out .chip{opacity:.7}
 .dflocked .dfimg{cursor:default}
