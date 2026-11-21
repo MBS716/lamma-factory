@@ -1,0 +1,4 @@
+51b348851e90ef79862605566d7e529c4e67b9bd Fri Nov 20 09:02:39 2026 +0000
+Copy of MBS716/lamma (main) = the live site v5.0 (build a64c144e16), before the update to v5.1.
+Restore: extract into a checkout of MBS716/lamma and commit it on top of main (no force push), or revert to commit 51b3488.
+The archive is split into parts under GitHub's 100 MB limit: cat lamma-main-51b3488.tar.gz.part-* > lamma-main-51b3488.tar.gz, then sha256sum -c SHA256SUMS.
