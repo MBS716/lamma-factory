@@ -854,16 +854,22 @@ body.dfsb-on{overflow:hidden}
 .dfsb-in{max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
 .dfsb-cap{margin:0;color:var(--muted);font-size:1rem}
 .dfsb-h{margin:0;font-family:var(--display);font-size:clamp(2rem,7vw,3.2rem);color:var(--gold)}
-.dfsb-list{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:8px}
-.dfsb-r{display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-size:clamp(1.15rem,4.4vw,1.7rem);text-align:start}
-.dfsb-r.top{border-color:color-mix(in srgb,var(--gold) 55%,var(--line))}
-.dfsb-r.r1{background:color-mix(in srgb,var(--gold) 16%,var(--card));font-size:clamp(1.3rem,5vw,2rem)}
-.dfsb-r.me{outline:3px solid var(--gold);outline-offset:-3px}
-.dfsb-k{font-family:var(--display);text-align:center;font-size:1.25em}
-.dfsb-n{overflow-wrap:anywhere;font-weight:700}
+.dfsb-t{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:clamp(1.15rem,4.6vw,1.7rem)}
+.dfsb-t tr{display:table-row}.dfsb-t td,.dfsb-t th{display:table-cell}
+.dfsb-t th{font-size:.62em;font-weight:700;color:var(--gold);padding:0 8px 2px;text-align:center}
+.dfsb-t th:nth-child(2){text-align:start}
+.dfsb-t td{background:var(--card);border-block:1px solid var(--line);padding:10px 8px;text-align:center;vertical-align:middle}
+.dfsb-t td:first-child{border-inline-start:1px solid var(--line);border-start-start-radius:14px;border-end-start-radius:14px}
+.dfsb-t td:last-child{border-inline-end:1px solid var(--line);border-start-end-radius:14px;border-end-end-radius:14px}
+.dfsb-t tr.top td{border-color:color-mix(in srgb,var(--gold) 55%,var(--line))}
+.dfsb-t tr.r1 td{background:color-mix(in srgb,var(--gold) 16%,var(--card))}
+.dfsb-t tr.me td{border-color:var(--gold);border-width:3px}
+.dfsb-k{width:2.6em;font-family:var(--display);font-size:1.2em}
+.dfsb-n{text-align:start!important;overflow-wrap:anywhere;font-weight:700}
 .dfsb-n small{font-weight:400;color:var(--muted);font-size:.6em}
-.dfsb-p{white-space:nowrap;color:var(--muted);font-size:.8em}
-.dfsb-p b{color:var(--gold);font-family:var(--display);font-size:1.35em}
+.dfsb-l{color:var(--muted);white-space:nowrap;width:22%}
+.dfsb-p{white-space:nowrap;width:24%}
+.dfsb-p b{color:var(--gold);font-family:var(--display);font-size:1.3em}
 .dfsb-note{margin:4px 0 0}
 .dfsboff{margin-top:6px;min-width:min(100%,280px)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -2948,7 +2954,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "7c29048e18", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "3989619844", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = true, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 /* A host of «أكملها» announces itself one protocol step up (4). Pages of this version know it and join it as usual; a page
    still showing an older version of لمّة (opened before a publish, without «أكملها») sees a host on a newer version and
@@ -5482,9 +5488,9 @@ const Diff = {
   // only the overall ranking of this competition: names, places and points (no picture, no place of a difference)
   sbHTML(s, me, host){
     const T = s.tot || {}, ks = Diff.totOrder(T), rn = Diff.totRanks(T), md = ["🥇", "🥈", "🥉"];
-    const rows = ks.map(k => `<li class="dfsb-r ${rn[k] <= 3 ? "top r" + rn[k] : ""} ${k === me ? "me" : ""}"><span class="dfsb-k">${md[rn[k] - 1] ? `<span aria-hidden="true">${md[rn[k] - 1]}</span><span class="vh">${rn[k]}</span>` : rn[k]}</span><span class="dfsb-n">${esc(T[k].n)}${k === me ? ` <small>(أنت)</small>` : ""}</span><span class="dfsb-p"><b>${T[k].p}</b> نقطة</span></li>`).join("");
+    const rows = ks.map(k => `<tr class="${rn[k] <= 3 ? "top r" + rn[k] : ""} ${k === me ? "me" : ""}"><td class="dfsb-k">${md[rn[k] - 1] ? `<span aria-hidden="true">${md[rn[k] - 1]}</span><span class="vh">${rn[k]}</span>` : rn[k]}</td><td class="dfsb-n">${esc(T[k].n)}${k === me ? ` <small>(أنت)</small>` : ""}</td><td class="dfsb-l">${T[k].dp || 0}</td><td class="dfsb-p"><b>${T[k].p}</b></td></tr>`).join("");
     return `<div class="dfsb-in"><p class="dfsb-cap">المنافسة ${s.cn || 1} · ${Diff.rounds(s.cr || 0)}</p><h2 id="dfsbT" class="dfsb-h">الترتيب العام</h2>
-      ${rows ? `<ol class="dfsb-list">${rows}</ol>` : `<p class="bigmsg">لم تُحتسب أي جولة في هذه المنافسة بعد.</p>`}
+      ${rows ? `<table class="dfsb-t"><thead><tr><th scope="col">#</th><th scope="col">اسم اللاعب</th><th scope="col">آخر جولة</th><th scope="col">إجمالي النقاط</th></tr></thead><tbody>${rows}</tbody></table>` : `<p class="bigmsg">لم تُحتسب أي جولة في هذه المنافسة بعد.</p>`}
       ${host ? `<button class="btn big dfsboff" data-sb="off">إخفاء النتائج</button>` : `<p class="muted dfsb-note">المقدّم يعرض النتائج الآن</p>`}</div>`;
   },
   // drawn over the page (host and phones) while s.sb is on; s = null removes it

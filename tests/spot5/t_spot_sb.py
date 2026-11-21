@@ -61,13 +61,16 @@ async def main():
         order = await B.evaluate('[...document.querySelectorAll("#dfSB .dfsb-n")].map(e => e.firstChild.textContent.trim())')
         pts = await B.evaluate('[...document.querySelectorAll("#dfSB .dfsb-p b")].map(e => +e.textContent)')
         check(order == ['صالح', 'تافير', 'نورة'] and pts == [130, 50, 0], f'names, places and points in order: {list(zip(order, pts))}')
+        last = await B.evaluate('[...document.querySelectorAll("#dfSB .dfsb-l")].map(e => e.textContent.trim())')
+        heads = await B.evaluate('[...document.querySelectorAll("#dfSB thead th")].map(e => e.textContent.trim())')
+        check(heads == ['#', 'اسم اللاعب', 'آخر جولة', 'إجمالي النقاط'] and last == ['130', '50', '0'], f'columns like Flashi: last round and total points ({heads}; last round {last})')
         check('الترتيب العام' in txt['A'] and 'المنافسة 1' in txt['A'] and 'جولة واحدة' in txt['A'], 'title, competition and number of rounds')
-        check('(أنت)' in txt['B'] and await B.locator('#dfSB .dfsb-r.me').count() == 1, 'each phone sees its own row marked («أنت»)')
+        check('(أنت)' in txt['B'] and await B.locator('#dfSB tbody tr.me').count() == 1, 'each phone sees its own row marked («أنت»)')
         check(await host.locator('#dfSB [data-sb=off]').count() == 1 and all([await p.locator('#dfSB button').count() == 0 for p in (A, B, C)]),
               'the host has «إخفاء النتائج»; the phones only «المقدّم يعرض النتائج الآن»')
         leak = await host.evaluate('(() => { const el = document.getElementById("dfSB"); return {img:el.querySelectorAll("img,svg,canvas").length, pair:el.innerText.includes(H.s.pair.title)}; })()')
         check(leak['img'] == 0 and not leak['pair'], 'the ranking screen shows no picture and no place of a difference')
-        big = await A.evaluate('(() => { const r = document.querySelector("#dfSB .dfsb-r"), b = r.getBoundingClientRect(); return {fs:parseFloat(getComputedStyle(r).fontSize), cover:document.getElementById("dfSB").getBoundingClientRect().height >= innerHeight - 1, sw:document.documentElement.scrollWidth}; })()')
+        big = await A.evaluate('(() => { const r = document.querySelector("#dfSB tbody tr"), b = r.getBoundingClientRect(); return {fs:parseFloat(getComputedStyle(r).fontSize), cover:document.getElementById("dfSB").getBoundingClientRect().height >= innerHeight - 1, sw:document.documentElement.scrollWidth}; })()')
         check(big['fs'] >= 18 and big['cover'] and big['sw'] <= 390, f'big and clear on phone 390: font {big["fs"]:.0f} px, full screen, no horizontal scroll')
         for n, pg in (('host', host), ('phone390', A), ('phone360', B), ('computer', C)): await pg.screenshot(path=f'{SHOTS}/v51_sb_{n}.png')
         s = await S(host)
@@ -122,8 +125,11 @@ async def main():
         check(s['tot'][kC]['p'] == 130 and s['tot'][kA]['p'] == 130 + 0 and s['tot'][kB]['p'] == 50 and s['cr'] == 2,
               f'round 2 counted normally (نورة 130, صالح {s["tot"][kA]["p"]}, تافير {s["tot"][kB]["p"]}; 2 rounds)')
         await host.click('#dfAct [data-h=sbon]'); check(await all_shown(True, (host, A, B, C)), 'after round 2: shown again on request')
-        top = await A.evaluate('[...document.querySelectorAll("#dfSB .dfsb-r")].map(r => r.innerText.replace(/\\s+/g, " "))')
+        top = await A.evaluate('[...document.querySelectorAll("#dfSB tbody tr")].map(r => r.innerText.replace(/\\s+/g, " "))')
         check(len(top) == 3 and 'جولتان' in await A.inner_text('#dfSB'), f'the ranking after 2 rounds: {top}')
+        rows2 = await A.evaluate('[...document.querySelectorAll("#dfSB tbody tr")].map(r => [r.querySelector(".dfsb-n").firstChild.textContent.trim(), r.querySelector(".dfsb-l").textContent.trim(), +r.querySelector(".dfsb-p b").textContent])')
+        want2 = {'نورة': ('130', 130), 'صالح': ('0', 130), 'تافير': ('0', 50)}
+        check(all(want2[n] == (l, p) for n, l, p in rows2), f'after round 2: «آخر جولة» shows that round only, «إجمالي النقاط» the sum ({rows2})')
         await host.click('#dfSB [data-sb=off]'); check(await all_shown(False, (host, A, B, C)), 'and hidden')
         for pg, w in ((A, 390), (B, 360), (C, 1280)):
             sw = await pg.evaluate('document.documentElement.scrollWidth'); check(sw <= w, f'no horizontal scroll at {w} px ({sw})')
