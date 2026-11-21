@@ -623,6 +623,7 @@ body{overflow-wrap:break-word;word-break:normal;hyphens:none}
 .dfx.ok{color:var(--green);font-size:1.4rem}
 .dfx.info{color:var(--ink);font-size:.9rem;font-weight:700;background:color-mix(in srgb,var(--bg) 85%,transparent);padding:2px 8px;border-radius:8px;white-space:nowrap;line-height:1.5}
 .dfmine{gap:6px;flex-wrap:wrap;align-items:center}
+.dfmine .chip{font-variant-numeric:tabular-nums}.dfmine .chip:last-child{min-width:6.6em;text-align:center}   /* the chips keep their width as the counters grow: the pictures below never jump between two taps */
 .dfmine .chip.gold{color:var(--gold)}
 .dfmine.out .chip{opacity:.7}
 .dflocked .dfimg{cursor:default}
@@ -2954,7 +2955,7 @@ const FIREBASE_CONFIG = {"apiKey": "AIzaSyDYeFUK0RhwmFUUwuGNkjH_0cnrsDP0EOA", "a
 /* BUILD changes with every published version (written by build.py); SITE_URL is the one official address.
    A preview copy (for testing before publishing) keeps its rooms apart from the official site's rooms, so a phone on
    one and a host on the other can never meet half-way: the phone is told where the game really is. */
-const BUILD = "4b1bfade4e", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
+const BUILD = "97fbb856cf", SITE_URL = "https://mbs716.github.io/lamma/", PREVIEW = false, PREVIEW_URL = "https://mbs716.github.io/lamma-factory/preview-next/";
 const APP_V = 3, ROOM_PREFIX = PREVIEW ? "lmp3-" : "lm3-";
 /* A host of «أكملها» announces itself one protocol step up (4). Pages of this version know it and join it as usual; a page
    still showing an older version of لمّة (opened before a publish, without «أكملها») sees a host on a newer version and
