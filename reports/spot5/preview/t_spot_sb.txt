@@ -3,11 +3,12 @@ OK   the host has «عرض النتائج للجميع» next to «الجولة 
 OK   no phone has a show or hide control
 OK   show: the ranking appears on the host and the 3 phones
 OK   names, places and points in order: [('صالح', 130), ('تافير', 50), ('نورة', 0)]
+OK   columns like Flashi: last round and total points (['#', 'اسم اللاعب', 'آخر جولة', 'إجمالي النقاط']; last round ['130', '50', '0'])
 OK   title, competition and number of rounds
 OK   each phone sees its own row marked («أنت»)
 OK   the host has «إخفاء النتائج»; the phones only «المقدّم يعرض النتائج الآن»
 OK   the ranking screen shows no picture and no place of a difference
-OK   big and clear on phone 390: font 21 px, full screen, no horizontal scroll
+OK   big and clear on phone 390: font 18 px, full screen, no horizontal scroll
 OK   showing changes no points, no round, no phase
 OK   still shown 4 s later (only the host hides it)
 OK   while shown, «الجولة التالية» or «منافسة جديدة» does nothing (the host hides the ranking first)
@@ -27,11 +28,12 @@ OK   during a round the host cannot show it (the pictures stay for everybody)
 OK   and there is no show button during the round
 OK   round 2 counted normally (نورة 130, صالح 130, تافير 50; 2 rounds)
 OK   after round 2: shown again on request
-OK   the ranking after 2 rounds: ['🥇 1 صالح (أنت) 130 نقطة', '🥇 1 نورة 130 نقطة', '🥉 3 تافير 50 نقطة']
+OK   the ranking after 2 rounds: ['🥇 1 صالح (أنت) 0 130', '🥇 1 نورة 130 130', '🥉 3 تافير 0 50']
+OK   after round 2: «آخر جولة» shows that round only, «إجمالي النقاط» the sum ([['صالح', '0', 130], ['نورة', '130', 130], ['تافير', '0', 50]])
 OK   and hidden
 OK   no horizontal scroll at 390 px (390)
 OK   no horizontal scroll at 360 px (360)
 OK   no horizontal scroll at 1280 px (1280)
 OK   no page errors 
 
-35/35 passed
+37/37 passed
