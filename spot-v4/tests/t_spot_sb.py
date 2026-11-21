@@ -87,7 +87,10 @@ async def main():
         await host.reload(); await host.wait_for_function('!window.__resuming && H && H.code && H.g === "diff"', timeout=20000); await host.wait_for_timeout(1500)
         check(await all_shown(True, (host, A, B, C)), 'host reloads: the ranking is still shown everywhere')
         await A.reload(); check(await all_shown(True, (A,), 15000), 'phone 390 reloads: the ranking comes back')
-        await C.evaluate('window.__setOnline(false)'); await host.wait_for_timeout(1200); await C.evaluate('window.__setOnline(true)'); await host.wait_for_timeout(1500)
+        if await C.evaluate('typeof window.__setOnline === "function"'):      # local stand-in database
+            await C.evaluate('window.__setOnline(false)'); await host.wait_for_timeout(1200); await C.evaluate('window.__setOnline(true)'); await host.wait_for_timeout(1500)
+        else:                                                                  # the real database: the browser goes offline
+            await C.context.set_offline(True); await host.wait_for_timeout(4000); await C.context.set_offline(False); await host.wait_for_timeout(6000)
         check(await all_shown(True, (C,)), 'the computer loses its connection and gets it back: still shown')
         # B leaves the page (network gone); the host hides meanwhile; B comes back on a new page of the same device
         await B.close()

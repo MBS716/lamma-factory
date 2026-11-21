@@ -32,6 +32,7 @@ async def main():
     async with Env(8814) as E:
         host = await E.page('host', 1280, 900); A = await E.page('A', 390, 844); B = await E.page('B', 360, 740); D = await E.page('D', 390, 844)
         code = await E.start(host, 'diff', {'lv': 0, 'lim': 300})
+        if await host.locator('[data-opt=pk][data-val=auto]').count(): await host.click('[data-opt=pk][data-val=auto]')   # v5.0 and later: the host picks by default; this test lets the game pick
         await E.join(A, code, 'صالح'); await E.join(B, code, 'تافير'); await host.wait_for_timeout(800)
         check(await BUILD(host) == old_b and await BUILD(A) == old_b, f'before the publish: the room on the old version ({old_b})')
         G = {}
@@ -69,8 +70,10 @@ async def main():
         await A.wait_for_function(f'typeof BUILD !== "undefined" && BUILD === "{new_b}"', timeout=40000); await A.wait_for_timeout(3000)
         check(await A.evaluate('P.joined && P.code') == code and 'الترتيب العام' in await A.inner_text('#playerMain'), 'the old phone moved to v5: same room, same player, results on screen')
         # v5 on the same room: the picture library (the room's old settings had no choice: the host chooses)
-        await host.click('[data-h=go]'); await host.wait_for_selector('.dfpk-c', timeout=15000)
-        await host.click('.dfpk-c'); await host.wait_for_function('H.s.ph === "play"', timeout=15000); await ready([A, B, D])
+        await host.click('[data-h=go]')
+        await host.wait_for_function('H.s.ph === "play" || !!document.querySelector(".dfpk-c")', timeout=15000)   # the host's picker, or the game picks (room set to auto)
+        if await host.locator('.dfpk-c').count(): await host.click('.dfpk-c')
+        await host.wait_for_function('H.s.ph === "play"', timeout=15000); await ready([A, B, D])
         for i in range(5): await tap(A, i)
         await host.wait_for_function('H.s.ph === "over"', timeout=8000); s = await S(host)
         check(s['tot'][kB]['p'] == before[kB]['p'] and s['tot'][kA]['p'] > before[kA]['p'] and s['tot'][kA]['r'] == 3 and s['cr'] == 3,
