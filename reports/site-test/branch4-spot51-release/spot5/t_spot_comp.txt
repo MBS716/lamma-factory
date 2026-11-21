@@ -1,7 +1,7 @@
 OK   a new room is competition 1
-DEBUG {"ph":"play","nd":5,"pl":{"n_y4ta36":{"n":"تافير","f":2,"w":0,"p":20,"out":0,"done":0,"ft":1804,"dt":0,"da":0,"b":0},"n_zho357":{"n":"نورة","f":0,"w":0,"p":0,"out":0,"done":0,"ft":0,"dt":0,"da":0,"b":0},"n_zha8he":{"n":"صالح","f":3,"w":2,"p":20,"out":0,"done":0,"ft":4405,"dt":0,"da":0,"b":0}},"pf":{"n_zho357":{"fi":[],"lr":[]},"n_zha8he":{"fi":[0,2,4],"lr":[["0pe8qnv","ok",136,664],["nc46dxf","no",360,354],["rhy8beu","ok",872,632],["iwcdgau","no",1000,82],["asmkh2i","ok",1160,424]]},"n_y4ta36":{"fi":[0,1],"lr":[["t263cst","ok",136,664],["7iupezi","ok",360,536]]}},"q":0,"uns":0,"winAt":0,"now":1795264211170}
+DEBUG {"ph":"play","nd":5,"pl":{"n_zho357":{"n":"نورة","f":0,"w":0,"p":0,"out":0,"done":0,"ft":0,"dt":0,"da":0,"b":0},"n_y4ta36":{"n":"تافير","f":2,"w":0,"p":20,"out":0,"done":0,"ft":1851,"dt":0,"da":0,"b":0},"n_zha8he":{"n":"صالح","f":4,"w":1,"p":35,"out":0,"done":0,"ft":4505,"dt":0,"da":0,"b":0}},"pf":{"n_zha8he":{"fi":[0,2,3,4],"lr":[["lo1tvi8","ok",152,344],["p0bgofl","no",344,626],["kr4s1rq","ok",808,664],["qhzt05y","ok",696,792],["dip6onp","ok",472,616]]},"n_zho357":{"fi":[],"lr":[]},"n_y4ta36":{"fi":[0,1],"lr":[["9jkgi2b","ok",152,344],["5bdaype","ok",344,808]]}},"q":0,"uns":0,"winAt":0,"now":1795264979038}
 Traceback (most recent call last):
-  File "/tmp/tmp.v0UCjIf2mf/t_spot_comp.py", line 149, in <module>
+  File "/tmp/tmp.ziqqOP9BJr/t_spot_comp.py", line 149, in <module>
     asyncio.run(main())
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
     return runner.run(main)
@@ -12,10 +12,10 @@ Traceback (most recent call last):
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
     return future.result()
            ^^^^^^^^^^^^^^^
-  File "/tmp/tmp.v0UCjIf2mf/t_spot_comp.py", line 55, in main
+  File "/tmp/tmp.ziqqOP9BJr/t_spot_comp.py", line 55, in main
     await taps(A, [0, 1, 2, 3, 4]); await over_or_dump(host); s = await S(host)
                                     ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/tmp/tmp.v0UCjIf2mf/t_spot_comp.py", line 22, in over_or_dump
+  File "/tmp/tmp.ziqqOP9BJr/t_spot_comp.py", line 22, in over_or_dump
     try: await host.wait_for_function('H.s.ph === "over"', timeout=t)
          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 11452, in wait_for_function

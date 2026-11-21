@@ -1,44 +1,29 @@
-OK   after the round: the round results as before, the ranking is NOT shown by itself
-OK   the host has «عرض النتائج للجميع» next to «الجولة التالية»
-OK   no phone has a show or hide control
-OK   show: the ranking appears on the host and the 3 phones
-OK   names, places and points in order: [('صالح', 130), ('تافير', 50), ('نورة', 0)]
-OK   columns like Flashi: last round and total points (['#', 'اسم اللاعب', 'آخر جولة', 'إجمالي النقاط']; last round ['130', '50', '0'])
-OK   title, competition and number of rounds
-OK   each phone sees its own row marked («أنت»)
-OK   the host has «إخفاء النتائج»; the phones only «المقدّم يعرض النتائج الآن»
-OK   the ranking screen shows no picture and no place of a difference
-OK   big and clear on phone 390: font 18 px, full screen, no horizontal scroll
-OK   showing changes no points, no round, no phase
-OK   still shown 4 s later (only the host hides it)
-OK   while shown, «الجولة التالية» or «منافسة جديدة» does nothing (the host hides the ranking first)
-OK   a player's page cannot hide it (its messages do not change the host's game)
-OK   host reloads: the ranking is still shown everywhere
-OK   phone 390 reloads: the ranking comes back
-OK   the computer loses its connection and gets it back: still shown
-OK   hide: gone on every screen
-OK   the phone that was away comes back to its seat: the ranking stays hidden (the host hid it meanwhile)
-OK   hiding starts nothing: still after round 1, points unchanged
-OK   between rounds (settings): «عرض النتائج للجميع» in the competition panel
-OK   between rounds: shown on every screen, phones waiting in the lobby included
-OK   a phone reloads in the lobby: shown again
-OK   hidden again
-OK   round 2 runs: no ranking screen over the pictures
-OK   during a round the host cannot show it (the pictures stay for everybody)
-OK   and there is no show button during the round
-OK   round 2 counted normally (نورة 130, صالح 130, تافير 50; 2 rounds)
-OK   after round 2: shown again on request
-OK   the ranking after 2 rounds: ['🥇 1 صالح (أنت) 0 130', '🥇 1 نورة 130 130', '🥉 3 تافير 0 50']
-OK   after round 2: «آخر جولة» shows that round only, «إجمالي النقاط» the sum ([['صالح', '0', 130], ['نورة', '130', 130], ['تافير', '0', 50]])
-OK   a tie (130 = 130): both ranked first, the next one third, the same order as the game's own ranking ([['صالح', '🥇1'], ['نورة', '🥇1'], ['تافير', '🥉3']])
-OK   and hidden
-OK   after round 3: shown on every screen together
-OK   after 3 rounds: «آخر جولة» = this round, «إجمالي النقاط» = before + this round, identical on all 4 screens ([['تافير', 130, 180], ['صالح', 50, 180], ['نورة', 0, 130]])
-OK   the caption says 3 rounds
-OK   hidden on every screen together
-OK   no horizontal scroll at 390 px (390)
-OK   no horizontal scroll at 360 px (360)
-OK   no horizontal scroll at 1280 px (1280)
-OK   no page errors 
-
-42/42 passed
+Traceback (most recent call last):
+  File "/tmp/tmp.ziqqOP9BJr/t_spot_sb.py", line 161, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/tmp/tmp.ziqqOP9BJr/t_spot_sb.py", line 51, in main
+    await host.wait_for_function('H.s.ph === "over"', timeout=20000); await host.wait_for_timeout(1200)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 11452, in wait_for_function
+    await self._impl_obj.wait_for_function(
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_page.py", line 1083, in wait_for_function
+    return await self._main_frame.wait_for_function(**locals_to_params(locals()))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 771, in wait_for_function
+    return from_channel(await self._channel.send("waitForFunction", params))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 59, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 520, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.wait_for_function: Timeout 20000ms exceeded.
