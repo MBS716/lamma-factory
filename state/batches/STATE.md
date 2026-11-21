@@ -142,3 +142,7 @@ Target 750 = 250/level. Bank: 90 (spotlib-v6). Owner approval happens on the rev
 - factory: deploy-site.yml adapted (SPOT_V5=1 skips v4 spot in live_e2e; spot5 run_live on branch/live; library check uses catalog; version switch spot). deploy-request branch:spot5-release → run 44699243497.
 - next if all pass: verify backup; deploy-request main-approved (workflow makes backup branch backup-main-<date>, publishes, tests live); then deploy-request none; final report with commit.
 - 2026-11-20 12:05 — v5.0 LIVE: lamma main 51b3488 (build a64c144e16, 691 files exactly site/, no artifact.html). Backups: backup-main-20261120-0836 (=e1a0742 v4.8-akml5), -0859/-0902 (=500c849), factory site-backup/2026-11-20-v4.8-akml5. Live tests: e2e 69/69, spot5 65/32/28/28, library 224 PASS, akml all PASS. deploy-request none. Fixed: upload mirrors site/ exactly; deploy-message v5.0. NOTE future builds: build.py writes dist/artifact.html → never copy into site/.
+
+## 2026-11-21 — v5.1: host shows/hides overall ranking (owner request); branch spot-v5.1 (from v5.0 code)
+- app.js: s.sb flag; Diff.sbOk/sbBtn/sbHTML/sbSync; act sbon/sboff + guards (no round/competition start while shown; never during play); overlay #dfSB on body (opaque). style.css .dfsb*. tests/t_spot_sb.py 35/35; full local regression PASS (vswitchspot updated for OLD=v5.0: 10/10).
+- preview-spot5 = v5.1-preview build 7c29048e18 (factory 1876423); tests/spot5 + t_spot_sb (run_live). spot5-test real DB running. No main/site/Firebase change.
