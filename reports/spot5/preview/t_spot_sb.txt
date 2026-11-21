@@ -1,0 +1,37 @@
+OK   after the round: the round results as before, the ranking is NOT shown by itself
+OK   the host has «عرض النتائج للجميع» next to «الجولة التالية»
+OK   no phone has a show or hide control
+OK   show: the ranking appears on the host and the 3 phones
+OK   names, places and points in order: [('صالح', 130), ('تافير', 50), ('نورة', 0)]
+OK   title, competition and number of rounds
+OK   each phone sees its own row marked («أنت»)
+OK   the host has «إخفاء النتائج»; the phones only «المقدّم يعرض النتائج الآن»
+OK   the ranking screen shows no picture and no place of a difference
+OK   big and clear on phone 390: font 21 px, full screen, no horizontal scroll
+OK   showing changes no points, no round, no phase
+OK   still shown 4 s later (only the host hides it)
+OK   while shown, «الجولة التالية» or «منافسة جديدة» does nothing (the host hides the ranking first)
+OK   a player's page cannot hide it (its messages do not change the host's game)
+OK   host reloads: the ranking is still shown everywhere
+OK   phone 390 reloads: the ranking comes back
+OK   the computer loses its connection and gets it back: still shown
+OK   hide: gone on every screen
+OK   the phone that was away comes back to its seat: the ranking stays hidden (the host hid it meanwhile)
+OK   hiding starts nothing: still after round 1, points unchanged
+OK   between rounds (settings): «عرض النتائج للجميع» in the competition panel
+OK   between rounds: shown on every screen, phones waiting in the lobby included
+OK   a phone reloads in the lobby: shown again
+OK   hidden again
+OK   round 2 runs: no ranking screen over the pictures
+OK   during a round the host cannot show it (the pictures stay for everybody)
+OK   and there is no show button during the round
+OK   round 2 counted normally (نورة 130, صالح 130, تافير 50; 2 rounds)
+OK   after round 2: shown again on request
+OK   the ranking after 2 rounds: ['🥇 1 صالح (أنت) 130 نقطة', '🥇 1 نورة 130 نقطة', '🥉 3 تافير 50 نقطة']
+OK   and hidden
+OK   no horizontal scroll at 390 px (390)
+OK   no horizontal scroll at 360 px (360)
+OK   no horizontal scroll at 1280 px (1280)
+OK   no page errors 
+
+35/35 passed
